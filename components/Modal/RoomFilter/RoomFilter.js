@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import * as roomFilterActions from "../../../store/modules/roomFilter";
+import * as roomFilterActions from "../../../redux/store/modules/roomFilter";
 
 const RoomFilter = () => {
   const [checkedInputs, setCheckedInputs] = useState([]);

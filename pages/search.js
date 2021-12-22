@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 // import Modal from "../components/Modal/RoomFilterModal";
 import PesonalModal from "../components/Modal/Personal/PersonalModal";
 import { useSelector, useDispatch } from "react-redux";
-import styles from "../styles/Home.module.css";
+
 import RoomFilterModal from "../components/Modal/RoomFilter/RoomFilterModal";
 
 const search = () => {
@@ -112,7 +112,7 @@ const search = () => {
   };
 
   return (
-    <div className={styles.main}>
+    <div>
       <div>
         <input
           type="search"
