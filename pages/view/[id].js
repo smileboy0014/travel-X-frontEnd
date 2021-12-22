@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Axios from "axios";
 import SearchResultList from "../../components/Card/SearchResultList";
 import RoomFilterModal from "../../components/Modal/RoomFilter/RoomFilterModal";
+import ScrollTopArrow from "../../components/ScrollTop/ScrollTopArrow";
 
 const Post = ({ item }) => {
   const [showModal, setShowModal] = useState(false);
@@ -26,8 +27,9 @@ const Post = ({ item }) => {
         onClose={() => setShowModal(false)}
         show={showModal}
       ></RoomFilterModal>
+
       <div>{nameList}</div>
-      aaaaaaaaa
+      <ScrollTopArrow></ScrollTopArrow>
     </div>
   );
 };
