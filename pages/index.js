@@ -1,11 +1,14 @@
-import React from 'react';
+import styles from "../styles/Home.module.css";
+import Link from "next/link";
 
-const Home = () => {
-    return (
-        <div>
-           Home 입니다.
-        </div>
-    );
-};
-
-export default Home;
+export default function Home() {
+  return (
+    <div className={styles.main}>
+      <Link href="/search" as={`/search`}>
+        <a>
+          <img src="/main.png" />
+        </a>
+      </Link>
+    </div>
+  );
+}
