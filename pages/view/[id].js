@@ -1,24 +1,37 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import Axios from "axios";
 import SearchResultList from "../../components/Card/SearchResultList";
 import RoomFilterModal from "../../components/Modal/RoomFilter/RoomFilterModal";
 import ScrollTopArrow from "../../components/ScrollTop/ScrollTopArrow";
+import { useRouter } from "next/router";
+import useInfiniteSearch from "../../components/InfiniteScroll/useInfiniteSearch";
 
 const Post = ({ item }) => {
   const [showModal, setShowModal] = useState(false);
+  const router = useRouter();
+  const { id } = router.query;
+  const [query, setQuery] = useState("");
+  const [pageNumber, setPageNumber] = useState(10);
+  const { rooms, hasMore, loading, error } = useInfiniteSearch(id, pageNumber);
 
-  //검색 결과 LIST Card
-  const nameList = item.map((name, index) => (
-    <SearchResultList
-      propertyName={name.propertyName}
-      roomName={name.roomName}
-      address={name.address}
-      propertyType={name.propertyType}
-      images={"https://" + name.images[0]}
-      price={name.price}
-      index={index}
-    />
-  ));
+  const observer = useRef();
+  const lastroomElementRef = useCallback(
+    (node) => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setPageNumber((prevPageNumber) => prevPageNumber + 10);
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [loading, hasMore]
+  );
+
+  useEffect(() => {
+    console.log(rooms);
+  }, [rooms]);
 
   return (
     <div>
@@ -28,25 +41,33 @@ const Post = ({ item }) => {
         show={showModal}
       ></RoomFilterModal>
 
-      <div>{nameList}</div>
+      <div>
+        {rooms.length > 0 &&
+          rooms.map((room, index) => {
+            if (rooms.length === index + 1) {
+              return <div ref={lastroomElementRef} key={room}></div>;
+            } else {
+              return (
+                <div key={index}>
+                  <SearchResultList
+                    propertyName={room.propertyName}
+                    roomName={room.roomName}
+                    address={room.address}
+                    propertyType={room.propertyType}
+                    images={"https://" + room.images[0]}
+                  />
+                </div>
+              );
+            }
+          })}
+
+        <div>{loading && "Loading..."}</div>
+        <div>{error && "Error"}</div>
+      </div>
+
       <ScrollTopArrow></ScrollTopArrow>
     </div>
   );
 };
 
 export default Post;
-
-export async function getServerSideProps(context) {
-  const id = context.params.id;
-  const apiUrl = `http://shineware.iptime.org:5050/search?checkinDate=20211210&checkoutDate=20211212&adult=4&query=${encodeURIComponent(
-    id
-  )}`;
-
-  const res = await Axios.get(apiUrl);
-  const data = res.data.roomDocumentList;
-  return {
-    props: {
-      item: data,
-    },
-  };
-}
