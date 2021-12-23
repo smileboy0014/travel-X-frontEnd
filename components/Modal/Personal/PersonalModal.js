@@ -1,19 +1,33 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
 import PersonalCounter from "./PersonalCounter";
+import { useSelector, useDispatch } from "react-redux";
+import * as adultCounterActions from "../../../redux/store/modules/adultCounter";
+import * as childCounterActions from "../../../redux/store/modules/chlidCounter";
 
-const PersonalModal = ({ show, onClose, children, title }) => {
+const PersonalModal = ({ show, onClose }) => {
+  const dispatch = useDispatch();
   const [isBrowser, setIsBrowser] = useState(false);
 
   useEffect(() => {
     setIsBrowser(true);
   }, []);
 
-  const handleCloseClick = (e) => {
+  const handleSaveClick = (e) => {
     e.preventDefault();
     onClose();
   };
+
+  const handleCloseClick = useCallback(
+    (e) => {
+      dispatch(adultCounterActions.reset());
+      dispatch(childCounterActions.reset());
+      e.preventDefault();
+      onClose();
+    },
+    [dispatch]
+  );
 
   const modalContent = show ? (
     <StyledModalOverlay>
@@ -24,6 +38,9 @@ const PersonalModal = ({ show, onClose, children, title }) => {
           </a>
         </StyledModalHeader>
         <StyledModalBody>{<PersonalCounter></PersonalCounter>}</StyledModalBody>
+
+        <button onClick={handleSaveClick}> 확인</button>
+        <button onClick={handleCloseClick}> 취소</button>
       </StyledModal>
     </StyledModalOverlay>
   ) : null;

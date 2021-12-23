@@ -15,7 +15,7 @@ const adultCounter = createSlice({
       }
     },
     reset: (state) => {
-      state.value = 0;
+      state.value = 1;
     },
   },
 });

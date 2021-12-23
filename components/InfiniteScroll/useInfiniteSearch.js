@@ -1,44 +1,40 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 export default function useInfiniteSearch(query, pageNumber) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [books, setBooks] = useState({
-    item: [],
-  });
+  const [rooms, setRooms] = useState([]);
   const [hasMore, setHasMore] = useState(false);
+  const adultCounterValue = useSelector(
+    ({ adultCounter }) => adultCounter.value
+  );
 
   useEffect(() => {
-    setBooks([]);
+    setRooms([]);
   }, [query]);
 
   useEffect(() => {
     setLoading(true);
     setError(false);
-    let cancel;
+
     axios({
       method: "GET",
       url: "http://shineware.iptime.org:5050/search",
       params: {
         checkinDate: "20211223",
         checkoutDate: "20211224",
-        adult: "2",
+        adult: adultCounterValue,
         query: query,
         size: pageNumber,
       },
-    })
-      .then((res) => {
-        console.log(res.data);
-        setBooks(res.data.roomDocumentList);
-        setHasMore(res.data.roomDocumentList.length > 0);
-        setLoading(false);
-      })
-      .catch((e) => {
-        if (axios.isCancel(e)) return;
-        setError(true);
-      });
+    }).then((res) => {
+      setRooms(res.data.roomDocumentList ? res.data.roomDocumentList : []);
+      setHasMore(res.data.roomDocumentList.length > 0);
+      setLoading(false);
+    });
   }, [query, pageNumber]);
 
-  return { loading, error, books, hasMore };
+  return { loading, error, rooms, hasMore };
 }

@@ -12,10 +12,10 @@ const Post = ({ item }) => {
   const { id } = router.query;
   const [query, setQuery] = useState("");
   const [pageNumber, setPageNumber] = useState(10);
-  const { books, hasMore, loading, error } = useInfiniteSearch(id, pageNumber);
+  const { rooms, hasMore, loading, error } = useInfiniteSearch(id, pageNumber);
 
   const observer = useRef();
-  const lastBookElementRef = useCallback(
+  const lastroomElementRef = useCallback(
     (node) => {
       if (loading) return;
       if (observer.current) observer.current.disconnect();
@@ -30,27 +30,8 @@ const Post = ({ item }) => {
   );
 
   useEffect(() => {
-    if (books.length > 0) {
-      books.map((book, index) => {
-        console.log("11111111111");
-        console.log(book.propertyName);
-        console.log("2222222222");
-      });
-    }
-  }, [books]);
-
-  //검색 결과 LIST Card
-  // const nameList = item.map((name, index) => (
-  //   <SearchResultList
-  //     propertyName={name.propertyName}
-  //     roomName={name.roomName}
-  //     address={name.address}
-  //     propertyType={name.propertyType}
-  //     images={"https://" + name.images[0]}
-  //     price={name.price}
-  //     index={index}
-  //   />
-  // ));
+    console.log(rooms);
+  }, [rooms]);
 
   return (
     <div>
@@ -59,21 +40,21 @@ const Post = ({ item }) => {
         onClose={() => setShowModal(false)}
         show={showModal}
       ></RoomFilterModal>
-      {/* <div>{id}</div> */}
+
       <div>
-        {books.length > 0 &&
-          books.map((book, index) => {
-            if (books.length === index + 1) {
-              return <div ref={lastBookElementRef} key={book}></div>;
+        {rooms.length > 0 &&
+          rooms.map((room, index) => {
+            if (rooms.length === index + 1) {
+              return <div ref={lastroomElementRef} key={room}></div>;
             } else {
               return (
-                <div key={book}>
+                <div key={index}>
                   <SearchResultList
-                    propertyName={book.propertyName}
-                    roomName={book.roomName}
-                    address={book.address}
-                    propertyType={book.propertyType}
-                    images={"https://" + book.images[0]}
+                    propertyName={room.propertyName}
+                    roomName={room.roomName}
+                    address={room.address}
+                    propertyType={room.propertyType}
+                    images={"https://" + room.images[0]}
                   />
                 </div>
               );

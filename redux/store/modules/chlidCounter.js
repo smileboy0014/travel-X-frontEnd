@@ -15,7 +15,7 @@ const childCounter = createSlice({
       }
     },
     reset: (state) => {
-      state.value = 1;
+      state.value = 0;
     },
   },
 });
