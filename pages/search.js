@@ -14,9 +14,7 @@ const search = () => {
   const [autoCompltData, setAutoCompltData] = useState([]);
   const [showPersonalModal, setPersonalShowModal] = useState(false);
   const [showRoomFilterModal, setRoomFilterShowModal] = useState(false);
-
   const router = useRouter();
-
   const adultCounterValue = useSelector(
     ({ adultCounter }) => adultCounter.value
   );

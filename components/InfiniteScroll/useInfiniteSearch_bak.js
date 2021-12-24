@@ -30,16 +30,8 @@ export default function useInfiniteSearch(query, pageNumber) {
         size: pageNumber,
       },
     }).then((res) => {
-      setRooms((prevState) => ({
-        ...prevState,
-        item: res.data.roomDocumentList ? res.data.roomDocumentList : [],
-      }));
-      // setRooms(item: res.data.roomDocumentList ? res.data.roomDocumentList : []);
-
-      setHasMore(
-        res.data.roomDocumentList !== undefined &&
-          res.data.roomDocumentList.length > 0
-      );
+      setRooms(res.data.roomDocumentList ? res.data.roomDocumentList : []);
+      // setHasMore(res.data.roomDocumentList.length > 0);
       setLoading(false);
     });
   }, [query, pageNumber]);
