@@ -5,6 +5,7 @@ import RoomFilterModal from "../../components/Modal/RoomFilter/RoomFilterModal";
 import ScrollTopArrow from "../../components/ScrollTop/ScrollTopArrow";
 import { useRouter } from "next/router";
 import useInfiniteSearch from "../../components/InfiniteScroll/useInfiniteSearch";
+import SearchModal from "../../components/Modal/Search/SearchModal";
 
 const Post = ({ item }) => {
   const [showModal, setShowModal] = useState(false);
@@ -13,6 +14,8 @@ const Post = ({ item }) => {
   const [pageNumber, setPageNumber] = useState(10);
   const { rooms, hasMore, loading, error } = useInfiniteSearch(id, pageNumber);
   const observer = useRef();
+  const [showSearchModal, setshowSearchModal] = useState(false);
+
   const lastroomElementRef = useCallback(
     (node) => {
       if (loading) return;
@@ -29,7 +32,16 @@ const Post = ({ item }) => {
 
   return (
     <div>
-      <button onClick={() => setShowModal(true)}>룸타입</button>
+      <a>
+        <button onClick={() => setshowSearchModal(true)}>
+          {<img src="/Search.jpg" />}
+        </button>
+        <SearchModal
+          onClose={() => setshowSearchModal(false)}
+          show={showSearchModal}
+        ></SearchModal>
+      </a>
+
       <RoomFilterModal
         onClose={() => setShowModal(false)}
         show={showModal}
