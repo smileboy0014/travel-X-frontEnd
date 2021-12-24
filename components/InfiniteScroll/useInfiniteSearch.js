@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 
-export default function useInfiniteSearch(query, pageNumber) {
+export default function useInfiniteSearch_test(query, pageNumber) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [rooms, setRooms] = useState([]);
@@ -30,8 +30,15 @@ export default function useInfiniteSearch(query, pageNumber) {
         size: pageNumber,
       },
     }).then((res) => {
-      setRooms(res.data.roomDocumentList ? res.data.roomDocumentList : []);
-      setHasMore(res.data.roomDocumentList.length > 0);
+      setRooms((prevState) => ({
+        ...prevState,
+        item: res.data.roomDocumentList ? res.data.roomDocumentList : [],
+      }));
+
+      setHasMore(
+        res.data.roomDocumentList !== undefined &&
+          res.data.roomDocumentList.length > 0
+      );
       setLoading(false);
     });
   }, [query, pageNumber]);
