@@ -1,5 +1,6 @@
 import Link from "next/link";
 import styles from "../styles/Home.module.css";
+import MainTap from "../components/Tap/MainTap";
 
 export default function Home() {
   return (
@@ -9,6 +10,7 @@ export default function Home() {
           <img src="/main.jpg" />
         </a>
       </Link>
+      <MainTap />
     </div>
   );
 }
