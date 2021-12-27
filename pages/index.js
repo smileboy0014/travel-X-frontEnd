@@ -10,7 +10,6 @@ export default function Home() {
           <img src="/main.jpg" />
         </a>
       </Link>
-      <MainTap />
     </div>
   );
 }
