@@ -3,12 +3,12 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 // import Modal from "../components/Modal/RoomFilterModal";
-import PesonalModal from "../components/Modal/Personal/PersonalModal";
+import PesonalModal from "../Personal/PersonalModal";
 import { useSelector, useDispatch } from "react-redux";
 
-import RoomFilterModal from "../components/Modal/RoomFilter/RoomFilterModal";
+import RoomFilterModal from "../RoomFilter/RoomFilterModal";
 
-const search = () => {
+const search = (prop, closeParentModal) => {
   const [keywords, setKeywords] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [autoCompltData, setAutoCompltData] = useState([]);
@@ -47,6 +47,10 @@ const search = () => {
         ")",
     };
     setKeywords([newKeyword, ...keywords]);
+
+    console.log("111111111111111" + closeParentDialog);
+
+    closeParentDialog(false);
   };
 
   // 단일 검색어 삭제
@@ -65,10 +69,6 @@ const search = () => {
   const onChangeSearch = (e) => {
     setSearchValue(e.target.value);
   };
-
-  useEffect(() => {
-    console.log(searchValue);
-  }, [searchValue]);
 
   useEffect(() => {
     const timerId = setTimeout(() => {

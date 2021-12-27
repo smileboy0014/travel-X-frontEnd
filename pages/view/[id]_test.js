@@ -1,20 +1,20 @@
-import React, { useState, useRef, useCallback, useEffect, Fragment } from "react";
-import { useRouter } from "next/router";
+import React, { useState, useRef, useCallback, useEffect } from "react";
+import Axios from "axios";
+import SearchResultList from "../../components/Card/SearchResultList";
 import RoomFilterModal from "../../components/Modal/RoomFilter/RoomFilterModal";
 import ScrollTopArrow from "../../components/ScrollTop/ScrollTopArrow";
+import { useRouter } from "next/router";
 import useInfiniteSearch from "../../components/InfiniteScroll/useInfiniteSearch";
-import SearchRoomCard from "../../components/Card/SearchRoomCard";
-import SearchModal from "../../components/Modal/Search/SearchModal";
 
 const Post = ({ item }) => {
   const [showModal, setShowModal] = useState(false);
   const router = useRouter();
   const { id } = router.query;
+  const [query, setQuery] = useState("");
   const [pageNumber, setPageNumber] = useState(10);
   const { rooms, hasMore, loading, error } = useInfiniteSearch(id, pageNumber);
-  const observer = useRef();
-  const [showSearchModal, setshowSearchModal] = useState(false);
 
+  const observer = useRef();
   const lastroomElementRef = useCallback(
     (node) => {
       if (loading) return;
@@ -29,59 +29,41 @@ const Post = ({ item }) => {
     [loading, hasMore]
   );
 
-  const GetRandomRatingScore = () => {
-    let max = 5.0;
-    let min = 2.0;
-    return (Math.random() * (max - min) + min).toFixed(1);
-  }
-
   useEffect(() => {
     console.log(rooms);
   }, [rooms]);
 
   return (
     <div>
-      <a>
-        <button onClick={() => setshowSearchModal(true)}>
-          {<img src="/Search.jpg" />}
-        </button>
-        <SearchModal
-          onClose={() => setshowSearchModal(false)}
-          show={showSearchModal}
-        ></SearchModal>
-      </a>
-
+      <button onClick={() => setShowModal(true)}>룸타입</button>
       <RoomFilterModal
         onClose={() => setShowModal(false)}
         show={showModal}
       ></RoomFilterModal>
 
-      <Fragment>
-        {rooms && 
+      <div>
+        {rooms.length > 0 &&
           rooms.map((room, index) => {
             if (rooms.length === index + 1) {
               return <div ref={lastroomElementRef} key={room}></div>;
             } else {
               return (
-                <Fragment key={index}>
-                  <SearchRoomCard
-                    id={room.roomId}
-                    roomName={room.roomName}
+                <div key={index}>
+                  <SearchResultList
                     propertyName={room.propertyName}
-                    images={room.images}
-                    maxUser={room.maxUser}
-                    price={room.price}
-                    ratingScoreAvg={GetRandomRatingScore()}
+                    roomName={room.roomName}
+                    address={room.address}
+                    propertyType={room.propertyType}
+                    images={"https://" + room.images[0]}
                   />
-                  <p>---------------------------------------</p>
-                </Fragment>
+                </div>
               );
             }
           })}
-        <div>{!loading && rooms.length === 0 && "조회된 데이터가 없습니다."}</div>
+
         <div>{loading && "Loading..."}</div>
         <div>{error && "Error"}</div>
-      </Fragment>
+      </div>
 
       <ScrollTopArrow></ScrollTopArrow>
     </div>

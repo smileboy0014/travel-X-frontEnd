@@ -1,19 +1,36 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Axios from "axios";
 import Carousel from '../../components/Card/Carousel/Carousel';
+import MainTap from '../../components/Tap/MainTap';
 
 const Post = ({ items }) => {
   const carouselRef = useRef(null);
 
+  const [tabItem, setTapItem] = useState(null);
+
+
   useEffect(() => {
     console.log('example useEffect:', items);
-  });
+    let tab = [];
+
+    for(let i =0; i< 3; i++){
+      let tabObj = {tab:"강남"+i, content:items[i].images, roomId:items[i].roomId}  ;
+      tab.push(tabObj);
+    }
+    setTapItem(tab);
+
+  },[]);
 
   return (
-    <Carousel
+    <>
+      <Carousel
       ref={carouselRef}
       items={items}
     />
+    <MainTap 
+    items={tabItem}/>
+    </>
+
   )
 }
 export default Post;

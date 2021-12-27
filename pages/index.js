@@ -7,6 +7,7 @@ import SearchMapModal from './../components/Modal/Map/SearchMapModal';
 import { useDispatch, useSelector } from "react-redux";
 import * as mapActions from "../redux/store/modules/map";
 import SelectSearchLocationModal from './../components/Modal/Map/SelectSearchLocationModal';
+import MainTap from "../components/Tap/MainTap";
 
 export default function Home() {
   const [showSearchMapModal, setShowSearchMapModal] = useState(false);
