@@ -68,7 +68,7 @@ const SearchBar = ({ getSearchValue, getSearchAutoComptValue }) => {
       </button>
 
       <div>
-        <button>12/30 ~ 12/31 1박2일</button>
+        <button>12/29 ~ 12/31 2박3일</button>
         <button onClick={() => setPersonalShowModal(true)}>
           {"성인: " + adultCounterValue + " 아동: " + childCounterValue}
         </button>
