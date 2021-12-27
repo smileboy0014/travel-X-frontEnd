@@ -1,11 +1,9 @@
-import Layout from "../components/Layout/Main/MainLayout";
+import Layout from "../components/Layout/Layout";
 import ScrollTopArrow from "../components/ScrollTop/ScrollTopArrow";
 import { wrapper } from "../redux/store";
 import "../styles/globals.css";
-import ReactModal from "react-modal";
 
-function MyApp({ Component, pageProps }) {
-  ReactModal.setAppElement("#__next");
+function TravelX({ Component, pageProps }) {
   return (
     <Layout>
       <ScrollTopArrow></ScrollTopArrow>
@@ -14,4 +12,4 @@ function MyApp({ Component, pageProps }) {
   );
 }
 
-export default wrapper.withRedux(MyApp);
+export default wrapper.withRedux(TravelX);
