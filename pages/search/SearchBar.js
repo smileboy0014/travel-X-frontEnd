@@ -39,6 +39,12 @@ const SearchBar = ({ getSearchValue, getSearchAutoComptValue }) => {
       });
   };
 
+  const onKeyPress = (e) => {
+    if (e.key == "Enter") {
+      onSubmit(e);
+    }
+  };
+
   const onSubmit = useCallback(
     (e) => {
       e.preventDefault();
@@ -53,8 +59,8 @@ const SearchBar = ({ getSearchValue, getSearchAutoComptValue }) => {
     <div>
       <input
         type="search"
-        // value={searchValue}
         onChange={onChangeSearch}
+        onKeyPress={onKeyPress}
         placeholder="조회조건"
       />
       <button onClick={onSubmit}>
