@@ -1,0 +1,15 @@
+.roomListScoreStarsBackground {
+  display: inline-block;
+  width: 60px;
+  height: 1.2rem;
+  flex:1;
+  background: url(../public/icon-score-yayellow-line-1.svg) repeat-x;
+  margin-right: 0.2rem;
+}
+
+.roomListScoreStars {
+  display: inline-block;
+  height: 1.2rem;
+  flex:1;
+  background: url(../public/icon-score-yayellow-fill.svg) repeat-x;
+}
