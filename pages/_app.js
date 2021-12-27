@@ -3,7 +3,7 @@ import ScrollTopArrow from "../components/ScrollTop/ScrollTopArrow";
 import { wrapper } from "../redux/store";
 import "../styles/globals.css";
 
-function MyApp({ Component, pageProps }) {
+function TravelX({ Component, pageProps }) {
   return (
     <Layout>
       <ScrollTopArrow></ScrollTopArrow>
@@ -12,4 +12,4 @@ function MyApp({ Component, pageProps }) {
   );
 }
 
-export default wrapper.withRedux(MyApp);
+export default wrapper.withRedux(TravelX);
