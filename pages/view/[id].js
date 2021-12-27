@@ -36,7 +36,7 @@ const Post = ({ item }) => {
   }
 
   useEffect(() => {
-    console.log(rooms);
+    console.log('rooms:', rooms);
   }, [rooms]);
 
   return (
@@ -56,32 +56,30 @@ const Post = ({ item }) => {
         show={showModal}
       ></RoomFilterModal>
 
-      <Fragment>
-        {rooms && 
-          rooms.map((room, index) => {
-            if (rooms.length === index + 1) {
-              return <div ref={lastroomElementRef} key={room}></div>;
-            } else {
-              return (
-                <Fragment key={index}>
-                  <SearchRoomCard
-                    id={room.roomId}
-                    roomName={room.roomName}
-                    propertyName={room.propertyName}
-                    images={room.images}
-                    maxUser={room.maxUser}
-                    price={room.price}
-                    ratingScoreAvg={GetRandomRatingScore()}
-                  />
-                  <p>---------------------------------------</p>
-                </Fragment>
-              );
-            }
-          })}
-        <div>{!loading && rooms.length === 0 && "조회된 데이터가 없습니다."}</div>
-        <div>{loading && "Loading..."}</div>
-        <div>{error && "Error"}</div>
-      </Fragment>
+      {rooms && rooms.item &&
+        rooms.item.map((room, index) => {
+          if (rooms.length === index + 1) {
+            return <div ref={lastroomElementRef} key={room}></div>;
+          } else {
+            return (
+              <Fragment key={index}>
+                <SearchRoomCard
+                  id={room.roomId}
+                  roomName={room.roomName}
+                  propertyName={room.propertyName}
+                  images={room.images}
+                  maxUser={room.maxUser}
+                  price={room.price}
+                  ratingScoreAvg={GetRandomRatingScore()}
+                />
+                <p>---------------------------------------</p>
+              </Fragment>
+            );
+          }
+        })}
+      <div>{!loading && rooms.length === 0 && "조회된 데이터가 없습니다."}</div>
+      <div>{loading && "Loading..."}</div>
+      <div>{error && "Error"}</div>
 
       <ScrollTopArrow></ScrollTopArrow>
     </div>
