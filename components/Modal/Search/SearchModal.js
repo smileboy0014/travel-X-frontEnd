@@ -1,78 +1,28 @@
-import React, { useEffect, useRef, useState } from "react";
-import ReactDOM from "react-dom";
-import styled from "styled-components";
-import Search from "./Search";
+import React, { useState, useEffect } from "react";
+import Modal from "react-modal";
+import Search from "../../../pages/search";
 
-const SearchModal = ({ show, onClose, children, title }) => {
-  const [isBrowser, setIsBrowser] = useState(false);
+const SearchModal = ({ show, onClose }) => {
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   useEffect(() => {
-    setIsBrowser(true);
-  }, []);
+    console.log(show);
 
-  const handleCloseClick = (e) => {
-    e.preventDefault();
-    onClose();
-  };
+    setModalIsOpen(show);
+  }, [show]);
 
-  const modalContent = show ? (
-    <StyledModalOverlay>
-      <StyledModal>
-        <StyledModalHeader>
-          <a href="#" onClick={handleCloseClick}>
-            x
-          </a>
-        </StyledModalHeader>
-        <StyledModalBody>
-          {
-            <Search
-              closeParentModal={() => {
-                show(false);
-              }}
-            />
-          }
-        </StyledModalBody>
-      </StyledModal>
-    </StyledModalOverlay>
-  ) : null;
+  useEffect(() => {
+    console.log(modalIsOpen);
+  }, [modalIsOpen]);
 
-  if (isBrowser) {
-    return ReactDOM.createPortal(
-      modalContent,
-      document.getElementById("modal-root")
-    );
-  } else {
-    return null;
-  }
+  return (
+    <div>
+      <Modal isOpen={modalIsOpen}>
+        <Search />
+        <button onClick={() => onClose(false)}>Close Modal</button>
+      </Modal>
+    </div>
+  );
 };
-
-const StyledModalBody = styled.div`
-  padding-top: 10px;
-`;
-
-const StyledModalHeader = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  font-size: 25px;
-`;
-
-const StyledModal = styled.div`
-  background: white;
-  width: 500px;
-  height: 600px;
-  border-radius: 15px;
-  padding: 15px;
-`;
-const StyledModalOverlay = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
-`;
 
 export default SearchModal;

@@ -1,11 +1,10 @@
 import React from "react";
 
-import BottomNavbar from "./BottomNavbar";
+import BottomNavbar from "./TopNavbar";
 
 const Layout = ({ children }) => {
   return (
     <div>
-      {children}
       <BottomNavbar />
     </div>
   );

@@ -3,9 +3,21 @@
   height: 50px;
   position: fixed;
   bottom: 0;
-  border-top: 1px solid var(--grey-color);
-  z-index: 3;
-  background-color: rgb(117, 117, 117);
+  background-color: rgb(194, 194, 194);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bottomNav2 {
+  width: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bnTab {
+  width: 33%;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -1,33 +1,19 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
-import PersonalCounter from "./PersonalCounter";
-import { useSelector, useDispatch } from "react-redux";
-import * as adultCounterActions from "../../../redux/store/modules/adultCounter";
-import * as childCounterActions from "../../../redux/store/modules/chlidCounter";
+import Search from "./Search";
 
-const PersonalModal = ({ show, onClose }) => {
-  const dispatch = useDispatch();
+const SearchModal = ({ show, onClose, children, title }) => {
   const [isBrowser, setIsBrowser] = useState(false);
 
   useEffect(() => {
     setIsBrowser(true);
   }, []);
 
-  const handleSaveClick = (e) => {
+  const handleCloseClick = (e) => {
     e.preventDefault();
     onClose();
   };
-
-  const handleCloseClick = useCallback(
-    (e) => {
-      dispatch(adultCounterActions.reset());
-      dispatch(childCounterActions.reset());
-      e.preventDefault();
-      onClose();
-    },
-    [dispatch]
-  );
 
   const modalContent = show ? (
     <StyledModalOverlay>
@@ -37,10 +23,15 @@ const PersonalModal = ({ show, onClose }) => {
             x
           </a>
         </StyledModalHeader>
-        <StyledModalBody>{<PersonalCounter></PersonalCounter>}</StyledModalBody>
-
-        <button onClick={handleSaveClick}> 확인</button>
-        <button onClick={handleCloseClick}> 취소</button>
+        <StyledModalBody>
+          {
+            <Search
+              closeParentModal={() => {
+                show(false);
+              }}
+            />
+          }
+        </StyledModalBody>
       </StyledModal>
     </StyledModalOverlay>
   ) : null;
@@ -67,21 +58,21 @@ const StyledModalHeader = styled.div`
 
 const StyledModal = styled.div`
   background: white;
-  width: 200px;
-  height: 200px;
+  width: 100%;
+  height: 100%;
   border-radius: 15px;
   padding: 15px;
 `;
 const StyledModalOverlay = styled.div`
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: rgba(0, 0, 0, 0.5);
 `;
 
-export default PersonalModal;
+export default SearchModal;
