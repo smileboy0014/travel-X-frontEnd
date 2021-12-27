@@ -31,7 +31,7 @@ export default function useInfiniteSearch(query, pageNumber) {
       },
     }).then((res) => {
       setRooms(res.data.roomDocumentList ? res.data.roomDocumentList : []);
-      setHasMore(res.data.roomDocumentList.length > 0);
+      setHasMore(res.data.roomDocumentList && res.data.roomDocumentList.length > 0);
       setLoading(false);
     });
   }, [query, pageNumber]);

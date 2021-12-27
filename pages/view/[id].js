@@ -1,10 +1,9 @@
-import React, { useState, useRef, useCallback, useEffect } from "react";
-import Axios from "axios";
-import SearchResultList from "../../components/Card/SearchResultList";
+import React, { useState, useRef, useCallback, useEffect, Fragment } from "react";
+import { useRouter } from "next/router";
 import RoomFilterModal from "../../components/Modal/RoomFilter/RoomFilterModal";
 import ScrollTopArrow from "../../components/ScrollTop/ScrollTopArrow";
-import { useRouter } from "next/router";
 import useInfiniteSearch from "../../components/InfiniteScroll/useInfiniteSearch";
+import SearchRoomCard from "../../components/Card/SearchRoomCard";
 
 const Post = ({ item }) => {
   const [showModal, setShowModal] = useState(false);
@@ -29,6 +28,12 @@ const Post = ({ item }) => {
     [loading, hasMore]
   );
 
+  const GetRandomRatingScore = () => {
+    let max = 5.0;
+    let min = 2.0;
+    return (Math.random() * (max - min) + min).toFixed(1);
+  }
+
   useEffect(() => {
     console.log(rooms);
   }, [rooms]);
@@ -41,29 +46,32 @@ const Post = ({ item }) => {
         show={showModal}
       ></RoomFilterModal>
 
-      <div>
-        {rooms.length > 0 &&
+      <Fragment>
+        {rooms && 
           rooms.map((room, index) => {
             if (rooms.length === index + 1) {
               return <div ref={lastroomElementRef} key={room}></div>;
             } else {
               return (
-                <div key={index}>
-                  <SearchResultList
-                    propertyName={room.propertyName}
+                <Fragment key={index}>
+                  <SearchRoomCard
+                    id={room.roomId}
                     roomName={room.roomName}
-                    address={room.address}
-                    propertyType={room.propertyType}
-                    images={"https://" + room.images[0]}
+                    propertyName={room.propertyName}
+                    images={room.images}
+                    maxUser={room.maxUser}
+                    price={room.price}
+                    ratingScoreAvg={GetRandomRatingScore()}
                   />
-                </div>
+                  <p>---------------------------------------</p>
+                </Fragment>
               );
             }
           })}
-
+        <div>{!loading && rooms.length === 0 && "조회된 데이터가 없습니다."}</div>
         <div>{loading && "Loading..."}</div>
         <div>{error && "Error"}</div>
-      </div>
+      </Fragment>
 
       <ScrollTopArrow></ScrollTopArrow>
     </div>
