@@ -48,7 +48,7 @@ const SearchBar = ({ getSearchValue, getSearchAutoComptValue }) => {
   const onSubmit = useCallback(
     (e) => {
       e.preventDefault();
-      router.push(`/view/${searchValue}`);
+      router.push(`/view/search/${searchValue}`);
       getSearchValue(searchValue);
       setSearchValue("");
     },

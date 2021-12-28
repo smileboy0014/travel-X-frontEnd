@@ -1,12 +1,7 @@
 .scrollTop {
   position: fixed;
-  width: 100%;
-  bottom: 200px;
-  align-items: center;
-  height: 200px;
-  justify-content: center;
-  z-index: 1000;
-  cursor: pointer;
+  bottom: 50px;
+  left: 90%;
   animation: fadeIn 0.3s;
   transition: opacity 0.4s;
   opacity: 0.5;
