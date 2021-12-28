@@ -53,7 +53,11 @@ const RecentSearch = ({ sendSearchValue, sendSearchAutoComptValue }) => {
     <div>
       {autoCompltData.length > 0 ? (
         autoCompltData.map((item, index) => (
-          <Link href="/view/[id]" as={`/view/${item}`} key={index}>
+          <Link
+            href="/view/search/[id]"
+            as={`/view/search/${item}`}
+            key={index}
+          >
             <a onClick={() => addKeyword(item)}>
               <div>{item}</div>
               <p></p>

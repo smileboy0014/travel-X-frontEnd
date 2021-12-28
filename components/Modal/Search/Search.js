@@ -5,10 +5,9 @@ import { useRouter } from "next/router";
 // import Modal from "../components/Modal/RoomFilterModal";
 import PesonalModal from "../Personal/PersonalModal";
 import { useSelector, useDispatch } from "react-redux";
-
 import RoomFilterModal from "../RoomFilter/RoomFilterModal";
 
-const search = (prop, closeParentModal) => {
+const search = ({ onRequestClose }) => {
   const [keywords, setKeywords] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [autoCompltData, setAutoCompltData] = useState([]);
@@ -35,7 +34,7 @@ const search = (prop, closeParentModal) => {
   }, [keywords]);
 
   const handleAddKeyword = () => {
-    router.push(`/view/${searchValue}`);
+    router.push(`/view/search/${searchValue}`);
     const newKeyword = {
       id: Date.now(),
       text:
@@ -47,10 +46,7 @@ const search = (prop, closeParentModal) => {
         ")",
     };
     setKeywords([newKeyword, ...keywords]);
-
-    console.log("111111111111111" + closeParentDialog);
-
-    closeParentDialog(false);
+    onRequestClose(false);
   };
 
   // 단일 검색어 삭제
@@ -145,7 +141,11 @@ const search = (prop, closeParentModal) => {
       </div>
       {autoCompltData.length > 0 ? (
         autoCompltData.map((item, index) => (
-          <Link href="/view/[id]" as={`/view/${item}`} key={index}>
+          <Link
+            href="/view/search/[id]"
+            as={`/view/search/${item}`}
+            key={index}
+          >
             <a onClick={() => onListClick(item)}>
               <div>{item}</div>
               <p></p>

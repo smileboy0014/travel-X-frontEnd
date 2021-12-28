@@ -1,20 +1,25 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import Axios from "axios";
-import SearchResultList from "../../components/Card/SearchResultList";
-import RoomFilterModal from "../../components/Modal/RoomFilter/RoomFilterModal";
-import ScrollTopArrow from "../../components/ScrollTop/ScrollTopArrow";
+import SearchResultList from "../../../components/Card/SearchResultList";
+import RoomFilterModal from "../../../components/Modal/RoomFilter/RoomFilterModal";
+import ScrollTopArrow from "../../../components/ScrollTop/ScrollTopArrow";
 import { useRouter } from "next/router";
-import useInfiniteSearch from "../../components/InfiniteScroll/useInfiniteSearch";
+import useInfiniteSearch from "../../../components/InfiniteScroll/useInfiniteSearch";
+import SearchModal from "../../../components/Modal/Search/SearchModal";
+
+import styles from "../../../styles/Index.module.css";
+
+import Link from "next/link";
 
 const Post = ({ item }) => {
   const [showModal, setShowModal] = useState(false);
   const router = useRouter();
   const { id } = router.query;
-  const [query, setQuery] = useState("");
   const [pageNumber, setPageNumber] = useState(10);
   const { rooms, hasMore, loading, error } = useInfiniteSearch(id, pageNumber);
-
   const observer = useRef();
+  const [searchModalOpen, setSearchModalOpen] = useState(false);
+
   const lastroomElementRef = useCallback(
     (node) => {
       if (loading) return;
@@ -29,33 +34,44 @@ const Post = ({ item }) => {
     [loading, hasMore]
   );
 
-  useEffect(() => {
-    console.log(rooms);
-  }, [rooms]);
-
   return (
     <div>
-      <button onClick={() => setShowModal(true)}>룸타입</button>
+      <a>
+        <label
+          className={styles.button}
+          onClick={() => setSearchModalOpen(true)}
+        >
+          {<img src="/SearchBar2.jpg" />}
+        </label>
+
+        <SearchModal
+          isOpen={searchModalOpen}
+          onRequestClose={() => setSearchModalOpen(false)}
+        />
+      </a>
+
       <RoomFilterModal
         onClose={() => setShowModal(false)}
         show={showModal}
       ></RoomFilterModal>
 
       <div>
-        {rooms.length > 0 &&
-          rooms.map((room, index) => {
-            if (rooms.length === index + 1) {
+        {rooms.item !== undefined &&
+          rooms.item.map((room, index) => {
+            if (rooms.item.length === index + 1) {
               return <div ref={lastroomElementRef} key={room}></div>;
             } else {
               return (
                 <div key={index}>
-                  <SearchResultList
-                    propertyName={room.propertyName}
-                    roomName={room.roomName}
-                    address={room.address}
-                    propertyType={room.propertyType}
-                    images={"https://" + room.images[0]}
-                  />
+                  <Link
+                    href="/view/detail/[id]"
+                    as={`/view/detail/${room.roomId}`}
+                    key={index}
+                  >
+                    <a>
+                      <SearchResultList items={room} />
+                    </a>
+                  </Link>
                 </div>
               );
             }
