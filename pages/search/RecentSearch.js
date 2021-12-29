@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import Style from "../../styles/RecentSearch.module.css";
+import { AiOutlineSearch, AiOutlineClockCircle } from "react-icons/ai";
 
 const RecentSearch = ({ sendSearchValue, sendSearchAutoComptValue }) => {
   const [keywords, setKeywords] = useState([]);
@@ -50,23 +52,27 @@ const RecentSearch = ({ sendSearchValue, sendSearchAutoComptValue }) => {
   };
 
   return (
-    <div>
+    <div className={Style.header}>
       {autoCompltData.length > 0 ? (
         autoCompltData.map((item, index) => (
-          <Link
-            href="/view/search/[id]"
-            as={`/view/search/${item}`}
-            key={index}
-          >
-            <a onClick={() => addKeyword(item)}>
-              <div>{item}</div>
-              <p></p>
-            </a>
-          </Link>
+          <div className={Style.header_autoCompt}>
+            <Link
+              href="/view/search/[id]"
+              as={`/view/search/${item}`}
+              key={index}
+            >
+              <a onClick={() => addKeyword(item)}>
+                <div>
+                  <AiOutlineSearch />
+                  {item}
+                </div>
+              </a>
+            </Link>
+          </div>
         ))
       ) : (
         <React.Fragment>
-          <div>
+          <div className={Style.header_recent}>
             <h2>최근 검색어</h2>
             {keywords.length ? (
               <button type="button" onClick={handleClearKeywords}>
@@ -77,20 +83,22 @@ const RecentSearch = ({ sendSearchValue, sendSearchAutoComptValue }) => {
             )}
           </div>
 
-          <ul>
+          <div>
             {keywords.length ? (
               keywords.map((k) => (
-                <li key={k.id}>
+                <div key={k.id}>
+                  <AiOutlineClockCircle />
                   {k.text}
+
                   <button onClick={() => handleRemoveKeyword(k.id)}>
                     삭제
                   </button>
-                </li>
+                </div>
               ))
             ) : (
               <div>최근 검색어가 없습니다</div>
             )}
-          </ul>
+          </div>
         </React.Fragment>
       )}
     </div>
