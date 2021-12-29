@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as mapActions from "../../../redux/store/modules/map";
+import { isMobile } from "react-device-detect";
 
 const NaverMap = (props) => {
   const [latitude, setLatitude] = useState("");
@@ -18,11 +19,21 @@ const NaverMap = (props) => {
 
   useEffect(() => {
     const initMap = () => {
-      const mapOptions = {
-        center: new naver.maps.LatLng(37.71344096516783, 126.8666797982575),
-        // zoom: 18,
-        // zoomControl: true,
-      };
+      if (isMobile) {
+        console.log("모바일 버젼");
+        const mapOptions = {
+          center: new naver.maps.LatLng(37.71344096516783, 126.8666797982575),
+          zoom: 18,
+        };
+      } else {
+        console.log("웹버젼");
+        const mapOptions = {
+          center: new naver.maps.LatLng(37.71344096516783, 126.8666797982575),
+          zoom: 18,
+          zoomControl: true,
+        };
+      }
+
       var infoWindow = new naver.maps.InfoWindow({
         anchorSkew: true,
       });
