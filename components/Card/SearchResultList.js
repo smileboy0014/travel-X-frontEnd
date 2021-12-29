@@ -1,34 +1,63 @@
-import React, { useRef } from "react";
-import Carousel from "./Carousel/Carousel_test";
+import { useRef, forwardRef, useState, useEffect } from "react";
+import SearchResultCarousel from "./Carousel/SearchResultCarousel";
 import style from "../../styles/Carousel.module.css";
+import SearchResultCard from "./SearchResultCard";
+import Link from "next/link";
 
-const SearchResultList = ({ items }) => {
+const SearchResultList = (props, ref) => {
   const carouselRef = useRef(null);
+  const { rooms } = props;
+  const [slide, setSlide] = useState(false);
+
+  const GetRandomRatingScore = () => {
+    let max = 5.0;
+    let min = 2.0;
+    return (Math.random() * (max - min) + min).toFixed(1);
+  }
+
+  useEffect(() => {
+    setSlide(false);
+    return () => { setSlide(true); }
+  }, []);
 
   return (
     <div className={style.container}>
       <div>
         <div>
-          <Carousel ref={carouselRef} items={items.images} />
-          <p>CSS 조정 필요</p>
-          <p>CSS 조정 필요</p>
-          <p>CSS 조정 필요</p>
-        </div>
-        <div>
-          <p>주소: {items.address}</p>
-          <h3>이름: {items.propertyName}</h3>
-          <p>룸이름: {items.roomName}</p>
-        </div>
-
-        <div>
-          <div>
-            <p>
-              <strong>타입: {items.propertyType}</strong>
-            </p>
-          </div>
-          <div>
-            <h2>가격: {items.price}</h2>
-          </div>
+          {rooms.item &&
+            rooms.item.map((room, index) => {
+              if (rooms.item.length === index + 1) {
+                return <div ref={ref} key={room}></div>;
+              } else {
+                return (
+                  <div key={index}>
+                    <div style={{border: "1px solid rgb(0, 0, 0)"}}>
+                      <SearchResultCarousel 
+                        ref={carouselRef} 
+                        items={room.images} 
+                        initSlide={slide}
+                        />
+                      <Link
+                        href="/view/detail/[id]"
+                        as={`/view/detail/${room.roomId}`}
+                        key={index}>
+                        <a>
+                          <SearchResultCard 
+                            id={room.roomId}
+                            roomName={room.roomName}
+                            propertyName={room.propertyName}
+                            images={room.images}
+                            maxUser={room.maxUser}
+                            price={room.price}
+                            ratingScoreAvg={GetRandomRatingScore()}
+                            />
+                        </a>
+                      </Link>
+                    </div>
+                  </div>    
+                );
+              }
+            })}
         </div>
       </div>
       <p>____</p>
@@ -36,4 +65,4 @@ const SearchResultList = ({ items }) => {
   );
 };
 
-export default SearchResultList;
+export default forwardRef(SearchResultList);
