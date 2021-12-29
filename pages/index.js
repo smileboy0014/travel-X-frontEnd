@@ -19,6 +19,8 @@ export default function Home() {
   const dispatch = useDispatch();
   const { addresses } = useSelector((state) => state.map);
   const [showPersonalModal, setPersonalShowModal] = useState(false);
+  const [personalModalOpen, setPersonalModalOpen] = useState(false);
+
   const adultCounterValue = useSelector(
     ({ adultCounter }) => adultCounter.value
   );
@@ -59,16 +61,17 @@ export default function Home() {
             </div>
             <div className={styles.button2}>
               <button>12/30 ~ 12/31 1박2일</button>
-              <button onClick={() => setPersonalShowModal(true)}>
+              <button onClick={() => setPersonalModalOpen(true)}>
                 {"성인: " + adultCounterValue + " 아동: " + childCounterValue}
               </button>
             </div>
           </div>
 
           <PesonalModal
-            onClose={() => setPersonalShowModal(false)}
-            show={showPersonalModal}
+            isOpen={personalModalOpen}
+            onRequestClose={() => setPersonalModalOpen(false)}
           />
+
           <SelectSearchLocationModal
             onClose={() => setShowSelectSearchLocationModal(false)}
             show={showSelectSearchLocationModal}

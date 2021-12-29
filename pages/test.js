@@ -1,10 +1,12 @@
 import React from "react";
-import CarouselDetail from "../components/Card/Carousel/CarouselDetail";
+import PersonalModal from "../components/Modal/Personal/PersonalModal";
+// import CarouselDetail from "../components/Card/Carousel/CarouselDetail";
 
 const test = () => {
   return (
     <div>
-      <CarouselDetail></CarouselDetail>
+      {/* <CarouselDetail></CarouselDetail> */}
+      <PersonalModal></PersonalModal>
     </div>
   );
 };
