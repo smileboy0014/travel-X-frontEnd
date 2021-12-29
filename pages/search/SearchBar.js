@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useEffect } from "react";
 import Axios from "axios";
 import { useRouter } from "next/router";
-import PesonalModal from "../../components/Modal/Personal/PersonalModal";
+import PesonalModal from "../../components/Modal/Personal/PersonalModal_bak";
 import { useSelector } from "react-redux";
 import Style from "../../styles/SearchBar.module.css";
 import { AiOutlineSearch } from "react-icons/ai";

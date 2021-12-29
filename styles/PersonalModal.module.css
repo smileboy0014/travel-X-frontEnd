@@ -1,0 +1,21 @@
+.Modal {
+  position: absolute;
+  top: 40%;
+  left: 35%;
+  right: 35%;
+  bottom: 40%;
+  background-color: rgb(207, 206, 206);
+  border-radius: 10px;
+}
+
+@media screen and (max-width: 480px) {
+  .Modal {
+    position: absolute;
+    top: 40%;
+    left: 20%;
+    right: 20%;
+    bottom: 40%;
+    background-color: rgb(116, 124, 248);
+    border-radius: 10px;
+  }
+}
