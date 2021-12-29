@@ -56,27 +56,7 @@ const Post = ({ item }) => {
       ></RoomFilterModal>
 
       <div>
-        {rooms.item !== undefined &&
-          rooms.item.map((room, index) => {
-            if (rooms.item.length === index + 1) {
-              return <div ref={lastroomElementRef} key={room}></div>;
-            } else {
-              return (
-                <div key={index}>
-                  <Link
-                    href="/view/detail/[id]"
-                    as={`/view/detail/${room.roomId}`}
-                    key={index}
-                  >
-                    <a>
-                      <SearchResultList items={room} />
-                    </a>
-                  </Link>
-                </div>
-              );
-            }
-          })}
-
+        <SearchResultList ref={lastroomElementRef} rooms={rooms} />
         <div>{loading && "Loading..."}</div>
         <div>{error && "Error"}</div>
       </div>

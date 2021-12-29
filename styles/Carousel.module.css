@@ -18,3 +18,17 @@
   align-items: center;
   z-index: 200;
 }
+
+.slideBtn2 {
+  padding: 1.5em 1.0em;
+  border-radius: 10px;
+  position: absolute;
+  background-color: rgb(255, 253, 253);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 200;
+  opacity: 80%;
+}

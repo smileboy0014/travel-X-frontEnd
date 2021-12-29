@@ -22,25 +22,13 @@ const RatingScoreStar = ({ ratingScoreAvg }) => {
 
 const SearchRoomCard = (props) => {
   return (
-    <>
-      <div className={styles.grid}>
-        <div className={styles.card}>
-          {props.images[0] &&
-            <Image
-              src={`http://${props.images[0]}`}
-              alt="roomImage"
-              width={250}
-              height={250}
-            />
-          }
-          <h4>{props.propertyName}</h4>
-          <div>{props.roomName}</div>
-          <p>최대인원 : {props.maxUser}명</p>
-          <RatingScoreStar ratingScoreAvg={props.ratingScoreAvg} />
-          <p>₩{props.price}</p>
-        </div>
-      </div>
-    </>
+    <div style={{ marginTop: "100px", textAlign: "center"}}>
+      <h4>{props.propertyName}</h4>
+      <div>{props.roomName}</div>
+      <p>최대인원 : {props.maxUser}명</p>
+      <RatingScoreStar ratingScoreAvg={props.ratingScoreAvg} />
+      <p>₩{props.price}</p>
+    </div>
   );
 };
 
