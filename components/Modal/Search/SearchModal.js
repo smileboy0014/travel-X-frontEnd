@@ -9,6 +9,7 @@ const SearchModal = ({ isOpen, onRequestClose }) => {
       <Modal
         className={Styles.Modal}
         overlayClassName={Styles.Overlay}
+        closeTimeoutMS={500}
         isOpen={isOpen}
       >
         <label onClick={() => onRequestClose(false)}>X 키워드 검색</label>
