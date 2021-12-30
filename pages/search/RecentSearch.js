@@ -39,7 +39,10 @@ const RecentSearch = ({
         text: value,
       };
       setKeywords([newKeyword, ...keywords]);
-      getSearchValue(value);
+
+      if (getSearchValue !== undefined) {
+        getSearchValue(value);
+      }
     }
   };
 
