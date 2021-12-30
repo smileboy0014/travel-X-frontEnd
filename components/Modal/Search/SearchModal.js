@@ -11,6 +11,7 @@ const SearchModal = ({ isOpen, onRequestClose }) => {
         overlayClassName={Styles.Overlay}
         closeTimeoutMS={500}
         isOpen={isOpen}
+        ariaHideApp={false}
       >
         <label onClick={() => onRequestClose(false)}>X 키워드 검색</label>
         <Search getClose={() => onRequestClose(true)} />

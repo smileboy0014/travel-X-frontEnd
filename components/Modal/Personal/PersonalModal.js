@@ -29,6 +29,7 @@ const PersonalModal = ({ isOpen, onRequestClose }) => {
         className={Styles.Modal}
         overlayClassName={Styles.Overlay}
         isOpen={isOpen}
+        ariaHideApp={false}
       >
         <label onClick={() => onRequestClose(false)}>X</label>
         <PersonalCounter></PersonalCounter>
