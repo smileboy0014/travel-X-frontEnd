@@ -3,7 +3,11 @@ import Link from "next/link";
 import Style from "../../styles/RecentSearch.module.css";
 import { AiOutlineSearch, AiOutlineClockCircle } from "react-icons/ai";
 
-const RecentSearch = ({ sendSearchValue, sendSearchAutoComptValue }) => {
+const RecentSearch = ({
+  sendSearchValue,
+  sendSearchAutoComptValue,
+  getSearchValue,
+}) => {
   const [keywords, setKeywords] = useState([]);
   const [autoCompltData, setAutoCompltData] = useState([]);
 
@@ -35,6 +39,7 @@ const RecentSearch = ({ sendSearchValue, sendSearchAutoComptValue }) => {
         text: value,
       };
       setKeywords([newKeyword, ...keywords]);
+      getSearchValue(value);
     }
   };
 

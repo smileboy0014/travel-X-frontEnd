@@ -11,8 +11,8 @@ const SearchModal = ({ isOpen, onRequestClose }) => {
         overlayClassName={Styles.Overlay}
         isOpen={isOpen}
       >
-        <label onClick={() => onRequestClose(false)}>X</label>
-        <Search onRequestClose={() => onRequestClose(false)} />
+        <label onClick={() => onRequestClose(false)}>X 키워드 검색</label>
+        <Search getClose={() => onRequestClose(true)} />
       </Modal>
     </div>
   );
