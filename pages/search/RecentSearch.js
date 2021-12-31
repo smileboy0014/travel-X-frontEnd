@@ -63,12 +63,8 @@ const RecentSearch = ({
     <div className={Style.header}>
       {autoCompltData.length > 0 ? (
         autoCompltData.map((item, index) => (
-          <div className={Style.header_autoCompt}>
-            <Link
-              href="/view/search/[id]"
-              as={`/view/search/${item}`}
-              key={index}
-            >
+          <div className={Style.header_autoCompt} key={index}>
+            <Link href="/view/search/[id]" as={`/view/search/${item}`}>
               <a onClick={() => addKeyword(item)}>
                 <div>
                   <AiOutlineSearch />
