@@ -71,3 +71,12 @@
   bottom: 0px;
   right: 10px;
 }
+
+@media screen and (max-width: 480px) {
+  .searchResult {
+    flex-direction: column;
+  }
+  .searchResult__infoTop {
+    width: 100%;
+  }
+}
