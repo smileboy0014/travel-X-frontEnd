@@ -39,6 +39,10 @@ const Post = ({ item }) => {
     [loading, hasMore]
   );
 
+  useEffect(() => {
+    setShowModal(hasMore);
+  }, [hasMore]);
+
   return (
     <div className={styles.background}>
       <div className={styles.main}>
@@ -71,10 +75,11 @@ const Post = ({ item }) => {
             <Modal
               className={LodingStyles.Modal}
               overlayClassName={LodingStyles.Overlay}
-              isOpen={!hasMore}
+              isOpen={!showModal}
               ariaHideApp={false}
             >
-              더이상 데이터가 없습니다.
+              <label onClick={() => setShowModal(true)}>X</label>
+              <p>더이상 데이터가 없습니다.</p>
             </Modal>
           </div>
         </div>

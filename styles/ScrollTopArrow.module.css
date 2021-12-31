@@ -11,6 +11,17 @@
   opacity: 1;
 }
 
+@media screen and (max-width: 480px) {
+  .scrollTop {
+    position: fixed;
+    bottom: 5%;
+    left: 85%;
+    animation: fadeIn 0.3s;
+    transition: opacity 0.4s;
+    opacity: 0.5;
+  }
+}
+
 @keyframes fadeIn {
   0% {
     opacity: 0;
