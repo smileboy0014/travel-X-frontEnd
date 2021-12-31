@@ -8,6 +8,7 @@ import SearchModal from "../../../components/Modal/Search/SearchModal";
 import styles from "../../../styles/SearchResult.module.css";
 import LodingStyles from "../../../styles/LodingModal.module.css";
 import Modal from "react-modal";
+import SearchBar from "../../../pages/search/SearchBar";
 
 const Post = ({ item }) => {
   const [showModal, setShowModal] = useState(false);
@@ -46,7 +47,7 @@ const Post = ({ item }) => {
             className={styles.button}
             onClick={() => setSearchModalOpen(true)}
           >
-            {<img src="/SearchBar2.jpg" />}
+            <SearchBar />
           </label>
 
           <SearchModal
@@ -54,11 +55,6 @@ const Post = ({ item }) => {
             onRequestClose={() => setSearchModalOpen(false)}
           />
         </a>
-
-        <RoomFilterModal
-          onClose={() => setShowModal(false)}
-          show={showModal}
-        ></RoomFilterModal>
 
         <div>
           <SearchResultList ref={lastroomElementRef} rooms={rooms} />

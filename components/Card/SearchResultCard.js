@@ -17,12 +17,12 @@ const RatingScoreStar = ({ ratingScoreAvg }) => {
       </span>
       {ratingScoreAvg}
     </div>
-  )
-}
+  );
+};
 
 const SearchRoomCard = (props) => {
   return (
-    <div style={{ marginTop: "100px", textAlign: "center"}}>
+    <div style={{ marginTop: "100px", textAlign: "center" }}>
       <h4>{props.propertyName}</h4>
       <div>{props.roomName}</div>
       <p>최대인원 : {props.maxUser}명</p>
