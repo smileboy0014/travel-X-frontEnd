@@ -6,6 +6,8 @@ import { useRouter } from "next/router";
 import useInfiniteSearch from "../../../components/InfiniteScroll/useInfiniteSearch";
 import SearchModal from "../../../components/Modal/Search/SearchModal";
 import styles from "../../../styles/SearchResult.module.css";
+import LodingStyles from "../../../styles/LodingModal.module.css";
+import Modal from "react-modal";
 
 const Post = ({ item }) => {
   const [showModal, setShowModal] = useState(false);
@@ -60,8 +62,25 @@ const Post = ({ item }) => {
 
         <div>
           <SearchResultList ref={lastroomElementRef} rooms={rooms} />
-          <div>{loading && "Loading..."}</div>
-          <div>{!hasMore && "더이상 없습니다."}</div>
+
+          <div>
+            <Modal
+              className={LodingStyles.Modal}
+              overlayClassName={LodingStyles.Overlay}
+              isOpen={loading}
+              ariaHideApp={false}
+            >
+              Loading...
+            </Modal>
+            <Modal
+              className={LodingStyles.Modal}
+              overlayClassName={LodingStyles.Overlay}
+              isOpen={!hasMore}
+              ariaHideApp={false}
+            >
+              더이상 데이터가 없습니다.
+            </Modal>
+          </div>
         </div>
 
         <ScrollTopArrow></ScrollTopArrow>

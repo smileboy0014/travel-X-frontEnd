@@ -13,11 +13,13 @@ const SearchResultList = (props, ref) => {
     let max = 5.0;
     let min = 2.0;
     return (Math.random() * (max - min) + min).toFixed(1);
-  }
+  };
 
   useEffect(() => {
     setSlide(false);
-    return () => { setSlide(true); }
+    return () => {
+      setSlide(true);
+    };
   }, []);
 
   return (
@@ -31,18 +33,19 @@ const SearchResultList = (props, ref) => {
               } else {
                 return (
                   <div key={index}>
-                    <div style={{border: "1px solid rgb(0, 0, 0)"}}>
-                      <SearchResultCarousel 
-                        ref={carouselRef} 
-                        items={room.images} 
+                    <div style={{ border: "1px solid rgb(0, 0, 0)" }}>
+                      <SearchResultCarousel
+                        ref={carouselRef}
+                        items={room.images}
                         initSlide={slide}
-                        />
+                      />
                       <Link
                         href="/view/detail/[id]"
                         as={`/view/detail/${room.roomId}`}
-                        key={index}>
+                        key={index}
+                      >
                         <a>
-                          <SearchResultCard 
+                          <SearchResultCard
                             id={room.roomId}
                             roomName={room.roomName}
                             propertyName={room.propertyName}
@@ -50,11 +53,11 @@ const SearchResultList = (props, ref) => {
                             maxUser={room.maxUser}
                             price={room.price}
                             ratingScoreAvg={GetRandomRatingScore()}
-                            />
+                          />
                         </a>
                       </Link>
                     </div>
-                  </div>    
+                  </div>
                 );
               }
             })}

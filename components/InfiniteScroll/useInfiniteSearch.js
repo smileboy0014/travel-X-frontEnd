@@ -4,6 +4,8 @@ import { useSelector } from "react-redux";
 
 export default function useInfiniteSearch(query, fromPageNumber, toPageNumber) {
   const [fromPage, setFromPage] = useState(0);
+  const [totalHitCount, setTotalHitCount] = useState(1);
+  const [roomCnt, setroomCnt] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [rooms, setRooms] = useState([]);
@@ -13,9 +15,11 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber) {
   );
 
   useEffect(() => {
-    console.log("fromPageNumber:" + fromPageNumber);
-    console.log("toPageNumber: " + toPageNumber);
-  }, [fromPageNumber, toPageNumber]);
+    if (rooms.item !== undefined) {
+      setroomCnt(rooms.item.length);
+    }
+    setHasMore(roomCnt < totalHitCount);
+  }, [rooms]);
 
   useEffect(() => {
     setRooms([]);
@@ -33,23 +37,16 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber) {
         checkoutDate: "20211224",
         adult: adultCounterValue,
         query: query,
-        from: fromPageNumber,
+        // from: fromPageNumber,
         size: toPageNumber,
       },
     }).then((res) => {
-      if (
-        res.data.roomDocumentList !== undefined &&
-        res.data.roomDocumentList.length > 0
-      ) {
-        setRooms((prevState) => ({
-          ...prevState,
-          item: res.data.roomDocumentList ? res.data.roomDocumentList : [],
-        }));
+      setTotalHitCount(res.data.totalHitCount);
+      setRooms((prevState) => ({
+        ...prevState,
+        item: res.data.roomDocumentList,
+      }));
 
-        setHasMore(true);
-      } else {
-        setHasMore(false);
-      }
       setLoading(false);
     });
   }, [query, toPageNumber]);

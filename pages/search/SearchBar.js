@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useEffect } from "react";
 import Axios from "axios";
 import { useRouter } from "next/router";
-import PesonalModal from "../../components/Modal/Personal/PersonalModal_bak";
+import PesonalModal from "../../components/Modal/Personal/PersonalModal";
 import { useSelector } from "react-redux";
 import Style from "../../styles/SearchBar.module.css";
 import { AiOutlineSearch } from "react-icons/ai";
@@ -10,7 +10,7 @@ import { BsPerson, BsCalendar } from "react-icons/bs";
 const SearchBar = ({ getSearchValue, getSearchAutoComptValue }) => {
   const [searchValue, setSearchValue] = useState();
   const router = useRouter();
-  const [showPersonalModal, setPersonalShowModal] = useState(false);
+  const [personalModalOpen, setPersonalModalOpen] = useState(false);
   const adultCounterValue = useSelector(
     ({ adultCounter }) => adultCounter.value
   );
@@ -71,7 +71,6 @@ const SearchBar = ({ getSearchValue, getSearchAutoComptValue }) => {
           <AiOutlineSearch />
         </div>
       </div>
-
       <div className={Style.bottom}>
         <div
           className={Style.bottom__center}
@@ -86,7 +85,7 @@ const SearchBar = ({ getSearchValue, getSearchAutoComptValue }) => {
         </div>
         <div
           className={Style.bottom__center}
-          onClick={() => setPersonalShowModal(true)}
+          onClick={() => setPersonalModalOpen(true)}
         >
           <div className={Style.bottom_div}>
             <div>
@@ -98,8 +97,8 @@ const SearchBar = ({ getSearchValue, getSearchAutoComptValue }) => {
       </div>
 
       <PesonalModal
-        onClose={() => setPersonalShowModal(false)}
-        show={showPersonalModal}
+        isOpen={personalModalOpen}
+        onRequestClose={() => setPersonalModalOpen(false)}
       />
     </div>
   );
