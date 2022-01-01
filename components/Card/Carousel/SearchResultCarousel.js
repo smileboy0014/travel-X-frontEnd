@@ -30,9 +30,9 @@ const SearchResultCarousel = (props, ref) => {
   const { items } = props;
   const [currentSlide, setCurrentSlide] = useState(0);
   const slideRef = useRef(null);
-  const itemLength = items.length;
+  const itemLength = items ? items.length : 0;
   const slideContainerStyle = {
-    width: `${items.length * 600}px`,
+    width: `${items ? items.length * 600 : 600}px`,
     height: "auto",
     display: "flex",
   }

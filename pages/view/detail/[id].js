@@ -3,13 +3,14 @@ import ReserveNavbar from "../../../components/NavBar/ReserveNavbar";
 import NaverMap from "../../../components/Modal/Map/NaverMap";
 import Styles from "../../../styles/DetailModal.module.css";
 import { isMobile } from "react-device-detect";
-import CarouselDetail from "../../../components/Card/Carousel/CarouselDetail";
+import CarouselDetail from "../../../components/Card/Carousel/RoomDetailCarousel";
 
 import Style from "../../../styles/BackLayout.module.css";
 import Axios from "axios";
 
 const DetailView = () => {
   const [rooms, setRooms] = useState([]);
+  const [slide, setSlide] = useState(false);
 
   useEffect(() => {
     Axios({
@@ -39,11 +40,19 @@ const DetailView = () => {
       console.log("WEB");
     }
   }, [isMobile]);
+
+  useEffect(() => {
+    setSlide(false);
+    return () => { setSlide(true); }
+  }, [])
   return (
     <div className={Style.main}>
       <div className={Style.subMain}>
         <div>
-          <CarouselDetail imges={rooms} />
+          <CarouselDetail 
+            items={rooms.item} 
+            initSlide={slide}
+          />
         </div>
         <div>위치</div>
         <div>날짜</div>
