@@ -5,12 +5,13 @@ import roomFilter from "./roomFilter";
 import adultCounter from "./adultCounter";
 import childCounter from "./chlidCounter";
 import map from "./map";
+import reviewContent from "./reviewContent";
 
 const reducer = (state, action) => {
   if (action.type === HYDRATE) {
     return { ...state, ...action.payload };
   }
-  return combineReducers({ counter, roomFilter, adultCounter, childCounter, map })(
+  return combineReducers({ counter, roomFilter, adultCounter, childCounter, map, reviewContent })(
     state,
     action
   );
