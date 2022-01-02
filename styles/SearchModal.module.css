@@ -1,11 +1,10 @@
 .Modal {
-  position: absolute;
-  padding: 15px;
-  top: 0px;
-  left: 0px;
-  right: 0px;
-  bottom: 0px;
-  background-color: rgba(255, 255, 255, 0.5);
+  min-height: 100%;
+  max-width: 50rem;
+  background: #fff;
+  margin: 0 auto;
+  position: relative;
+  padding: 30px;
 }
 .Overlay {
   position: fixed;
@@ -13,5 +12,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: white;
+  justify-content: center;
+  align-items: center;
+  background-color: #00ff0000;
 }

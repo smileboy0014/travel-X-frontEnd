@@ -1,6 +1,5 @@
 import React from "react";
 import Modal from "react-modal";
-
 import Styles from "../../../styles/ReserveModal.module.css";
 
 const ReserveModal = ({ isOpen, onRequestClose }) => {

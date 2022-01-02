@@ -1,0 +1,14 @@
+.header {
+  padding-top: 10px;
+  padding-left: 5%;
+}
+
+.header_recent {
+  display: flex;
+  align-items: center;
+  background-color: white;
+}
+
+.header_autoCompt {
+  padding-top: 20px;
+}

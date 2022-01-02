@@ -1,0 +1,14 @@
+.main {
+  min-height: 100vh;
+  max-width: 50rem;
+  background: #fff;
+  margin: 0 auto;
+  position: relative;
+  margin-bottom: 5%;
+}
+
+.background {
+  background-color: rgb(190, 190, 190);
+  min-height: 100vh;
+  position: relative;
+}

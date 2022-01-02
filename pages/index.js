@@ -10,6 +10,7 @@ import SelectSearchLocationModal from "./../components/Modal/Map/SelectSearchLoc
 import PesonalModal from "../components/Modal/Personal/PersonalModal";
 import MainTap from "../components/Tap/MainTap";
 import BottomNavbar from "../components/NavBar/BottomNavbar";
+import ReserveNavbar from "../components/NavBar/ReserveNavbar";
 
 export default function Home() {
   const [showSearchMapModal, setShowSearchMapModal] = useState(false);
@@ -18,6 +19,8 @@ export default function Home() {
   const dispatch = useDispatch();
   const { addresses } = useSelector((state) => state.map);
   const [showPersonalModal, setPersonalShowModal] = useState(false);
+  const [personalModalOpen, setPersonalModalOpen] = useState(false);
+
   const adultCounterValue = useSelector(
     ({ adultCounter }) => adultCounter.value
   );
@@ -30,58 +33,65 @@ export default function Home() {
   };
 
   return (
-    <>
+    <div className={styles.background}>
       <div className={styles.main}>
-        <Script
-          type="text/javascript"
-          src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=ra1rvd631l&submodules=geocoder"
-          onError={(e) => {
-            console.error("Script failed to load", e);
-          }}
-          onLoad={() => {
-            handleScriptLoaded(true);
-          }}
-        />
-        <Link href="/search" as={`/search`}>
-          <a>
-            <img src="/SearchBar2.jpg" />
-          </a>
-        </Link>
-        <div>
-          <GeoLocationButton
-            showSelectSearchLocationModal={() =>
-              setShowSelectSearchLocationModal(true)
-            }
+        <div className={styles.subMain}>
+          <Script
+            type="text/javascript"
+            src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=ra1rvd631l&submodules=geocoder"
+            onError={(e) => {
+              console.error("Script failed to load", e);
+            }}
+            onLoad={() => {
+              handleScriptLoaded(true);
+            }}
           />
-          <button>12/30 ~ 12/31 1박2일</button>
-          <button onClick={() => setPersonalShowModal(true)}>
-            {"성인: " + adultCounterValue + " 아동: " + childCounterValue}
-          </button>
-        </div>
+          <Link href="/search" as={`/search`}>
+            <a>
+              <img className={styles.img} src="/SearchBar2.jpg" />
+            </a>
+          </Link>
+          <div>
+            <div className={styles.button1}>
+              <GeoLocationButton
+                showSelectSearchLocationModal={() =>
+                  setShowSelectSearchLocationModal(true)
+                }
+              />
+            </div>
+            <div className={styles.button2}>
+              <button>12/30 ~ 12/31 1박2일</button>
+              <button onClick={() => setPersonalModalOpen(true)}>
+                {"성인: " + adultCounterValue + " 아동: " + childCounterValue}
+              </button>
+            </div>
+          </div>
 
-        <PesonalModal
-          onClose={() => setPersonalShowModal(false)}
-          show={showPersonalModal}
-        />
-        <SelectSearchLocationModal
-          onClose={() => setShowSelectSearchLocationModal(false)}
-          show={showSelectSearchLocationModal}
-          showSearchMapModal={() => setShowSearchMapModal(true)}
-        />
-        <SearchMapModal
-          onClose={() => setShowSearchMapModal(false)}
-          show={showSearchMapModal}
-        />
-        <p>
-          {addresses.map((addr, index) => (
-            <Fragment key={index}>
-              {addr}
-              <br />
-            </Fragment>
-          ))}
-        </p>
+          <PesonalModal
+            isOpen={personalModalOpen}
+            onRequestClose={() => setPersonalModalOpen(false)}
+          />
+
+          <SelectSearchLocationModal
+            onClose={() => setShowSelectSearchLocationModal(false)}
+            show={showSelectSearchLocationModal}
+            showSearchMapModal={() => setShowSearchMapModal(true)}
+          />
+          <SearchMapModal
+            onClose={() => setShowSearchMapModal(false)}
+            show={showSearchMapModal}
+          />
+          <p>
+            {addresses.map((addr, index) => (
+              <Fragment key={index}>
+                {addr}
+                <br />
+              </Fragment>
+            ))}
+          </p>
+        </div>
+        <BottomNavbar></BottomNavbar>
       </div>
-      <BottomNavbar></BottomNavbar>
-    </>
+    </div>
   );
 }

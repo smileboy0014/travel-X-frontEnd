@@ -3,11 +3,14 @@ import Axios from "axios";
 import { useRouter } from "next/router";
 import PesonalModal from "../../components/Modal/Personal/PersonalModal";
 import { useSelector } from "react-redux";
+import Style from "../../styles/SearchBar.module.css";
+import { AiOutlineSearch } from "react-icons/ai";
+import { BsPerson, BsCalendar } from "react-icons/bs";
 
 const SearchBar = ({ getSearchValue, getSearchAutoComptValue }) => {
   const [searchValue, setSearchValue] = useState();
   const router = useRouter();
-  const [showPersonalModal, setPersonalShowModal] = useState(false);
+  const [personalModalOpen, setPersonalModalOpen] = useState(false);
   const adultCounterValue = useSelector(
     ({ adultCounter }) => adultCounter.value
   );
@@ -57,26 +60,45 @@ const SearchBar = ({ getSearchValue, getSearchAutoComptValue }) => {
 
   return (
     <div>
-      <input
-        type="search"
-        onChange={onChangeSearch}
-        onKeyPress={onKeyPress}
-        placeholder="조회조건"
-      />
-      <button onClick={onSubmit}>
-        <div>{"확인"}</div>
-      </button>
-
-      <div>
-        <button>12/29 ~ 12/31 2박3일</button>
-        <button onClick={() => setPersonalShowModal(true)}>
-          {"성인: " + adultCounterValue + " 아동: " + childCounterValue}
-        </button>
+      <div className={Style.header}>
+        <div className={Style.header__center}>
+          <input
+            type="search"
+            onChange={onChangeSearch}
+            onKeyPress={onKeyPress}
+            placeholder="지역, 지하철역, 숙소명으로 찾아보세요."
+          />
+          <AiOutlineSearch />
+        </div>
+      </div>
+      <div className={Style.bottom}>
+        <div
+          className={Style.bottom__center}
+          onClick={() => setPersonalShowModal(true)}
+        >
+          <div className={Style.bottom_div}>
+            <div>
+              <BsCalendar />
+              12/29 ~ 12/31 10박3일
+            </div>
+          </div>
+        </div>
+        <div
+          className={Style.bottom__center}
+          onClick={() => setPersonalModalOpen(true)}
+        >
+          <div className={Style.bottom_div}>
+            <div>
+              <BsPerson />
+              {"성인: " + adultCounterValue + " 아동: " + childCounterValue}
+            </div>
+          </div>
+        </div>
       </div>
 
       <PesonalModal
-        onClose={() => setPersonalShowModal(false)}
-        show={showPersonalModal}
+        isOpen={personalModalOpen}
+        onRequestClose={() => setPersonalModalOpen(false)}
       />
     </div>
   );

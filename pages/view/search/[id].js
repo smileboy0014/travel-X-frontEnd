@@ -1,22 +1,26 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
-import Axios from "axios";
 import SearchResultList from "../../../components/Card/SearchResultList";
 import RoomFilterModal from "../../../components/Modal/RoomFilter/RoomFilterModal";
 import ScrollTopArrow from "../../../components/ScrollTop/ScrollTopArrow";
 import { useRouter } from "next/router";
 import useInfiniteSearch from "../../../components/InfiniteScroll/useInfiniteSearch";
 import SearchModal from "../../../components/Modal/Search/SearchModal";
-
-import styles from "../../../styles/Index.module.css";
-
-import Link from "next/link";
+import styles from "../../../styles/SearchResult.module.css";
+import LodingStyles from "../../../styles/LodingModal.module.css";
+import Modal from "react-modal";
+import SearchBar from "../../../pages/search/SearchBar";
 
 const Post = ({ item }) => {
   const [showModal, setShowModal] = useState(false);
   const router = useRouter();
   const { id } = router.query;
-  const [pageNumber, setPageNumber] = useState(10);
-  const { rooms, hasMore, loading, error } = useInfiniteSearch(id, pageNumber);
+  const [toPageNumber, setToPageNumber] = useState(10);
+  const [fromPageNumber, setFromPageNumber] = useState(0);
+  const { rooms, hasMore, loading, error } = useInfiniteSearch(
+    id,
+    fromPageNumber,
+    toPageNumber
+  );
   const observer = useRef();
   const [searchModalOpen, setSearchModalOpen] = useState(false);
 
@@ -26,7 +30,8 @@ const Post = ({ item }) => {
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
-          setPageNumber((prevPageNumber) => prevPageNumber + 10);
+          setToPageNumber(toPageNumber + 10);
+          setFromPageNumber(fromPageNumber + 10);
         }
       });
       if (node) observer.current.observe(node);
@@ -34,54 +39,53 @@ const Post = ({ item }) => {
     [loading, hasMore]
   );
 
+  useEffect(() => {
+    setShowModal(hasMore);
+  }, [hasMore]);
+
   return (
-    <div>
-      <a>
-        <label
-          className={styles.button}
-          onClick={() => setSearchModalOpen(true)}
-        >
-          {<img src="/SearchBar2.jpg" />}
-        </label>
+    <div className={styles.background}>
+      <div className={styles.main}>
+        <a>
+          <label
+            className={styles.button}
+            onClick={() => setSearchModalOpen(true)}
+          >
+            <SearchBar />
+          </label>
 
-        <SearchModal
-          isOpen={searchModalOpen}
-          onRequestClose={() => setSearchModalOpen(false)}
-        />
-      </a>
+          <SearchModal
+            isOpen={searchModalOpen}
+            onRequestClose={() => setSearchModalOpen(false)}
+          />
+        </a>
 
-      <RoomFilterModal
-        onClose={() => setShowModal(false)}
-        show={showModal}
-      ></RoomFilterModal>
+        <div>
+          <SearchResultList ref={lastroomElementRef} rooms={rooms} />
 
-      <div>
-        {rooms.item !== undefined &&
-          rooms.item.map((room, index) => {
-            if (rooms.item.length === index + 1) {
-              return <div ref={lastroomElementRef} key={room}></div>;
-            } else {
-              return (
-                <div key={index}>
-                  <Link
-                    href="/view/detail/[id]"
-                    as={`/view/detail/${room.roomId}`}
-                    key={index}
-                  >
-                    <a>
-                      <SearchResultList items={room} />
-                    </a>
-                  </Link>
-                </div>
-              );
-            }
-          })}
+          <div>
+            <Modal
+              className={LodingStyles.Modal}
+              overlayClassName={LodingStyles.Overlay}
+              isOpen={loading}
+              ariaHideApp={false}
+            >
+              Loading...
+            </Modal>
+            <Modal
+              className={LodingStyles.Modal}
+              overlayClassName={LodingStyles.Overlay}
+              isOpen={!showModal}
+              ariaHideApp={false}
+            >
+              <label onClick={() => setShowModal(true)}>X</label>
+              <p>더이상 데이터가 없습니다.</p>
+            </Modal>
+          </div>
+        </div>
 
-        <div>{loading && "Loading..."}</div>
-        <div>{error && "Error"}</div>
+        <ScrollTopArrow></ScrollTopArrow>
       </div>
-
-      <ScrollTopArrow></ScrollTopArrow>
     </div>
   );
 };
