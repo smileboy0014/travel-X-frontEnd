@@ -3,11 +3,11 @@ import style from "../../styles/SearchTest.module.css";
 import { AiFillStar } from "react-icons/ai";
 
 function SearchResult(props) {
-  useEffect(() => {
-    console.log(props.images[0]);
+  // useEffect(() => {
+  //   console.log(props.images[0]);
 
-    console.log(props);
-  }, [props]);
+  //   console.log(props);
+  // }, [props]);
 
   return (
     <div className={style.searchResult}>

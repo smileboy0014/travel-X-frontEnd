@@ -12,11 +12,11 @@ const CarouselDetail = ({ imges }) => {
     setImages(imges);
   }, [imges]);
 
-  useEffect(() => {
-    console.log("------------");
-    console.log(images);
-    console.log("------------");
-  }, [images]);
+  // useEffect(() => {
+  //   console.log("------------");
+  //   console.log(images);
+  //   console.log("------------");
+  // }, [images]);
 
   const handleArrow = (direction) => {
     if (direction === "l") {

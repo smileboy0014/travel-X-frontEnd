@@ -11,6 +11,7 @@ import PesonalModal from "../components/Modal/Personal/PersonalModal";
 import MainTap from "../components/Tap/MainTap";
 import BottomNavbar from "../components/NavBar/BottomNavbar";
 import ReserveNavbar from "../components/NavBar/ReserveNavbar";
+import test from "./test";
 
 export default function Home() {
   const [showSearchMapModal, setShowSearchMapModal] = useState(false);

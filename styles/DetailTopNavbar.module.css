@@ -1,0 +1,36 @@
+.DetailTopNav {
+  min-width: 50rem;
+  margin: 0 auto;
+  height: 50px;
+  top: 0px;
+  position: fixed;
+  background-color: #00ff0000;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.DetailTopNav_first {
+  min-width: 50rem;
+  margin: 0 auto;
+  height: 50px;
+  top: 0px;
+  position: fixed;
+  background-color: #ffffff;
+  opacity: 0.5;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.DetailTopNav_second {
+  min-width: 50rem;
+  margin: 0 auto;
+  height: 50px;
+  top: 0px;
+  position: fixed;
+  background-color: rgb(255, 255, 255);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
