@@ -4,9 +4,9 @@ import NaverMap from "../../../components/Modal/Map/NaverMap";
 import Styles from "../../../styles/DetailModal.module.css";
 import { isMobile } from "react-device-detect";
 import CarouselDetail from "../../../components/Card/Carousel/RoomDetailCarousel";
-
 import Style from "../../../styles/BackLayout.module.css";
 import Axios from "axios";
+import DetailTopNavbar from "../../../components/NavBar/DetailTopNavbar";
 
 const DetailView = () => {
   const [rooms, setRooms] = useState([]);
@@ -33,27 +33,27 @@ const DetailView = () => {
     });
   }, [isMobile]);
 
-  useEffect(() => {
-    if (isMobile) {
-      console.log("모바일");
-    } else {
-      console.log("WEB");
-    }
-  }, [isMobile]);
+  // useEffect(() => {
+  //   if (isMobile) {
+  //     console.log("모바일");
+  //   } else {
+  //     console.log("WEB");
+  //   }
+  // }, [isMobile]);
 
   useEffect(() => {
     setSlide(false);
-    return () => { setSlide(true); }
-  }, [])
+    return () => {
+      setSlide(true);
+    };
+  }, []);
+
   return (
     <div className={Style.main}>
       <div className={Style.subMain}>
-        <div>
-          <CarouselDetail 
-            items={rooms.item} 
-            initSlide={slide}
-          />
-        </div>
+        <CarouselDetail items={rooms.item} initSlide={slide} />
+        <DetailTopNavbar />
+
         <div>위치</div>
         <div>날짜</div>
         <div>총금액</div>
@@ -105,8 +105,8 @@ const DetailView = () => {
         <div className={Styles.map}>
           <NaverMap />
         </div>
+        <ReserveNavbar />
       </div>
-      <ReserveNavbar />
     </div>
   );
 };
