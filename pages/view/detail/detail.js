@@ -6,12 +6,9 @@ import { isMobile } from "react-device-detect";
 import CarouselDetail from "../../../components/Card/Carousel/RoomDetailCarousel";
 import Style from "../../../styles/Detail.module.css";
 import Axios from "axios";
-
 import { useSelector, useDispatch } from "react-redux";
-
 import { useRouter } from "next/router";
 import DetailTopNavbar from "../../../components/NavBar/DetailTopNavbar_test";
-
 import { RiHotelLine } from "react-icons/ri";
 import { BsPerson } from "react-icons/bs";
 
