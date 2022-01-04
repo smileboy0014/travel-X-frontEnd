@@ -7,7 +7,7 @@ import { AiOutlineHome } from "react-icons/ai";
 import { AiOutlineShareAlt } from "react-icons/ai";
 import { useRouter } from "next/router";
 
-const DetailTopNavbar = () => {
+const DetailTopNavbar = ({ HeaderTitle }) => {
   const router = useRouter();
 
   return (
@@ -16,9 +16,7 @@ const DetailTopNavbar = () => {
         <div className={Styles.HeaderBack}>
           <AiOutlineLeft onClick={() => router.back()} size={30} />
         </div>
-        <div className={Styles.HeaderTitle}>
-          {"슈페리어 트윈 (넷플릭스 - 숙소 문의)"}
-        </div>
+        <div className={Styles.HeaderTitle}>{HeaderTitle}</div>
         <div className={Styles.HeaderShare}>
           <AiOutlineShareAlt size={30}></AiOutlineShareAlt>
         </div>
