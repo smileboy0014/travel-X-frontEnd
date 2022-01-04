@@ -18,6 +18,7 @@ import { BsPerson } from "react-icons/bs";
 const DetailView = () => {
   const [rooms, setRooms] = useState([]);
   const [slide, setSlide] = useState(false);
+  const [title, setTitle] = useState("");
 
   useEffect(() => {
     Axios({
@@ -40,14 +41,6 @@ const DetailView = () => {
     });
   }, [isMobile]);
 
-  // useEffect(() => {
-  //   if (isMobile) {
-  //     console.log("모바일");
-  //   } else {
-  //     console.log("WEB");
-  //   }
-  // }, [isMobile]);
-
   useEffect(() => {
     setSlide(false);
     return () => {
@@ -62,17 +55,49 @@ const DetailView = () => {
   useEffect(() => {
     if (scrollYValue.scrollYValue == 0) {
       setChangeStyle(Style.site_header);
+      setTitle("");
     } else if (scrollYValue.scrollYValue <= 100) {
       setChangeStyle(Style.site_header1);
+      setTitle("타이틀");
     } else {
       setChangeStyle(Style.site_header2);
+      setTitle("타이틀");
     }
   }, [scrollYValue]);
 
   useEffect(() => {
     if (scrollYValue.scrollYValue > 0) {
       setChangeStyle(Style.site_header);
+      setTitle("");
     }
+  }, []);
+
+  useEffect(() => {
+    setSlide(false);
+    return () => {
+      setSlide(true);
+    };
+  }, []);
+
+  useEffect(() => {
+    Axios({
+      method: "GET",
+      url: "http://shineware.iptime.org:5050/search",
+      params: {
+        checkinDate: "20211223",
+        checkoutDate: "20211224",
+        adult: "2",
+        query: "강남",
+        size: "10",
+      },
+    }).then((res) => {
+      setRooms((prevState) => ({
+        ...prevState,
+        item: res.data.roomDocumentList[0].images
+          ? res.data.roomDocumentList[0].images
+          : [],
+      }));
+    });
   }, []);
 
   return (
@@ -81,7 +106,7 @@ const DetailView = () => {
       <div class={changeStyle}>
         <div class={Style.site_container}>
           <div class={Style.Header_inner}>
-            <DetailTopNavbar></DetailTopNavbar>
+            <DetailTopNavbar HeaderTitle={title} />
           </div>
         </div>
       </div>
@@ -91,7 +116,9 @@ const DetailView = () => {
         {/* <!-- 컨텐츠 시작 --> */}
         <div class={Style.SinglePage}>
           {/* <!-- Slide --> */}
-          <div class="DetailSlide">{"슬라이스 부분"}</div>
+          <div class="DetailSlide">
+            <CarouselDetail items={rooms.item} initSlide={slide} />
+          </div>
           {/* <!-- .Slide -->
 				<!-- DetailHeader --> */}
           <div class={Style.DetailHeader}>
