@@ -19,35 +19,6 @@ const DetailView = () => {
   const [rooms, setRooms] = useState([]);
   const [slide, setSlide] = useState(false);
   const [title, setTitle] = useState("");
-
-  useEffect(() => {
-    Axios({
-      method: "GET",
-      url: "http://shineware.iptime.org:5050/search",
-      params: {
-        checkinDate: "20211223",
-        checkoutDate: "20211224",
-        adult: "2",
-        query: "강남",
-        size: "10",
-      },
-    }).then((res) => {
-      setRooms((prevState) => ({
-        ...prevState,
-        item: res.data.roomDocumentList[0].images
-          ? res.data.roomDocumentList[0].images
-          : [],
-      }));
-    });
-  }, [isMobile]);
-
-  useEffect(() => {
-    setSlide(false);
-    return () => {
-      setSlide(true);
-    };
-  }, []);
-
   const scrollYValue = useSelector(({ scrollY }) => scrollY.value);
   const [changeStyle, setChangeStyle] = useState(Style.site_header);
   const router = useRouter();
