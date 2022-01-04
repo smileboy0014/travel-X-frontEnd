@@ -34,3 +34,33 @@
   justify-content: space-around;
   align-items: center;
 }
+
+.HeaderTitle {
+  font-size: 14px;
+  line-height: 1.2em;
+  color: #000;
+  font-weight: bold;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+
+.HeaderBack {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  background-size: 20px 20px;
+}
+
+.HeaderShare {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  width: 22px;
+  height: 22px;
+}
