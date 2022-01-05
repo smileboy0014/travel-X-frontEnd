@@ -435,3 +435,76 @@
   top: 0;
   left: 0;
 }
+
+/*=========================================================
+  SinglePage
+=========================================================*/
+.SinglePage{
+	overflow:hidden;
+}
+
+/*=========================================================
+  SinglePage:Slide
+=========================================================*/
+.DetailSlide{
+	position:relative;
+}
+
+.DetailSlide_thumb{
+	width:100%;
+	display:block;
+	overflow:hidden;
+	line-height:0;
+	position:relative;
+}
+
+.DetailSlide_thumb:after{
+	content:"";
+	display:block;
+	padding-bottom:69%;
+}
+
+.DetailSlide_thumb:before{
+	content:"";
+	position:absolute;
+	top:0;
+	left:0;
+	right:0;
+	height:40%;
+	opacity: 0.6;
+	mix-blend-mode: multiply;
+	background-image: linear-gradient(to top, rgba(0, 0, 0, 0), #000 27%);
+	z-index:1;
+}
+
+.DetailSlide_thumb img{
+	position:absolute;
+	top:50%;
+	left:50%;
+	transform:translate(-50%, -50%);
+	width:100%;
+}
+
+.DetailSlide_pagination{
+	position:absolute;
+	bottom:0.625rem;
+	left:50%;
+	transform:translateX(-50%);
+	z-index:10;
+	text-align:center;
+	font-size:0;
+	line-height:0;
+}
+
+.DetailSlide_pagination .swiper_pagination_bullet{
+	width:0.3125rem;
+	height:0.3125rem;
+	border-radius:100%;
+	background-color:#fff;
+	display:inline-block;
+	margin:0 0.125rem;
+}
+
+.DetailSlide_pagination .swiper_pagination-bullet.swiper_pagination_bullet_active{
+	background-color:#6957e8;
+}
