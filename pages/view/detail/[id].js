@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import NaverMap from "../../../components/Modal/Map/NaverMap";
-import CarouselDetail from "../../../components/Card/Carousel/RoomDetailCarousel";
+import CarouselDetail from "../../../components/Card/Carousel/DetailCarousel";
 import Style from "../../../styles/Detail.module.css";
 import Axios from "axios";
 import { useSelector } from "react-redux";
