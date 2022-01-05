@@ -45,20 +45,18 @@ export default function PersonalCounter() {
   return (
     <div>
       <div>
-        <div>
-          {"성인"}
-          <button onClick={adultPlus}>+</button>
-          {adiltValue}
-          <button onClick={adultMinus}>-</button>
-          <button onClick={() => adultReset()}>리셋</button>
-        </div>
-        <div>
-          {"어린이"}
-          <button onClick={childPlus}>+</button>
-          {childValue}
-          <button onClick={childMinus}>-</button>
-          <button onClick={() => childReset()}>리셋</button>
-        </div>
+        {"성인"}
+        <button onClick={adultPlus}>+</button>
+        {adiltValue}
+        <button onClick={adultMinus}>-</button>
+        <button onClick={() => adultReset()}>리셋</button>
+      </div>
+      <div>
+        {"어린이"}
+        <button onClick={childPlus}>+</button>
+        {childValue}
+        <button onClick={childMinus}>-</button>
+        <button onClick={() => childReset()}>리셋</button>
       </div>
     </div>
   );

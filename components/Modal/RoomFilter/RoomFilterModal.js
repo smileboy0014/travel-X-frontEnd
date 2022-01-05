@@ -1,70 +1,26 @@
-import React, { useEffect, useRef, useState } from "react";
-import ReactDOM from "react-dom";
-import styled from "styled-components";
-import Filter from "./RoomFilter";
+import React from "react";
+import RoomFilter from "./RoomFilter";
 
-const RoomFilterModal = ({ show, onClose, children, title }) => {
-  const [isBrowser, setIsBrowser] = useState(false);
-
-  useEffect(() => {
-    setIsBrowser(true);
-  }, []);
-
-  const handleCloseClick = (e) => {
+const RoomFilterModal = ({ isOpen, onRequestClose }) => {
+  const dispatch = useDispatch();
+  const handleSaveClick = (e) => {
     e.preventDefault();
-    onClose();
+    onRequestClose(false);
   };
 
-  const modalContent = show ? (
-    <StyledModalOverlay>
-      <StyledModal>
-        <StyledModalHeader>
-          <a href="#" onClick={handleCloseClick}>
-            x
-          </a>
-        </StyledModalHeader>
-        <StyledModalBody>{<Filter />}</StyledModalBody>
-      </StyledModal>
-    </StyledModalOverlay>
-  ) : null;
-
-  if (isBrowser) {
-    return ReactDOM.createPortal(
-      modalContent,
-      document.getElementById("modal-root")
-    );
-  } else {
-    return null;
-  }
+  const handleCloseClick = () => {
+    console.log("취소");
+  };
+  return (
+    <div>
+      <Modal isOpen={isOpen} ariaHideApp={false}>
+        <label onClick={() => onRequestClose(false)}>X</label>
+        <RoomFilter></RoomFilter>
+        <button onClick={handleSaveClick}> 확인</button>
+        <button onClick={handleCloseClick}> 취소</button>
+      </Modal>
+    </div>
+  );
 };
-
-const StyledModalBody = styled.div`
-  padding-top: 10px;
-`;
-
-const StyledModalHeader = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  font-size: 25px;
-`;
-
-const StyledModal = styled.div`
-  background: white;
-  width: 500px;
-  height: 600px;
-  border-radius: 15px;
-  padding: 15px;
-`;
-const StyledModalOverlay = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
-`;
 
 export default RoomFilterModal;

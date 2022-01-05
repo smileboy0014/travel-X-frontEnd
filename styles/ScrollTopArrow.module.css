@@ -1,6 +1,6 @@
 .scrollTop {
   position: fixed;
-  bottom: 50px;
+  bottom: 90px;
   left: 90%;
   animation: fadeIn 0.3s;
   transition: opacity 0.4s;
