@@ -4,8 +4,7 @@ import { useRouter } from "next/router";
 import PesonalModal from "../../components/Modal/Personal/PersonalModal";
 import { useSelector } from "react-redux";
 import Style from "../../styles/SearchBar.module.css";
-import { AiOutlineSearch } from "react-icons/ai";
-import { BsPerson, BsCalendar } from "react-icons/bs";
+import { AiOutlineSearch, AiOutlineClose } from "react-icons/ai";
 
 const SearchBar = ({ getSearchValue, getSearchAutoComptValue }) => {
   const [searchValue, setSearchValue] = useState();
@@ -60,47 +59,79 @@ const SearchBar = ({ getSearchValue, getSearchAutoComptValue }) => {
 
   return (
     <div>
-      <div className={Style.header}>
-        <div className={Style.header__center}>
-          <input
-            type="search"
-            onChange={onChangeSearch}
-            onKeyPress={onKeyPress}
-            placeholder="지역, 지하철역, 숙소명으로 찾아보세요."
-          />
-          <AiOutlineSearch />
-        </div>
-      </div>
-      <div className={Style.bottom}>
-        <div
-          className={Style.bottom__center}
-          onClick={() => setPersonalShowModal(true)}
-        >
-          <div className={Style.bottom_div}>
-            <div>
-              <BsCalendar />
-              12/29 ~ 12/31 10박3일
-            </div>
-          </div>
-        </div>
-        <div
-          className={Style.bottom__center}
-          onClick={() => setPersonalModalOpen(true)}
-        >
-          <div className={Style.bottom_div}>
-            <div>
-              <BsPerson />
-              {"성인: " + adultCounterValue + " 아동: " + childCounterValue}
-            </div>
-          </div>
-        </div>
-      </div>
+      <div className={Style.ListFilterSearch}>
+        <AiOutlineSearch className={Style.ListFilterSearch_icon} />
+        <input
+          type="text"
+          className={Style.ListFilterSearch_text}
+          value={searchValue}
+          onChange={onChangeSearch}
+          onKeyPress={onKeyPress}
+        />
 
-      <PesonalModal
-        isOpen={personalModalOpen}
-        onRequestClose={() => setPersonalModalOpen(false)}
-      />
+        <PesonalModal
+          isOpen={personalModalOpen}
+          onRequestClose={() => setPersonalModalOpen(false)}
+        />
+
+        {!searchValue && (
+          <span className={Style.ListFilterSearch_date}>
+            12.20(월)-12.21(화), 2인
+          </span>
+        )}
+
+        {searchValue && (
+          <AiOutlineClose
+            onClick={() => {
+              setSearchValue("");
+            }}
+            className={Style.ListFilterSearch_close}
+          ></AiOutlineClose>
+        )}
+      </div>
     </div>
+    // <div>
+    //   <div className={Style.header}>
+    //     <div className={Style.header__center}>
+    //       <input
+    //         type="search"
+    //         onChange={onChangeSearch}
+    //         onKeyPress={onKeyPress}
+    //         placeholder="지역, 지하철역, 숙소명으로 찾아보세요."
+    //       />
+    //       <AiOutlineSearch />
+    //     </div>
+    //   </div>
+    //   <div className={Style.bottom}>
+    //     <div
+    //       className={Style.bottom__center}
+    //       onClick={() => setPersonalShowModal(true)}
+    //     >
+    //       <div className={Style.bottom_div}>
+    //         <div>
+    //           <BsCalendar />
+    //           12/29 ~ 12/31 10박3일
+    //         </div>
+    //       </div>
+    //     </div>
+    //     <div
+    //       className={Style.bottom__center}
+    //       onClick={() => setPersonalModalOpen(true)}
+    //     >
+    //       <div className={Style.bottom_div}>
+    //         <div>
+    //           <BsPerson />
+    //           {"성인: " + adultCounterValue + " 아동: " + childCounterValue}
+    //         </div>
+    //       </div>
+    //     </div>
+    //   </div>
+
+    //   <PesonalModal
+    //     isOpen={personalModalOpen}
+    //     onRequestClose={() => setPersonalModalOpen(false)}
+    //   />
+    // </div>
   );
 };
 

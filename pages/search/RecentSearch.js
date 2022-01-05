@@ -7,9 +7,11 @@ const RecentSearch = ({
   sendSearchValue,
   sendSearchAutoComptValue,
   getSearchValue,
+  getCloseRecentSearch,
 }) => {
   const [keywords, setKeywords] = useState([]);
   const [autoCompltData, setAutoCompltData] = useState([]);
+  const [sendClose, setSendClose] = useState(false);
 
   useEffect(() => {
     setAutoCompltData(sendSearchAutoComptValue);
@@ -60,7 +62,7 @@ const RecentSearch = ({
   };
 
   return (
-    <div className={Style.header}>
+    <div className={Style.site_container}>
       {autoCompltData.length > 0 ? (
         autoCompltData.map((item, index) => (
           <div className={Style.header_autoCompt} key={index}>

@@ -24,46 +24,36 @@ const SearchResultList = (props, ref) => {
   }, []);
 
   return (
-    <div>
-      <div>
-        {rooms.item &&
-          rooms.item.map((room, index) => {
-            if (rooms.item.length === index + 1) {
-              return <div ref={ref} key={room}></div>;
-            } else {
-              return (
-                <div key={index}>
-                  <div>
-                    {/* <div style={{ border: "1px solid rgb(0, 0, 0)" }}> */}
-                    {/* <SearchResultCarousel
-                        ref={carouselRef}
-                        items={room.images}
-                        initSlide={slide}
-                      /> */}
-                    <Link
-                      href="/view/detail/[id]"
-                      as={`/view/detail/${room.roomId}`}
-                      key={index}
-                    >
-                      <a>
-                        <SearchResultCard
-                          id={room.roomId}
-                          roomName={room.roomName}
-                          propertyName={room.propertyName}
-                          images={room.images}
-                          maxUser={room.maxUser}
-                          price={room.price}
-                          ratingScoreAvg={GetRandomRatingScore()}
-                        />
-                      </a>
-                    </Link>
-                  </div>
-                </div>
-              );
-            }
-          })}
-      </div>
-    </div>
+    <>
+      {rooms.item &&
+        rooms.item.map((room, index) => {
+          if (rooms.item.length === index + 1) {
+            return <div ref={ref} key={room}></div>;
+          } else {
+            return (
+              <div key={index}>
+                <Link
+                  href="/view/detail/[id]"
+                  as={`/view/detail/${room.roomId}`}
+                  key={index}
+                >
+                  <a>
+                    <SearchResultCard
+                      id={room.roomId}
+                      roomName={room.roomName}
+                      propertyName={room.propertyName}
+                      images={room.images}
+                      maxUser={room.maxUser}
+                      price={room.price}
+                      ratingScoreAvg={GetRandomRatingScore()}
+                    />
+                  </a>
+                </Link>
+              </div>
+            );
+          }
+        })}
+    </>
   );
 };
 
