@@ -5,7 +5,7 @@ import Style from "../../../styles/Detail.module.css";
 import Axios from "axios";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
-import DetailTopNavbar from "../../../components/NavBar/DetailTopNavbar_test";
+import DetailTopNavbar from "../../../components/NavBar/DetailTopNavbar";
 import { RiHotelLine } from "react-icons/ri";
 import { BsPerson, BsCalendar, BsGeoAlt } from "react-icons/bs";
 

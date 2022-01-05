@@ -12,7 +12,7 @@ import PersonalFilterButton from "../../../components/Button/Personal/PersonalFi
 import CalendarFilterButton from "../../../components/Button/Calendar/CalendarFilterButton";
 import OptionFilterButton from "../../../components/Button/OptionFilter/OptionFilterButton";
 import OrderByFilterButton from "../../../components/Button/OptionFilter/OrderByFilterButton";
-import DetailTopNavbar from "../../../components/NavBar/DetailTopNavbar_test";
+import DetailTopNavbar from "../../../components/NavBar/DetailTopNavbar";
 
 const Post = ({ item }) => {
   const [showModal, setShowModal] = useState(false);

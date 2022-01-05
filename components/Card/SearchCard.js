@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import style from "../../styles/SearchResult.module.css";
+import style from "../../styles/SearchCard.module.css";
 import { AiFillStar } from "react-icons/ai";
 import { BsGeoAlt } from "react-icons/bs";
 
