@@ -128,7 +128,10 @@ const DetailView = () => {
                   {"일자_DB"}
                 </span>
                 <span className={Style.DetailPaymentDate_day}>{"일박_DB"}</span>
-                <button type="button" class={Style.DetailPaymentDate_button}>
+                <button
+                  type="button"
+                  className={Style.DetailPaymentDate_button}
+                >
                   변경
                 </button>
               </div>
@@ -231,7 +234,7 @@ const DetailView = () => {
 				<!-- BttonFixButton --> */}
         <div className={Style.BttonFixButton}>
           <div className={Style.site_container}>
-            <button type="button" class={Style.BttonFixButton_button}>
+            <button type="button" className={Style.BttonFixButton_button}>
               예약하기
             </button>
           </div>

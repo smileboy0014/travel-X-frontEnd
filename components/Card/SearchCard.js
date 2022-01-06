@@ -27,32 +27,32 @@ function SearchResult(props) {
           </div>
 
           <div className={style.ProductItemCont}>
-            <div class={style.ProductItemMeta}>
-              <span class={style.ProductItemMeta_item}>{"숙소 타입"}</span>
-              <span class={style.ProductItemMeta_item}>{"숙소명"}</span>
+            <div className={style.ProductItemMeta}>
+              <span className={style.ProductItemMeta_item}>{"숙소 타입"}</span>
+              <span className={style.ProductItemMeta_item}>{"숙소명"}</span>
             </div>
-            <div class={style.ProductItemTitle}>{props.roomName}</div>
-            <div class={style.ProductItemFilter}>
-              <span class={style.ProductItemFilter_item}>
+            <div className={style.ProductItemTitle}>{props.roomName}</div>
+            <div className={style.ProductItemFilter}>
+              <span className={style.ProductItemFilter_item}>
                 2인 기준 최대 {props.maxUser}인
               </span>
-              <span class={style.ProductItemFilter_item}>
+              <span className={style.ProductItemFilter_item}>
                 {"숙박시간 입력"}
               </span>
             </div>
 
-            <div class={style.ProductItemPrice}>
+            <div className={style.ProductItemPrice}>
               <div className={style.searchResult__stars}>
                 <AiFillStar className={style.searchResult_star} />
                 <strong>{props.ratingScoreAvg} rating 값이 계속 변경됨 </strong>
               </div>
             </div>
 
-            <div class={style.ProductItemPrice}>
-              <span class={style.ProductItemPrice_current}>
+            <div className={style.ProductItemPrice}>
+              <span className={style.ProductItemPrice_current}>
                 ₩{props.price}원
               </span>
-              <span class={style.ProductItemPrice_condition}>
+              <span className={style.ProductItemPrice_condition}>
                 {"추가요금 관련"}
               </span>
             </div>
