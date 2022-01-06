@@ -17,7 +17,6 @@ import MapFixButton from "../../../components/Button/Fix/MapFixButton";
 
 const Post = ({ item }) => {
   const [showModal, setShowModal] = useState(false);
-  const [closeRecentSearch, setCloseRecentSearch] = useState(false);
   const [recentListView, setRecentListView] = useState(false);
   const router = useRouter();
   const { id } = router.query;
@@ -54,10 +53,6 @@ const Post = ({ item }) => {
   useEffect(() => {
     setSearchAutoComptValue([]);
   }, [searchValue]);
-
-  useEffect(() => {
-    console.log("recentListView:" + recentListView);
-  }, [recentListView]);
 
   useEffect(() => {
     setRecentListView(false);
@@ -104,9 +99,6 @@ const Post = ({ item }) => {
             getSearchValue={(value) => {
               setSearchValue(value);
             }}
-            getCloseRecentSearch={(value) => {
-              setCloseRecentSearch(value);
-            }}
           />
         ) : (
           <React.Fragment>
@@ -145,9 +137,6 @@ const Post = ({ item }) => {
                 sendSearchAutoComptValue={searchAutoComptValue}
                 getSearchValue={(value) => {
                   setSearchValue(value);
-                }}
-                getCloseRecentSearch={(value) => {
-                  setCloseRecentSearch(value);
                 }}
               />
             )}

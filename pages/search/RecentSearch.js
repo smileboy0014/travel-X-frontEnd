@@ -7,11 +7,9 @@ const RecentSearch = ({
   sendSearchValue,
   sendSearchAutoComptValue,
   getSearchValue,
-  getCloseRecentSearch,
 }) => {
   const [keywords, setKeywords] = useState([]);
   const [autoCompltData, setAutoCompltData] = useState([]);
-  const [sendClose, setSendClose] = useState(false);
 
   useEffect(() => {
     setAutoCompltData(sendSearchAutoComptValue);
