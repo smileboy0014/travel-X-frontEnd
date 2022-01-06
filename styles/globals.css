@@ -324,13 +324,13 @@ body {
   Swiper Basic CSS
 =========================================================*/
 .swiper-container {
-  margin-left: auto;
-  margin-right: auto;
-  position: relative;
-  overflow: hidden;
-  z-index: 1;
-  width: 100%;
-  height: 100%;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  position: relative !important;
+  overflow: hidden !important;
+  z-index: 1 !important;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .swiper-wrapper {
