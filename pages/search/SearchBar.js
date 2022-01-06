@@ -4,18 +4,19 @@ import { useRouter } from "next/router";
 import PesonalModal from "../../components/Modal/Personal/PersonalModal";
 import { useSelector } from "react-redux";
 import Style from "../../styles/SearchBar.module.css";
-import { AiOutlineSearch, AiOutlineClose } from "react-icons/ai";
+import { AiOutlineSearch, AiOutlineClose, AiOutlineLeft } from "react-icons/ai";
 
-const SearchBar = ({ getSearchValue, getSearchAutoComptValue }) => {
+const SearchBar = ({
+  getSearchValue,
+  getSearchAutoComptValue,
+  sendTextValue,
+  getRecentListView,
+}) => {
   const [searchValue, setSearchValue] = useState();
-  const router = useRouter();
+  const [placeholderValue, setplaceholderValue] = useState();
   const [personalModalOpen, setPersonalModalOpen] = useState(false);
-  const adultCounterValue = useSelector(
-    ({ adultCounter }) => adultCounter.value
-  );
-  const childCounterValue = useSelector(
-    ({ childCounter }) => childCounter.value
-  );
+  const [checkBackStep, setCheckBackStep] = useState(true);
+  const router = useRouter();
 
   const onChangeSearch = useCallback((e) => {
     setSearchValue(e.target.value);
@@ -57,16 +58,47 @@ const SearchBar = ({ getSearchValue, getSearchAutoComptValue }) => {
     [searchValue, router]
   );
 
+  useEffect(() => {
+    if (sendTextValue !== undefined) {
+      setplaceholderValue(sendTextValue);
+      setSearchValue("");
+    }
+  }, [sendTextValue]);
+
+  const onClickInput = () => {
+    if (getRecentListView != undefined) {
+      getRecentListView(true);
+      setCheckBackStep(false);
+      console.log("인풋박스 클릭했습니다.");
+    }
+  };
+
+  const onClickBackStep = () => {
+    if (checkBackStep) {
+      router.back();
+    } else if (getRecentListView != undefined) {
+      getRecentListView(false);
+      setCheckBackStep(true);
+      setSearchValue("");
+    }
+  };
+
   return (
     <div>
       <div className={Style.ListFilterSearch}>
-        <AiOutlineSearch className={Style.ListFilterSearch_icon} />
+        <AiOutlineLeft
+          className={Style.ListFilterSearch_icon1}
+          onClick={onClickBackStep}
+        />
+        <AiOutlineSearch className={Style.ListFilterSearch_icon2} />
         <input
           type="text"
           className={Style.ListFilterSearch_text}
           value={searchValue}
           onChange={onChangeSearch}
           onKeyPress={onKeyPress}
+          placeholder={placeholderValue}
+          onClick={onClickInput}
         />
 
         <PesonalModal
@@ -83,55 +115,15 @@ const SearchBar = ({ getSearchValue, getSearchAutoComptValue }) => {
         {searchValue && (
           <AiOutlineClose
             onClick={() => {
+              console.log(searchValue);
               setSearchValue("");
+              console.log(searchValue);
             }}
             className={Style.ListFilterSearch_close}
           ></AiOutlineClose>
         )}
       </div>
     </div>
-    // <div>
-    //   <div className={Style.header}>
-    //     <div className={Style.header__center}>
-    //       <input
-    //         type="search"
-    //         onChange={onChangeSearch}
-    //         onKeyPress={onKeyPress}
-    //         placeholder="지역, 지하철역, 숙소명으로 찾아보세요."
-    //       />
-    //       <AiOutlineSearch />
-    //     </div>
-    //   </div>
-    //   <div className={Style.bottom}>
-    //     <div
-    //       className={Style.bottom__center}
-    //       onClick={() => setPersonalShowModal(true)}
-    //     >
-    //       <div className={Style.bottom_div}>
-    //         <div>
-    //           <BsCalendar />
-    //           12/29 ~ 12/31 10박3일
-    //         </div>
-    //       </div>
-    //     </div>
-    //     <div
-    //       className={Style.bottom__center}
-    //       onClick={() => setPersonalModalOpen(true)}
-    //     >
-    //       <div className={Style.bottom_div}>
-    //         <div>
-    //           <BsPerson />
-    //           {"성인: " + adultCounterValue + " 아동: " + childCounterValue}
-    //         </div>
-    //       </div>
-    //     </div>
-    //   </div>
-
-    //   <PesonalModal
-    //     isOpen={personalModalOpen}
-    //     onRequestClose={() => setPersonalModalOpen(false)}
-    //   />
-    // </div>
   );
 };
 
