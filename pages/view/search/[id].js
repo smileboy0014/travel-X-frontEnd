@@ -8,11 +8,12 @@ import LodingStyles from "../../../styles/LodingModal.module.css";
 import Modal from "react-modal";
 import SearchBar from "../../search/SearchBar";
 import RecentSearch from "../../search/RecentSearch";
-import PersonalFilterButton from "../../../components/Button/Personal/PersonalFilterButton";
-import CalendarFilterButton from "../../../components/Button/Calendar/CalendarFilterButton";
+import PersonalFilterButton from "../../../components/Button/OptionFilter/PersonalFilterButton";
+import CalendarFilterButton from "../../../components/Button/OptionFilter/CalendarFilterButton";
 import OptionFilterButton from "../../../components/Button/OptionFilter/OptionFilterButton";
 import OrderByFilterButton from "../../../components/Button/OptionFilter/OrderByFilterButton";
 import DetailTopNavbar from "../../../components/NavBar/DetailTopNavbar";
+import MapFixButton from "../../../components/Button/Fix/MapFixButton";
 
 const Post = ({ item }) => {
   const [showModal, setShowModal] = useState(false);
@@ -67,16 +68,6 @@ const Post = ({ item }) => {
       <div className={styles.site_body}>
         <div className={styles.ListFilter}>
           <div className={styles.site_container}>
-            <div>
-              <button
-              // onClick={() => {
-              //   setRecentListView(false);
-              // }}
-              >
-                {"<<<<<<<<"}{" "}
-              </button>
-            </div>
-
             <div>
               <SearchBar
                 getSearchValue={(value) => {
@@ -162,6 +153,8 @@ const Post = ({ item }) => {
             )}
           </React.Fragment>
         )}
+
+        <MapFixButton></MapFixButton>
       </div>
     </div>
   );

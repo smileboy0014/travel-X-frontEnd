@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Style from "../../../styles/PersonalFilterButton.module.css";
+import Style from "../../../styles/FilterButton.module.css";
 import { BsPerson } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import PesonalModal from "../../Modal/Personal/PersonalModal";

@@ -1,5 +1,5 @@
 import React from "react";
-import Style from "../../../styles/CalendarFilterButton.module.css";
+import Style from "../../../styles/FilterButton.module.css";
 import { BsCalendar } from "react-icons/bs";
 
 const CalendarFilterButton = () => {
