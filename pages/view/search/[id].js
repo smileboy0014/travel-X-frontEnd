@@ -17,6 +17,7 @@ import DetailTopNavbar from "../../../components/NavBar/DetailTopNavbar";
 const Post = ({ item }) => {
   const [showModal, setShowModal] = useState(false);
   const [closeRecentSearch, setCloseRecentSearch] = useState(false);
+  const [recentListView, setRecentListView] = useState(false);
   const router = useRouter();
   const { id } = router.query;
   const [toPageNumber, setToPageNumber] = useState(10);
@@ -54,7 +55,11 @@ const Post = ({ item }) => {
   }, [searchValue]);
 
   useEffect(() => {
-    console.log("searchAutoComptValue:" + searchAutoComptValue);
+    console.log("recentListView:" + recentListView);
+  }, [recentListView]);
+
+  useEffect(() => {
+    setRecentListView(false);
   }, [searchAutoComptValue]);
 
   return (
@@ -62,59 +67,46 @@ const Post = ({ item }) => {
       <div className={styles.site_body}>
         <div className={styles.ListFilter}>
           <div className={styles.site_container}>
-            <SearchBar
-              getSearchValue={(value) => {
-                setSearchValue(value);
-              }}
-              getSearchAutoComptValue={(value) => {
-                setSearchAutoComptValue(value);
-              }}
-            ></SearchBar>
-            <div className={styles.ListFilterValue}>
-              <div className={styles.ListFilterValue_list}>
-                <CalendarFilterButton></CalendarFilterButton>
-                <PersonalFilterButton></PersonalFilterButton>
-              </div>
+            <div>
+              <button
+              // onClick={() => {
+              //   setRecentListView(false);
+              // }}
+              >
+                {"<<<<<<<<"}{" "}
+              </button>
             </div>
 
-            <div className={styles.ListFilterButton}>
-              <div className={styles.ListFilterButton_list}>
-                <OptionFilterButton></OptionFilterButton>
-                <OrderByFilterButton></OrderByFilterButton>
+            <div>
+              <SearchBar
+                getSearchValue={(value) => {
+                  setSearchValue(value);
+                }}
+                getSearchAutoComptValue={(value) => {
+                  setSearchAutoComptValue(value);
+                }}
+                sendTextValue={id}
+                getRecentListView={(value) => {
+                  setRecentListView(value);
+                }}
+              ></SearchBar>
+              <div className={styles.ListFilterValue}>
+                <div className={styles.ListFilterValue_list}>
+                  <CalendarFilterButton></CalendarFilterButton>
+                  <PersonalFilterButton></PersonalFilterButton>
+                </div>
+              </div>
+
+              <div className={styles.ListFilterButton}>
+                <div className={styles.ListFilterButton_list}>
+                  <OptionFilterButton></OptionFilterButton>
+                  <OrderByFilterButton></OrderByFilterButton>
+                </div>
               </div>
             </div>
           </div>
         </div>
-        {searchAutoComptValue.length < 1 ? (
-          <div className={styles.ProductList}>
-            <div className={styles.site_container}>
-              <ul class={"ProductList-list"}>
-                <SearchResultList ref={lastroomElementRef} rooms={rooms} />
-              </ul>
-              <>
-                <Modal
-                  className={LodingStyles.Modal}
-                  overlayClassName={LodingStyles.Overlay}
-                  isOpen={loading}
-                  ariaHideApp={false}
-                >
-                  Loading...
-                </Modal>
-                <Modal
-                  className={LodingStyles.Modal}
-                  overlayClassName={LodingStyles.Overlay}
-                  isOpen={!showModal}
-                  ariaHideApp={false}
-                >
-                  <label onClick={() => setShowModal(true)}>X</label>
-                  <p>더이상 데이터가 없습니다.</p>
-                </Modal>
-              </>
-
-              <ScrollTopArrow></ScrollTopArrow>
-            </div>
-          </div>
-        ) : (
+        {recentListView ? (
           <RecentSearch
             sendSearchValue={searchValue}
             sendSearchAutoComptValue={searchAutoComptValue}
@@ -124,7 +116,51 @@ const Post = ({ item }) => {
             getCloseRecentSearch={(value) => {
               setCloseRecentSearch(value);
             }}
-          ></RecentSearch>
+          />
+        ) : (
+          <React.Fragment>
+            {searchAutoComptValue.length < 1 ? (
+              <div className={styles.ProductList}>
+                <div className={styles.site_container}>
+                  <ul>
+                    <SearchResultList ref={lastroomElementRef} rooms={rooms} />
+                  </ul>
+                  <>
+                    <Modal
+                      className={LodingStyles.Modal}
+                      overlayClassName={LodingStyles.Overlay}
+                      isOpen={loading}
+                      ariaHideApp={false}
+                    >
+                      Loading...
+                    </Modal>
+                    <Modal
+                      className={LodingStyles.Modal}
+                      overlayClassName={LodingStyles.Overlay}
+                      isOpen={!showModal}
+                      ariaHideApp={false}
+                    >
+                      <label onClick={() => setShowModal(true)}>X</label>
+                      <p>더이상 데이터가 없습니다.</p>
+                    </Modal>
+                  </>
+
+                  <ScrollTopArrow></ScrollTopArrow>
+                </div>
+              </div>
+            ) : (
+              <RecentSearch
+                sendSearchValue={searchValue}
+                sendSearchAutoComptValue={searchAutoComptValue}
+                getSearchValue={(value) => {
+                  setSearchValue(value);
+                }}
+                getCloseRecentSearch={(value) => {
+                  setCloseRecentSearch(value);
+                }}
+              />
+            )}
+          </React.Fragment>
         )}
       </div>
     </div>
