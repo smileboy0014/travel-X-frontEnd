@@ -1,5 +1,5 @@
 import React from "react";
-import Style from "../../../styles/OptionFilterButton.module.css";
+import Style from "../../../styles/FilterButton.module.css";
 import { BsSliders } from "react-icons/bs";
 
 const OptionFilterButton = () => {

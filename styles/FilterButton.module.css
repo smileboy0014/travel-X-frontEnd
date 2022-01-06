@@ -1,0 +1,82 @@
+.ListFilterButton_item {
+  display: inline-block;
+  padding: 0 0.125rem;
+}
+
+body .ListFilterButton_filter {
+  border-radius: 1rem;
+  border: solid 0.0625rem #e0e0e0;
+  font-size: 0.75rem;
+  line-height: 1.2em;
+  color: #000;
+  font-weight: 500;
+  padding: 0.5rem 0.625rem 0.5rem 1.75rem;
+  position: relative;
+}
+
+body .ListFilterButtonItem_select {
+  border-radius: 1rem;
+  border: solid 0.0625rem #e0e0e0;
+  font-size: 0.75rem;
+  line-height: 1.2em;
+  color: #000;
+  font-weight: 500;
+  padding: 0.5rem 1.875rem 0.5rem 0.625rem;
+  position: relative;
+  text-align: left;
+  background-position: calc(100% - 0.625rem) center;
+  background-repeat: no-repeat;
+  background-size: 0.875rem 0.875rem;
+  cursor: pointer;
+}
+
+body .ListFilterButton_filter_icon {
+  content: "";
+  width: 0.875rem;
+  height: 0.875rem;
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  background-size: 0.875rem 0.875rem;
+}
+
+.ListFilterValue_list::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.ListFilterValue_list {
+  margin: 0 -0.25rem;
+}
+
+.ListFilterValue_item {
+  width: 50%;
+  float: left;
+  padding: 0 0.25rem;
+}
+
+body .ListFilterValueItem {
+  font-size: 12px;
+  line-height: 1.2em;
+  color: #000;
+  padding: 0.5625rem 0.5rem 0.5625rem 2.25rem;
+  border-radius: 0.25rem;
+  background-color: #f8f8f8;
+  display: block;
+  position: relative;
+  width: 100%;
+  text-align: left;
+}
+
+.ListFilterValueItem_icon {
+  content: "";
+  width: 1.25rem;
+  height: 1.25rem;
+  position: absolute;
+  top: 50%;
+  left: 8px;
+  transform: translateY(-50%);
+  background-size: 1.25rem 1.25rem;
+}

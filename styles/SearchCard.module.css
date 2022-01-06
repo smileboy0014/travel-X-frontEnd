@@ -49,10 +49,10 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 40%;
+  height: 15%;
   opacity: 0.6;
   mix-blend-mode: multiply;
-  background-image: linear-gradient(to top, rgba(0, 0, 0, 0), #000 31%);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0), #000 31%);
   z-index: 1;
 }
 
