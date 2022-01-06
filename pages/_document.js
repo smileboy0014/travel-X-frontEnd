@@ -9,12 +9,13 @@ class MyDocument extends Document {
   render() {
     return (
       <Html>
-        <Head />
+        <Head></Head>
         <body>
           <Main />
           <NextScript />
           <div id="modal-root"></div>
         </body>
+        <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
       </Html>
     );
   }

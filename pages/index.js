@@ -8,27 +8,21 @@ import { useDispatch, useSelector } from "react-redux";
 import * as mapActions from "../redux/store/modules/map";
 import SelectSearchLocationModal from "./../components/Modal/Map/SelectSearchLocationModal";
 import PesonalModal from "../components/Modal/Personal/PersonalModal";
-import MainTap from "../components/Tap/MainTap";
 import BottomNavbar from "../components/NavBar/BottomNavbar";
-import ReserveNavbar from "../components/NavBar/ReserveNavbar";
-import test from "./test";
 
 export default function Home() {
   const [showSearchMapModal, setShowSearchMapModal] = useState(false);
+  const [personalModalOpen, setPersonalModalOpen] = useState(false);
   const [showSelectSearchLocationModal, setShowSelectSearchLocationModal] =
     useState(false);
   const dispatch = useDispatch();
   const { addresses } = useSelector((state) => state.map);
-  const [showPersonalModal, setPersonalShowModal] = useState(false);
-  const [personalModalOpen, setPersonalModalOpen] = useState(false);
-
   const adultCounterValue = useSelector(
     ({ adultCounter }) => adultCounter.value
   );
   const childCounterValue = useSelector(
     ({ childCounter }) => childCounter.value
   );
-
   const handleScriptLoaded = (value) => {
     dispatch(mapActions.setScriptLoaded(value));
   };
