@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import style from "../../styles/SearchCard.module.css";
 import { AiFillStar } from "react-icons/ai";
 import { BsGeoAlt } from "react-icons/bs";
+import SearchResultCarousel from "./Carousel/SearchResultCarousel"
 
 function SearchResult(props) {
   {
@@ -18,17 +19,7 @@ function SearchResult(props) {
             <BsGeoAlt className={style.ProductItem_address_icon} />
             {props.address}
           </div>
-
-          <div className={style.ProductSlide}>
-            <div className={style.ProductSlide_link}>
-              <img
-                className={style.ProductSlide_link_img}
-                src={"http://" + props.images[0]}
-                alt=""
-              />
-            </div>
-          </div>
-
+          <SearchResultCarousel items={props.images} />
           <div className={style.ProductItemCont}>
             <div className={style.ProductItemMeta}>
               <span className={style.ProductItemMeta_item}>
