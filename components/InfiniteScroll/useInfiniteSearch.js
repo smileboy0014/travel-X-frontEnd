@@ -41,6 +41,8 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber) {
         size: toPageNumber,
       },
     }).then((res) => {
+      console.log(res);
+
       setTotalHitCount(res.data.totalHitCount);
       setRooms((prevState) => ({
         ...prevState,

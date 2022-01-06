@@ -4,23 +4,13 @@ import style from "../../styles/Carousel.module.css";
 // import SearchResultCard from "./SearchResultCard";
 import SearchResultCard from "./SearchCard";
 import Link from "next/link";
+import DetailView from "../../pages/view/detail/[id]";
 
 const SearchResultList = (props, ref) => {
-  const carouselRef = useRef(null);
   const { rooms } = props;
-  const [slide, setSlide] = useState(false);
-
-  const GetRandomRatingScore = () => {
-    let max = 5.0;
-    let min = 2.0;
-    return (Math.random() * (max - min) + min).toFixed(1);
-  };
 
   useEffect(() => {
-    setSlide(false);
-    return () => {
-      setSlide(true);
-    };
+    console.log("rooms: " + props);
   }, []);
 
   return (
@@ -33,19 +23,38 @@ const SearchResultList = (props, ref) => {
             return (
               <div key={index}>
                 <Link
-                  href="/view/detail/[id]"
-                  as={`/view/detail/${room.roomId}`}
+                  href={{
+                    pathname: "/view/detail/[id]",
+                    query: { id: room.roomId },
+                  }}
                   key={index}
                 >
                   <a>
                     <SearchResultCard
                       id={room.roomId}
-                      roomName={room.roomName}
-                      propertyName={room.propertyName}
+                      address={room.address}
+                      baseUser={room.baseUser}
+                      checkinInfo={room.checkinInfo}
+                      checkoutInfo={room.checkoutInfo}
                       images={room.images}
+                      lastTimeInfo={room.lastTimeInfo}
+                      maxUseTimeInfo={room.maxUseTimeInfo}
                       maxUser={room.maxUser}
                       price={room.price}
-                      ratingScoreAvg={GetRandomRatingScore()}
+                      propertyName={room.propertyName}
+                      propertyType={
+                        room.propertyType !== undefined
+                          ? room.propertyType
+                          : "N/A"
+                      }
+                      roomName={room.roomName}
+                      stock={room.stock}
+                      useType={room.useType}
+                      ratingScoreAvg={
+                        room.ratingScoreAvg !== undefined
+                          ? room.ratingScoreAvg
+                          : 0
+                      }
                     />
                   </a>
                 </Link>

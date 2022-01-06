@@ -5,6 +5,9 @@ import { BsGeoAlt } from "react-icons/bs";
 
 function SearchResult(props) {
   {
+    useEffect(() => {
+      console.log(props);
+    }, [props]);
   }
 
   return (
@@ -13,7 +16,7 @@ function SearchResult(props) {
         <div className={style.ProductItem}>
           <div className={style.ProductItem_address}>
             <BsGeoAlt className={style.ProductItem_address_icon} />
-            {"주소 입력 부분"}
+            {props.address}
           </div>
 
           <div className={style.ProductSlide}>
@@ -28,23 +31,27 @@ function SearchResult(props) {
 
           <div className={style.ProductItemCont}>
             <div className={style.ProductItemMeta}>
-              <span className={style.ProductItemMeta_item}>{"숙소 타입"}</span>
-              <span className={style.ProductItemMeta_item}>{"숙소명"}</span>
+              <span className={style.ProductItemMeta_item}>
+                {props.propertyType}
+              </span>
+              <span className={style.ProductItemMeta_item}>
+                {props.propertyName}
+              </span>
             </div>
             <div className={style.ProductItemTitle}>{props.roomName}</div>
             <div className={style.ProductItemFilter}>
               <span className={style.ProductItemFilter_item}>
-                2인 기준 최대 {props.maxUser}인
+                기준: {props.baseUser}인 최대: {props.maxUser}인
               </span>
               <span className={style.ProductItemFilter_item}>
-                {"숙박시간 입력"}
+                체크인: {props.checkinInfo} 체크아웃:{props.checkoutInfo}인
               </span>
             </div>
 
             <div className={style.ProductItemPrice}>
               <div className={style.searchResult__stars}>
                 <AiFillStar className={style.searchResult_star} />
-                <strong>{props.ratingScoreAvg} rating 값이 계속 변경됨 </strong>
+                <strong>{props.ratingScoreAvg} rating</strong>
               </div>
             </div>
 
