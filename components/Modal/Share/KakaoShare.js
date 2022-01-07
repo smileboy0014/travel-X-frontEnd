@@ -50,7 +50,7 @@ const kakao = () => {
 
   return (
     <div id={"kakao-link-btn"}>
-      <AiOutlineShareAlt size={30} onClick={onClickKakao}></AiOutlineShareAlt>
+      <button onClick={onClickKakao}>카카오</button>
     </div>
   );
 };
