@@ -2,13 +2,10 @@ import React, { useEffect } from "react";
 import style from "../../styles/SearchCard.module.css";
 import { AiFillStar } from "react-icons/ai";
 import { BsGeoAlt } from "react-icons/bs";
-import SearchResultCarousel from "./Carousel/SearchResultCarousel"
+import SearchResultCarousel from "./Carousel/SearchResultCarousel";
 
 function SearchResult(props) {
   {
-    useEffect(() => {
-      console.log(props);
-    }, [props]);
   }
 
   return (

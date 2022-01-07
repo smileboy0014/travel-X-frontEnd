@@ -1,40 +1,29 @@
 import React, { useEffect, useState } from "react";
-import Styles from "../../styles/DetailTopNavbar.module.css";
-import { useSelector, useDispatch } from "react-redux";
-import { AiOutlineLeft } from "react-icons/ai";
-import { AiOutlineHome } from "react-icons/ai";
-import { AiOutlineShareAlt } from "react-icons/ai";
+import Style from "../../styles/DetailTopNavbar.module.css";
 import { useRouter } from "next/router";
-import Kakao from "../Modal/Share/KakaoShare";
+import ShareModal from "../Modal/Share/ShareModal";
 
-const DetailTopNavbar = () => {
-  const scrollYValue = useSelector(({ scrollY }) => scrollY.value);
-  const [changeStyle, setChangeStyle] = useState(Styles.DetailTopNav);
+const DetailTopNavbar = ({ HeaderTitle }) => {
+  const [shareModalOpen, setShareModalOpen] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    if (scrollYValue.scrollYValue == 0) {
-      setChangeStyle(Styles.DetailTopNav);
-    } else if (scrollYValue.scrollYValue <= 100) {
-      setChangeStyle(Styles.DetailTopNav_first);
-    } else {
-      setChangeStyle(Styles.DetailTopNav_second);
-    }
-  }, [scrollYValue]);
-
-  const buttonClickHandler = () => {
-    props.showSelectSearchLocationModal();
-  };
-
   return (
-    <div>
-      <div className={changeStyle}>
-        <AiOutlineLeft onClick={() => router.back()} size={30}></AiOutlineLeft>
-        <AiOutlineHome size={30}></AiOutlineHome>
-        {/* <AiOutlineShareAlt size={30}></AiOutlineShareAlt> */}
-        <Kakao />
+    <>
+      <div className={Style.HeaderBack} onClick={() => router.back()} />
+      <div className={Style.HeaderTitle}>{HeaderTitle}</div>
+      <div className={Style.HeaderShare}>
+        <button
+          type="button"
+          className={Style.HeaderShare_button}
+          onClick={() => setShareModalOpen(true)}
+        />
       </div>
-    </div>
+
+      <ShareModal
+        isOpen={shareModalOpen}
+        onRequestClose={() => setShareModalOpen(false)}
+      ></ShareModal>
+    </>
   );
 };
 

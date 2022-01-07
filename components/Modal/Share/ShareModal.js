@@ -1,27 +1,25 @@
 import React from "react";
 import Modal from "react-modal";
-import Styles from "../../../styles/ReserveModal.module.css";
+import Style from "../../../styles/CommonModal.module.css";
+import KakaoShre from "./KakaoShare";
 
-const ReserveModal = ({ isOpen, onRequestClose }) => {
+const ShareModal = ({ isOpen, onRequestClose }) => {
   return (
     <div>
       <Modal
-        className={Styles.Modal}
-        overlayClassName={Styles.Overlay}
+        className={Style.Modal}
+        overlayClassName={Style.Overlay}
         isOpen={isOpen}
       >
         <label onClick={() => onRequestClose(false)}>X</label>
 
-        <div>여행</div>
-        <div>체크인..... 체크아웃....</div>
-        <div>게스트 1명</div>
-
-        <div>가격</div>
-        <div>10000원</div>
-        <div>총합계: 2950000</div>
+        <div>
+          <KakaoShre /> 카카오
+        </div>
+        <div>URL</div>
       </Modal>
     </div>
   );
 };
 
-export default ReserveModal;
+export default ShareModal;

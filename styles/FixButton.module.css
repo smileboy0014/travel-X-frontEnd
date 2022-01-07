@@ -17,7 +17,7 @@
   z-index: 1000;
 }
 
-body .MapFixButton_icon {
+body .MapFixButton:before {
   content: "";
   width: 0.875rem;
   height: 0.875rem;
@@ -25,5 +25,6 @@ body .MapFixButton_icon {
   top: 50%;
   left: 1.1875rem;
   transform: translateY(-50%);
+  background-image: url(../public/icon/ico_map.svg);
   background-size: 0.875rem 0.875rem;
 }

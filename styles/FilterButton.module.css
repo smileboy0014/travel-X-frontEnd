@@ -24,13 +24,14 @@ body .ListFilterButtonItem_select {
   padding: 0.5rem 1.875rem 0.5rem 0.625rem;
   position: relative;
   text-align: left;
+  background-image: url(../public/icon/ico_search_arrow.svg);
   background-position: calc(100% - 0.625rem) center;
   background-repeat: no-repeat;
   background-size: 0.875rem 0.875rem;
   cursor: pointer;
 }
 
-body .ListFilterButton_filter_icon {
+body .ListFilterButton_filter:before {
   content: "";
   width: 0.875rem;
   height: 0.875rem;
@@ -38,6 +39,7 @@ body .ListFilterButton_filter_icon {
   top: 50%;
   left: 10px;
   transform: translateY(-50%);
+  background-image: url(../public/icon/ico_filter.svg);
   background-size: 0.875rem 0.875rem;
 }
 
