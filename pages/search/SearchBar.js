@@ -69,7 +69,6 @@ const SearchBar = ({
     if (getRecentListView != undefined) {
       getRecentListView(true);
       setCheckBackStep(false);
-      console.log("인풋박스 클릭했습니다.");
     }
   };
 
