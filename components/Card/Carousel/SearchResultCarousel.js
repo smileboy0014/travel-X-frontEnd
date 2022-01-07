@@ -1,12 +1,13 @@
-import { useEffect, useState, useRef, forwardRef, Fragment } from 'react'
+import { useEffect, useState, useRef, forwardRef, Fragment } from "react";
 import Styles from "../../../styles/SearchResult.module.css";
-import DetailAllImageModal from '../../Modal/RoomDetail/DetailAllImageModal';
+import DetailAllImageModal from "../../Modal/RoomDetail/DetailAllImageModal";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination } from 'swiper';
+import { Pagination } from "swiper";
 import "swiper/css";
-import "swiper/css/pagination"
+import "swiper/css/pagination";
 
-const sampleImage = 'http://image.goodchoice.kr/resize_490x348/adimg_new/891/279402/934791805cb0b0b25a27081f1dd3f584.jpg';
+const sampleImage =
+  "http://image.goodchoice.kr/resize_490x348/adimg_new/891/279402/934791805cb0b0b25a27081f1dd3f584.jpg";
 
 const SearchResultCarousel = (props, ref) => {
   const { items } = props;
@@ -21,30 +22,32 @@ const SearchResultCarousel = (props, ref) => {
   return (
     <>
       <div className={Styles.ProductSlide}>
-        <Swiper 
+        <Swiper
           modules={[Pagination]}
-          pagination={true} 
+          pagination={true}
           loop={true}
-          className="swiper-container">
-          {items && items.map((item, index) => (
-            <SwiperSlide key={index} className='ProductSlide-slide'>
-              <div className={Styles.ProductSlide_thumb}>
-                <a href='#' className={Styles.ProductSlide_link}>
-                  <img
-                    className={Styles.ProductSlide_link_img}
-                    src={item ? 'http://' + item : sampleImage}
-                    alt="search-room-img"
-                  />
-                </a>
-              </div>
-            </SwiperSlide>
-          ))}
+          className="swiper-container"
+        >
+          {items &&
+            items.map((item, index) => (
+              <SwiperSlide key={index} className="ProductSlide-slide">
+                <div className={Styles.ProductSlide_thumb}>
+                  <a href="#" className={Styles.ProductSlide_link}>
+                    <img
+                      className={Styles.ProductSlide_link_img}
+                      src={item ? "http://" + item : sampleImage}
+                      alt="search-room-img"
+                    />
+                  </a>
+                </div>
+              </SwiperSlide>
+            ))}
         </Swiper>
       </div>
     </>
-  )
+  );
 };
 
-SearchResultCarousel.displayName = 'SearchResultCarousel';
+SearchResultCarousel.displayName = "SearchResultCarousel";
 
 export default forwardRef(SearchResultCarousel);

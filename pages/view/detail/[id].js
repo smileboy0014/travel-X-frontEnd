@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import DetailTopNavbar from "../../../components/NavBar/DetailTopNavbar";
 import { RiHotelLine } from "react-icons/ri";
 import { BsPerson, BsCalendar, BsGeoAlt } from "react-icons/bs";
+import ReserveButton from "../../../components/Button/Reserve/ReserveButton";
 
 const DetailView = () => {
   const [rooms, setRooms] = useState([]);
@@ -232,13 +233,9 @@ const DetailView = () => {
         </div>
         {/* <!-- .DetailInfo -->
 				<!-- BttonFixButton --> */}
-        <div className={Style.BttonFixButton}>
-          <div className={Style.site_container}>
-            <button type="button" className={Style.BttonFixButton_button}>
-              예약하기
-            </button>
-          </div>
-        </div>
+
+        <ReserveButton></ReserveButton>
+
         {/* <!-- .BttonFixButton --> */}
       </div>
       {/* <!-- .컨텐츠 끝 --> */}

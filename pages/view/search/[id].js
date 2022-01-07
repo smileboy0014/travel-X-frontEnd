@@ -143,7 +143,7 @@ const Post = ({ item }) => {
           </React.Fragment>
         )}
 
-        <MapFixButton></MapFixButton>
+        <MapFixButton />
       </div>
     </div>
   );
