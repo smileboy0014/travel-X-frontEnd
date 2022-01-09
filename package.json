@@ -8,8 +8,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@ckeditor/ckeditor5-build-classic": "^31.1.0",
-    "@ckeditor/ckeditor5-react": "^3.0.3",
     "@reduxjs/toolkit": "^1.7.1",
     "@types/navermaps": "^3.0.10",
     "axios": "^0.24.0",

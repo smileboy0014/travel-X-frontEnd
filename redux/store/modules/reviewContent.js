@@ -17,6 +17,6 @@ const reviewContent = createSlice({
   }
 });
 
-export const { input, setData } = reviewContent.actions; // 액션 생성 함수
+export const { setData } = reviewContent.actions; // 액션 생성 함수
 
 export default reviewContent.reducer; // 리듀서
