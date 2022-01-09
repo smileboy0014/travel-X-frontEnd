@@ -1,6 +1,10 @@
 .App {
   text-align: center;
 }
+.reviewCotent {
+  border-top: 1px solid #eaeaea;
+  margin-top: 10px;
+}
 
 .reviewContainer {
   margin: 0 auto;
@@ -37,4 +41,18 @@
   border-radius: 5px;
   margin-top: 40px;
   vertical-align: middle;
+}
+
+.formHeader {
+  height: auto;
+  border-bottom: 2px solid #eaeaea;
+}
+
+.starPoint {
+  margin-left: 10px;
+  font-size: 30px;
+}
+
+.progressBarForm{
+  display: flex;
 }

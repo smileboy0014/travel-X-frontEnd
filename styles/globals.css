@@ -447,3 +447,23 @@ body {
 .swiper-pagination-bullet-active { 
   background-color: #6957e8 !important; 
 }
+
+/* start rating relating */
+.box {
+  width: 300px;
+}
+.flex {
+  display: flex;
+}
+
+.w-6 {
+  width:1.5em;
+}
+
+.h-6 {
+  height: 1.5em;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
