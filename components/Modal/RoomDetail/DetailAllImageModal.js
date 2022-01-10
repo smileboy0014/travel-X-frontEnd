@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect } from "react";
 import Modal from "react-modal";
-import Styles from "../../../styles/DetailAllImageModal.module.css";
+import Style from "../../../styles/DetailAllImageModal.module.css";
 import Image from "next/image";
 
 const sampleImage =
@@ -14,13 +14,14 @@ const DetailAllImageModal = ({ isOpen, onRequestClose, images }) => {
   return (
     <div>
       <Modal
-        className={Styles.Modal}
-        overlayClassName={Styles.Overlay}
+        className={Style.Modal}
+        overlayClassName={Style.Overlay}
         isOpen={isOpen}
+        ariaHideApp={false}
       >
         <label onClick={() => onRequestClose(false)}>X</label>
 
-        <div className={Styles.container}>
+        <div className={Style.container}>
           {images &&
             images.map((item, index) => (
               <Fragment key={index}>

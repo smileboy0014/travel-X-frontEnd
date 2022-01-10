@@ -1,24 +1,29 @@
 .Modal {
-  min-height: 100%;
-  max-width: 50rem;
+  max-width: 48rem;
   background: rgb(142, 231, 243);
   margin: 0 auto;
-  position: relative;
+  position: fixed;
   padding: 30px;
   border-radius: 15px;
-  margin-bottom: 50px;
-  z-index: 9999;
+  margin-bottom: -10px;
+  z-index: 200;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 .Overlay {
   position: fixed;
-  top: 100;
+  min-height: 100%;
+  min-width: 100%;
+  top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   justify-content: center;
   align-items: center;
   background-color: #00ff0000;
+  z-index: 200;
 }
 
 @media screen and (max-width: 480px) {

@@ -10,6 +10,7 @@ const ReviewModal = ({ isOpen, onRequestClose }) => {
         className={Style.Modal}
         overlayClassName={Style.Overlay}
         isOpen={isOpen}
+        ariaHideApp={false}
       >
         <label onClick={() => onRequestClose(false)}>X</label>
 

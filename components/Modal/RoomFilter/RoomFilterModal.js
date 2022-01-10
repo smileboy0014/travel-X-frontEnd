@@ -1,23 +1,22 @@
 import React from "react";
 import RoomFilter from "./RoomFilter";
+import Modal from "react-modal";
+import Style from "../../../styles/CommonModal.module.css";
 
 const RoomFilterModal = ({ isOpen, onRequestClose }) => {
-  const dispatch = useDispatch();
-  const handleSaveClick = (e) => {
-    e.preventDefault();
-    onRequestClose(false);
-  };
-
-  const handleCloseClick = () => {
-    console.log("취소");
-  };
   return (
     <div>
-      <Modal isOpen={isOpen} ariaHideApp={false}>
+      <Modal
+        className={Style.Modal}
+        overlayClassName={Style.Overlay}
+        isOpen={isOpen}
+        // ariaHideApp={false}
+        shouldCloseOnOverlayClick={true}
+        shouldCloseOnEsc={true}
+        onRequestClose={() => onRequestClose(false)}
+      >
         <label onClick={() => onRequestClose(false)}>X</label>
         <RoomFilter></RoomFilter>
-        <button onClick={handleSaveClick}> 확인</button>
-        <button onClick={handleCloseClick}> 취소</button>
       </Modal>
     </div>
   );

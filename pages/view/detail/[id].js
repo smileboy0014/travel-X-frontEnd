@@ -137,7 +137,7 @@ const DetailView = () => {
                     <AiFillStar className={Style.searchResult_star} />
                     <strong>100_DB 연동</strong>
                     <span className={Style.ProductItemFilter_item}>
-                      (1000)_DB연동
+                      후가 1000개_DB연동
                     </span>
                   </button>
 

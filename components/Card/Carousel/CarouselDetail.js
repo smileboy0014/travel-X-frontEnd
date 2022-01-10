@@ -1,4 +1,4 @@
-import styles from "../../../styles/Featured.module.css";
+import Style from "../../../styles/Featured.module.css";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 
@@ -28,21 +28,21 @@ const CarouselDetail = ({ imges }) => {
   };
 
   return (
-    <div className={styles.container}>
+    <div className={Style.container}>
       <div
-        className={styles.arrowContainer}
+        className={Style.arrowContainer}
         style={{ left: 0 }}
         onClick={() => handleArrow("l")}
       >
         <Image src="/img/arrowl.png" alt="" layout="fill" objectFit="contain" />
       </div>
       <div
-        className={styles.wrapper}
+        className={Style.wrapper}
         style={{ transform: `translateX(${-35 * index}vw)` }}
       >
         {images.item !== undefined &&
           images.item.map((img, i) => (
-            <div className={styles.imgContainer} key={i}>
+            <div className={Style.imgContainer} key={i}>
               <Image
                 src={"http://" + img}
                 alt=""
@@ -55,7 +55,7 @@ const CarouselDetail = ({ imges }) => {
           ))}
       </div>
       <div
-        className={styles.arrowContainer}
+        className={Style.arrowContainer}
         style={{ right: 0 }}
         onClick={() => handleArrow("r")}
       >

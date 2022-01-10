@@ -37,7 +37,7 @@ const RoomFilter = () => {
         <div>
           <label>{"대실"}</label>
           <input
-            // className={styles.checkbox}
+            // className={Style.checkbox}
             type="checkbox"
             id="hDay"
             name="hDay"
@@ -48,7 +48,7 @@ const RoomFilter = () => {
           />
           <label>{"숙박"}</label>
           <input
-            // className={styles.checkbox}
+            // className={Style.checkbox}
             type="checkbox"
             id="fDay"
             name="fDay"
@@ -65,7 +65,7 @@ const RoomFilter = () => {
         <div>
           <label>{"호텔"}</label>
           <input
-            // className={styles.checkbox}
+            // className={Style.checkbox}
             type="checkbox"
             id="hotel"
             name="hotel"
@@ -77,7 +77,7 @@ const RoomFilter = () => {
 
           <label>{"모델"}</label>
           <input
-            // className={styles.checkbox}
+            // className={Style.checkbox}
             type="checkbox"
             id="motel"
             name="motel"
@@ -89,7 +89,7 @@ const RoomFilter = () => {
 
           <label>{"펜션"}</label>
           <input
-            // className={styles.checkbox}
+            // className={Style.checkbox}
             type="checkbox"
             id="pension"
             name="pension"
@@ -102,7 +102,7 @@ const RoomFilter = () => {
         <div>
           <label>{"게스트하우스"}</label>
           <input
-            // className={styles.checkbox}
+            // className={Style.checkbox}
             type="checkbox"
             id="guestHose"
             name="guestHose"
@@ -114,7 +114,7 @@ const RoomFilter = () => {
 
           <label>{"리조트"}</label>
           <input
-            // className={styles.checkbox}
+            // className={Style.checkbox}
             type="checkbox"
             id="resort"
             name="resort"
@@ -126,7 +126,7 @@ const RoomFilter = () => {
 
           <label>{"캠핑장"}</label>
           <input
-            // className={styles.checkbox}
+            // className={Style.checkbox}
             type="checkbox"
             id="camping"
             name="camping"
