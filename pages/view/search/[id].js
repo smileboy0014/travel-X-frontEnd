@@ -14,6 +14,7 @@ import OptionFilterButton from "../../../components/Button/OptionFilter/OptionFi
 import OrderByFilterButton from "../../../components/Button/OptionFilter/OrderByFilterButton";
 import DetailTopNavbar from "../../../components/NavBar/DetailTopNavbar";
 import MapFixButton from "../../../components/Button/Fix/MapFixButton";
+import SearchMapModal from "../../../components/Modal/Map/SearchMapModal";
 
 const Post = ({ item }) => {
   const [showModal, setShowModal] = useState(false);

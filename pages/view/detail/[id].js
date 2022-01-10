@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import NaverMap from "../../../components/Modal/Map/NaverMap";
+import DetailMap from "../../../components/Modal/Map/DetailMap";
 import CarouselDetail from "../../../components/Card/Carousel/DetailCarousel";
 import DetailTopNavbar from "../../../components/NavBar/DetailTopNavbar";
 import ReserveButton from "../../../components/Button/Reserve/ReserveButton";
@@ -284,6 +284,8 @@ const DetailView = () => {
 						<!-- item --> */}
                 <div className={Style.DetailInfoItem}>
                   <div className={Style.DetailInfoItem_title}>위치 정보</div>
+
+                  <DetailMap lat={37.3595704} lng={127.105399} />
                 </div>
                 {/* <!-- .item --> */}
               </div>

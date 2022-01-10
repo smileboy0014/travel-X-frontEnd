@@ -3,7 +3,7 @@ import Link from "next/link";
 import Script from "next/script";
 import Style from "../styles/Index.module.css";
 import GeoLocationButton from "../components/Button/GeolocationButton";
-import SearchMapModal from "./../components/Modal/Map/SearchMapModal";
+import SearchMapModal from "./../components/Modal/Map/SearchMapModal_Bak";
 import { useDispatch, useSelector } from "react-redux";
 import * as mapActions from "../redux/store/modules/map";
 import SelectSearchLocationModal from "./../components/Modal/Map/SelectSearchLocationModal";
@@ -31,7 +31,7 @@ export default function Home() {
     <div className={Style.background}>
       <div className={Style.main}>
         <div className={Style.subMain}>
-          <Script
+          {/* <Script
             type="text/javascript"
             src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=ra1rvd631l&submodules=geocoder"
             onError={(e) => {
@@ -40,7 +40,7 @@ export default function Home() {
             onLoad={() => {
               handleScriptLoaded(true);
             }}
-          />
+          /> */}
           <Link href="/search" as={`/search`}>
             <a>
               <img className={Style.img} src="/SearchBar2.jpg" />
