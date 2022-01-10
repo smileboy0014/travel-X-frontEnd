@@ -6,7 +6,8 @@
   position: relative;
   padding: 30px;
   border-radius: 15px;
-  margin-bottom: 100px;
+  margin-bottom: 50px;
+  z-index: 9999;
 }
 
 .Overlay {
