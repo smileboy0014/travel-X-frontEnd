@@ -4,7 +4,7 @@ import ScrollTopArrow from "../../../components/ScrollTop/ScrollTopArrow";
 import { useRouter } from "next/router";
 import useInfiniteSearch from "../../../components/InfiniteScroll/useInfiniteSearch";
 import Style from "../../../styles/SearchResult.module.css";
-import LodingStyles from "../../../styles/LodingModal.module.css";
+import LodingStyles from "../../../styles/CommonModal.module.css";
 import Modal from "react-modal";
 import SearchBar from "../../search/SearchBar";
 import RecentSearch from "../../search/RecentSearch";
@@ -122,6 +122,7 @@ const Post = ({ item }) => {
                       overlayClassName={LodingStyles.Overlay}
                       isOpen={!showModal}
                       ariaHideApp={false}
+                      onRequestClose={() => setShowModal(true)}
                     >
                       <label onClick={() => setShowModal(true)}>X</label>
                       <p>더이상 데이터가 없습니다.</p>

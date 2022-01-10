@@ -10,9 +10,7 @@ const RoomFilterModal = ({ isOpen, onRequestClose }) => {
         className={Style.Modal}
         overlayClassName={Style.Overlay}
         isOpen={isOpen}
-        // ariaHideApp={false}
-        shouldCloseOnOverlayClick={true}
-        shouldCloseOnEsc={true}
+        ariaHideApp={false}
         onRequestClose={() => onRequestClose(false)}
       >
         <label onClick={() => onRequestClose(false)}>X</label>

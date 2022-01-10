@@ -18,6 +18,7 @@ const DetailAllImageModal = ({ isOpen, onRequestClose, images }) => {
         overlayClassName={Style.Overlay}
         isOpen={isOpen}
         ariaHideApp={false}
+        onRequestClose={() => onRequestClose(false)}
       >
         <label onClick={() => onRequestClose(false)}>X</label>
 

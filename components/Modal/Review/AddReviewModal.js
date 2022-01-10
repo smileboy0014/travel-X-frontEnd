@@ -1,6 +1,6 @@
 import React, { useMemo, useCallback, useEffect, useState } from "react";
 import Modal from "react-modal";
-import style from "../../../styles/AddReviewModal.module.css";
+import Style from "../../../styles/AddReviewModal.module.css";
 import { useSelector, useDispatch } from "react-redux";
 import StarRating from "../../Rating/StarRating";
 import * as reviewData from "../../../redux/store/modules/reviewContent";
@@ -170,10 +170,11 @@ const AddReviewModal = ({ isOpen, setReview, onRequestClose }) => {
   return (
     <>
       <Modal
-        className={style.Modal}
-        overlayClassName={style.Overlay}
+        className={Style.Modal}
+        overlayClassName={Style.Overlay}
         isOpen={isOpen}
         ariaHideApp={false}
+        onRequestClose={() => onRequestClose(false)}
       >
         <label onClick={() => onRequestClose(false)}>X</label>
         <h2>[ 리뷰 작성 ]</h2>
@@ -188,12 +189,12 @@ const AddReviewModal = ({ isOpen, setReview, onRequestClose }) => {
         <div className="box flex">{handleStarRating(4)}</div>
         <label>교통&위치접근성은 어떠셨나요?</label>
         <div className="box flex">{handleStarRating(5)}</div>
-        <div className={style.formWrapper}>
+        <div className={Style.formWrapper}>
           <br />
           <h2>후기를 작성해주세요.</h2>
           <br />
           <textarea
-            className={style.area}
+            className={Style.area}
             name="content"
             onChange={getValue}
             placeholder="개인 정보 보호를 위해 개인 정보를 입력하지 마세요."
@@ -202,13 +203,13 @@ const AddReviewModal = ({ isOpen, setReview, onRequestClose }) => {
           <label>{handleCount()}</label>
           {/* <Editor setData={setData}></Editor> */}
         </div>
-        <div className={style.noticeWapper}>
+        <div className={Style.noticeWapper}>
           <label>유의사항</label>
           <br />
           <br />
           <ul>{handleNotice()}</ul>
         </div>
-        <button className={style.submitButton} onClick={handleInput}>
+        <button className={Style.submitButton} onClick={handleInput}>
           등록
         </button>
       </Modal>

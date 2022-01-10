@@ -135,9 +135,9 @@ const DetailView = () => {
                     }}
                   >
                     <AiFillStar className={Style.searchResult_star} />
-                    <strong>100_DB 연동</strong>
-                    <span className={Style.ProductItemFilter_item}>
-                      후가 1000개_DB연동
+                    <strong>5.0_DB</strong>
+                    <span className={Style.DetailHeaderInfoAddress}>
+                      {"후기 1000개 >_DB"}
                     </span>
                   </button>
 

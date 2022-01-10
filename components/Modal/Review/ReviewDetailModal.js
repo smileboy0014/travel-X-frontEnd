@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
-import style from "../../../styles/ReviewDetail.module.css";
-
+import Style from "../../../styles/ReviewDetail.module.css";
 import ReviewCard from "../../../components/Card/Review/ReviewCard";
 import ProgressBar from "../../Progress/ProgressBar";
 import ReviewSearchBar from "../../SearchBar/ReveiwSearchBar";
@@ -26,35 +25,35 @@ const ReviewDetailModal = (props) => {
     switch (type) {
       case 1:
         return (
-          <div className={style.progressBarForm}>
+          <div className={Style.progressBarForm}>
             만족도
             <ProgressBar width={300} percent={point1 * 0.2} /> {point1}
           </div>
         );
       case 2:
         return (
-          <div className={style.progressBarForm}>
+          <div className={Style.progressBarForm}>
             친절도
             <ProgressBar width={300} percent={point2 * 0.2} /> {point2}
           </div>
         );
       case 3:
         return (
-          <div className={style.progressBarForm}>
+          <div className={Style.progressBarForm}>
             청결도
             <ProgressBar width={300} percent={point3 * 0.2} /> {point3}
           </div>
         );
       case 4:
         return (
-          <div className={style.progressBarForm}>
+          <div className={Style.progressBarForm}>
             편의성
             <ProgressBar width={300} percent={point4 * 0.2} /> {point4}
           </div>
         );
       case 5:
         return (
-          <div className={style.progressBarForm}>
+          <div className={Style.progressBarForm}>
             접근성
             <ProgressBar width={300} percent={point5 * 0.2} /> {point5}
           </div>
@@ -65,14 +64,16 @@ const ReviewDetailModal = (props) => {
   return (
     <>
       <Modal
+        className={Style.Modal}
+        overlayClassName={Style.Overlay}
         isOpen={isOpen}
-        className={style.Modal}
-        overlayClassName={style.Overlay}
+        ariaHideApp={false}
+        onRequestClose={() => onRequestClose(false)}
       >
         <label onClick={() => onRequestClose(false)}>X</label>
-        <div className={style.modalBody}>
-          <div className={style.leftDetail}>
-            <div className={style.formHeader}>
+        <div className={Style.modalBody}>
+          <div className={Style.leftDetail}>
+            <div className={Style.formHeader}>
               <svg
                 className="w-6 h-6"
                 fill="red"
@@ -87,8 +88,8 @@ const ReviewDetailModal = (props) => {
                   d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
                 ></path>
               </svg>
-              <label className={style.starPoint}>{totalPoint}</label>
-              <label className={style.starPoint}>후기 {totalCount}</label>
+              <label className={Style.starPoint}>{totalPoint}</label>
+              <label className={Style.starPoint}>후기 {totalCount}</label>
             </div>
             {handleProgressBar(1)}
             {handleProgressBar(2)}
