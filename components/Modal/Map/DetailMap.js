@@ -8,38 +8,29 @@ const DetailMap = ({ lat, lng, markerArr }) => {
     if (isMobile) {
       var roomMap = new naver.maps.Map("roomMap", {
         center: new naver.maps.LatLng(lat, lng),
-        zoom: 10,
+        zoom: 12,
       });
     } else {
       var roomMap = new naver.maps.Map("roomMap", {
         center: new naver.maps.LatLng(lat, lng),
-        zoom: 10,
+        zoom: 12,
         zoomControl: true,
       });
     }
 
     if (markerArr !== undefined) {
-      var roomMapMarker = new naver.maps.Marker({
-        position: new naver.maps.LatLng(lat, lng),
-        map: roomMap,
-      });
-    } else {
-      // var roomMapMarker = new naver.maps.Marker({
-      //   position: new naver.maps.LatLng(37.3595704, 127.105399),
-      //   map: roomMap,
-      // });
-      // var roomMapMarker = new naver.maps.Marker({
-      //   position: new naver.maps.LatLng(lat + 1, lng + 1),
-      //   map: roomMap,
-      // });
-      for (var i = 0; i < 10; i++) {
-        var position = new naver.maps.LatLng(lat + i, lng + i);
-        var roomMapMarker = new naver.maps.Marker({
+      for (var i = 0; i < markerArr.length; i++) {
+        var marker = new naver.maps.Marker({
           map: roomMap,
-          position: position,
-          title: key,
+          title: markerArr[i].location,
+          position: new naver.maps.LatLng(markerArr[i].lat, markerArr[i].lng),
         });
       }
+    } else {
+      var roomMapMarker = new naver.maps.Marker({
+        position: new naver.maps.LatLng(37.3595704, 127.105399),
+        map: roomMap,
+      });
     }
   };
 
@@ -49,7 +40,8 @@ const DetailMap = ({ lat, lng, markerArr }) => {
 
   return (
     <div id="roomMap">
-      <div style={{ width: "100%", height: "300px" }}></div>
+      <div style={{ width: "100%", height: "40rem" }}></div>
+      <div style={{ width: "200px%", padding: "10px" }} />
     </div>
   );
 };
