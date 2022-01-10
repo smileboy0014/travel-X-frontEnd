@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import Modal from "react-modal";
 import PersonalCounter from "./PersonalCounter";
-import Styles from "../../../styles/PersonalModal.module.css";
+import Style from "../../../styles/CommonModal.module.css";
 import { useSelector, useDispatch } from "react-redux";
 import * as adultCounterActions from "../../../redux/store/modules/adultCounter";
 import * as childCounterActions from "../../../redux/store/modules/chlidCounter";
@@ -26,10 +26,11 @@ const PersonalModal = ({ isOpen, onRequestClose }) => {
   return (
     <div>
       <Modal
-        className={Styles.Modal}
-        overlayClassName={Styles.Overlay}
+        className={Style.Modal}
+        overlayClassName={Style.Overlay}
         isOpen={isOpen}
         ariaHideApp={false}
+        onRequestClose={() => onRequestClose(false)}
       >
         <label onClick={() => onRequestClose(false)}>X</label>
         <PersonalCounter></PersonalCounter>

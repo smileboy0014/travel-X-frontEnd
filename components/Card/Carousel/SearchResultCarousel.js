@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, forwardRef, Fragment } from "react";
-import Styles from "../../../styles/SearchResult.module.css";
+import Style from "../../../styles/SearchResult.module.css";
 import DetailAllImageModal from "../../Modal/RoomDetail/DetailAllImageModal";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper";
@@ -21,7 +21,7 @@ const SearchResultCarousel = (props, ref) => {
 
   return (
     <>
-      <div className={Styles.ProductSlide}>
+      <div className={Style.ProductSlide}>
         <Swiper
           modules={[Pagination]}
           pagination={true}
@@ -31,10 +31,10 @@ const SearchResultCarousel = (props, ref) => {
           {items &&
             items.map((item, index) => (
               <SwiperSlide key={index} className="ProductSlide-slide">
-                <div className={Styles.ProductSlide_thumb}>
-                  <a href="#" className={Styles.ProductSlide_link}>
+                <div className={Style.ProductSlide_thumb}>
+                  <a href="#" className={Style.ProductSlide_link}>
                     <img
-                      className={Styles.ProductSlide_link_img}
+                      className={Style.ProductSlide_link_img}
                       src={item ? "http://" + item : sampleImage}
                       alt="search-room-img"
                     />

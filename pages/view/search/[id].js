@@ -3,8 +3,8 @@ import SearchResultList from "../../../components/Card/SearchResultList";
 import ScrollTopArrow from "../../../components/ScrollTop/ScrollTopArrow";
 import { useRouter } from "next/router";
 import useInfiniteSearch from "../../../components/InfiniteScroll/useInfiniteSearch";
-import styles from "../../../styles/SearchResult.module.css";
-import LodingStyles from "../../../styles/LodingModal.module.css";
+import Style from "../../../styles/SearchResult.module.css";
+import LodingStyles from "../../../styles/CommonModal.module.css";
 import Modal from "react-modal";
 import SearchBar from "../../search/SearchBar";
 import RecentSearch from "../../search/RecentSearch";
@@ -14,6 +14,7 @@ import OptionFilterButton from "../../../components/Button/OptionFilter/OptionFi
 import OrderByFilterButton from "../../../components/Button/OptionFilter/OrderByFilterButton";
 import DetailTopNavbar from "../../../components/NavBar/DetailTopNavbar";
 import MapFixButton from "../../../components/Button/Fix/MapFixButton";
+import SearchMapModal from "../../../components/Modal/Map/SearchMapModal";
 
 const Post = ({ item }) => {
   const [showModal, setShowModal] = useState(false);
@@ -59,10 +60,10 @@ const Post = ({ item }) => {
   }, [searchAutoComptValue]);
 
   return (
-    <div className={styles.site}>
-      <div className={styles.site_body}>
-        <div className={styles.ListFilter}>
-          <div className={styles.site_container}>
+    <div className={Style.site}>
+      <div className={Style.site_body}>
+        <div className={Style.ListFilter}>
+          <div className={Style.site_container}>
             <div>
               <SearchBar
                 getSearchValue={(value) => {
@@ -76,15 +77,15 @@ const Post = ({ item }) => {
                   setRecentListView(value);
                 }}
               ></SearchBar>
-              <div className={styles.ListFilterValue}>
-                <div className={styles.ListFilterValue_list}>
+              <div className={Style.ListFilterValue}>
+                <div className={Style.ListFilterValue_list}>
                   <CalendarFilterButton></CalendarFilterButton>
                   <PersonalFilterButton></PersonalFilterButton>
                 </div>
               </div>
 
-              <div className={styles.ListFilterButton}>
-                <div className={styles.ListFilterButton_list}>
+              <div className={Style.ListFilterButton}>
+                <div className={Style.ListFilterButton_list}>
                   <OptionFilterButton></OptionFilterButton>
                   <OrderByFilterButton></OrderByFilterButton>
                 </div>
@@ -103,8 +104,8 @@ const Post = ({ item }) => {
         ) : (
           <React.Fragment>
             {searchAutoComptValue.length < 1 ? (
-              <div className={styles.ProductList}>
-                <div className={styles.site_container}>
+              <div className={Style.ProductList}>
+                <div className={Style.site_container}>
                   <ul>
                     <SearchResultList ref={lastroomElementRef} rooms={rooms} />
                   </ul>
@@ -122,6 +123,7 @@ const Post = ({ item }) => {
                       overlayClassName={LodingStyles.Overlay}
                       isOpen={!showModal}
                       ariaHideApp={false}
+                      onRequestClose={() => setShowModal(true)}
                     >
                       <label onClick={() => setShowModal(true)}>X</label>
                       <p>더이상 데이터가 없습니다.</p>

@@ -1,8 +1,9 @@
 import React from "react";
 import Modal from "react-modal";
-import Style from "../../../styles/ReserveModal.module.css";
+import Review from "../../Review/Review";
+import Style from "../../../styles/CommonModal.module.css";
 
-const ReserveModal = ({ isOpen, onRequestClose }) => {
+const ReviewModal = ({ isOpen, onRequestClose }) => {
   return (
     <div>
       <Modal
@@ -14,16 +15,10 @@ const ReserveModal = ({ isOpen, onRequestClose }) => {
       >
         <label onClick={() => onRequestClose(false)}>X</label>
 
-        <div>여행</div>
-        <div>체크인..... 체크아웃....</div>
-        <div>게스트 1명</div>
-
-        <div>가격</div>
-        <div>10000원</div>
-        <div>총합계: 2950000</div>
+        <Review />
       </Modal>
     </div>
   );
 };
 
-export default ReserveModal;
+export default ReviewModal;

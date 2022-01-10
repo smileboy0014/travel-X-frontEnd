@@ -1,19 +1,22 @@
 import React, { useEffect, useState } from "react";
-import NaverMap from "../../../components/Modal/Map/NaverMap";
+import DetailMap from "../../../components/Modal/Map/DetailMap";
 import CarouselDetail from "../../../components/Card/Carousel/DetailCarousel";
+import DetailTopNavbar from "../../../components/NavBar/DetailTopNavbar";
+import ReserveButton from "../../../components/Button/Reserve/ReserveButton";
 import Style from "../../../styles/Detail.module.css";
 import Axios from "axios";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
-import DetailTopNavbar from "../../../components/NavBar/DetailTopNavbar";
 import { RiHotelLine } from "react-icons/ri";
 import { BsPerson, BsCalendar, BsGeoAlt } from "react-icons/bs";
-import ReserveButton from "../../../components/Button/Reserve/ReserveButton";
+import { AiFillStar } from "react-icons/ai";
+import ReviewModal from "../../../components/Modal/Review/ReviewModal";
 
 const DetailView = () => {
   const [rooms, setRooms] = useState([]);
   const [slide, setSlide] = useState(false);
   const [title, setTitle] = useState("");
+  const [reviewModalOpen, setReviewModalOpen] = useState(false);
   const scrollYValue = useSelector(({ scrollY }) => scrollY.value);
   const [changeStyle, setChangeStyle] = useState(Style.site_header);
   const router = useRouter();
@@ -63,7 +66,11 @@ const DetailView = () => {
           adult: "2",
         },
       }).then((res) => {
-        console.log(res);
+        console.log("전체: " + res.data);
+        console.log(res.data.availableDates);
+        console.log(res.data.priceDetails);
+        console.log(res.data.propertyInfo);
+        console.log(res.data.roomInfo);
         setRooms((prevState) => ({
           ...prevState,
           item: res.data.roomInfo.images ? res.data.roomInfo.images : [],
@@ -72,6 +79,7 @@ const DetailView = () => {
             ? res.data.availableDates
             : [],
           priceDetails: res.data.priceDetails ? res.data.priceDetails : [],
+          propertyInfo: res.data.propertyInfo ? res.data.propertyInfo : [],
         }));
       });
     }
@@ -107,8 +115,8 @@ const DetailView = () => {
                   <div className={Style.DetailHeaderMeta}>
                     <RiHotelLine size={10} />
                     <span className={Style.DetailHeaderMeta_item}>
-                      {rooms.roomInfo.propertyType !== undefined
-                        ? rooms.roomInfo.propertyType
+                      {rooms.propertyInfo.type !== undefined
+                        ? rooms.propertyInfo.type
                         : "숙박 타입: N/A"}
                     </span>
 
@@ -119,13 +127,32 @@ const DetailView = () => {
                   <div className={Style.DetailHeaderTitle}>
                     {rooms.roomInfo.propertyName}
                   </div>
+
+                  <button
+                    className={Style.searchResult_stars}
+                    onClick={() => {
+                      setReviewModalOpen(true);
+                    }}
+                  >
+                    <AiFillStar className={Style.searchResult_star} />
+                    <strong>5.0_DB</strong>
+                    <span className={Style.DetailHeaderInfoAddress}>
+                      {"후기 1000개 >_DB"}
+                    </span>
+                  </button>
+
+                  <ReviewModal
+                    isOpen={reviewModalOpen}
+                    onRequestClose={() => setReviewModalOpen(false)}
+                  ></ReviewModal>
+
                   <div className={Style.DetailHeaderInfo}>
                     <div className={Style.DetailHeaderInfoAddress}>
                       <BsGeoAlt
                         className={Style.DetailHeaderInfoAddress_Icon}
                       />
-                      {rooms.roomInfo.address !== undefined
-                        ? rooms.roomInfo.address
+                      {rooms.propertyInfo.address !== undefined
+                        ? rooms.propertyInfo.address
                         : "주소: N/A"}
                     </div>
                     <div className={Style.DetailHeaderInfoFilter}>
@@ -257,6 +284,8 @@ const DetailView = () => {
 						<!-- item --> */}
                 <div className={Style.DetailInfoItem}>
                   <div className={Style.DetailInfoItem_title}>위치 정보</div>
+
+                  <DetailMap lat={37.3595704} lng={127.105399} />
                 </div>
                 {/* <!-- .item --> */}
               </div>

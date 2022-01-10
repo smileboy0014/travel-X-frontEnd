@@ -1,9 +1,9 @@
 import { useState, useEffect, Fragment } from "react";
 import Link from "next/link";
 import Script from "next/script";
-import styles from "../styles/Index.module.css";
+import Style from "../styles/Index.module.css";
 import GeoLocationButton from "../components/Button/GeolocationButton";
-import SearchMapModal from "./../components/Modal/Map/SearchMapModal";
+import SearchMapModal from "./../components/Modal/Map/SearchMapModal_Bak";
 import { useDispatch, useSelector } from "react-redux";
 import * as mapActions from "../redux/store/modules/map";
 import SelectSearchLocationModal from "./../components/Modal/Map/SelectSearchLocationModal";
@@ -28,10 +28,10 @@ export default function Home() {
   };
 
   return (
-    <div className={styles.background}>
-      <div className={styles.main}>
-        <div className={styles.subMain}>
-          <Script
+    <div className={Style.background}>
+      <div className={Style.main}>
+        <div className={Style.subMain}>
+          {/* <Script
             type="text/javascript"
             src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=ra1rvd631l&submodules=geocoder"
             onError={(e) => {
@@ -40,21 +40,21 @@ export default function Home() {
             onLoad={() => {
               handleScriptLoaded(true);
             }}
-          />
+          /> */}
           <Link href="/search" as={`/search`}>
             <a>
-              <img className={styles.img} src="/SearchBar2.jpg" />
+              <img className={Style.img} src="/SearchBar2.jpg" />
             </a>
           </Link>
           <div>
-            <div className={styles.button1}>
+            <div className={Style.button1}>
               <GeoLocationButton
                 showSelectSearchLocationModal={() =>
                   setShowSelectSearchLocationModal(true)
                 }
               />
             </div>
-            <div className={styles.button2}>
+            <div className={Style.button2}>
               <button>12/30 ~ 12/31 1박2일</button>
               <button onClick={() => setPersonalModalOpen(true)}>
                 {"성인: " + adultCounterValue + " 아동: " + childCounterValue}

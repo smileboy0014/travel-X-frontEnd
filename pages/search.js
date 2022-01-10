@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import RecentSearch from "./search/RecentSearch";
 import SearchBar from "./search/SearchBar";
-import styles from "../styles/Index.module.css";
+import Style from "../styles/Index.module.css";
 
 const search = () => {
   const [searchValue, setSearchValue] = useState();
@@ -12,8 +12,8 @@ const search = () => {
   // }, [searchValue]);
 
   return (
-    <div className={styles.background}>
-      <div className={styles.main}>
+    <div className={Style.background}>
+      <div className={Style.main}>
         <SearchBar
           getSearchValue={(value) => {
             setSearchValue(value);

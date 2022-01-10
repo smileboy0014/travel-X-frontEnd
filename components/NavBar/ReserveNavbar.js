@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Styles from "../../styles/ReserveNavbar.module.css";
+import Style from "../../styles/ReserveNavbar.module.css";
 import ReserveModal from "../Modal/Reserve/ReserveModal";
 
 const ReserveNavbar = () => {
@@ -8,7 +8,7 @@ const ReserveNavbar = () => {
     <div>
       <div>
         <label
-          className={Styles.bottomNav}
+          className={Style.bottomNav}
           onClick={() => setReserveModalOpen(true)}
         >
           예약 하기
