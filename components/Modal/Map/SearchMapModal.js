@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import Modal from "react-modal";
-import Style from "../../../styles/CommonModal.module.css";
+// import Style from "../../../styles/CommonModal.module.css";
 import DetailMap from "./DetailMap";
 
 const SearchMapModal = ({ isOpen, onRequestClose }) => {
@@ -35,8 +35,8 @@ const SearchMapModal = ({ isOpen, onRequestClose }) => {
   return (
     <div>
       <Modal
-        className={Style.Modal}
-        overlayClassName={Style.Overlay}
+        // className={Style.Modal}
+        // overlayClassName={Style.Overlay}
         isOpen={isOpen}
         ariaHideApp={false}
         onRequestClose={() => onRequestClose(false)}
