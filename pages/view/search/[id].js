@@ -48,10 +48,6 @@ const Post = ({ item }) => {
   );
 
   useEffect(() => {
-    setShowModal(hasMore);
-  }, [hasMore]);
-
-  useEffect(() => {
     setSearchAutoComptValue([]);
   }, [searchValue]);
 
@@ -117,16 +113,6 @@ const Post = ({ item }) => {
                       ariaHideApp={false}
                     >
                       Loading...
-                    </Modal>
-                    <Modal
-                      className={LodingStyles.Modal}
-                      overlayClassName={LodingStyles.Overlay}
-                      isOpen={!showModal}
-                      ariaHideApp={false}
-                      onRequestClose={() => setShowModal(true)}
-                    >
-                      <label onClick={() => setShowModal(true)}>X</label>
-                      <p>더이상 데이터가 없습니다.</p>
                     </Modal>
                   </>
 
