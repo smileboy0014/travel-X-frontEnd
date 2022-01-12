@@ -1,21 +1,26 @@
-import React, { useEffect } from "react";
-import { isMobile } from "react-device-detect";
+import React, { useEffect, useState } from "react";
+import { ConsoleView, isMobile } from "react-device-detect";
 import img from "../../../public/icon/ico_calender.svg";
-import SearchCard_test from "../../Card/SearchCard_test";
+import SearchMobileCard from "../../Card/SearchMobileCard";
+
+var markers = [];
+var infoWindows = [];
+var mobileWindows = [];
+var mobileWindow_test = [];
+var roomMap;
 
 const DetailMap = ({ lat, lng, markerArr }) => {
-  var markers = [];
-  var infoWindows = [];
+  const [roomData, setRoomData] = useState([]);
+  const [mobileSeq, setMobileSeq] = useState("");
 
   const initMap = () => {
-    var roomMap = new naver.maps.Map("roomMap", {
+    roomMap = new naver.maps.Map("roomMap", {
       center: new naver.maps.LatLng(lat, lng),
       zoom: 12,
-      // zoomControl: true,
     });
+  };
 
-    var IWpoint = roomMap.getCenter();
-
+  const addRoomMapMarker = () => {
     if (markerArr !== undefined) {
       for (var i = 0; i < markerArr.length; i++) {
         var roomMapMarker = new naver.maps.Marker({
@@ -40,58 +45,18 @@ const DetailMap = ({ lat, lng, markerArr }) => {
           position: new naver.maps.LatLng(markerArr[i].lat, markerArr[i].lng),
         });
 
-        var contentString = "";
+        var contentString;
+        var mobileContent;
         if (isMobile) {
-          contentString =
-            '<div class="ProductItem">																			' +
-            '	<div class="ProductItem-address">서울 강남구 논현동 201-11</div>                                      ' +
-            "	<!-- slide -->                                                                                  " +
-            '	<div class="ProductSlide">                                                                      ' +
-            '		<div class="swiper-container ProductSlide-container">                                       ' +
-            '			<div class="swiper-wrapper ProductSlide-wrapper">                                       ' +
-            '				<div class="ProductSlide-slide swiper-slide">                                       ' +
-            '					<div class="ProductSlide-thumb">                                                ' +
-            '						<a href="#;" class="ProductSlide-link">                                     ' +
-            "						</a>                                                                        " +
-            "					</div>                                                                          " +
-            "				</div>                                                                              " +
-            '				<div class="ProductSlide-slide swiper-slide">                                       ' +
-            '					<div class="ProductSlide-thumb">                                                ' +
-            '						<a href="#;" class="ProductSlide-link">                                     ' +
-            "					      " +
-            "						</a>                                                                        " +
-            "					</div>                                                                          " +
-            "				</div>                                                                              " +
-            '				<div class="ProductSlide-slide swiper-slide">                                       ' +
-            '					<div class="ProductSlide-thumb">                                                ' +
-            '						<a href="#;" class="ProductSlide-link">                                     ' +
-            "				       " +
-            "						</a>                                                                        " +
-            "					</div>                                                                          " +
-            "				</div>                                                                              " +
-            "			</div>                                                                                  " +
-            "		</div>                                                                                      " +
-            '		<div class="ProductSlide-pagination swiper-pagination"></div>                               ' +
-            "	</div>                                                                                          " +
-            "	<!-- .slide -->                                                                                 " +
-            '	<div class="ProductItemCont">                                                                   ' +
-            '		<a href="#;" class="ProductItemCont-link">                                                  ' +
-            '			<div class="ProductItemMeta">                                                           ' +
-            '				<span class="ProductItemMeta-item icoHotel">호텔</span>                               ' +
-            '				<span class="ProductItemMeta-item">슈페리어 트윈 호텔</span>                              ' +
-            "			</div>                                                                                  " +
-            '			<div class="ProductItemTitle">슈페리어 트윈 (넷플릭스 - 숙소 문의)</div>                           ' +
-            '			<div class="ProductItemFilter">                                                         ' +
-            '				<span class="ProductItemFilter-item">2인 기준 최대 4인</span>                            ' +
-            '				<span class="ProductItemFilter-item">숙박 17시부터</span>                               ' +
-            "			</div>                                                                                  " +
-            '			<div class="ProductItemPrice">                                                          ' +
-            '				<span class="ProductItemPrice-current">79,000원</span>                               ' +
-            '				<span class="ProductItemPrice-condition">70,000원+9,000원(1인추가)</span>               ' +
-            "			</div>                                                                                  " +
-            "		</a>                                                                                        " +
-            "	</div>                                                                                          ";
-        } else {
+          mobileContent = [
+            {
+              addr: markerArr[i].location,
+              price: markerArr[i].price,
+            },
+          ];
+        }
+
+        if (!isMobile) {
           contentString =
             '<div class="ProductItem">																			' +
             '	<div class="ProductItem-address">서울 강남구 논현동 201-11</div>                                      ' +
@@ -151,20 +116,14 @@ const DetailMap = ({ lat, lng, markerArr }) => {
           anchorSize: new naver.maps.Size(0, 0),
           anchorSkew: false,
           anchorColor: "#eee",
-
           pixelOffset: new naver.maps.Point(20, -20),
         });
 
         markers.push(roomMapMarker);
         infoWindows.push(infoWindow);
+        mobileWindows.push(mobileContent);
       }
-    } else {
-      var roomMapMarker = new naver.maps.Marker({
-        position: new naver.maps.LatLng(37.3595704, 127.105399),
-        map: roomMap,
-      });
     }
-
     naver.maps.Event.addListener(roomMap, "dragend", function (e) {
       console.log("dragend: " + e.coord);
     });
@@ -181,21 +140,52 @@ const DetailMap = ({ lat, lng, markerArr }) => {
         if (infoWindow.getMap()) {
           infoWindow.close();
         } else {
-          console.log(IWpoint);
-          infoWindow.setPosition(IWpoint);
-          infoWindow.open(roomMap, marker);
+          if (!isMobile) {
+            infoWindow.open(roomMap, marker);
+          } else {
+            setRoomData(mobileWindows[seq]);
+          }
         }
       };
     }
   };
 
+  const getGeocode = () => {
+    naver.maps.Service.geocode(
+      {
+        address: "불정로 6",
+      },
+      function (status, response) {
+        if (status !== naver.maps.Service.Status.OK) {
+          return alert("Something wrong!");
+        } else {
+          var result = response.result, // 검색 결과의 컨테이너
+            items = result.items; // 검색 결과의 배열
+
+          // console.log("result: " + items);
+          // console.log("result: " + JSON.stringify(result.items[0].point));
+          return result.items[0].point;
+        }
+
+        // do Something
+      }
+    );
+  };
+
   useEffect(() => {
     initMap();
-  }, []);
+    addRoomMapMarker();
+    const a = getGeocode();
+    console.log("좌표: " + a);
+  }, [markerArr]);
 
   return (
-    <div id="roomMap">
-      <div style={{ width: "100%", height: "60rem" }}></div>
+    <div>
+      <div id="roomMap">
+        <div style={{ width: "100%", height: "60rem" }}>
+          <SearchMobileCard data={roomData}></SearchMobileCard>
+        </div>
+      </div>
     </div>
   );
 };

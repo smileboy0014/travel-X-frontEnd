@@ -5,7 +5,7 @@ import DetailMap from "./DetailMap";
 
 const SearchMapModal = ({ isOpen, onRequestClose }) => {
   const markerArr = [
-    { location: "강남", lat: "37.4959854", lng: "127.0664091" }, // 강남구 중심좌표
+    { location: "불정로 6", lat: "37.4959854", lng: "127.0664091" }, // 강남구 중심좌표
     { location: "강동", lat: "37.5492077", lng: "127.1464824" }, // 강동구 중심좌표
     { location: "강북", lat: "37.6469954", lng: "127.0147158" }, // 강북구 중심좌표
     { location: "강서", lat: "37.5657617", lng: "126.8226561" }, // 강서구 중심좌표
