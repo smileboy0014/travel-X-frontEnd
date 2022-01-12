@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { ConsoleView, isMobile } from "react-device-detect";
+import { isMobile } from "react-device-detect";
 import img from "../../../public/icon/ico_calender.svg";
 import SearchMobileCard from "../../Card/SearchMobileCard";
 
 var markers = [];
 var infoWindows = [];
 var mobileWindows = [];
-var mobileWindow_test = [];
 var roomMap;
 
 const DetailMap = ({ lat, lng, markerArr }) => {
@@ -183,7 +182,9 @@ const DetailMap = ({ lat, lng, markerArr }) => {
     <div>
       <div id="roomMap">
         <div style={{ width: "100%", height: "60rem" }}>
-          <SearchMobileCard data={roomData}></SearchMobileCard>
+          {isMobile == true && (
+            <SearchMobileCard data={roomData}></SearchMobileCard>
+          )}
         </div>
       </div>
     </div>
