@@ -12,8 +12,8 @@ const SearchBar = ({
   sendTextValue,
   getRecentListView,
 }) => {
-  const [searchValue, setSearchValue] = useState();
-  const [placeholderValue, setplaceholderValue] = useState();
+  const [searchValue, setSearchValue] = useState("");
+  const [placeholderValue, setplaceholderValue] = useState("");
   const [personalModalOpen, setPersonalModalOpen] = useState(false);
   const [checkBackStep, setCheckBackStep] = useState(true);
   const router = useRouter();

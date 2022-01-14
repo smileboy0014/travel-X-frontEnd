@@ -7,6 +7,7 @@ import childCounter from "./chlidCounter";
 import map from "./map";
 import reviewContent from "./reviewContent";
 import scrollY from "./scrollY";
+import searchResult from "./searchResult";
 
 const reducer = (state, action) => {
   if (action.type === HYDRATE) {
@@ -20,6 +21,7 @@ const reducer = (state, action) => {
     map,
     reviewContent,
     scrollY,
+    searchResult,
   })(state, action);
 };
 

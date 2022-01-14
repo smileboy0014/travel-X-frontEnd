@@ -14,13 +14,13 @@ class MyDocument extends Document {
             type="text/javascript"
             src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=ra1rvd631l&submodules=geocoder"
           />
+          <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
         </Head>
         <body>
           <Main />
           <NextScript />
           <div id="modal-root"></div>
         </body>
-        <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
       </Html>
     );
   }

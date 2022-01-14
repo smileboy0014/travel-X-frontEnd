@@ -32,13 +32,13 @@ const SearchResultCarousel = (props, ref) => {
             items.map((item, index) => (
               <SwiperSlide key={index} className="ProductSlide-slide">
                 <div className={Style.ProductSlide_thumb}>
-                  <a href="#" className={Style.ProductSlide_link}>
+                  <div className={Style.ProductSlide_link}>
                     <img
                       className={Style.ProductSlide_link_img}
                       src={item ? "http://" + item : sampleImage}
                       alt="search-room-img"
                     />
-                  </a>
+                  </div>
                 </div>
               </SwiperSlide>
             ))}
