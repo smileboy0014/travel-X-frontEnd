@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Style from "../../../styles/FixButton.module.css";
 import SearchMapModal from "../../Modal/Map/SearchMapModal";
 
 const MapFixButton = () => {
   const [searchMapModalOpen, setSearchMapModalOpen] = useState(false);
+
   return (
     <div>
       <button
@@ -16,7 +17,7 @@ const MapFixButton = () => {
       <SearchMapModal
         isOpen={searchMapModalOpen}
         onRequestClose={() => setSearchMapModalOpen(false)}
-      ></SearchMapModal>
+      />
     </div>
   );
 };

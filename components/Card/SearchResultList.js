@@ -8,9 +8,9 @@ const sampleImage =
 const SearchResultList = (props, ref) => {
   const { rooms } = props;
 
-  useEffect(() => {
-    console.log("rooms: " + props);
-  }, []);
+  // useEffect(() => {
+  //   console.log("rooms: " + props);
+  // }, []);
 
   return (
     <>

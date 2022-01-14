@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import * as searchResultActions from "../../redux/store/modules/searchResult";
 
 export default function useInfiniteSearch(query, fromPageNumber, toPageNumber) {
   const [fromPage, setFromPage] = useState(0);
@@ -10,8 +11,14 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber) {
   const [error, setError] = useState(false);
   const [rooms, setRooms] = useState([]);
   const [hasMore, setHasMore] = useState(false);
+  const dispatch = useDispatch();
+
   const adultCounterValue = useSelector(
     ({ adultCounter }) => adultCounter.value
+  );
+
+  const childCounterValue = useSelector(
+    ({ childCounter }) => childCounter.value
   );
 
   useEffect(() => {
@@ -33,15 +40,17 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber) {
       method: "GET",
       url: "http://shineware.iptime.org:5050/search",
       params: {
-        checkinDate: "20211223",
-        checkoutDate: "20211224",
+        checkinDate: "20220123",
+        checkoutDate: "20220124",
         adult: adultCounterValue,
+        child: childCounterValue,
         query: query,
         // from: fromPageNumber,
         size: toPageNumber,
       },
     }).then((res) => {
       console.log(res);
+      dispatch(searchResultActions.saveData(res.data.roomDocumentList));
 
       setTotalHitCount(res.data.totalHitCount);
       setRooms((prevState) => ({
