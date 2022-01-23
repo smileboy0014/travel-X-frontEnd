@@ -11,16 +11,20 @@ import { RiHotelLine } from "react-icons/ri";
 import { BsPerson, BsCalendar, BsGeoAlt } from "react-icons/bs";
 import { AiFillStar } from "react-icons/ai";
 import ReviewModal from "../../../components/Modal/Review/ReviewModal";
+import DetailCalendarModal from "../../../components/Modal/Calendar/DetailCalendarModal";
 
 const DetailView = () => {
   const [rooms, setRooms] = useState([]);
   const [slide, setSlide] = useState(false);
   const [title, setTitle] = useState("");
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
+  const [calendarModalOpen, setCalendarModalOpen] = useState(false);
   const scrollYValue = useSelector(({ scrollY }) => scrollY.value);
   const [changeStyle, setChangeStyle] = useState(Style.site_header);
   const router = useRouter();
   const { id } = router.query;
+  const { detailDate } = useSelector((state) => state.date);
+	const week = new Array('일', '월', '화', '수', '목', '금', '토');
 
   useEffect(() => {
     if (rooms.roomInfo !== undefined) {
@@ -46,6 +50,7 @@ const DetailView = () => {
 
   useEffect(() => {
     setSlide(false);
+    console.log(rooms)
     return () => {
       setSlide(true);
     };
@@ -59,8 +64,8 @@ const DetailView = () => {
         params: {
           roomId: id,
           useType: "NIGHT",
-          checkinDate: "20220109",
-          checkoutDate: "20220110",
+          checkinDate: "20220125",
+          checkoutDate: "20220126",
           children: "0",
           baby: "0",
           adult: "2",
@@ -181,14 +186,15 @@ const DetailView = () => {
                       <BsCalendar
                         className={Style.DetailPaymentDate_schedule_Icon}
                       />
-                      {"일자_DB"}
+                      {`${new Date(detailDate.start).getMonth()+1}.${new Date(detailDate.start).getDate()}(${week[new Date(detailDate.start).getDay()]}) - ${new Date(detailDate.end).getMonth()+1}.${new Date(detailDate.end).getDate()}(${week[new Date(detailDate.end).getDay()]})`}
                     </span>
                     <span className={Style.DetailPaymentDate_day}>
-                      {"일박_DB"}
+                      {Math.ceil((new Date(detailDate.end).getTime() - new Date(detailDate.start).getTime()) / (1000*60*60*24))}박 
                     </span>
                     <button
                       type="button"
                       className={Style.DetailPaymentDate_button}
+                      onClick={() => setCalendarModalOpen(true)}
                     >
                       변경
                     </button>
@@ -295,6 +301,11 @@ const DetailView = () => {
 
             <ReserveButton></ReserveButton>
 
+            <DetailCalendarModal
+              isOpen={calendarModalOpen}
+              onRequestClose={() => setCalendarModalOpen(false)}
+              availableDates={rooms.availableDates}
+            />
             {/* <!-- .BttonFixButton --> */}
           </div>
           {/* <!-- .컨텐츠 끝 --> */}
