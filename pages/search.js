@@ -1,8 +1,8 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Style from "../styles/SearchResult.module.css";
-import SearchBar from "../pages/search/SearchBar";
-import RecentSearch from "../pages/search/RecentSearch";
+import SearchBar from "./search/SearchBar";
+import RecentSearch from "./search/RecentSearch";
 import PersonalFilterButton from "../components/Button/OptionFilter/PersonalFilterButton";
 import CalendarFilterButton from "../components/Button/OptionFilter/CalendarFilterButton";
 import OptionFilterButton from "../components/Button/OptionFilter/OptionFilterButton";
@@ -11,7 +11,7 @@ import MapFixButton from "../components/Button/Fix/MapFixButton";
 import CalendarModal from "../components/Modal/Calendar/CalendarModal";
 import * as dateActions from "../redux/store/modules/date";
 
-const search = () => {
+const Search = () => {
   const [recentListView, setRecentListView] = useState(false);
   const dispatch = useDispatch();
   const { searchDate } = useSelector((state) => state.date);
@@ -108,4 +108,4 @@ const search = () => {
   );
 };
 
-export default search;
+export default Search;
