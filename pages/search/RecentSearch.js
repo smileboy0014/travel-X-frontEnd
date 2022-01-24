@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Style from "../../styles/RecentSearch.module.css";
-import { AiOutlineSearch, AiOutlineClockCircle } from "react-icons/ai";
 
 const RecentSearch = ({
   sendSearchValue,
   sendSearchAutoComptValue,
   getSearchValue,
+  sendSearchTxt,
 }) => {
   const [keywords, setKeywords] = useState([]);
   const [autoCompltData, setAutoCompltData] = useState([]);
@@ -16,8 +16,14 @@ const RecentSearch = ({
   }, [sendSearchAutoComptValue]);
 
   useEffect(() => {
+    // addKeyword(sendSearchValue);
+
     if (sendSearchValue !== undefined) {
-      addKeyword(sendSearchValue);
+      const newKeyword = {
+        id: Date.now(),
+        text: sendSearchValue,
+      };
+      setKeywords([...keywords, newKeyword]);
     }
   }, [sendSearchValue]);
 
@@ -29,17 +35,21 @@ const RecentSearch = ({
   }, []);
 
   useEffect(() => {
+    console.log("저장하는 데이터: " + JSON.stringify(keywords));
+
     localStorage.setItem("keywords", JSON.stringify(keywords));
   }, [keywords]);
 
   const addKeyword = (value) => {
+    console.log("value: " + value);
+
     if (value !== undefined) {
       const newKeyword = {
         id: Date.now(),
         text: value,
       };
-      setKeywords([newKeyword, ...keywords]);
-
+      setKeywords([...keywords, newKeyword]);
+      console.log("newKeyword: " + JSON.stringify(newKeyword));
       if (getSearchValue !== undefined) {
         getSearchValue(value);
       }
@@ -62,45 +72,94 @@ const RecentSearch = ({
   return (
     <div className={Style.site_container}>
       {autoCompltData.length > 0 ? (
-        autoCompltData.map((item, index) => (
-          <div className={Style.header_autoCompt} key={index}>
-            <Link href="/view/search/[id]" as={`/view/search/${item}`}>
-              <a onClick={() => addKeyword(item)}>
-                <div>
-                  <AiOutlineSearch />
-                  {item}
-                </div>
-              </a>
-            </Link>
+        <div className={Style.TotalSearchRelated}>
+          <div className={Style.TotalSearchRelatedHeader}>
+            <div className={Style.TotalSearchRelatedHeader_title}>
+              관련 검색어
+            </div>
           </div>
-        ))
+          <div className="TotalSearchRelatedBody">
+            <div className={Style.TotalSearchRelatedItem}>
+              <div className={Style.TotalSearchRelatedItemTitle}>도서/지역</div>
+              <ul className="TotalSearchRelatedList">
+                {autoCompltData.map((item, index) => (
+                  <li className={Style.TotalSearchRelatedList_item} key={index}>
+                    <Link href="/view/search/[id]" as={`/view/search/${item}`}>
+                      <a
+                        className={Style.TotalSearchRelatedList_link}
+                        onClick={() => addKeyword(item)}
+                      >
+                        <mark>{sendSearchTxt}</mark>
+                        {item.replace(sendSearchTxt, "")}
+                      </a>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className={Style.TotalSearchRelatedItem}>
+              <div className={Style.TotalSearchRelatedItemTitle}>호텔</div>
+              <ul className="TotalSearchRelatedList">
+                {autoCompltData.map((item, index) => (
+                  <li className={Style.TotalSearchRelatedList_item} key={index}>
+                    <Link href="/view/search/[id]" as={`/view/search/${item}`}>
+                      <a
+                        className={Style.TotalSearchRelatedList_link}
+                        onClick={() => addKeyword(item)}
+                      >
+                        <mark>{sendSearchTxt}</mark>
+                        {item.replace(sendSearchTxt, "")}
+                      </a>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
       ) : (
         <React.Fragment>
-          <div className={Style.header_recent}>
-            <h2>최근 검색어</h2>
-            {keywords.length ? (
-              <button type="button" onClick={handleClearKeywords}>
-                전체 삭제
-              </button>
-            ) : (
-              ""
-            )}
+          <div className={Style.TotalSearchRecent}>
+            <div className={Style.TotalSearchRecentHeader}>
+              <div className={Style.TotalSearchRecentHeader_title}>
+                최근 검색어
+              </div>
+              {keywords.length ? (
+                <button
+                  type="button"
+                  className={Style.TotalSearchRecentHeader_close}
+                  onClick={handleClearKeywords}
+                >
+                  전체 삭제
+                </button>
+              ) : (
+                ""
+              )}
+            </div>
           </div>
 
           <div>
             {keywords.length ? (
               keywords.map((k) => (
-                <div key={k.id}>
-                  <AiOutlineClockCircle />
-                  {k.text}
+                <div className={Style.TotalSearchRecentList_item} key={k.id}>
+                  <div className={Style.TotalSearchRecentList_link}>
+                    {k.text}
+                  </div>
+                  {/* <AiOutlineClockCircle />
+                  {k.text} */}
 
-                  <button onClick={() => handleRemoveKeyword(k.id)}>
-                    삭제
-                  </button>
+                  <button
+                    className={Style.TotalSearchRecentList_del}
+                    onClick={() => handleRemoveKeyword(k.id)}
+                  ></button>
                 </div>
               ))
             ) : (
-              <div>최근 검색어가 없습니다</div>
+              <div className="TotalSearchRecentBody">
+                <div className={Style.TotalSearchRecent_noTag}>
+                  최근 검색한 내역이 없습니다.
+                </div>
+              </div>
             )}
           </div>
         </React.Fragment>

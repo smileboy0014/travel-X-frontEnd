@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { AiOutlineShareAlt } from "react-icons/ai";
 
-const kakao = () => {
+const Kakao = () => {
   const key = "168bcdc445ab7e1c1299427f8be5d700";
 
   useEffect(() => {
@@ -55,4 +55,4 @@ const kakao = () => {
   );
 };
 
-export default kakao;
+export default Kakao;

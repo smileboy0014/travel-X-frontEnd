@@ -9,13 +9,7 @@ class MyDocument extends Document {
   render() {
     return (
       <Html>
-        <Head>
-          <script
-            type="text/javascript"
-            src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=ra1rvd631l&submodules=geocoder"
-          />
-          <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
-        </Head>
+        <Head />
         <body>
           <Main />
           <NextScript />

@@ -11,21 +11,26 @@ const SearchBar = ({
   getSearchAutoComptValue,
   sendTextValue,
   getRecentListView,
+  getSearchTxt,
 }) => {
   const [searchValue, setSearchValue] = useState("");
   const [placeholderValue, setplaceholderValue] = useState("");
   const [personalModalOpen, setPersonalModalOpen] = useState(false);
   const [checkBackStep, setCheckBackStep] = useState(true);
+  const { searchDate } = useSelector((state) => state.date);
   const router = useRouter();
 
   const onChangeSearch = useCallback((e) => {
     setSearchValue(e.target.value);
-    // getSearchValue(e.target.value);
   }, []);
+  const week = new Array("일", "월", "화", "수", "목", "금", "토");
 
   useEffect(() => {
     const timerId = setTimeout(() => {
       getAutoComplt();
+      if (getSearchTxt !== undefined) {
+        getSearchTxt(searchValue);
+      }
     }, 100);
     return () => clearTimeout(timerId);
   }, [searchValue]);
@@ -54,6 +59,7 @@ const SearchBar = ({
       router.push(`/view/search/${searchValue}`);
       getSearchValue(searchValue);
       setSearchValue("");
+      console.log("보내는 문자 : " + searchValue);
     },
     [searchValue, router]
   );
@@ -79,8 +85,13 @@ const SearchBar = ({
       getRecentListView(false);
       setCheckBackStep(true);
       setSearchValue("");
+      getSearchValue("");
     }
   };
+
+  // useEffect(() => {
+  //   getSearchValue("");
+  // }, []);
 
   return (
     <div>
@@ -105,18 +116,22 @@ const SearchBar = ({
           onRequestClose={() => setPersonalModalOpen(false)}
         />
 
-        {!searchValue && (
+        {!searchValue && searchDate !== undefined && (
           <span className={Style.ListFilterSearch_date}>
-            12.20(월)-12.21(화), 2인
+            {`${new Date(searchDate.start).getMonth() + 1}.${new Date(
+              searchDate.start
+            ).getDate()}(${week[new Date(searchDate.start).getDay()]}) - ${
+              new Date(searchDate.end).getMonth() + 1
+            }.${new Date(searchDate.end).getDate()}(${
+              week[new Date(searchDate.end).getDay()]
+            })`}
           </span>
         )}
 
         {searchValue && (
           <AiOutlineClose
             onClick={() => {
-              console.log(searchValue);
               setSearchValue("");
-              console.log(searchValue);
             }}
             className={Style.ListFilterSearch_close}
           ></AiOutlineClose>
