@@ -2,6 +2,7 @@ import React, { useState, useRef, useCallback, useEffect } from "react";
 import SearchResultList from "../../../components/Card/SearchResultList";
 import ScrollTopArrow from "../../../components/ScrollTop/ScrollTopArrow";
 import { useRouter } from "next/router";
+import { useDispatch, useSelector } from "react-redux";
 import useInfiniteSearch from "../../../components/InfiniteScroll/useInfiniteSearch";
 import Style from "../../../styles/SearchResult.module.css";
 import LodingStyles from "../../../styles/CommonModal.module.css";
@@ -15,12 +16,16 @@ import OrderByFilterButton from "../../../components/Button/OptionFilter/OrderBy
 import DetailTopNavbar from "../../../components/NavBar/DetailTopNavbar";
 import MapFixButton from "../../../components/Button/Fix/MapFixButton";
 import SearchMapModal from "../../../components/Modal/Map/SearchMapModal";
+import CalendarModal from "../../../components/Modal/Calendar/CalendarModal";
+import * as dateActions from "../../../redux/store/modules/date";
 
 const Post = ({ item }) => {
   const [showModal, setShowModal] = useState(false);
   const [recentListView, setRecentListView] = useState(false);
   const router = useRouter();
   const { id } = router.query;
+  const dispatch = useDispatch();
+  const { searchDate } = useSelector((state) => state.date);
   const [toPageNumber, setToPageNumber] = useState(10);
   const [fromPageNumber, setFromPageNumber] = useState(0);
   const { rooms, hasMore, loading, error } = useInfiniteSearch(
@@ -32,6 +37,7 @@ const Post = ({ item }) => {
   const [searchValue, setSearchValue] = useState();
   const [searchAutoComptValue, setSearchAutoComptValue] = useState([]);
   const [searchTxt, setSearchTxt] = useState("");
+  const [calendarModalOpen, setCalendarModalOpen] = useState(false);
 
   const lastroomElementRef = useCallback(
     (node) => {
@@ -55,6 +61,10 @@ const Post = ({ item }) => {
   useEffect(() => {
     setRecentListView(false);
   }, [searchAutoComptValue]);
+
+  useEffect(() => {
+    dispatch(dateActions.setDetailDate({start: searchDate.start, end: searchDate.end}));
+  }, [])
 
   return (
     <div className={Style.site}>
@@ -80,7 +90,9 @@ const Post = ({ item }) => {
 
               <div className={Style.ListFilterValue}>
                 <div className={Style.ListFilterValue_list}>
-                  <CalendarFilterButton></CalendarFilterButton>
+                  <CalendarFilterButton
+                    open={() => setCalendarModalOpen(true)}
+                  ></CalendarFilterButton>
                   <PersonalFilterButton></PersonalFilterButton>
                 </div>
               </div>
@@ -154,6 +166,10 @@ const Post = ({ item }) => {
         )}
 
         <MapFixButton />
+        <CalendarModal
+          isOpen={calendarModalOpen}
+          onRequestClose={() => setCalendarModalOpen(false)}
+        />
       </div>
     </div>
   );

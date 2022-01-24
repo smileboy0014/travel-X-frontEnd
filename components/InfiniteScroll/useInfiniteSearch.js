@@ -12,6 +12,7 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber) {
   const [rooms, setRooms] = useState([]);
   const [hasMore, setHasMore] = useState(false);
   const dispatch = useDispatch();
+  const { searchDate } = useSelector((state) => state.date);
 
   const adultCounterValue = useSelector(
     ({ adultCounter }) => adultCounter.value
@@ -20,6 +21,23 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber) {
   const childCounterValue = useSelector(
     ({ childCounter }) => childCounter.value
   );
+
+  function addZero(value) { 
+    if (value >= 10) { 
+      return value; 
+    } 
+    
+    return `0${value}`; 
+  } 
+  
+  function FormattingDate(date) { 
+    console.log(date);
+    const year = date.getFullYear(); 
+    const month = addZero(date.getMonth() + 1); 
+    const day = addZero(date.getDate()); 
+    
+    return `${year}${month}${day}`; 
+  }
 
   useEffect(() => {
     if (rooms.item !== undefined) {
@@ -40,8 +58,8 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber) {
       method: "GET",
       url: "http://shineware.iptime.org:5050/search",
       params: {
-        checkinDate: "20220123",
-        checkoutDate: "20220124",
+        checkinDate: FormattingDate(new Date(searchDate.start)),
+        checkoutDate: FormattingDate(new Date(searchDate.end)),
         adult: adultCounterValue,
         // child: childCounterValue,
         query: query,
@@ -59,8 +77,11 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber) {
       }));
 
       setLoading(false);
+    }).catch((error) => {
+      console.log(error);
+      setError(true);
     });
-  }, [query, toPageNumber]);
+  }, [query, toPageNumber, searchDate]);
 
   return { loading, error, rooms, hasMore };
 }
