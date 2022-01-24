@@ -31,7 +31,7 @@ const PersonalModal = ({ isOpen, onRequestClose }) => {
     <div>
       <Modal
         className={Style.Modal}
-        overlayClassName={Style.Overlay}
+        // overlayClassName={Style.Overlay}
         isOpen={isOpen}
         ariaHideApp={false}
         onRequestClose={() => onRequestClose(false)}

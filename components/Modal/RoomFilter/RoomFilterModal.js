@@ -8,13 +8,34 @@ const RoomFilterModal = ({ isOpen, onRequestClose }) => {
     <div>
       <Modal
         className={Style.Modal}
-        overlayClassName={Style.Overlay}
         isOpen={isOpen}
         ariaHideApp={false}
         onRequestClose={() => onRequestClose(false)}
       >
-        <label onClick={() => onRequestClose(false)}>X</label>
-        <RoomFilter></RoomFilter>
+        <div className={Style.site_container}>
+          <div className={Style.FilterPopHeader}>
+            <button
+              className={Style.FilterPopHeader_reset}
+              // onClick={onClickReset}
+            >
+              초기화
+            </button>
+            <div className={Style.FilterPopHeader_title}>필터</div>
+            <button
+              className={Style.FilterPopHeader_close}
+              onClick={() => onRequestClose(false)}
+            ></button>
+          </div>
+          <RoomFilter></RoomFilter>
+          <div className={Style.FilterPopFooter}>
+            <button
+              className={Style.FilterPopFooter_button}
+              // onClick={handleSaveClick}
+            >
+              선택하기
+            </button>
+          </div>
+        </div>
       </Modal>
     </div>
   );

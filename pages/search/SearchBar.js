@@ -12,7 +12,6 @@ const SearchBar = ({
   sendTextValue,
   getRecentListView,
   getSearchTxt,
-  getRecentListView,
 }) => {
   const [searchValue, setSearchValue] = useState("");
   const [placeholderValue, setplaceholderValue] = useState("");
