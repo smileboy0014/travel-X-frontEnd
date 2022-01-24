@@ -7,10 +7,6 @@ const search = () => {
   const [searchValue, setSearchValue] = useState();
   const [searchAutoComptValue, setSearchAutoComptValue] = useState([]);
 
-  // useEffect(() => {
-  //   console.log(searchValue);
-  // }, [searchValue]);
-
   return (
     <div className={Style.background}>
       <div className={Style.main}>

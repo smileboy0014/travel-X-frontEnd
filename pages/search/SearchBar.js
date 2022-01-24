@@ -11,6 +11,7 @@ const SearchBar = ({
   getSearchAutoComptValue,
   sendTextValue,
   getRecentListView,
+  getSearchTxt,
 }) => {
   const [searchValue, setSearchValue] = useState("");
   const [placeholderValue, setplaceholderValue] = useState("");
@@ -20,12 +21,14 @@ const SearchBar = ({
 
   const onChangeSearch = useCallback((e) => {
     setSearchValue(e.target.value);
-    // getSearchValue(e.target.value);
   }, []);
 
   useEffect(() => {
     const timerId = setTimeout(() => {
       getAutoComplt();
+      if (getSearchTxt !== undefined) {
+        getSearchTxt(searchValue);
+      }
     }, 100);
     return () => clearTimeout(timerId);
   }, [searchValue]);
@@ -54,6 +57,7 @@ const SearchBar = ({
       router.push(`/view/search/${searchValue}`);
       getSearchValue(searchValue);
       setSearchValue("");
+      console.log("보내는 문자 : " + searchValue);
     },
     [searchValue, router]
   );
@@ -79,8 +83,13 @@ const SearchBar = ({
       getRecentListView(false);
       setCheckBackStep(true);
       setSearchValue("");
+      getSearchValue("");
     }
   };
+
+  // useEffect(() => {
+  //   getSearchValue("");
+  // }, []);
 
   return (
     <div>
@@ -114,9 +123,7 @@ const SearchBar = ({
         {searchValue && (
           <AiOutlineClose
             onClick={() => {
-              console.log(searchValue);
               setSearchValue("");
-              console.log(searchValue);
             }}
             className={Style.ListFilterSearch_close}
           ></AiOutlineClose>

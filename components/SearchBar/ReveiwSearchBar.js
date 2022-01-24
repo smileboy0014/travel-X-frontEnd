@@ -1,14 +1,12 @@
 import React, { useCallback, useState, useEffect } from "react";
 import Axios from "axios";
 import Style from "../../styles/ReviewSearchBar.module.css";
-import { AiOutlineSearch, AiOutlineClose} from "react-icons/ai";
+import { AiOutlineSearch, AiOutlineClose } from "react-icons/ai";
 
-const ReviewSearchBar = (props) =>{
-
-  const {getSearchValue, getPlaceholderValue} = props;
+const ReviewSearchBar = (props) => {
+  const { getSearchValue, getPlaceholderValue } = props;
   const [searchValue, setSearchValue] = useState();
   const [placeholderValue, setplaceholderValue] = useState();
-  
 
   const onKeyPress = (e) => {
     if (e.key == "Enter") {
@@ -18,7 +16,6 @@ const ReviewSearchBar = (props) =>{
 
   const onChangeSearch = useCallback((e) => {
     setSearchValue(e.target.value);
-
   }, []);
 
   const onSubmit = useCallback(
@@ -48,13 +45,11 @@ const ReviewSearchBar = (props) =>{
           onKeyPress={onKeyPress}
           placeholder={placeholderValue}
         />
-       
+
         {searchValue && (
           <AiOutlineClose
             onClick={() => {
-              console.log(searchValue);
               setSearchValue("");
-              console.log(searchValue);
             }}
             className={Style.ListFilterSearch_close}
           ></AiOutlineClose>
@@ -62,9 +57,6 @@ const ReviewSearchBar = (props) =>{
       </div>
     </div>
   );
-
- 
-
-}
+};
 
 export default ReviewSearchBar;
