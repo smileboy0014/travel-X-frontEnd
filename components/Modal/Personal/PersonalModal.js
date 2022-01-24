@@ -32,10 +32,22 @@ const PersonalModal = ({ isOpen, onRequestClose }) => {
         ariaHideApp={false}
         onRequestClose={() => onRequestClose(false)}
       >
-        <label onClick={() => onRequestClose(false)}>X</label>
-        <PersonalCounter></PersonalCounter>
-        <button onClick={handleSaveClick}> 확인</button>
-        <button onClick={handleCloseClick}> 취소</button>
+        <div className={Style.site_container}>
+          <div className={Style.FilterPopHeader}>
+            <button className={Style.FilterPopHeader_reset}>초기화</button>
+            <div className={Style.FilterPopHeader_title}>인원수 선택</div>
+            <button className={Style.FilterPopHeader_close}></button>
+          </div>
+          {/* <PersonalCounter></PersonalCounter> */}
+          <div className={Style.FilterPopFooter}>
+            <button
+              className={Style.FilterPopFooter_button}
+              onClick={handleSaveClick}
+            >
+              선택하기
+            </button>
+          </div>
+        </div>
       </Modal>
     </div>
   );

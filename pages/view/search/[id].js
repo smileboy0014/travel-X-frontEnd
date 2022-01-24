@@ -63,8 +63,13 @@ const Post = ({ item }) => {
   }, [searchAutoComptValue]);
 
   useEffect(() => {
-    dispatch(dateActions.setDetailDate({start: searchDate.start, end: searchDate.end}));
-  }, [])
+    dispatch(
+      dateActions.setDetailDate({
+        start: searchDate.start,
+        end: searchDate.end,
+      })
+    );
+  }, []);
 
   return (
     <div className={Style.site}>
