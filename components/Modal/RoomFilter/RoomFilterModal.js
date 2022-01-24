@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import RoomFilter from "./RoomFilter";
 import Modal from "react-modal";
 import Style from "../../../styles/CommonModal.module.css";
 
 const RoomFilterModal = ({ isOpen, onRequestClose }) => {
+  const [clear, setClear] = useState(false);
+
   return (
     <div>
       <Modal
@@ -16,7 +18,7 @@ const RoomFilterModal = ({ isOpen, onRequestClose }) => {
           <div className={Style.FilterPopHeader}>
             <button
               className={Style.FilterPopHeader_reset}
-              // onClick={onClickReset}
+              onClick={() => setClear(true)}
             >
               초기화
             </button>
@@ -26,15 +28,12 @@ const RoomFilterModal = ({ isOpen, onRequestClose }) => {
               onClick={() => onRequestClose(false)}
             ></button>
           </div>
-          <RoomFilter></RoomFilter>
-          <div className={Style.FilterPopFooter}>
-            <button
-              className={Style.FilterPopFooter_button}
-              // onClick={handleSaveClick}
-            >
-              선택하기
-            </button>
-          </div>
+          <RoomFilter
+            onRequestClear={clear}
+            onSetClear={(value) => {
+              setClear(value);
+            }}
+          ></RoomFilter>
         </div>
       </Modal>
     </div>

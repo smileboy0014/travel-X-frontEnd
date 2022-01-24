@@ -399,7 +399,7 @@ body .FilterPopHeader_close {
 }
 
 .FilterRadio_input:checked + .FilterRadio-text:after {
-  /* background-image: url(../images/icon/ico_radio_checked.svg);  */
+  background-image: url(../public/icon/ico_radio_checked.svg);
 }
 
 /*=========================================================
