@@ -1,37 +1,4 @@
 .Modal {
-  /* max-width: 48rem;
-  background: rgb(142, 231, 243);
-  margin: 0 auto;
-  position: fixed;
-  padding: 30px;
-  border-radius: 15px;
-  margin-bottom: -10px;
-  z-index: 200;
-  left: 0;
-  right: 0;
-  bottom: 0; */
-  /* position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgb(255, 10, 10);
-  border-radius: 0.625rem 0.625rem 0 0;
-  z-index: 200;
-  transform: translateY(110%);
-  transition-property: transform;
-  transition-duration: 0.3s; */
-
-  /* position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 2000;
-  background-color: #f8f8f8;
-  transform:translateY(110%); 
-  transition-property: transform;
-  transition-duration: 0.3s; */
-
   position: fixed;
   bottom: 0;
   left: 0;
@@ -170,15 +137,6 @@ body .FilterPopHeader_close {
   width: 100%;
 }
 
-.FilterPopBody {
-  max-height: calc(100vh - 21.875rem);
-  overflow: hidden;
-  overflow-y: auto;
-  padding: 0.625rem 1rem 1.25rem;
-  margin-left: -1rem;
-  margin-right: -1rem;
-}
-
 /*=========================================================
   FilterPop:Radio
 =========================================================*/
@@ -295,123 +253,6 @@ body .FilterPopHeader_close {
 }
 
 /*=========================================================
-  FilterNumberPop
-=========================================================*/
-.FilterNumberList_item {
-  margin-top: 1.75rem;
-}
-
-.FilterNumberList_item:first-child {
-  margin-top: 0;
-}
-
-.FilterNumberList_inner {
-  display: table;
-  table-layout: fixed;
-  width: 100%;
-}
-
-.FilterNumberListTitle {
-  display: table-cell;
-  vertical-align: middle;
-  width: 55%;
-}
-
-.FilterNumberListCont {
-  display: table-cell;
-  vertical-align: middle;
-  width: 45%;
-}
-
-.FilterNumberListTitle_title {
-  display: block;
-  font-size: 14px;
-  line-height: 1.4em;
-  color: #000;
-  font-weight: bold;
-}
-
-.FilterNumberListTitle_text {
-  display: block;
-  font-size: 0.75rem;
-  line-height: 1.4em;
-  color: #6f6f6f;
-}
-
-/*=========================================================
-  BasicCount
-=========================================================*/
-.BasicCount {
-  width: 100%;
-  padding: 0 1.625rem;
-  text-align: center;
-  position: relative;
-}
-
-.BasicCount_button {
-  width: 1.625rem;
-  height: 1.625rem;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  border-radius: 100%;
-  border: solid 0.0625rem #6957e8;
-}
-
-.BasicCount_button::before {
-  content: "";
-  width: 0.0625rem;
-  height: 0.6875rem;
-  background-color: #6957e8;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.BasicCount_button::after {
-  content: "";
-  width: 0.6875rem;
-  height: 0.0625rem;
-  background-color: #6957e8;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.BasicCount_button.minus::before {
-  display: none;
-}
-
-.is-disabled.BasicCount_button {
-  border-color: #e9e9e9;
-}
-
-.is-disabled.BasicCount-button:before {
-  background-color: #e9e9e9;
-}
-
-.is-disabled.BasicCount-button:after {
-  background-color: #e9e9e9;
-}
-
-.BasicCount-button.minus {
-  left: 0;
-}
-
-.BasicCount-button.plus {
-  right: 0;
-}
-
-.BasicCount-text {
-  font-size: 1rem;
-  line-height: 1.4em;
-  color: #000;
-  font-weight: bold;
-}
-
-/*=========================================================
   MapSection
 =========================================================*/
 .MapSection {
@@ -476,7 +317,7 @@ body .FilterPopHeader_close {
   position: relative;
 }
 
-body .ListFixButton:before {
+body .ListFixButton::before {
   content: "";
   width: 0.875rem;
   height: 0.875rem;
@@ -500,7 +341,7 @@ body .ListFixButton:before {
   text-align: left;
 }
 
-.MapList-link {
+.MapList_link {
   display: flex;
   height: 8.125rem;
 }
@@ -526,14 +367,14 @@ body .ListFixButton:before {
   position: relative;
 }
 
-.MapListContGrade-total {
+.MapListContGrade_total {
   margin-left: 0.125rem;
   font-size: 0.75rem;
   line-height: 1.2em;
   color: #000;
 }
 
-.MapListCont-meta {
+.MapListCont_meta {
   font-size: 0.75rem;
   line-height: 1.4em;
   color: #6f6f6f;
@@ -543,7 +384,7 @@ body .ListFixButton:before {
   margin-bottom: 0.5rem;
 }
 
-.MapListCont-meta:before {
+.MapListCont_meta::before {
   content: "";
   width: 1rem;
   height: 1rem;
@@ -555,7 +396,7 @@ body .ListFixButton:before {
   transform: translateY(-50%);
 }
 
-.MapListCont-title {
+.MapListCont_title {
   margin-bottom: 0.125rem;
   font-size: 1rem;
   line-height: 1.4em;
@@ -569,7 +410,7 @@ body .ListFixButton:before {
   line-height: 0;
 }
 
-.MapListContGrade-current {
+.MapListContGrade_current {
   padding-left: 1.5rem;
   position: relative;
   font-size: 0.75rem;
@@ -578,7 +419,7 @@ body .ListFixButton:before {
   font-weight: bold;
 }
 
-.MapListContGrade-current:before {
+.MapListContGrade_current::before {
   content: "";
   width: 1.25rem;
   height: 1.25rem;
@@ -590,7 +431,7 @@ body .ListFixButton:before {
   transform: translateY(-50%);
 }
 
-.MapListCont-price {
+.MapListCont_price {
   position: absolute;
   bottom: 0.8125rem;
   right: 0.75rem;
@@ -610,7 +451,7 @@ body .ListFixButton:before {
   box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.08);
 }
 
-.MapPin-count {
+.MapPin_count {
   position: absolute;
   top: -0.5rem;
   right: -0.5rem;
@@ -624,7 +465,7 @@ body .ListFixButton:before {
   z-index: 5;
 }
 
-.MapPin-price {
+.MapPin_price {
   border: solid 0.0625rem #d0d0d0;
   background-color: #fff;
   padding: 0.1875rem 0.875rem 0.25rem;

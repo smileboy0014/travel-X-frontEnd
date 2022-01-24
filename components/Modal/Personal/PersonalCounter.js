@@ -22,10 +22,6 @@ export default function PersonalCounter() {
     [dispatch]
   );
 
-  const adultReset = useCallback(() => {
-    dispatch(adultCounterActions.reset());
-  }, [dispatch]);
-
   const childPlus = useCallback(
     ({ childValue }) => {
       dispatch(childCounterActions.increment({ childValue }));
@@ -39,15 +35,10 @@ export default function PersonalCounter() {
     [dispatch]
   );
 
-  const childReset = useCallback(() => {
-    dispatch(childCounterActions.reset());
-  }, [dispatch]);
-
   return (
     <div className={Style.FilterPopBody}>
-      <ul className="FilterNuberList">
-        <li>
-          {/* <li className={Style.FilterNumberList_item}> */}
+      <ul className="FilterNumberList">
+        <li className={Style.FilterNumberList_item}>
           <dl className={Style.FilterNumberList_inner}>
             <dt className={Style.FilterNumberListTitle}>
               <span className={Style.FilterNumberListTitle_title}>성인</span>
@@ -58,22 +49,77 @@ export default function PersonalCounter() {
 
             <dd className={Style.FilterNumberListCont}>
               <div className={Style.BasicCount}>
-                <button onClick={adultMinus}>-</button>
-                <span className={Style.BasicCount_text}> {adiltValue}</span>
-                <button onClick={adultPlus} className={Style.BasicCount_button}>
-                  +
+                <button
+                  onClick={adultMinus}
+                  className={Style.BasicCount_button_minus}
+                ></button>
+                <span className={Style.BasicCount_text}>{adiltValue}</span>
+                <button
+                  onClick={adultPlus}
+                  className={Style.BasicCount_button_plus}
+                >
+                  <span className={Style.ab_text}>pluse</span>
                 </button>
               </div>
             </dd>
           </dl>
         </li>
-        <div>
-          {"어린이"}
-          <button onClick={childPlus}>+</button>
-          {childValue}
-          <button onClick={childMinus}>-</button>
-          <button onClick={() => childReset()}>리셋</button>
-        </div>
+      </ul>
+      <ul className="FilterNumberList">
+        <li className={Style.FilterNumberList_item}>
+          <dl className={Style.FilterNumberList_inner}>
+            <dt className={Style.FilterNumberListTitle}>
+              <span className={Style.FilterNumberListTitle_title}>어린이</span>
+              <span className={Style.FilterNumberListTitle_text}>
+                만 2 ~ 12세
+              </span>
+            </dt>
+
+            <dd className={Style.FilterNumberListCont}>
+              <div className={Style.BasicCount}>
+                <button
+                  onClick={childMinus}
+                  className={Style.BasicCount_button_minus}
+                ></button>
+                <span className={Style.BasicCount_text}>{childValue}</span>
+                <button
+                  onClick={childPlus}
+                  className={Style.BasicCount_button_plus}
+                >
+                  <span className={Style.ab_text}>pluse</span>
+                </button>
+              </div>
+            </dd>
+          </dl>
+        </li>
+      </ul>
+      <ul className="FilterNumberList">
+        <li className={Style.FilterNumberList_item}>
+          <dl className={Style.FilterNumberList_inner}>
+            <dt className={Style.FilterNumberListTitle}>
+              <span className={Style.FilterNumberListTitle_title}>유아</span>
+              <span className={Style.FilterNumberListTitle_text}>
+                만 2세 미만
+              </span>
+            </dt>
+
+            <dd className={Style.FilterNumberListCont}>
+              <div className={Style.BasicCount}>
+                <button
+                  onClick={adultMinus}
+                  className={Style.BasicCount_button_minus}
+                ></button>
+                <span className={Style.BasicCount_text}>{adiltValue}</span>
+                <button
+                  onClick={adultPlus}
+                  className={Style.BasicCount_button_plus}
+                >
+                  <span className={Style.ab_text}>pluse</span>
+                </button>
+              </div>
+            </dd>
+          </dl>
+        </li>
       </ul>
     </div>
   );

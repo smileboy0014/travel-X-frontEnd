@@ -15,13 +15,17 @@ const PersonalModal = ({ isOpen, onRequestClose }) => {
 
   const handleCloseClick = useCallback(
     (e) => {
-      dispatch(adultCounterActions.reset());
-      dispatch(childCounterActions.reset());
+      onClickReset();
       e.preventDefault();
       onRequestClose(false);
     },
     [dispatch]
   );
+
+  const onClickReset = () => {
+    dispatch(adultCounterActions.reset());
+    dispatch(childCounterActions.reset());
+  };
 
   return (
     <div>
@@ -34,11 +38,19 @@ const PersonalModal = ({ isOpen, onRequestClose }) => {
       >
         <div className={Style.site_container}>
           <div className={Style.FilterPopHeader}>
-            <button className={Style.FilterPopHeader_reset}>초기화</button>
+            <button
+              className={Style.FilterPopHeader_reset}
+              onClick={onClickReset}
+            >
+              초기화
+            </button>
             <div className={Style.FilterPopHeader_title}>인원수 선택</div>
-            <button className={Style.FilterPopHeader_close}></button>
+            <button
+              className={Style.FilterPopHeader_close}
+              onClick={handleCloseClick}
+            ></button>
           </div>
-          {/* <PersonalCounter></PersonalCounter> */}
+          <PersonalCounter></PersonalCounter>
           <div className={Style.FilterPopFooter}>
             <button
               className={Style.FilterPopFooter_button}

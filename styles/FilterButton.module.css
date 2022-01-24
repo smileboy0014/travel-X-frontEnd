@@ -82,3 +82,163 @@ body .ListFilterValueItem {
   transform: translateY(-50%);
   background-size: 1.25rem 1.25rem;
 }
+
+.FilterPopBody {
+  max-height: calc(100vh - 21.875rem);
+  overflow: hidden;
+  overflow-y: auto;
+  padding: 0.625rem 1rem 1.25rem;
+  margin-left: -1rem;
+  margin-right: -1rem;
+}
+
+/*=========================================================
+  FilterNumberPop
+=========================================================*/
+.FilterNumberList_item {
+  margin-top: 1.75rem;
+}
+
+.FilterNumberList_item::first-child {
+  margin-top: 0;
+}
+
+.FilterNumberList_inner {
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+}
+
+.FilterNumberListTitle {
+  display: table-cell;
+  vertical-align: middle;
+  width: 55%;
+}
+
+.FilterNumberListCont {
+  display: table-cell;
+  vertical-align: middle;
+  width: 45%;
+}
+
+.FilterNumberListTitle_title {
+  display: block;
+  font-size: 14px;
+  line-height: 1.4em;
+  color: #000;
+  font-weight: bold;
+}
+
+.FilterNumberListTitle_text {
+  display: block;
+  font-size: 0.75rem;
+  line-height: 1.4em;
+  color: #6f6f6f;
+}
+
+/*=========================================================
+  BasicCount
+=========================================================*/
+.BasicCount {
+  width: 100%;
+  padding: 0 1.625rem;
+  text-align: center;
+  position: relative;
+}
+
+.BasicCount_button_plus {
+  right: 0;
+  width: 1.625rem;
+  height: 1.625rem;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border-radius: 100%;
+  border: solid 0.0625rem #6957e8;
+}
+.BasicCount_button_minus {
+  left: 0;
+  width: 1.625rem;
+  height: 1.625rem;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border-radius: 100%;
+  border: solid 0.0625rem #6957e8;
+}
+
+.BasicCount_button_plus::before {
+  content: "";
+  width: 0.0625rem;
+  height: 0.6875rem;
+  background-color: #6957e8;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.BasicCount_button_plus::after {
+  content: "";
+  width: 0.6875rem;
+  height: 0.0625rem;
+  background-color: #6957e8;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.BasicCount_button_minus::before {
+  content: "";
+  width: 0.0625rem;
+  height: 0.6875rem;
+  background-color: #6957e8;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.BasicCount_button_minus::after {
+  content: "";
+  width: 0.6875rem;
+  height: 0.0625rem;
+  background-color: #6957e8;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.BasicCount_button_minus::before {
+  display: none;
+}
+
+.is-disabled.BasicCount_button_plus {
+  border-color: #e9e9e9;
+}
+
+.is-disabled.BasicCount_button_plus:before {
+  background-color: #e9e9e9;
+}
+
+.is-disabled.BasicCount_button_plus::after {
+  background-color: #e9e9e9;
+}
+
+.BasicCount_text {
+  font-size: 1rem;
+  line-height: 1.4em;
+  color: #000;
+  font-weight: bold;
+}
+
+.ab_text {
+  overflow: hidden;
+  display: block;
+  position: absolute;
+  border: 0;
+  width: 1px;
+  height: 1px;
+}
