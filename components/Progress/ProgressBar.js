@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import style from '../../styles/ProgressBar.module.css'
+import style from '../../styles/Progressbar.module.css'
 
 const ProgressBar = ({ width, percent }) => {
 
