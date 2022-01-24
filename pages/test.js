@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import accidentDeath from "./data";
-import MarkerClustering from "./MarkerClustering.js";
+// import MarkerClustering from "./MarkerClustering.js";
 import $ from "jquery";
 
 var map;
