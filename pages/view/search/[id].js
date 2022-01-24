@@ -36,6 +36,7 @@ const Post = ({ item }) => {
   const observer = useRef();
   const [searchValue, setSearchValue] = useState();
   const [searchAutoComptValue, setSearchAutoComptValue] = useState([]);
+  const [searchTxt, setSearchTxt] = useState("");
   const [calendarModalOpen, setCalendarModalOpen] = useState(false);
 
   const lastroomElementRef = useCallback(
@@ -62,8 +63,13 @@ const Post = ({ item }) => {
   }, [searchAutoComptValue]);
 
   useEffect(() => {
-    dispatch(dateActions.setDetailDate({start: searchDate.start, end: searchDate.end}));
-  }, [])
+    dispatch(
+      dateActions.setDetailDate({
+        start: searchDate.start,
+        end: searchDate.end,
+      })
+    );
+  }, []);
 
   return (
     <div className={Style.site}>
@@ -82,7 +88,11 @@ const Post = ({ item }) => {
                 getRecentListView={(value) => {
                   setRecentListView(value);
                 }}
+                getSearchTxt={(value) => {
+                  setSearchTxt(value);
+                }}
               ></SearchBar>
+
               <div className={Style.ListFilterValue}>
                 <div className={Style.ListFilterValue_list}>
                   <CalendarFilterButton
@@ -92,23 +102,37 @@ const Post = ({ item }) => {
                 </div>
               </div>
 
-              <div className={Style.ListFilterButton}>
-                <div className={Style.ListFilterButton_list}>
-                  <OptionFilterButton></OptionFilterButton>
-                  <OrderByFilterButton></OrderByFilterButton>
-                </div>
-              </div>
+              {!recentListView ? (
+                <React.Fragment>
+                  {searchAutoComptValue.length < 1 ? (
+                    <div className={Style.ListFilterButton}>
+                      <div className={Style.ListFilterButton_list}>
+                        <OptionFilterButton></OptionFilterButton>
+                        <OrderByFilterButton></OrderByFilterButton>
+                      </div>
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                </React.Fragment>
+              ) : (
+                ""
+              )}
             </div>
           </div>
         </div>
         {recentListView ? (
-          <RecentSearch
-            sendSearchValue={searchValue}
-            sendSearchAutoComptValue={searchAutoComptValue}
-            getSearchValue={(value) => {
-              setSearchValue(value);
-            }}
-          />
+          <div className={Style.TotalSearch}>
+            <div className={Style.is_Focus}>
+              <RecentSearch
+                sendSearchValue={searchValue}
+                sendSearchAutoComptValue={searchAutoComptValue}
+                getSearchValue={(value) => {
+                  setSearchValue(value);
+                }}
+              />
+            </div>
+          </div>
         ) : (
           <React.Fragment>
             {searchAutoComptValue.length < 1 ? (
@@ -132,13 +156,16 @@ const Post = ({ item }) => {
                 </div>
               </div>
             ) : (
-              <RecentSearch
-                sendSearchValue={searchValue}
-                sendSearchAutoComptValue={searchAutoComptValue}
-                getSearchValue={(value) => {
-                  setSearchValue(value);
-                }}
-              />
+              <div className={Style.TotalSearch}>
+                <RecentSearch
+                  sendSearchValue={searchValue}
+                  sendSearchAutoComptValue={searchAutoComptValue}
+                  getSearchValue={(value) => {
+                    setSearchValue(value);
+                  }}
+                  sendSearchTxt={searchTxt}
+                />
+              </div>
             )}
           </React.Fragment>
         )}

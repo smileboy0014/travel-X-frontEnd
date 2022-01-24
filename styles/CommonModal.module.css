@@ -1,20 +1,17 @@
 .Modal {
-  max-width: 48rem;
-  background: rgb(142, 231, 243);
-  margin: 0 auto;
   position: fixed;
-  padding: 30px;
-  border-radius: 15px;
-  margin-bottom: -10px;
-  z-index: 200;
+  bottom: 0;
   left: 0;
   right: 0;
-  bottom: 0;
+  background-color: #f1f1f1;
+  border-radius: 1.625rem 1.625rem 0 0;
+  z-index: 200;
+  transition-duration: 0.3s;
 }
 
 .Overlay {
   position: fixed;
-  min-height: 100%;
+  min-height: 50%;
   min-width: 100%;
   top: 0;
   left: 0;
@@ -22,19 +19,334 @@
   bottom: 0;
   justify-content: center;
   align-items: center;
-  background-color: #00ff0000;
-  z-index: 200;
+  background-color: #f8f8f8;
+  z-index: 2000;
+  /* background-color: #ffffff;
+  opacity: 0.5; */
 }
 
-@media screen and (max-width: 480px) {
-  .Modal {
-    min-height: 100%;
-    max-width: 50rem;
-    background: rgb(142, 231, 243);
-    margin: 0 auto;
-    position: relative;
-    padding: 30px;
-    border-radius: 15px;
-    margin-bottom: -10px;
-  }
+.site_container {
+  max-width: 50rem;
+  padding: 0 1rem;
+  margin: 0 auto;
+  position: relative;
+  /* background-color: #ffffff;
+  z-index: 2000; */
+}
+
+.FilterPopHeader {
+  padding: 1.875rem 0;
+  position: relative;
+}
+
+body .FilterPopHeader_reset {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  font-size: 0.75rem;
+  line-height: 1.4em;
+  color: #000;
+  z-index: 5;
+}
+
+.FilterPopHeader_title {
+  text-align: center;
+  font-size: 1rem;
+  line-height: 1.2em;
+  color: #000;
+  font-weight: bold;
+}
+
+body .FilterPopHeader_close {
+  width: 1.25rem;
+  height: 1.25rem;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  z-index: 5;
+  background-image: url(../public/icon/ico_search_close.svg);
+  background-size: 1.25rem 1.25rem;
+  font-size: 0px;
+  line-height: 0;
+  cursor: pointer;
+}
+
+/*=========================================================
+  MapSection
+=========================================================*/
+.MapSection {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding-top: 8.25rem;
+  z-index: 800;
+  opacity: 0;
+  visibility: hidden;
+  transition-property: opacity, visibility;
+  transition-duration: 0.2s;
+}
+
+.FilterPopFooter {
+  padding: 1.25rem 0;
+}
+
+.FilterPopFooter_button {
+  padding: 1.0625rem 0.9375rem;
+  border-radius: 0.25rem;
+  background-color: #6957e8;
+  color: #fff;
+  display: block;
+  font-size: 0.875rem;
+  line-height: 1.2em;
+  font-weight: 500;
+  text-align: center;
+  width: 100%;
+}
+.is-View.MapSection {
+  opacity: 1;
+  visibility: visible;
+}
+
+.MapSection-map {
+  position: absolute;
+  top: 8.25rem;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.MapSection-map iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/*=========================================================
+  MapSection:ListFixButton
+=========================================================*/
+.MapSectionInfo {
+  position: absolute;
+  bottom: 1.25rem;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  text-align: center;
+  font-size: 0;
+  line-height: 0;
+}
+
+.ListFixButton {
+  border-radius: 2.25rem;
+  border: solid 0.0625rem #e0e0e0;
+  font-size: 0.75rem;
+  line-height: 1.2em;
+  color: #000;
+  font-weight: 500;
+  padding: 0.625rem 1.1875rem 0.625rem 2.3125rem;
+  background-color: #fff;
+  display: inline-block;
+  position: relative;
+}
+
+body .ListFixButton::before {
+  content: "";
+  width: 0.875rem;
+  height: 0.875rem;
+  position: absolute;
+  top: 50%;
+  left: 1.1875rem;
+  transform: translateY(-50%);
+  /* background-image: url(../images/icon/ico_maplist.svg); */
+  background-size: 0.875rem 0.875rem;
+}
+
+/*=========================================================
+  MapSection:MapList
+=========================================================*/
+.MapList {
+  margin-top: 1.25rem;
+  border-radius: 0.5rem 0.5rem;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 0.125rem 0.625rem 0 rgba(0, 0, 0, 0.3);
+  text-align: left;
+}
+
+.MapList_link {
+  display: flex;
+  height: 8.125rem;
+}
+
+.MapListThumb {
+  width: 6.875rem;
+  overflow: hidden;
+  position: relative;
+}
+
+.MapListThumb img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 100%;
+}
+
+.MapListCont {
+  background-color: #fff;
+  flex: 1;
+  padding: 0.8125rem 0.75rem;
+  position: relative;
+}
+
+.MapListContGrade_total {
+  margin-left: 0.125rem;
+  font-size: 0.75rem;
+  line-height: 1.2em;
+  color: #000;
+}
+
+.MapListCont_meta {
+  font-size: 0.75rem;
+  line-height: 1.4em;
+  color: #6f6f6f;
+  display: block;
+  position: relative;
+  padding-left: 1.125rem;
+  margin-bottom: 0.5rem;
+}
+
+.MapListCont_meta::before {
+  content: "";
+  width: 1rem;
+  height: 1rem;
+  /* background-image: url(../images/icon/ico_hotel.svg); */
+  background-size: 1rem 1rem;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+}
+
+.MapListCont_title {
+  margin-bottom: 0.125rem;
+  font-size: 1rem;
+  line-height: 1.4em;
+  color: #000;
+  font-weight: bold;
+}
+
+.MapListContGrade {
+  margin-top: 0.375rem;
+  font-size: 0;
+  line-height: 0;
+}
+
+.MapListContGrade_current {
+  padding-left: 1.5rem;
+  position: relative;
+  font-size: 0.75rem;
+  line-height: 1.2em;
+  color: #000;
+  font-weight: bold;
+}
+
+.MapListContGrade_current::before {
+  content: "";
+  width: 1.25rem;
+  height: 1.25rem;
+  /* background-image: url(../images/icon/ico_star.svg); */
+  background-size: 1.25rem 1.25rem;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+}
+
+.MapListCont_price {
+  position: absolute;
+  bottom: 0.8125rem;
+  right: 0.75rem;
+  font-size: 1.25rem;
+  line-height: 1.2em;
+  color: #6957e8;
+  font-weight: bold;
+  font-family: "Roboto", "Noto Sans KR";
+}
+
+/*=========================================================
+  MapSection:MapPin
+=========================================================*/
+.MapPin {
+  position: absolute;
+  z-index: 5;
+  box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.08);
+}
+
+.MapPin_count {
+  position: absolute;
+  top: -0.5rem;
+  right: -0.5rem;
+  font-size: 0.625rem;
+  border: solid 0.0625rem #d0d0d0;
+  border-radius: 100%;
+  background-color: #fff;
+  text-align: center;
+  padding: 0 0.1875rem;
+  min-width: 1.1875rem;
+  z-index: 5;
+}
+
+.MapPin_price {
+  border: solid 0.0625rem #d0d0d0;
+  background-color: #fff;
+  padding: 0.1875rem 0.875rem 0.25rem;
+  font-size: 0.75rem;
+  line-height: 1.2em;
+  color: #000;
+  border-radius: 0.3125rem 0.3125rem;
+  position: relative;
+}
+
+.MapPin-price:before {
+  content: "";
+  width: 0.3125rem;
+  height: 0.3125rem;
+  border-right: solid 0.0625rem #d0d0d0;
+  border-bottom: solid 0.0625rem #d0d0d0;
+  background-color: #fff;
+  transform: translateX(-50%) rotate(45deg);
+  position: absolute;
+  bottom: -0.1875rem;
+  left: 50%;
+}
+
+.MapPin.is-Active .MapPin-count {
+  font-size: 0.75rem;
+  border-color: #6957e8;
+  color: #6957e8;
+  top: -0.75rem;
+  right: -0.5rem;
+}
+
+.MapPin.is-Active .MapPin-price {
+  font-size: 1rem;
+  font-weight: bold;
+  border-color: #6957e8;
+  color: #fff;
+  background-color: #6957e8;
+  border-radius: 1rem 1rem;
+}
+
+.MapPin.is-Active .MapPin-price:before {
+  border-color: #6957e8;
+  background-color: #6957e8;
+  width: 0.625rem;
+  height: 0.625rem;
+  bottom: -0.3125rem;
 }

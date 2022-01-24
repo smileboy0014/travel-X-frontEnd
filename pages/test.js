@@ -1,158 +1,114 @@
-import React from "react";
-import DetailMap from "../components/Modal/Map/DetailMap";
+import React, { useEffect, useState } from "react";
+import accidentDeath from "./data";
+import MarkerClustering from "./MarkerClustering.js";
+import $ from "jquery";
+
+var map;
 
 const test = () => {
-  const markerArr = [
-    {
-      price: "1000원",
-      location: "강남",
-      lat: "37.4959854",
-      lng: "127.0664091",
-    }, // 강남구 중심좌표
-    {
-      price: "2000원",
-      location: "강동",
-      lat: "37.5492077",
-      lng: "127.1464824",
-    }, // 강동구 중심좌표
-    {
-      price: "3000원",
-      location: "강북",
-      lat: "37.6469954",
-      lng: "127.0147158",
-    }, // 강북구 중심좌표
-    {
-      price: "4000원",
-      location: "강서",
-      lat: "37.5657617",
-      lng: "126.8226561",
-    }, // 강서구 중심좌표
-    {
-      price: "5000원",
-      location: "관악",
-      lat: "37.4603732",
-      lng: "126.9536086",
-    }, // 관악구 중심좌표
-    {
-      price: "6000원",
-      location: "광진",
-      lat: "37.5574120",
-      lng: "127.0796211",
-    }, // 광진구 중심좌표
-    { price: "7000원", location: "구로", lat: "37.4954856", lng: "126.858121" }, // 구로구 중심좌표
-    {
-      price: "8000원",
-      location: "금천",
-      lat: "37.4600969",
-      lng: "126.9001546",
-    }, // 금천구 중심좌표
-    {
-      price: "9000원",
-      location: "노원",
-      lat: "37.6377533",
-      lng: "127.0754623",
-    }, // 노원구 중심좌표
-    {
-      price: "10000원",
-      location: "도봉",
-      lat: "37.6658609",
-      lng: "127.0317674",
-    }, // 도봉구 중심좌표
-    {
-      price: "1100원",
-      location: "동대문",
-      lat: "37.5838012",
-      lng: "127.0507003",
-    }, // 동대문구 중심좌표
-    {
-      price: "12000원",
-      location: "동작",
-      lat: "37.4965037",
-      lng: "126.9443073",
-    }, // 동작구 중심좌표
-    {
-      price: "13000원",
-      location: "마포",
-      lat: "37.5676507",
-      lng: "126.8854549",
-    }, // 마포구 중심좌표
-    {
-      price: "14000원",
-      location: "서대문",
-      lat: "37.5820369",
-      lng: "126.9356665",
-    }, // 서대문구 중심좌표
-    {
-      price: "15000원",
-      location: "서초",
-      lat: "37.4769528",
-      lng: "127.0378103",
-    }, // 서초구 중심좌표
-    {
-      price: "17000원",
-      location: "성동",
-      lat: "37.5506753",
-      lng: "127.0409622",
-    }, // 성동구 중심좌표
-    {
-      price: "109800원",
-      location: "성북",
-      lat: "37.606991",
-      lng: "127.0232185",
-    }, // 성북구 중심좌표
-    {
-      price: "18000원",
-      location: "송파",
-      lat: "37.5177941",
-      lng: "127.1127078",
-    }, // 송파구 중심좌표
-    {
-      price: "13000원",
-      location: "양천",
-      lat: "37.5270616",
-      lng: "126.8561534",
-    }, // 양천구 중심좌표
-    {
-      price: "16000원",
-      location: "영등포",
-      lat: "37.520641",
-      lng: "126.9139242",
-    }, // 영등포구 중심좌표
-    {
-      price: "143000원",
-      location: "용산",
-      lat: "37.5311008",
-      lng: "126.9810742",
-    }, // 용산구 중심좌표
-    {
-      price: "13000원",
-      location: "은평",
-      lat: "37.6176125",
-      lng: "126.9227004",
-    }, // 은평구 중심좌표
-    {
-      price: "15000원",
-      location: "종로",
-      lat: "37.5990998",
-      lng: "126.9861493",
-    }, // 종로구 중심좌표
-    {
-      price: "13000원",
-      location: "중구",
-      lat: "37.5579452",
-      lng: "126.9941904",
-    }, // 중구 중심좌표
-    {
-      price: "15000원",
-      location: "중랑구",
-      lat: "37.598031",
-      lng: "127.092931",
-    }, // 중랑구 중심좌표
-  ];
+  const initMap = () => {
+    map = new naver.maps.Map("map", {
+      zoom: 6,
+      center: new naver.maps.LatLng(36.2253017, 127.6460516),
+      zoomControl: true,
+      zoomControlOptions: {
+        position: naver.maps.Position.TOP_LEFT,
+        style: naver.maps.ZoomControlStyle.SMALL,
+      },
+    });
 
+    var data = accidentDeath.accidentDeath;
+
+    if (data !== undefined) {
+      console.log("2222222222");
+
+      var markers = [];
+      var latlng;
+      var marker;
+      var roomMapMarker;
+
+      // data.map(
+      //   (item, idx) => (
+      //     console.log("item.grd_la: " + item.grd_la),
+      //     (roomMapMarker = new naver.maps.Marker({
+      //       map: roomMap,
+      //       position: new naver.maps.LatLng(item.grd_la, item.grd_lo),
+      //     }))
+      //   )
+      // );
+
+      data.map(
+        (item, idx) => (
+          (latlng = new naver.maps.LatLng(item.grd_la, item.grd_lo)),
+          (marker = new naver.maps.Marker({
+            position: latlng,
+            draggable: true,
+          })),
+          markers.push(marker)
+        )
+      );
+
+      var htmlMarker1 = {
+          content:
+            '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(../../../public/images/cluster-marker-1.png);background-size:contain;"></div>',
+          size: new naver.maps.Size(40, 40),
+          anchor: new naver.maps.Point(20, 20),
+        },
+        htmlMarker2 = {
+          content:
+            '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(../../../public/images/cluster-marker-2.png);background-size:contain;"></div>',
+          size: new naver.maps.Size(40, 40),
+          anchor: new naver.maps.Point(20, 20),
+        },
+        htmlMarker3 = {
+          content:
+            '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(../../../public/images/cluster-marker-3.png);background-size:contain;"></div>',
+          size: new naver.maps.Size(40, 40),
+          anchor: new naver.maps.Point(20, 20),
+        },
+        htmlMarker4 = {
+          content:
+            '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(../../../public/images/cluster-marker-4.png);background-size:contain;"></div>',
+          size: new naver.maps.Size(40, 40),
+          anchor: new naver.maps.Point(20, 20),
+        },
+        htmlMarker5 = {
+          content:
+            '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(../../../public/images/cluster-marker-5.png);background-size:contain;"></div>',
+          size: new naver.maps.Size(40, 40),
+          anchor: new naver.maps.Point(20, 20),
+        };
+
+      // var markerClustering = new MarkerClustering({
+      //   minClusterSize: 2,
+      //   maxZoom: 13,
+      //   map: map,
+      //   markers: markers,
+      //   disableClickZoom: false,
+      //   gridSize: 120,
+      //   icons: [
+      //     htmlMarker1,
+      //     htmlMarker2,
+      //     htmlMarker3,
+      //     htmlMarker4,
+      //     htmlMarker5,
+      //   ],
+      //   indexGenerator: [10, 100, 200, 500, 1000],
+      //   stylingFunction: function (clusterMarker, count) {
+      //     $(clusterMarker.getElement()).find("div:first-child").text(count);
+      //   },
+      // });
+    }
+  };
+
+  useEffect(() => {
+    initMap();
+  }, []);
   return (
     <div>
-      <DetailMap lat={37.4959854} lng={127.0664091} markerArr={markerArr} />
+      <div id="map">
+        <div style={{ width: "100%", height: "60rem" }}></div>
+      </div>
     </div>
   );
 };

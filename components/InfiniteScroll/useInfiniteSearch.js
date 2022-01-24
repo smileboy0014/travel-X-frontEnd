@@ -61,7 +61,7 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber) {
         checkinDate: FormattingDate(new Date(searchDate.start)),
         checkoutDate: FormattingDate(new Date(searchDate.end)),
         adult: adultCounterValue,
-        child: childCounterValue,
+        // child: childCounterValue,
         query: query,
         // from: fromPageNumber,
         size: toPageNumber,
