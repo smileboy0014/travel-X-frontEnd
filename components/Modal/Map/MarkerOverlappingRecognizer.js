@@ -1,27 +1,40 @@
-/**
- * Copyright 2016 NAVER Corp.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+import $ from "jquery";
 
-export function MarkerOverlappingRecognizer() {
-  this._listeners = [];
-  this._markers = [];
-}
+export class MarkerOverlapRecognizer {
+  constructor(opts) {
+    var defaultOptions = {
+      tolerance: 5,
+      highlightRect: true,
+      highlightRectStyle: {
+        strokeColor: "#ff0000",
+        strokeOpacity: 1,
+        strokeWeight: 2,
+        strokeStyle: "dot",
+        fillColor: "#ff0000",
+        fillOpacity: 0.5,
+      },
+      intersectNotice: true,
+      intersectNoticeTemplate:
+        '<div style="width:180px;border:solid 1px #333;background-color:#fff;padding:5px;"><em style="font-weight:bold;color:#f00;">{{count}}</em>개의 마커가 있습니다.</div>',
+      intersectList: true,
+    };
+    this._options = { ...defaultOptions, ...opts };
 
-MarkerOverlappingRecognizer.prototype = {
-  constructor: MarkerOverlappingRecognizer,
-  setMap: function (map) {
+    this._listeners = [];
+    this._markers = [];
+
+    this._rectangle = new naver.maps.Rectangle(
+      this._options.highlightRectStyle
+    );
+    this._overlapInfoEl = $(
+      '<div style="position:absolute;z-index:100;margin:0;padding:0;display:none;"></div>'
+    );
+    this._overlapListEl = $(
+      '<div style="position:absolute;z-index:100;margin:0;padding:0;display:none;"></div>'
+    );
+  }
+
+  setMap(map) {
     var oldMap = this.getMap();
 
     if (map === oldMap) return;
@@ -33,31 +46,31 @@ MarkerOverlappingRecognizer.prototype = {
     if (map) {
       this._bindEvent(map);
       this._overlapInfoEl.appendTo(map.getPanes().floatPane);
-      this._overlapListEl.appendTo(map.getPanes().floatPane);
+      // this._overlapListEl.appendTo(map.getPanes().floatPane);
     }
 
     this.map = map || null;
-  },
+  }
 
-  getMap: function () {
+  getMap() {
     return this.map;
-  },
+  }
 
-  _bindEvent: function (map) {
+  _bindEvent(map) {
     var listeners = this._listeners,
       self = this;
 
     listeners.push(
-      map.addListener("idle", $.proxy(this._onIdle, this)),
-      map.addListener("click", $.proxy(this._onIdle, this))
+      map.addListener("idle", $.proxy(this._onIdle, this))
+      // map.addListener("click", $.proxy(this._onIdle, this))
     );
 
     this.forEach(function (marker) {
       listeners = listeners.concat(self._bindMarkerEvent(marker));
     });
-  },
+  }
 
-  _unbindEvent: function (map_) {
+  _unbindEvent(map_) {
     var map = map_ || this.getMap();
 
     naver.maps.Event.removeListener(this._listeners);
@@ -66,52 +79,52 @@ MarkerOverlappingRecognizer.prototype = {
     this._rectangle.setMap(null);
     this._overlapInfoEl.remove();
     this._overlapListEl.remove();
-  },
+  }
 
-  add: function (marker) {
+  add(marker) {
     this._listeners = this._listeners.concat(this._bindMarkerEvent(marker));
     this._markers.push(marker);
-  },
+  }
 
-  remove: function (marker) {
+  remove(marker) {
     this.forEach(function (m, i, markers) {
       if (m === marker) {
         markers.splice(i, 1);
       }
     });
     this._unbindMarkerEvent(marker);
-  },
+  }
 
-  forEach: function (callback) {
+  forEach(callback) {
     var markers = this._markers;
 
     for (var i = markers.length - 1; i >= 0; i--) {
       callback(markers[i], i, markers);
     }
-  },
+  }
 
-  hide: function () {
+  hide() {
     this._overlapListEl.hide();
     this._overlapInfoEl.hide();
     this._rectangle.setMap(null);
-  },
+  }
 
-  _bindMarkerEvent: function (marker) {
+  _bindMarkerEvent(marker) {
     marker.__intersectListeners = [
       marker.addListener("mouseover", $.proxy(this._onOver, this)),
-      marker.addListener("mouseout", $.proxy(this._onOut, this)),
+      // marker.addListener("mouseout", $.proxy(this._onOut, this)),
       marker.addListener("mousedown", $.proxy(this._onDown, this)),
     ];
 
     return marker.__intersectListeners;
-  },
+  }
 
-  _unbindMarkerEvent: function (marker) {
+  _unbindMarkerEvent(marker) {
     naver.maps.Event.removeListener(marker.__intersectListeners);
     delete marker.__intersectListeners;
-  },
+  }
 
-  getOverlapRect: function (marker) {
+  getOverlapRect(marker) {
     var map = this.getMap(),
       proj = map.getProjection(),
       position = marker.getPosition(),
@@ -121,9 +134,9 @@ MarkerOverlappingRecognizer.prototype = {
       rectRightBottom = offset.clone().add(tolerance, tolerance);
 
     return naver.maps.PointBounds.bounds(rectLeftTop, rectRightBottom);
-  },
+  }
 
-  getOverlapedMarkers: function (marker) {
+  getOverlapedMarkers(marker) {
     var baseRect = this.getOverlapRect(marker),
       overlaped = [
         {
@@ -147,14 +160,14 @@ MarkerOverlappingRecognizer.prototype = {
     });
 
     return overlaped;
-  },
+  }
 
-  _onIdle: function () {
+  _onIdle() {
     this._overlapInfoEl.hide();
     this._overlapListEl.hide();
-  },
+  }
 
-  _onOver: function (e) {
+  _onOver(e) {
     var marker = e.overlay,
       map = this.getMap(),
       proj = map.getProjection(),
@@ -197,14 +210,14 @@ MarkerOverlappingRecognizer.prototype = {
     } else {
       this.hide();
     }
-  },
+  }
 
-  _onOut: function (e) {
+  _onOut(e) {
     this._rectangle.setMap(null);
     this._overlapInfoEl.hide();
-  },
+  }
 
-  _guid: function () {
+  _guid() {
     return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx"
       .replace(/[xy]/g, function (c) {
         var r = (Math.random() * 16) | 0,
@@ -212,9 +225,9 @@ MarkerOverlappingRecognizer.prototype = {
         return v.toString(16);
       })
       .toUpperCase();
-  },
+  }
 
-  _renderIntersectList: function (overlaped, offset) {
+  _renderIntersectList(overlaped, offset) {
     if (!this._options.intersectList) return;
 
     var listLayer = this._overlapListEl;
@@ -249,30 +262,32 @@ MarkerOverlappingRecognizer.prototype = {
       itemPlace = listLayer;
     }
 
-    var items = [];
-    for (var i = 0, ii = overlaped.length; i < ii; i++) {
-      var c = overlaped[i],
-        item = $(
-          itemTemplate.replace(/\{\{(\w+)\}\}/g, function (match, symbol) {
-            if (symbol === "order") {
-              return i + 1;
-            } else if (symbol in c.marker) {
-              return c.marker[symbol];
-            } else if (c.marker.get(symbol)) {
-              return c.marker.get(symbol);
-            } else {
-              match;
-            }
-          })
-        );
+    // var items = [];
+    // for (var i = 0, ii = overlaped.length; i < ii; i++) {
+    //   var c = overlaped[i],
+    //     item = $(
+    //       itemTemplate.replace(/\{\{(\w+)\}\}/g, function (match, symbol) {
+    //         if (symbol === "order") {
+    //           return i + 1;
+    //         } else if (symbol in marker) {
+    //           console.log("symbol: " + symbol);
 
-      item.on("click", $.proxy(self._onClickItem, self, c.marker));
-      items.push(item);
-    }
+    //           return c.marker[symbol];
+    //         } else if (c.marker.get(symbol)) {
+    //           return c.marker.get(symbol);
+    //         } else {
+    //           match;
+    //         }
+    //       })
+    //     );
 
-    for (var j = 0, jj = items.length; j < jj; j++) {
-      itemPlace.append(items[j]);
-    }
+    //   item.on("click", $.proxy(self._onClickItem, self, c.marker));
+    //   items.push(item);
+    // }
+
+    // for (var j = 0, jj = items.length; j < jj; j++) {
+    //   itemPlace.append(items[j]);
+    // }
 
     listLayer
       .css({
@@ -280,9 +295,9 @@ MarkerOverlappingRecognizer.prototype = {
         top: offset.y,
       })
       .show();
-  },
+  }
 
-  _onDown: function (e) {
+  _onDown(e) {
     var marker = e.overlay,
       map = this.getMap(),
       proj = map.getProjection(),
@@ -290,27 +305,25 @@ MarkerOverlappingRecognizer.prototype = {
       overlaped = this.getOverlapedMarkers(marker),
       self = this;
 
-    naver.maps.Event.resumeDispatch(marker, "click");
+    // naver.maps.Event.resumeDispatch(marker, "click");
 
     if (overlaped.length <= 1) {
       return;
     }
 
-    naver.maps.Event.stopDispatch(marker, "click");
+    // naver.maps.Event.stopDispatch(marker, "click");
     this._renderIntersectList(overlaped, offset);
     this._overlapInfoEl.hide();
 
     naver.maps.Event.trigger(this, "overlap", overlaped);
-  },
+  }
 
-  _onClickItem: function (marker, e) {
-    naver.maps.Event.resumeDispatch(marker, "click");
-
-    naver.maps.Event.trigger(this, "clickItem", {
-      overlay: marker,
-      originalEvent: e.originalEvent,
-    });
-
-    marker.trigger("click");
-  },
-};
+  _onClickItem(marker, e) {
+    // naver.maps.Event.resumeDispatch(marker, "click");
+    // naver.maps.Event.trigger(this, "clickItem", {
+    //   overlay: marker,
+    //   originalEvent: e.originalEvent,
+    // });
+    // marker.trigger("click");
+  }
+}

@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { useSelector } from "react-redux";
 import SearchMobileCard from "../../Card/SearchMobileCard";
-// import * as test from "./MarkerOverlappingRecognizer";
+import { MarkerOverlapRecognizer } from "./MarkerOverlappingRecognizer";
 
 var markers = [];
 var infoWindows = [];
 var mobileWindows = [];
 var roomMap;
+var recognizer;
 
 var MARKER_ICON_URL =
   "https://ssl.pstatic.net/static/maps/img/icons/sp_pins_spot_v3.png";
@@ -179,10 +180,16 @@ const DetailMap = ({ lat, lng }) => {
       zoom: 12,
     });
 
+    recognizer = new MarkerOverlapRecognizer({
+      highlightRect: false,
+      tolerance: 5,
+    });
+    recognizer.setMap(roomMap);
     // const woody = test.MarkerOverlappingRecognizer.setMap(roomMap);
   };
 
   const addRoomMapMarker = () => {
+    console.log(searchDataValue[0]);
     if (searchDataValue[0] !== undefined) {
       // for (var i = 0; i < searchDataValue.length; i++) {
       // for (var i = 0; i < 5; i++) {
@@ -310,6 +317,7 @@ const DetailMap = ({ lat, lng }) => {
           unhighlightMarker(e.overlay);
         });
 
+        recognizer.add(roomMapMarker);
         // roomMapMarker.addListener("click", function (e) {
         //   var m = e.overlay;
         // });
