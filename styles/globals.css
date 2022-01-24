@@ -301,26 +301,26 @@ body {
 }
 
 .site {
-	display: flex;
-	flex-direction: column;
-	min-height:100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
 }
 
-.site-body{
-	flex: 1;
+.site-body {
+  flex: 1;
 }
 
-.site-container{
-	max-width:50rem;
-	padding:0 1rem;
-	margin:0 auto;
-	position:relative;
+.site-container {
+  max-width: 50rem;
+  padding: 0 1rem;
+  margin: 0 auto;
+  position: relative;
 }
 
-.site-container:after{
-	content:"";
-	display:table;
-	clear:both;
+.site-container:after {
+  content: "";
+  display: table;
+  clear: both;
 }
 
 .ck.ck-editor__editable:not(.ck-editor__nested-editable) {
@@ -335,6 +335,7 @@ body {
 
 .ReactModal__Overlay--after-open {
   opacity: 1;
+  z-index: 2000;
   transform: translateY(0px);
 }
 

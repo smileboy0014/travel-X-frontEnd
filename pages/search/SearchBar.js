@@ -12,7 +12,6 @@ const SearchBar = ({
   sendTextValue,
   getRecentListView,
   getSearchTxt,
-  getRecentListView
 }) => {
   const [searchValue, setSearchValue] = useState("");
   const [placeholderValue, setplaceholderValue] = useState("");
@@ -24,7 +23,7 @@ const SearchBar = ({
   const onChangeSearch = useCallback((e) => {
     setSearchValue(e.target.value);
   }, []);
-	const week = new Array('일', '월', '화', '수', '목', '금', '토');
+  const week = new Array("일", "월", "화", "수", "목", "금", "토");
 
   useEffect(() => {
     const timerId = setTimeout(() => {
@@ -117,9 +116,15 @@ const SearchBar = ({
           onRequestClose={() => setPersonalModalOpen(false)}
         />
 
-        {!searchValue && (searchDate !== undefined) && (
+        {!searchValue && searchDate !== undefined && (
           <span className={Style.ListFilterSearch_date}>
-            {`${new Date(searchDate.start).getMonth()+1}.${new Date(searchDate.start).getDate()}(${week[new Date(searchDate.start).getDay()]}) - ${new Date(searchDate.end).getMonth()+1}.${new Date(searchDate.end).getDate()}(${week[new Date(searchDate.end).getDay()]})`}
+            {`${new Date(searchDate.start).getMonth() + 1}.${new Date(
+              searchDate.start
+            ).getDate()}(${week[new Date(searchDate.start).getDay()]}) - ${
+              new Date(searchDate.end).getMonth() + 1
+            }.${new Date(searchDate.end).getDate()}(${
+              week[new Date(searchDate.end).getDay()]
+            })`}
           </span>
         )}
 
