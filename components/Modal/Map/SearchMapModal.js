@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import Modal from "react-modal";
 import Style from "../../../styles/CommonModal.module.css";
-import DetailMap from "./DetailMap";
+import ListDetailMap from "./ListDetailMap";
 
 const SearchMapModal = ({ isOpen, onRequestClose }) => {
   return (
@@ -13,9 +13,15 @@ const SearchMapModal = ({ isOpen, onRequestClose }) => {
         ariaHideApp={false}
         onRequestClose={() => onRequestClose(false)}
       >
-        <label onClick={() => onRequestClose(false)}>X</label>
-
-        <DetailMap lat={37.4959854} lng={127.0664091} />
+        <ListDetailMap
+          lat={37.4959854}
+          lng={127.0664091}
+          onRequestClosed={(value) => {
+            if (value) {
+              onRequestClose(false);
+            }
+          }}
+        />
       </Modal>
     </div>
   );

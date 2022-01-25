@@ -1,5 +1,7 @@
 .Modal {
   position: fixed;
+  min-height: 100%;
+  min-width: 100%;
   bottom: 0;
   left: 0;
   right: 0;
@@ -11,7 +13,7 @@
 
 .Overlay {
   position: fixed;
-  min-height: 50%;
+  min-height: 100%;
   min-width: 100%;
   top: 0;
   left: 0;
@@ -19,7 +21,7 @@
   bottom: 0;
   justify-content: center;
   align-items: center;
-  background-color: #f8f8f8;
+  background-color: #ffffff;
   z-index: 2000;
   /* background-color: #ffffff;
   opacity: 0.5; */
