@@ -1,23 +1,32 @@
-import { useEffect, useState, useRef, forwardRef, Fragment } from 'react'
-import Image from 'next/image';
+import { useEffect, useState, useRef, forwardRef, Fragment } from "react";
+import Image from "next/image";
 import style from "../../../styles/Carousel.module.css";
-import Styles from "../../../styles/Detail.module.css";
-import DetailAllImageModal from '../../Modal/RoomDetail/DetailAllImageModal';
+import Style from "../../../styles/Detail.module.css";
+import DetailAllImageModal from "../../Modal/RoomDetail/DetailAllImageModal";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination } from 'swiper';
+import { Navigation, Pagination } from "swiper";
 import "swiper/css";
-import "swiper/css/pagination"
+import "swiper/css/pagination";
 
-const sampleImage = 'http://image.goodchoice.kr/resize_490x348/adimg_new/891/279402/934791805cb0b0b25a27081f1dd3f584.jpg';
+const sampleImage =
+  "http://image.goodchoice.kr/resize_490x348/adimg_new/891/279402/934791805cb0b0b25a27081f1dd3f584.jpg";
 
 const Btn = ({ direction, onClick, end, curSlide }) => {
   return (
     <button
-      className={direction === 'prev' ? style.pdpSlidePrevBtn : style.pdpSlideNextBtn}
+      className={
+        direction === "prev" ? style.pdpSlidePrevBtn : style.pdpSlideNextBtn
+      }
       onClick={onClick}
       direction={direction}
-      style={{ left: (direction === 'prev') && '1%', right: (direction === 'next') && '1%' }}
-      disabled={direction === 'prev' && curSlide === 0 || direction === 'next' && curSlide === end}
+      style={{
+        left: direction === "prev" && "1%",
+        right: direction === "next" && "1%",
+      }}
+      disabled={
+        (direction === "prev" && curSlide === 0) ||
+        (direction === "next" && curSlide === end)
+      }
     />
   );
 };
@@ -35,7 +44,7 @@ const SearchResultCarousel = (props, ref) => {
     } else {
       setCurrentSlide(currentSlide + 1);
     }
-  }
+  };
 
   const handlePrev = () => {
     if (currentSlide === 0) {
@@ -43,7 +52,7 @@ const SearchResultCarousel = (props, ref) => {
     } else {
       setCurrentSlide(currentSlide - 1);
     }
-  }
+  };
 
   // const pagination = {
   //   "clickable": true,
@@ -62,34 +71,44 @@ const SearchResultCarousel = (props, ref) => {
 
   useEffect(() => {
     if (openDetailAllImageModal) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'visible';
+      document.body.style.overflow = "visible";
     }
-
-  }, [openDetailAllImageModal])
+  }, [openDetailAllImageModal]);
 
   return (
     <>
-      <div className={Styles.DetailSlide}>
-        <Swiper 
+      <div className={Style.DetailSlide}>
+        <Swiper
           modules={[Navigation, Pagination]}
-          pagination={true} 
+          pagination={true}
           loop={true}
-          className="DetailSlide-slide swiper-slide">
-          {items && items.map((item, index) => (
-            <SwiperSlide key={index} className={Styles.DetailSlide_thumb}>
-              <img
-                src={item ? 'http://' + item : sampleImage}
-                alt="room-img"
-              />
-            </SwiperSlide>
-          ))}
+          className="DetailSlide-slide swiper-slide"
+        >
+          {items &&
+            items.map((item, index) => (
+              <SwiperSlide key={index} className={Style.DetailSlide_thumb}>
+                <img
+                  src={item ? "http://" + item : sampleImage}
+                  alt="room-img"
+                />
+              </SwiperSlide>
+            ))}
         </Swiper>
-        <button 
-          className={Styles.DetailPaymentDate_button} 
-          style={{ top: '93%', right: '1%', margin: 'auto', zIndex: '2', background: 'white'}}
-          onClick={() => setOpenDetailAllImageModal(true)}>사진 전체 보기</button>
+        <button
+          className={Style.DetailPaymentDate_button}
+          style={{
+            top: "93%",
+            right: "1%",
+            margin: "auto",
+            zIndex: "2",
+            background: "white",
+          }}
+          onClick={() => setOpenDetailAllImageModal(true)}
+        >
+          사진 전체 보기
+        </button>
       </div>
       <DetailAllImageModal
         isOpen={openDetailAllImageModal}
@@ -97,9 +116,9 @@ const SearchResultCarousel = (props, ref) => {
         images={items}
       ></DetailAllImageModal>
     </>
-  )
+  );
 };
 
-SearchResultCarousel.displayName = 'SearchResultCarousel';
+SearchResultCarousel.displayName = "SearchResultCarousel";
 
 export default forwardRef(SearchResultCarousel);

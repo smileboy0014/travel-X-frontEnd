@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import * as searchResultActions from "../../redux/store/modules/searchResult";
 
 export default function useInfiniteSearch(query, fromPageNumber, toPageNumber) {
   const [fromPage, setFromPage] = useState(0);
@@ -10,9 +11,32 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber) {
   const [error, setError] = useState(false);
   const [rooms, setRooms] = useState([]);
   const [hasMore, setHasMore] = useState(false);
+  const dispatch = useDispatch();
+  const { searchDate } = useSelector((state) => state.date);
+
   const adultCounterValue = useSelector(
     ({ adultCounter }) => adultCounter.value
   );
+
+  const childCounterValue = useSelector(
+    ({ childCounter }) => childCounter.value
+  );
+
+  function addZero(value) {
+    if (value >= 10) {
+      return value;
+    }
+
+    return `0${value}`;
+  }
+
+  function FormattingDate(date) {
+    const year = date.getFullYear();
+    const month = addZero(date.getMonth() + 1);
+    const day = addZero(date.getDate());
+
+    return `${year}-${month}-${day}`;
+  }
 
   useEffect(() => {
     if (rooms.item !== undefined) {
@@ -33,23 +57,32 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber) {
       method: "GET",
       url: "http://shineware.iptime.org:5050/search",
       params: {
-        checkinDate: "20211223",
-        checkoutDate: "20211224",
+        checkinDate: FormattingDate(new Date(searchDate.start)),
+        checkoutDate: FormattingDate(new Date(searchDate.end)),
         adult: adultCounterValue,
+        // child: childCounterValue,
         query: query,
         // from: fromPageNumber,
         size: toPageNumber,
       },
-    }).then((res) => {
-      setTotalHitCount(res.data.totalHitCount);
-      setRooms((prevState) => ({
-        ...prevState,
-        item: res.data.roomDocumentList,
-      }));
+    })
+      .then((res) => {
+        console.log(res);
+        dispatch(searchResultActions.saveData(res.data.roomDocumentList));
 
-      setLoading(false);
-    });
-  }, [query, toPageNumber]);
+        setTotalHitCount(res.data.totalHitCount);
+        setRooms((prevState) => ({
+          ...prevState,
+          item: res.data.roomDocumentList,
+        }));
+
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setError(true);
+      });
+  }, [query, toPageNumber, searchDate]);
 
   return { loading, error, rooms, hasMore };
 }

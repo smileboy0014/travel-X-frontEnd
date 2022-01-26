@@ -1,0 +1,14 @@
+.cardHeader{
+ display: flex;
+}
+
+.cardImg{
+  height: 56px; width: 56px;
+}
+
+.cardBody{
+  line-height: 24px;
+  text-align: left;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}

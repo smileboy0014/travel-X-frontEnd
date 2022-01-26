@@ -1,23 +1,40 @@
-import React from "react";
+import React, { useState } from "react";
 import RoomFilter from "./RoomFilter";
+import Modal from "react-modal";
+import Style from "../../../styles/CommonModal.module.css";
 
 const RoomFilterModal = ({ isOpen, onRequestClose }) => {
-  const dispatch = useDispatch();
-  const handleSaveClick = (e) => {
-    e.preventDefault();
-    onRequestClose(false);
-  };
+  const [clear, setClear] = useState(false);
 
-  const handleCloseClick = () => {
-    console.log("취소");
-  };
   return (
     <div>
-      <Modal isOpen={isOpen} ariaHideApp={false}>
-        <label onClick={() => onRequestClose(false)}>X</label>
-        <RoomFilter></RoomFilter>
-        <button onClick={handleSaveClick}> 확인</button>
-        <button onClick={handleCloseClick}> 취소</button>
+      <Modal
+        className={Style.Modal}
+        isOpen={isOpen}
+        ariaHideApp={false}
+        onRequestClose={() => onRequestClose(false)}
+      >
+        <div className={Style.site_container}>
+          <div className={Style.FilterPopHeader}>
+            <button
+              className={Style.FilterPopHeader_reset}
+              onClick={() => setClear(true)}
+            >
+              초기화
+            </button>
+            <div className={Style.FilterPopHeader_title}>필터</div>
+            <button
+              className={Style.FilterPopHeader_close}
+              onClick={() => onRequestClose(false)}
+            ></button>
+          </div>
+          <RoomFilter
+            onRequestClear={clear}
+            onSetClear={(value) => {
+              setClear(value);
+            }}
+          ></RoomFilter>
+        </div>
       </Modal>
     </div>
   );

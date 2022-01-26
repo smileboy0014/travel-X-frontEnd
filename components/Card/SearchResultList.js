@@ -1,26 +1,15 @@
-import { useRef, forwardRef, useState, useEffect } from "react";
-import SearchResultCarousel from "./Carousel/SearchResultCarousel";
-import style from "../../styles/Carousel.module.css";
-// import SearchResultCard from "./SearchResultCard";
-import SearchResultCard from "./SearchCard";
+import { forwardRef, useEffect } from "react";
+import SearchCard from "./SearchCard";
 import Link from "next/link";
 
-const SearchResultList = (props, ref) => {
-  const carouselRef = useRef(null);
-  const { rooms } = props;
-  const [slide, setSlide] = useState(false);
+const sampleImage =
+  "image.goodchoice.kr/resize_490x348/adimg_new/891/279402/934791805cb0b0b25a27081f1dd3f584.jpg";
 
-  const GetRandomRatingScore = () => {
-    let max = 5.0;
-    let min = 2.0;
-    return (Math.random() * (max - min) + min).toFixed(1);
-  };
+const SearchResultList = (props, ref) => {
+  const { rooms } = props;
 
   useEffect(() => {
-    setSlide(false);
-    return () => {
-      setSlide(true);
-    };
+    console.log("rooms: " + props);
   }, []);
 
   return (
@@ -33,19 +22,45 @@ const SearchResultList = (props, ref) => {
             return (
               <div key={index}>
                 <Link
-                  href="/view/detail/[id]"
-                  as={`/view/detail/${room.roomId}`}
+                  href={{
+                    pathname: "/view/detail/[id]",
+                    query: { id: room.roomId },
+                  }}
                   key={index}
                 >
                   <a>
-                    <SearchResultCard
+                    <SearchCard
                       id={room.roomId}
-                      roomName={room.roomName}
-                      propertyName={room.propertyName}
-                      images={room.images}
+                      address={room.address}
+                      baseUser={room.baseUser}
+                      checkinInfo={room.checkinInfo}
+                      checkoutInfo={room.checkoutInfo}
+                      images={
+                        room.images.length > 0 ? room.images : [sampleImage]
+                      }
+                      lastTimeInfo={room.lastTimeInfo}
+                      maxUseTimeInfo={room.maxUseTimeInfo}
                       maxUser={room.maxUser}
                       price={room.price}
-                      ratingScoreAvg={GetRandomRatingScore()}
+                      propertyName={room.propertyName}
+                      propertyType={
+                        room.propertyType !== undefined
+                          ? room.propertyType
+                          : "N/A"
+                      }
+                      roomName={room.roomName}
+                      stock={room.stock}
+                      useType={room.useType}
+                      averageScore={
+                        room.reviewSummary.averageScore !== undefined
+                          ? room.reviewSummary.averageScore
+                          : 0
+                      }
+                      reviewCount={
+                        room.reviewSummary.reviewCount !== undefined
+                          ? room.reviewSummary.reviewCount
+                          : 0
+                      }
                     />
                   </a>
                 </Link>

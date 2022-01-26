@@ -11,6 +11,9 @@
   position: relative;
 }
 
+/*=========================================================
+  Single:Header
+=========================================================*/
 .Header_inner {
   padding: 22px 65px 22px;
   position: relative;
@@ -22,7 +25,7 @@
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1000;
+  z-index: 10;
 }
 
 .site_header1 {
@@ -33,7 +36,7 @@
   box-shadow: 0 3px 8px 0 rgb(0 0 0 / 8%);
   opacity: 0.5;
   background-color: #fff;
-  z-index: 1000;
+  z-index: 10;
 }
 
 .site_header2 {
@@ -43,7 +46,7 @@
   right: 0;
   box-shadow: 0 3px 8px 0 rgb(0 0 0 / 8%);
   background-color: #fff;
-  z-index: 1000;
+  z-index: 10;
 }
 
 .site_body {
@@ -364,32 +367,6 @@
 }
 
 /*=========================================================
-  BttonFixButton
-=========================================================*/
-.BttonFixButton {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: #fff;
-  padding: 1.25rem 0;
-  z-index: 1000;
-}
-
-.BttonFixButton_button {
-  padding: 1.0625rem 0.9375rem;
-  border-radius: 0.25rem;
-  background-color: #6957e8;
-  color: #fff;
-  display: block;
-  font-size: 0.875rem;
-  line-height: 1.2em;
-  font-weight: 500;
-  text-align: center;
-  width: 100%;
-}
-
-/*=========================================================
   DetailInfo
 =========================================================*/
 .DetailInfo {
@@ -439,72 +416,85 @@
 /*=========================================================
   SinglePage
 =========================================================*/
-.SinglePage{
-	overflow:hidden;
+.SinglePage {
+  overflow: hidden;
 }
 
 /*=========================================================
   SinglePage:Slide
 =========================================================*/
-.DetailSlide{
-	position:relative;
+.DetailSlide {
+  position: relative;
 }
 
-.DetailSlide_thumb{
-	width:100%;
-	display:block;
-	overflow:hidden;
-	line-height:0;
-	position:relative;
+.DetailSlide_thumb {
+  width: 100%;
+  display: block;
+  overflow: hidden;
+  line-height: 0;
+  position: relative;
 }
 
-.DetailSlide_thumb:after{
-	content:"";
-	display:block;
-	padding-bottom:69%;
+.DetailSlide_thumb:after {
+  content: "";
+  display: block;
+  padding-bottom: 69%;
 }
 
-.DetailSlide_thumb:before{
-	content:"";
-	position:absolute;
-	top:0;
-	left:0;
-	right:0;
-	height:40%;
-	opacity: 0.6;
-	mix-blend-mode: multiply;
-	background-image: linear-gradient(to top, rgba(0, 0, 0, 0), #000 27%);
-	z-index:1;
+.DetailSlide_thumb:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  opacity: 0.6;
+  mix-blend-mode: multiply;
+  background-image: linear-gradient(to top, rgba(0, 0, 0, 0), #000 27%);
+  z-index: 1;
 }
 
-.DetailSlide_thumb img{
-	position:absolute;
-	top:50%;
-	left:50%;
-	transform:translate(-50%, -50%);
-	width:100%;
+.DetailSlide_thumb img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
 }
 
-.DetailSlide_pagination{
-	position:absolute;
-	bottom:0.625rem;
-	left:50%;
-	transform:translateX(-50%);
-	z-index:10;
-	text-align:center;
-	font-size:0;
-	line-height:0;
+.DetailSlide_pagination {
+  position: absolute;
+  bottom: 0.625rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  text-align: center;
+  font-size: 0;
+  line-height: 0;
 }
 
-.DetailSlide_pagination .swiper_pagination_bullet{
-	width:0.3125rem;
-	height:0.3125rem;
-	border-radius:100%;
-	background-color:#fff;
-	display:inline-block;
-	margin:0 0.125rem;
+.DetailSlide_pagination .swiper_pagination_bullet {
+  width: 0.3125rem;
+  height: 0.3125rem;
+  border-radius: 100%;
+  background-color: #fff;
+  display: inline-block;
+  margin: 0 0.125rem;
 }
 
-.DetailSlide_pagination .swiper_pagination-bullet.swiper_pagination_bullet_active{
-	background-color:#6957e8;
+.DetailSlide_pagination
+  .swiper_pagination-bullet.swiper_pagination_bullet_active {
+  background-color: #6957e8;
+}
+
+/*=========================================================
+ 리뷰 별 수정 임시용
+=========================================================*/
+.searchResult_star {
+  color: red;
+}
+
+.searchResult_stars {
+  display: flex;
+  align-items: center;
 }

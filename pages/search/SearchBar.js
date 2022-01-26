@@ -4,27 +4,33 @@ import { useRouter } from "next/router";
 import PesonalModal from "../../components/Modal/Personal/PersonalModal";
 import { useSelector } from "react-redux";
 import Style from "../../styles/SearchBar.module.css";
-import { AiOutlineSearch, AiOutlineClose } from "react-icons/ai";
+import { AiOutlineSearch, AiOutlineClose, AiOutlineLeft } from "react-icons/ai";
 
-const SearchBar = ({ getSearchValue, getSearchAutoComptValue }) => {
-  const [searchValue, setSearchValue] = useState();
-  const router = useRouter();
+const SearchBar = ({
+  getSearchValue,
+  getSearchAutoComptValue,
+  sendTextValue,
+  getRecentListView,
+  getSearchTxt,
+}) => {
+  const [searchValue, setSearchValue] = useState("");
+  const [placeholderValue, setplaceholderValue] = useState("");
   const [personalModalOpen, setPersonalModalOpen] = useState(false);
-  const adultCounterValue = useSelector(
-    ({ adultCounter }) => adultCounter.value
-  );
-  const childCounterValue = useSelector(
-    ({ childCounter }) => childCounter.value
-  );
+  const [checkBackStep, setCheckBackStep] = useState(true);
+  const { searchDate } = useSelector((state) => state.date);
+  const router = useRouter();
 
   const onChangeSearch = useCallback((e) => {
     setSearchValue(e.target.value);
-    // getSearchValue(e.target.value);
   }, []);
+  const week = new Array("일", "월", "화", "수", "목", "금", "토");
 
   useEffect(() => {
     const timerId = setTimeout(() => {
       getAutoComplt();
+      if (getSearchTxt !== undefined) {
+        getSearchTxt(searchValue);
+      }
     }, 100);
     return () => clearTimeout(timerId);
   }, [searchValue]);
@@ -53,20 +59,56 @@ const SearchBar = ({ getSearchValue, getSearchAutoComptValue }) => {
       router.push(`/view/search/${searchValue}`);
       getSearchValue(searchValue);
       setSearchValue("");
+      console.log("보내는 문자 : " + searchValue);
     },
     [searchValue, router]
   );
 
+  useEffect(() => {
+    if (sendTextValue !== undefined) {
+      setplaceholderValue(sendTextValue);
+      setSearchValue("");
+    }
+  }, [sendTextValue]);
+
+  const onClickInput = () => {
+    if (getRecentListView != undefined) {
+      getRecentListView(true);
+      setCheckBackStep(false);
+    }
+  };
+
+  const onClickBackStep = () => {
+    if (checkBackStep) {
+      router.back();
+    } else if (getRecentListView != undefined) {
+      getRecentListView(false);
+      setCheckBackStep(true);
+      setSearchValue("");
+      getSearchValue("");
+    }
+  };
+
+  // useEffect(() => {
+  //   getSearchValue("");
+  // }, []);
+
   return (
     <div>
       <div className={Style.ListFilterSearch}>
-        <AiOutlineSearch className={Style.ListFilterSearch_icon} />
+        <AiOutlineLeft
+          className={Style.ListFilterSearch_icon1}
+          onClick={onClickBackStep}
+        />
+        <AiOutlineSearch className={Style.ListFilterSearch_icon2} />
         <input
           type="text"
           className={Style.ListFilterSearch_text}
           value={searchValue}
           onChange={onChangeSearch}
           onKeyPress={onKeyPress}
+          placeholder={placeholderValue}
+          onClick={onClickInput}
         />
 
         <PesonalModal
@@ -74,9 +116,15 @@ const SearchBar = ({ getSearchValue, getSearchAutoComptValue }) => {
           onRequestClose={() => setPersonalModalOpen(false)}
         />
 
-        {!searchValue && (
+        {!searchValue && searchDate !== undefined && (
           <span className={Style.ListFilterSearch_date}>
-            12.20(월)-12.21(화), 2인
+            {`${new Date(searchDate.start).getMonth() + 1}.${new Date(
+              searchDate.start
+            ).getDate()}(${week[new Date(searchDate.start).getDay()]}) - ${
+              new Date(searchDate.end).getMonth() + 1
+            }.${new Date(searchDate.end).getDate()}(${
+              week[new Date(searchDate.end).getDay()]
+            })`}
           </span>
         )}
 
@@ -90,48 +138,6 @@ const SearchBar = ({ getSearchValue, getSearchAutoComptValue }) => {
         )}
       </div>
     </div>
-    // <div>
-    //   <div className={Style.header}>
-    //     <div className={Style.header__center}>
-    //       <input
-    //         type="search"
-    //         onChange={onChangeSearch}
-    //         onKeyPress={onKeyPress}
-    //         placeholder="지역, 지하철역, 숙소명으로 찾아보세요."
-    //       />
-    //       <AiOutlineSearch />
-    //     </div>
-    //   </div>
-    //   <div className={Style.bottom}>
-    //     <div
-    //       className={Style.bottom__center}
-    //       onClick={() => setPersonalShowModal(true)}
-    //     >
-    //       <div className={Style.bottom_div}>
-    //         <div>
-    //           <BsCalendar />
-    //           12/29 ~ 12/31 10박3일
-    //         </div>
-    //       </div>
-    //     </div>
-    //     <div
-    //       className={Style.bottom__center}
-    //       onClick={() => setPersonalModalOpen(true)}
-    //     >
-    //       <div className={Style.bottom_div}>
-    //         <div>
-    //           <BsPerson />
-    //           {"성인: " + adultCounterValue + " 아동: " + childCounterValue}
-    //         </div>
-    //       </div>
-    //     </div>
-    //   </div>
-
-    //   <PesonalModal
-    //     isOpen={personalModalOpen}
-    //     onRequestClose={() => setPersonalModalOpen(false)}
-    //   />
-    // </div>
   );
 };
 

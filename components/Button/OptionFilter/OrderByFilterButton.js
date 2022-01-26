@@ -1,5 +1,5 @@
 import React from "react";
-import Style from "../../../styles/OrderByFilterButton.module.css";
+import Style from "../../../styles/FilterButton.module.css";
 
 const OrderByFilterButton = () => {
   return (

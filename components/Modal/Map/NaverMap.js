@@ -183,7 +183,8 @@ const NaverMap = (props) => {
     }
 
     // Naver Map Script 로드 후 맵 초기화
-    if (scriptLoaded) initMap();
+    // if (scriptLoaded) 
+    initMap();
     console.log(scriptLoaded);
   }, [scriptLoaded]);
 
