@@ -14,7 +14,7 @@ const DetailCalendarModal = ({ isOpen, onRequestClose, availableDates }) => {
   const [rangeEnd, setRangeEnd] = useState(false);
   const [clickedValue, setClickedValue] = useState(null);
   const [startDisabledDate, setStartDisabledDate] = useState(new Date(detailDate.start));
-	const [availableDateList, setAvailableDateList] = useState(availableDates.map(date => new Date(`${date.slice(0,4)}-${date.slice(4,6)}-${date.slice(6,8)}`)));
+	const [availableDateList, setAvailableDateList] = useState(availableDates.map(date => new Date(date)));
 
 	function findMinDiffDay(value) {
     setClickedValue(value);
