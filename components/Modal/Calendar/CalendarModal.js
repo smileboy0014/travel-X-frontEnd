@@ -5,9 +5,11 @@ import Calendar from './ReactCalendar/Calendar';
 import { useDispatch, useSelector } from "react-redux";
 import * as dateActions from "../../../redux/store/modules/date";
 
-const CalendarModal = ({ isOpen, onRequestClose, allowDates }) => {
+const CalendarModal = ({ isOpen, onRequestClose }) => {
   const { searchDate } = useSelector((state) => state.date);
+	const now = new Date();
 	const week = new Array('일', '월', '화', '수', '목', '금', '토');
+	const defaultDateList = new Array(now, new Date(now.getFullYear(), now.getMonth()+1, now.getDate()), new Date(now.getFullYear(), now.getMonth()+2, now.getDate()), new Date(now.getFullYear(), now.getMonth()+3, now.getDate()));
   const dispatch = useDispatch();
 
   const [value, onChange] = useState([new Date(searchDate.start), new Date(searchDate.end)]);
@@ -54,6 +56,7 @@ const CalendarModal = ({ isOpen, onRequestClose, allowDates }) => {
                 calendarType='US'
 								handleRangeEnd={rangeEnd}
                 showNeighboringMonth={false}
+								showStartDateList={defaultDateList}
               />
             </div>
           </div>

@@ -247,7 +247,7 @@ export default class Calendar extends Component {
         default: throw new Error('Invalid returnValue.');
       }
     })();
-
+    
     return processFunction({
       value, minDate, maxDate, maxDetail,
     });
@@ -271,15 +271,15 @@ export default class Calendar extends Component {
       activeStartDate: previousActiveStartDate,
       view: previousView,
     };
-
+    
     this.setState(nextState, () => {
       const args = {
         action: nextState.action,
         activeStartDate: nextState.activeStartDate || this.activeStartDate,
         value: nextState.value || this.value,
-        view: nextState.view || this.view,
+        view: this.view,
       };
-
+      
       function shouldUpdate(key) {
         return (
           // Key must exist, and…
@@ -296,7 +296,7 @@ export default class Calendar extends Component {
           )
         );
       }
-
+      
       if (shouldUpdate('activeStartDate')) {
         if (onActiveStartDateChange) onActiveStartDateChange(args);
       }
@@ -309,14 +309,14 @@ export default class Calendar extends Component {
         if (onChange) {
           if (selectRange) {
             const isSingleValue = getIsSingleValue(nextState.value);
-
+            
             if (!isSingleValue) {
               onChange(nextState.value, event);
             } else if (allowPartialRange) {
               onChange([nextState.value], event);
             }
           } else {
-            onChange(nextState.value, event);
+            onChange(this.value, event);
           }
         }
       }
@@ -403,7 +403,7 @@ export default class Calendar extends Component {
 
     this.setStateAndCallCallbacks({
       action: 'onChange',
-      activeStartDate: nextActiveStartDate,
+      // activeStartDate: nextActiveStartDate,
       value: nextValue,
     }, event);
   }
@@ -449,7 +449,7 @@ export default class Calendar extends Component {
     this.setState({ hover: null });
   }
 
-  renderContent(next) {
+  renderContent(date) {
     const {
       activeStartDate: currentActiveStartDate,
       onMouseOver,
@@ -467,16 +467,10 @@ export default class Calendar extends Component {
       tileContent,
       tileDisabled,
       disabledDates,
-      startDisabledDate,
       handleRangeEnd
     } = this.props;
     const { hover } = this;
-
-    const activeStartDate = (
-      next
-        ? getBeginNext(view, currentActiveStartDate)
-        : getBegin(view, currentActiveStartDate)
-    );
+    const activeStartDate = date;
 
     const onClick = this.drillDownAvailable ? this.drillDown : this.onChange;
 
@@ -494,7 +488,6 @@ export default class Calendar extends Component {
       value,
       valueType,
       disabledDates,
-      startDisabledDate,
       handleRangeEnd
     };
 
@@ -532,7 +525,7 @@ export default class Calendar extends Component {
     }
   }
 
-  renderNavigation(next) {
+  renderNavigation(date) {
     const { showNavigation } = this.props;
 
     if (!showNavigation) {
@@ -540,11 +533,7 @@ export default class Calendar extends Component {
     }
 
     const { activeStartDate, view, views } = this;
-    const activeStartDate2 = (
-      next
-        ? getBeginNext(view, activeStartDate)
-        : getBegin(view, activeStartDate)
-    );
+    activeStartDate = date;
     const {
       formatMonthYear,
       formatYear,
@@ -567,7 +556,7 @@ export default class Calendar extends Component {
 
     return (
       <Navigation
-        activeStartDate={activeStartDate2}
+        activeStartDate={activeStartDate}
         drillUp={this.drillUp}
         formatMonthYear={formatMonthYear}
         formatYear={formatYear}
@@ -599,6 +588,7 @@ export default class Calendar extends Component {
       inputRef,
       selectRange,
       showDoubleView,
+      showStartDateList
     } = this.props;
     const { onMouseLeave, value } = this;
     const valueArray = [].concat(value);
@@ -613,17 +603,22 @@ export default class Calendar extends Component {
         )}
         ref={inputRef}
       >
-        {this.renderNavigation()}
-        <div
-          className={`${baseClassName}__viewContainer`}
-          onBlur={selectRange ? onMouseLeave : null}
-          onMouseLeave={selectRange ? onMouseLeave : null}
-        >
-          {this.renderContent()}
-          {this.renderNavigation(true)}
-          {this.renderContent(true)}
-          {showDoubleView && this.renderContent(true)}
-        </div>
+        
+        {
+          showStartDateList && showStartDateList.map(date => (
+            <>
+              {this.renderNavigation(date)}
+              <div
+                className={`${baseClassName}__viewContainer`}
+                onBlur={selectRange ? onMouseLeave : null}
+                onMouseLeave={selectRange ? onMouseLeave : null}
+              >
+                {this.renderContent(date)}
+              </div>
+              <br/>
+            </>
+          ))
+        }
       </div>
     );
   }
@@ -705,4 +700,5 @@ Calendar.propTypes = {
   disabledDates: PropTypes.array,
   value: isLooseValue,
   view: isView,
+  showStartDateList: PropTypes.array
 };
