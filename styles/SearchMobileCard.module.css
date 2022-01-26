@@ -27,6 +27,7 @@
 }
 .ListFixButton {
   border-radius: 2.25rem;
+  bottom: 1rem;
   border: solid 0.0625rem #e0e0e0;
   font-size: 0.75rem;
   line-height: 1.2em;

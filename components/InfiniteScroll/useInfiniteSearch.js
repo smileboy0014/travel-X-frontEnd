@@ -22,20 +22,20 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber) {
     ({ childCounter }) => childCounter.value
   );
 
-  function addZero(value) { 
-    if (value >= 10) { 
-      return value; 
-    } 
-    
-    return `0${value}`; 
-  } 
-  
-  function FormattingDate(date) { 
-    const year = date.getFullYear(); 
-    const month = addZero(date.getMonth() + 1); 
-    const day = addZero(date.getDate()); 
-    
-    return `${year}-${month}-${day}`; 
+  function addZero(value) {
+    if (value >= 10) {
+      return value;
+    }
+
+    return `0${value}`;
+  }
+
+  function FormattingDate(date) {
+    const year = date.getFullYear();
+    const month = addZero(date.getMonth() + 1);
+    const day = addZero(date.getDate());
+
+    return `${year}-${month}-${day}`;
   }
 
   useEffect(() => {
@@ -65,21 +65,23 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber) {
         // from: fromPageNumber,
         size: toPageNumber,
       },
-    }).then((res) => {
-      console.log(res);
-      dispatch(searchResultActions.saveData(res.data.roomDocumentList));
+    })
+      .then((res) => {
+        console.log(res);
+        dispatch(searchResultActions.saveData(res.data.roomDocumentList));
 
-      setTotalHitCount(res.data.totalHitCount);
-      setRooms((prevState) => ({
-        ...prevState,
-        item: res.data.roomDocumentList,
-      }));
+        setTotalHitCount(res.data.totalHitCount);
+        setRooms((prevState) => ({
+          ...prevState,
+          item: res.data.roomDocumentList,
+        }));
 
-      setLoading(false);
-    }).catch((error) => {
-      console.log(error);
-      setError(true);
-    });
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setError(true);
+      });
   }, [query, toPageNumber, searchDate]);
 
   return { loading, error, rooms, hasMore };
