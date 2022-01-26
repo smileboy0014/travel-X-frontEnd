@@ -31,12 +31,11 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber) {
   } 
   
   function FormattingDate(date) { 
-    console.log(date);
     const year = date.getFullYear(); 
     const month = addZero(date.getMonth() + 1); 
     const day = addZero(date.getDate()); 
     
-    return `${year}${month}${day}`; 
+    return `${year}-${month}-${day}`; 
   }
 
   useEffect(() => {
