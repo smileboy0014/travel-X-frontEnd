@@ -39,10 +39,10 @@ function SearchResult(props) {
             <div className={style.ProductItemPrice}>
               <div className={style.searchResult_stars}>
                 <AiFillStar className={style.searchResult_star} />
-                <strong>{props.ratingScoreAvg}</strong>
+                <strong>{props.averageScore.toFixed(1)}</strong>
                 <strong></strong>
                 <span className={style.ProductItemFilter_item}>
-                  (1000)_DB연동
+                  {"(" + props.reviewCount + ")"}
                 </span>
               </div>
             </div>

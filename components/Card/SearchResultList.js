@@ -8,9 +8,9 @@ const sampleImage =
 const SearchResultList = (props, ref) => {
   const { rooms } = props;
 
-  // useEffect(() => {
-  //   console.log("rooms: " + props);
-  // }, []);
+  useEffect(() => {
+    console.log("rooms: " + props);
+  }, []);
 
   return (
     <>
@@ -51,9 +51,14 @@ const SearchResultList = (props, ref) => {
                       roomName={room.roomName}
                       stock={room.stock}
                       useType={room.useType}
-                      ratingScoreAvg={
-                        room.ratingScoreAvg !== undefined
-                          ? room.ratingScoreAvg
+                      averageScore={
+                        room.reviewSummary.averageScore !== undefined
+                          ? room.reviewSummary.averageScore
+                          : 0
+                      }
+                      reviewCount={
+                        room.reviewSummary.reviewCount !== undefined
+                          ? room.reviewSummary.reviewCount
                           : 0
                       }
                     />

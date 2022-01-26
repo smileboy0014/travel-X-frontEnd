@@ -71,6 +71,10 @@ const Post = ({ item }) => {
     );
   }, []);
 
+  useEffect(() => {
+    console.log(rooms.item.length);
+  }, [rooms]);
+
   return (
     <div className={Style.site}>
       <div className={Style.site_body}>
@@ -138,9 +142,21 @@ const Post = ({ item }) => {
             {searchAutoComptValue.length < 1 ? (
               <div className={Style.ProductList}>
                 <div className={Style.site_container}>
-                  <ul>
-                    <SearchResultList ref={lastroomElementRef} rooms={rooms} />
-                  </ul>
+                  <React.Fragment>
+                    {rooms.item.length > 0 ? (
+                      <ul>
+                        <SearchResultList
+                          ref={lastroomElementRef}
+                          rooms={rooms}
+                        />
+                      </ul>
+                    ) : (
+                      <div className={Style.TotalSearch_noTag}>
+                        검색결과가 없습니다.
+                        <p>지역, 지하철역, 숙소명을 입력해주세요.</p>
+                      </div>
+                    )}
+                  </React.Fragment>{" "}
                   <>
                     <Modal
                       className={LodingStyles.Modal}
@@ -151,7 +167,6 @@ const Post = ({ item }) => {
                       Loading...
                     </Modal>
                   </>
-
                   <ScrollTopArrow></ScrollTopArrow>
                 </div>
               </div>
@@ -170,7 +185,7 @@ const Post = ({ item }) => {
           </React.Fragment>
         )}
 
-        <MapFixButton />
+        {rooms.length > 0 ? <MapFixButton /> : ""}
         <CalendarModal
           isOpen={calendarModalOpen}
           onRequestClose={() => setCalendarModalOpen(false)}

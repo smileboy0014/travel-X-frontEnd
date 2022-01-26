@@ -66,23 +66,6 @@ const Search = () => {
                   <PersonalFilterButton></PersonalFilterButton>
                 </div>
               </div>
-
-              {!recentListView ? (
-                <React.Fragment>
-                  {searchAutoComptValue.length < 1 ? (
-                    <div className={Style.ListFilterButton}>
-                      <div className={Style.ListFilterButton_list}>
-                        <OptionFilterButton></OptionFilterButton>
-                        <OrderByFilterButton></OrderByFilterButton>
-                      </div>
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                </React.Fragment>
-              ) : (
-                ""
-              )}
             </div>
           </div>
         </div>

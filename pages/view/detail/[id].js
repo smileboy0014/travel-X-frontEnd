@@ -24,7 +24,7 @@ const DetailView = () => {
   const router = useRouter();
   const { id } = router.query;
   const { detailDate } = useSelector((state) => state.date);
-	const week = new Array('일', '월', '화', '수', '목', '금', '토');
+  const week = new Array("일", "월", "화", "수", "목", "금", "토");
 
   useEffect(() => {
     if (rooms.roomInfo !== undefined) {
@@ -50,7 +50,7 @@ const DetailView = () => {
 
   useEffect(() => {
     setSlide(false);
-    console.log(rooms)
+    console.log(rooms);
     return () => {
       setSlide(true);
     };
@@ -71,7 +71,7 @@ const DetailView = () => {
           adult: "2",
         },
       }).then((res) => {
-        console.log("전체: " + res.data);
+        console.log(res.data);
         console.log(res.data.availableDates);
         console.log(res.data.priceDetails);
         console.log(res.data.propertyInfo);
@@ -186,10 +186,23 @@ const DetailView = () => {
                       <BsCalendar
                         className={Style.DetailPaymentDate_schedule_Icon}
                       />
-                      {`${new Date(detailDate.start).getMonth()+1}.${new Date(detailDate.start).getDate()}(${week[new Date(detailDate.start).getDay()]}) - ${new Date(detailDate.end).getMonth()+1}.${new Date(detailDate.end).getDate()}(${week[new Date(detailDate.end).getDay()]})`}
+                      {`${new Date(detailDate.start).getMonth() + 1}.${new Date(
+                        detailDate.start
+                      ).getDate()}(${
+                        week[new Date(detailDate.start).getDay()]
+                      }) - ${
+                        new Date(detailDate.end).getMonth() + 1
+                      }.${new Date(detailDate.end).getDate()}(${
+                        week[new Date(detailDate.end).getDay()]
+                      })`}
                     </span>
                     <span className={Style.DetailPaymentDate_day}>
-                      {Math.ceil((new Date(detailDate.end).getTime() - new Date(detailDate.start).getTime()) / (1000*60*60*24))}박 
+                      {Math.ceil(
+                        (new Date(detailDate.end).getTime() -
+                          new Date(detailDate.start).getTime()) /
+                          (1000 * 60 * 60 * 24)
+                      )}
+                      박
                     </span>
                     <button
                       type="button"
@@ -247,7 +260,7 @@ const DetailView = () => {
                 {/* <!-- item --> */}
                 <div className={Style.DetailInfoItem}>
                   <div className={Style.DetailInfoItem_title}>
-                    편의 시설 및 서비스
+                    편의 시설 및 서비스_DB
                   </div>
                   <ul className={Style.DetailInfoItem_list}>
                     <li className={Style.DetailInfoItem_item}>
@@ -263,9 +276,7 @@ const DetailView = () => {
                 <div className={Style.DetailInfoItem}>
                   <div className={Style.DetailInfoItem_title}>공지사항</div>
                   <p className={Style.DetailInfoItem_text}>
-                    {
-                      "사회적 거리두기 2단계 격상에 따라 11월 24일 0시부터 피드니스 센터 운영이 일시적으로 중단됩니다._DB"
-                    }
+                    {rooms.roomInfo.notice}
                   </p>
                 </div>
                 {/* <!-- .item -->
@@ -273,25 +284,34 @@ const DetailView = () => {
                 <div className={Style.DetailInfoItem}>
                   <div className={Style.DetailInfoItem_title}>기본 정보</div>
                   <p className={Style.DetailInfoItem_text}>
-                    전 객실 인원 추가 불가_DB
+                    {rooms.roomInfo.basicInfo}
                   </p>
                 </div>
                 {/* <!-- .item -->
 						<!-- item --> */}
                 <div className={Style.DetailInfoItem}>
-                  <div className={Style.DetailInfoItem_title}>조식 정보</div>
+                  <div className={Style.DetailInfoItem_title}>교통 정보</div>
                   <p className={Style.DetailInfoItem_text}>
-                    {
-                      " 레스토랑 (Bistro 860 by 신세계 푸드) / 3층 / 06:30~10:30 /  2020년 2월 29일 부터 별도 공지일까지 조식당 미운영_DB"
-                    }
+                    {rooms.roomInfo.trafficInfo}
+                  </p>
+                </div>
+                {/* <!-- .item -->
+						<!-- item --> */}
+
+                <div className={Style.DetailInfoItem}>
+                  <div className={Style.DetailInfoItem_title}>기타 정보</div>
+                  <p className={Style.DetailInfoItem_text}>
+                    {rooms.roomInfo.etcInfo}
                   </p>
                 </div>
                 {/* <!-- .item -->
 						<!-- item --> */}
                 <div className={Style.DetailInfoItem}>
                   <div className={Style.DetailInfoItem_title}>위치 정보</div>
-
-                  <DetailMap lat={37.3595704} lng={127.105399} />
+                  <DetailMap
+                    lat={rooms.propertyInfo.locationLat}
+                    lng={rooms.propertyInfo.locationLon}
+                  />
                 </div>
                 {/* <!-- .item --> */}
               </div>
