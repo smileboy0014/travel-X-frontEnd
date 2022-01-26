@@ -42,11 +42,20 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
     if (searchDataValue[0] !== undefined) {
       roomMap = new naver.maps.Map("roomMap", {
         center: new naver.maps.LatLng(
-          searchDataValue[0][0].location.lat + 0.03,
+          searchDataValue[0][0].location.lat,
           searchDataValue[0][0].location.lon
         ),
         zoom: 12,
       });
+
+      if (roomMap != null) {
+        var w = window.outerWidth;
+        var h = window.outerHeight;
+        // 지도 element
+        var el = document.getElementById("roomMap");
+        el.style.width = "100%";
+        el.style.height = h + "px";
+      }
 
       searchDataValue[0].map((room, index) => {
         var roomMapMarker = new naver.maps.Marker({
@@ -169,13 +178,11 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
   useEffect(() => {
     initMap();
     addRoomMapMarker();
-    // const a = getGeocode();
-    // console.log("좌표: " + a);
-  }, []);
+  }, [searchDataValue]);
 
   return (
     <div>
-      <div id="roomMap" style={{ width: "100%", height: "60rem" }}>
+      <div id="roomMap" style={{ width: "100%", height: "50rem" }}>
         <SearchMobileCard
           data={roomData}
           closeModal={(value) => {

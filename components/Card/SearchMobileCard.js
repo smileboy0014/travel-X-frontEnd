@@ -49,15 +49,6 @@ const SearchMobileCard = ({ data, closeModal }) => {
             </div>
           </div>
         )}
-        {/* <div className={Style.ListFixButton}>리스트 보기</div>
-      <div className={Style.MapFixButton}>
-        {data[0] !== undefined && (
-          <div>
-            <li>{"주소: " + data[0].name}</li>
-            <li>{"가격: " + data[0].price}</li>
-          </div>
-        )}
-      </div> */}
       </div>
     </div>
   );
