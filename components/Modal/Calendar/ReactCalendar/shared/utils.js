@@ -1,5 +1,4 @@
 import { getRange } from './dates';
-import Style from '../../../../../styles/CalendarModal.module.css';
 
 /**
  * Returns a value no smaller than min and no larger than max.

@@ -7,6 +7,7 @@ import * as dateActions from "../../../redux/store/modules/date";
 
 const DetailCalendarModal = ({ isOpen, onRequestClose, availableDates }) => {
   const { detailDate } = useSelector((state) => state.date);
+	const now = new Date();
 	const week = new Array('일', '월', '화', '수', '목', '금', '토');
   const dispatch = useDispatch();
 
@@ -16,16 +17,22 @@ const DetailCalendarModal = ({ isOpen, onRequestClose, availableDates }) => {
   const [startDisabledDate, setStartDisabledDate] = useState(new Date(detailDate.start));
 	const [availableDateList, setAvailableDateList] = useState(availableDates.map(date => new Date(date)));
 
-	function findMinDiffDay(value) {
-    setClickedValue(value);
-    for (let i of availableDateList) {
-      if (i > value) {
-        setStartDisabledDate(i);
-				console.log(i);
-        return;
-      }
-    }
-  }
+	const filterActiveStartDate = (availableDates) => {
+		let filterMonth = [];
+		let month = -1;
+		if (availableDates) {
+			filterMonth = availableDates.filter(date => {
+					if (date.getMonth() != month) {
+						month = date.getMonth();
+						return true;
+					}
+				});
+		}
+		
+		return filterMonth.map(date => {
+			return new Date(date.getFullYear(), date.getMonth(), 1);
+		});
+	}
 
 	useEffect(() => {
 		// setRangeEnd(true);
@@ -74,9 +81,10 @@ const DetailCalendarModal = ({ isOpen, onRequestClose, availableDates }) => {
 										date.getDate() === availableDate.getDate())
 									)
 								}
-								onClickDay={(value)=>{
-									findMinDiffDay(value);
-								}}
+								// onClickDay={(value)=>{
+								// 	findMinDiffDay(value);
+								// }}
+								showStartDateList={filterActiveStartDate(availableDateList)}
               />
             </div>
           </div>
