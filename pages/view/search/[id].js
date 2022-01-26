@@ -72,7 +72,7 @@ const Post = ({ item }) => {
   }, []);
 
   useEffect(() => {
-    console.log(rooms.item.length);
+    rooms.item && console.log(rooms.item.length);
   }, [rooms]);
 
   return (
@@ -143,7 +143,7 @@ const Post = ({ item }) => {
               <div className={Style.ProductList}>
                 <div className={Style.site_container}>
                   <React.Fragment>
-                    {rooms.item.length > 0 ? (
+                    {rooms.item && rooms.item.length > 0 ? (
                       <ul>
                         <SearchResultList
                           ref={lastroomElementRef}

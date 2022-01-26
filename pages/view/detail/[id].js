@@ -25,6 +25,22 @@ const DetailView = () => {
   const { id } = router.query;
   const { detailDate } = useSelector((state) => state.date);
   const week = new Array("일", "월", "화", "수", "목", "금", "토");
+ 
+  function addZero(value) { 
+    if (value >= 10) { 
+      return value; 
+    } 
+    
+    return `0${value}`; 
+  } 
+
+  function FormattingDate(date) { 
+    const year = date.getFullYear(); 
+    const month = addZero(date.getMonth() + 1); 
+    const day = addZero(date.getDate()); 
+    
+    return `${year}-${month}-${day}`; 
+  }
 
   useEffect(() => {
     if (rooms.roomInfo !== undefined) {
@@ -64,8 +80,8 @@ const DetailView = () => {
         params: {
           roomId: id,
           useType: "NIGHT",
-          checkinDate: "20220125",
-          checkoutDate: "20220126",
+          checkinDate: FormattingDate(new Date(detailDate.start)),
+          checkoutDate: FormattingDate(new Date(detailDate.end)),
           children: "0",
           baby: "0",
           adult: "2",
