@@ -54,7 +54,12 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
         // 지도 element
         var el = document.getElementById("roomMap");
         el.style.width = "100%";
-        el.style.height = h + "px";
+
+        if (!isMobile) {
+          el.style.height = h - 75 + "px";
+        } else {
+          el.style.height = h + "px";
+        }
       }
 
       searchDataValue[0].map((room, index) => {

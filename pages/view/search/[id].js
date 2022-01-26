@@ -199,8 +199,8 @@ const Post = ({ item }) => {
             </React.Fragment>
           ) : (
             <ListDetailMap
-              lat={37.4959854}
-              lng={127.0664091}
+              lat={0}
+              lng={0}
               onRequestClosed={(value) => {
                 setViewMap(!value);
               }}
