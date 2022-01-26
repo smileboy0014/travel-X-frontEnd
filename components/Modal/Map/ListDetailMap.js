@@ -3,6 +3,7 @@ import { isMobile } from "react-device-detect";
 import { useSelector } from "react-redux";
 import SearchMobileCard from "../../Card/SearchMobileCard";
 import { MarkerOverlapRecognizer } from "./MarkerOverlappingRecognizer";
+import Style from "../../../styles/CommonModal.module.css";
 
 var markers = [];
 var infoWindows = [];
@@ -41,7 +42,7 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
     if (searchDataValue[0] !== undefined) {
       roomMap = new naver.maps.Map("roomMap", {
         center: new naver.maps.LatLng(
-          searchDataValue[0][0].location.lat,
+          searchDataValue[0][0].location.lat + 0.03,
           searchDataValue[0][0].location.lon
         ),
         zoom: 12,

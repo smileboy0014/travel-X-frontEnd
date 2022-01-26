@@ -36,6 +36,11 @@
   z-index: 2000; */
 }
 
+.naverMap {
+  width: 100%;
+  position: inherit;
+}
+
 .FilterPopHeader {
   padding: 1.875rem 0;
   position: relative;
