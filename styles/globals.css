@@ -327,6 +327,10 @@ body {
   min-height: 500px;
 }
 
+.ReactModal__Body--open {
+  overflow-y: hidden;
+}
+
 .ReactModal__Content {
   opacity: 0;
   transform: translateY(110%);
