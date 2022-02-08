@@ -12,6 +12,7 @@ const SearchMapModal = ({ isOpen, onRequestClose }) => {
         isOpen={isOpen}
         ariaHideApp={false}
         onRequestClose={() => onRequestClose(false)}
+        closeTimeoutMS={200}
       >
         <ListDetailMap
           lat={37.4959854}

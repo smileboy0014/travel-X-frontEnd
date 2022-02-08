@@ -11,6 +11,7 @@ const ReserveModal = ({ isOpen, onRequestClose }) => {
         isOpen={isOpen}
         ariaHideApp={false}
         onRequestClose={() => onRequestClose(false)}
+        closeTimeoutMS={200}
       >
         <label onClick={() => onRequestClose(false)}>X</label>
 

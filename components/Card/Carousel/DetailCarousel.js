@@ -2,7 +2,6 @@ import { useEffect, useState, useRef, forwardRef, Fragment } from "react";
 import Image from "next/image";
 import style from "../../../styles/Carousel.module.css";
 import Style from "../../../styles/Detail.module.css";
-import DetailAllImageModal from "../../Modal/RoomDetail/DetailAllImageModal";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper";
 import "swiper/css";
@@ -96,25 +95,7 @@ const SearchResultCarousel = (props, ref) => {
               </SwiperSlide>
             ))}
         </Swiper>
-        <button
-          className={Style.DetailPaymentDate_button}
-          style={{
-            top: "93%",
-            right: "1%",
-            margin: "auto",
-            zIndex: "2",
-            background: "white",
-          }}
-          onClick={() => setOpenDetailAllImageModal(true)}
-        >
-          사진 전체 보기
-        </button>
       </div>
-      <DetailAllImageModal
-        isOpen={openDetailAllImageModal}
-        onRequestClose={() => setOpenDetailAllImageModal(false)}
-        images={items}
-      ></DetailAllImageModal>
     </>
   );
 };

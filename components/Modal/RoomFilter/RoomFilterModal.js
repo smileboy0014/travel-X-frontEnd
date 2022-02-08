@@ -10,9 +10,11 @@ const RoomFilterModal = ({ isOpen, onRequestClose }) => {
     <div>
       <Modal
         className={Style.Modal}
+        overlayClassName={Style.Overlay}
         isOpen={isOpen}
         ariaHideApp={false}
         onRequestClose={() => onRequestClose(false)}
+        closeTimeoutMS={200}
       >
         <div className={Style.site_container}>
           <div className={Style.FilterPopHeader}>

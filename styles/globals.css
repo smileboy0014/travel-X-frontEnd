@@ -327,21 +327,22 @@ body {
   min-height: 500px;
 }
 
-.ReactModal__Overlay {
+.ReactModal__Content {
   opacity: 0;
-  transform: translateY(100%);
-  transition: all 500ms ease-in-out;
+  transform: translateY(110%);
+  transition: all 1000ms ease-in-out;
 }
 
-.ReactModal__Overlay--after-open {
+.ReactModal__Content--after-open {
   opacity: 1;
-  z-index: 2000;
   transform: translateY(0px);
 }
 
-.ReactModal__Overlay--before-close {
-  opacity: 0;
-  transform: translateY(100%);
+.ReactModal__Content--before-close {
+  opacity: 0.8;
+  transform: translateY(110%);
+  transition-property: transform;
+  transition-duration: 0.3s;
 }
 
 /*=========================================================
