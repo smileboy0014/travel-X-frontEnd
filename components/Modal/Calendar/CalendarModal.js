@@ -28,6 +28,7 @@ const CalendarModal = ({ isOpen, onRequestClose }) => {
         isOpen={isOpen}
         ariaHideApp={false}
         onRequestClose={() => onRequestClose(false)}
+        closeTimeoutMS={200}
       >
 				<div className={Style.CalenderPopHeader}>
 					<div className='site-container'>
