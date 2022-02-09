@@ -25,21 +25,21 @@ const DetailView = () => {
   const { id } = router.query;
   const { detailDate } = useSelector((state) => state.date);
   const week = new Array("일", "월", "화", "수", "목", "금", "토");
- 
-  function addZero(value) { 
-    if (value >= 10) { 
-      return value; 
-    } 
-    
-    return `0${value}`; 
-  } 
 
-  function FormattingDate(date) { 
-    const year = date.getFullYear(); 
-    const month = addZero(date.getMonth() + 1); 
-    const day = addZero(date.getDate()); 
-    
-    return `${year}-${month}-${day}`; 
+  function addZero(value) {
+    if (value >= 10) {
+      return value;
+    }
+
+    return `0${value}`;
+  }
+
+  function FormattingDate(date) {
+    const year = date.getFullYear();
+    const month = addZero(date.getMonth() + 1);
+    const day = addZero(date.getDate());
+
+    return `${year}-${month}-${day}`;
   }
 
   useEffect(() => {
@@ -101,6 +101,7 @@ const DetailView = () => {
             : [],
           priceDetails: res.data.priceDetails ? res.data.priceDetails : [],
           propertyInfo: res.data.propertyInfo ? res.data.propertyInfo : [],
+          reviewSummary: res.data.reviewSummary ? res.data.reviewSummary : [],
         }));
       });
     }
@@ -156,9 +157,9 @@ const DetailView = () => {
                     }}
                   >
                     <AiFillStar className={Style.searchResult_star} />
-                    <strong>5.0_DB</strong>
+                    <strong>{rooms.reviewSummary.averageScore}</strong>
                     <span className={Style.DetailHeaderInfoAddress}>
-                      {"후기 1000개 >_DB"}
+                      후기 {rooms.reviewSummary.averageScore}개
                     </span>
                   </button>
 
