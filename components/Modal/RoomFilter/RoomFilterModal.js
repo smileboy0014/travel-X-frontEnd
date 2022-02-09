@@ -1,70 +1,45 @@
-import React, { useEffect, useRef, useState } from "react";
-import ReactDOM from "react-dom";
-import styled from "styled-components";
-import Filter from "./RoomFilter";
+import React, { useState } from "react";
+import RoomFilter from "./RoomFilter";
+import Modal from "react-modal";
+import Style from "../../../styles/CommonModal.module.css";
 
-const RoomFilterModal = ({ show, onClose, children, title }) => {
-  const [isBrowser, setIsBrowser] = useState(false);
+const RoomFilterModal = ({ isOpen, onRequestClose }) => {
+  const [clear, setClear] = useState(false);
 
-  useEffect(() => {
-    setIsBrowser(true);
-  }, []);
-
-  const handleCloseClick = (e) => {
-    e.preventDefault();
-    onClose();
-  };
-
-  const modalContent = show ? (
-    <StyledModalOverlay>
-      <StyledModal>
-        <StyledModalHeader>
-          <a href="#" onClick={handleCloseClick}>
-            x
-          </a>
-        </StyledModalHeader>
-        <StyledModalBody>{<Filter />}</StyledModalBody>
-      </StyledModal>
-    </StyledModalOverlay>
-  ) : null;
-
-  if (isBrowser) {
-    return ReactDOM.createPortal(
-      modalContent,
-      document.getElementById("modal-root")
-    );
-  } else {
-    return null;
-  }
+  return (
+    <div>
+      <Modal
+        className={Style.Modal}
+        overlayClassName={Style.Overlay}
+        isOpen={isOpen}
+        ariaHideApp={false}
+        onRequestClose={() => onRequestClose(false)}
+        closeTimeoutMS={200}
+      >
+        <div className={Style.site_container}>
+          <div className={Style.FilterPopHeader}>
+            <button
+              className={Style.FilterPopHeader_reset}
+              onClick={() => setClear(true)}
+            >
+              초기화
+            </button>
+            <div className={Style.FilterPopHeader_title}>필터</div>
+            <button
+              className={Style.FilterPopHeader_close}
+              onClick={() => onRequestClose(false)}
+            ></button>
+          </div>
+          <RoomFilter
+            onRequestClear={clear}
+            onSetClear={(value) => {
+              setClear(value);
+            }}
+          ></RoomFilter>
+        </div>
+      </Modal>
+    </div>
+  );
 };
-
-const StyledModalBody = styled.div`
-  padding-top: 10px;
-`;
-
-const StyledModalHeader = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  font-size: 25px;
-`;
-
-const StyledModal = styled.div`
-  background: white;
-  width: 500px;
-  height: 600px;
-  border-radius: 15px;
-  padding: 15px;
-`;
-const StyledModalOverlay = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
-`;
 
 export default RoomFilterModal;

@@ -1,87 +1,69 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
-import ReactDOM from "react-dom";
-import styled from "styled-components";
+import Modal from "react-modal";
 import PersonalCounter from "./PersonalCounter";
+import Style from "../../../styles/CommonModal.module.css";
 import { useSelector, useDispatch } from "react-redux";
 import * as adultCounterActions from "../../../redux/store/modules/adultCounter";
 import * as childCounterActions from "../../../redux/store/modules/chlidCounter";
 
-const PersonalModal = ({ show, onClose }) => {
+const PersonalModal = ({ isOpen, onRequestClose }) => {
   const dispatch = useDispatch();
-  const [isBrowser, setIsBrowser] = useState(false);
-
-  useEffect(() => {
-    setIsBrowser(true);
-  }, []);
-
   const handleSaveClick = (e) => {
     e.preventDefault();
-    onClose();
+    onRequestClose(false);
   };
 
   const handleCloseClick = useCallback(
     (e) => {
-      dispatch(adultCounterActions.reset());
-      dispatch(childCounterActions.reset());
+      onClickReset();
       e.preventDefault();
-      onClose();
+      onRequestClose(false);
     },
     [dispatch]
   );
 
-  const modalContent = show ? (
-    <StyledModalOverlay>
-      <StyledModal>
-        <StyledModalHeader>
-          <a href="#" onClick={handleCloseClick}>
-            x
-          </a>
-        </StyledModalHeader>
-        <StyledModalBody>{<PersonalCounter></PersonalCounter>}</StyledModalBody>
+  const onClickReset = () => {
+    dispatch(adultCounterActions.reset());
+    dispatch(childCounterActions.reset());
+  };
 
-        <button onClick={handleSaveClick}> 확인</button>
-        <button onClick={handleCloseClick}> 취소</button>
-      </StyledModal>
-    </StyledModalOverlay>
-  ) : null;
-
-  if (isBrowser) {
-    return ReactDOM.createPortal(
-      modalContent,
-      document.getElementById("modal-root")
-    );
-  } else {
-    return null;
-  }
+  return (
+    <div>
+      <Modal
+        className={Style.Modal}
+        overlayClassName={Style.Overlay}
+        isOpen={isOpen}
+        ariaHideApp={false}
+        onRequestClose={() => onRequestClose(false)}
+        closeTimeoutMS={200}
+      >
+        <div className={Style.site_container}>
+          <div className={Style.FilterPopHeader}>
+            <button
+              className={Style.FilterPopHeader_reset}
+              onClick={onClickReset}
+            >
+              초기화
+            </button>
+            <div className={Style.FilterPopHeader_title}>인원수 선택</div>
+            <button
+              className={Style.FilterPopHeader_close}
+              onClick={handleCloseClick}
+            ></button>
+          </div>
+          <PersonalCounter></PersonalCounter>
+          <div className={Style.FilterPopFooter}>
+            <button
+              className={Style.FilterPopFooter_button}
+              onClick={handleSaveClick}
+            >
+              선택하기
+            </button>
+          </div>
+        </div>
+      </Modal>
+    </div>
+  );
 };
-
-const StyledModalBody = styled.div`
-  padding-top: 10px;
-`;
-
-const StyledModalHeader = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  font-size: 25px;
-`;
-
-const StyledModal = styled.div`
-  background: white;
-  width: 500px;
-  height: 600px;
-  border-radius: 15px;
-  padding: 15px;
-`;
-const StyledModalOverlay = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
-`;
 
 export default PersonalModal;
