@@ -1,19 +1,27 @@
 import React, { useEffect, useState, Fragment, useCallback } from "react";
-import { GoogleMap, useLoadScript, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
+import { GoogleMap, useLoadScript, LoadScript, Marker, OverlayView, MarkerClusterer } from '@react-google-maps/api';
 import { isMobile } from "react-device-detect";
 import { useSelector } from "react-redux";
 import SearchMobileCard from "../../Card/SearchMobileCard";
+import Style from "../../../styles/ListDetailMap.module.css"
 
 const containerStyle = {
   width: '100%',
-  height: "70rem"
+  height: "100%",
+  position:'absolute',
+	top:0,
+	left:0,
+	right:0,
+	bottom:0
 };
 
-var MARKER_ICON_URL =
-"https://ssl.pstatic.net/static/maps/img/icons/sp_pins_spot_v3.png";
-var MARKER_HIGHLIGHT_ICON_URL =
-  "https://ssl.pstatic.net/static/maps/img/icons/sp_pins_spot_v3_over.png";
+const options = {
+  imagePath: 
+    // 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m', // so you must have m1.png, m2.png, m3.png, m4.png, m5.png and m6.png in that folder
+    'https://m', // so you must have m1.png, m2.png, m3.png, m4.png, m5.png and m6.png in that folder
+};
 
+  
 const DetailMap = ({ lat, lng, onRequestClosed }) => {
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: "AIzaSyBVi31CDrC3Dyi8f166yV_-6WKocsk7I8E"
@@ -21,8 +29,10 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
   const searchDataValue = useSelector(({ searchResult }) => searchResult.data);
   const [roomData, setRoomData] = useState([]);
   const [markers, setMarkers] = useState([]);
+  const [activeMarker, setActiveMarker] = useState(-1);
   const [mobileWindows, setMobileWindows] = useState([]);
-  const [mapCenter, setMapCenter] = useState({lat: 37.4959854, lng: 127.0664091});
+  const [mapCenter, setMapCenter] = useState({lat: lat, lng: lng});
+  const [markerLabels, setMarkerLabels] = React.useState([]);
 
   const addRoomMapMarker = () => {
     console.log(searchDataValue[0]);
@@ -35,7 +45,8 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
           position: {
             lat: room.location.lat,
             lng: room.location.lon
-          }
+          },
+          price: room.price
         }
 
         let mobileContent = [
@@ -72,50 +83,103 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
 
   const handleActiveMarker = (index) => {
     setRoomData(mobileWindows[index]);
+    setActiveMarker(index);
   };
 
-  const handleOnLoad = (map) => {
-    const bounds = new google.maps.LatLngBounds();
-    markers.forEach(({ position }) => bounds.extend(position));
-    map.fitBounds(bounds);
+  const createKey = (location) => {
+    return location.lat + location.lng;
   };
+  
+  const getPixelPositionOffset = (offsetWidth, offsetHeight, labelAnchor) => {
+    return {
+        x: offsetWidth + labelAnchor.x,
+        y: offsetHeight + labelAnchor.y,
+    };
+  };
+
+  const cx = (...classNames) => classNames.join(' ');
+
+  useEffect(() => {
+    console.log(activeMarker);
+  }, [activeMarker])
+
+  const markerLabelsHandler = (clusterer) => {
+    const markerLabelsList = [];
+    let allClusters = clusterer.clusters;
+    allClusters.map((cluster, clusterIndex) => {
+      // console.log(cluster)
+      let markersLength = cluster.getMarkers().length;
+
+      let labelAnchor = { x: -100, y: -43 }
+      markerLabelsList.push(
+        <OverlayView
+          key={clusterIndex}
+          position={cluster.getMarkers()[0].position}
+          mapPaneName= {OverlayView.OVERLAY_MOUSE_TARGET}
+          getPixelPositionOffset={(x, y) => getPixelPositionOffset(x, y, labelAnchor)}
+        >
+          <button className={Style.MapPin} onClick={() => handleActiveMarker(clusterIndex)}>
+            {markersLength > 1 ? 
+              (activeMarker === clusterIndex ? 
+                <span className={cx(Style.MapPin_count,Style.is_Active_MapPin_count)}>{markersLength}</span> :
+                <span className={Style.MapPin_count}>{markersLength}</span>)
+            : null}
+            <span 
+              className={activeMarker == clusterIndex ? cx(Style.MapPin_price,Style.is_Active_MapPin_price) : Style.MapPin_price}
+            >
+              78,000
+            </span>
+          </button>
+        </OverlayView>
+      );
+    });
+    setMarkerLabels(markerLabelsList)
+   }
 
   useEffect(() => {
     setMarkers([]);
     addRoomMapMarker();
   }, [searchDataValue, isLoaded]);
 
-  useEffect(() => {
-    console.log(roomData);
-  }, [roomData])
+  // useEffect(() => {
+  //   console.log(roomData);
+  // }, [roomData])
 
   return (
     <div>
       {isLoaded ? (
         <GoogleMap
-          onLoad={handleOnLoad}
           id='list-detail-map'
           mapContainerStyle={containerStyle}
           center={mapCenter}
           zoom={15}
         >
-          {markers.map((marker, index) => (
-            <Fragment key={index}>
-              <Marker
-                id={marker.id}
-                position={marker.position}
-                onClick={() => handleActiveMarker(index)}
-              >
-                {/* {activeMarker === marker.id ? (
-                  <InfoWindow 
+          <MarkerClusterer 
+            ignoreHidden={true}
+            onClusteringEnd={markerLabelsHandler}
+            options={options}
+            averageCenter
+            enableRetinaIcons
+            gridSize={100}
+            maxZoom={20}
+            zoomOnClick={false} 
+          >
+            {(clusterer) =>
+              markers.map((marker, index) => (
+                <Fragment key={index}>
+                  <Marker
+                    icon=''
+                    key={createKey(marker.position)}
                     position={marker.position}
-                    onCloseClick={() => setActiveMarker(null)}>
-                    <div>{marker.id}</div>
-                  </InfoWindow>
-                ) : null} */}
-              </Marker>
-            </Fragment>
-          ))}
+                    onClick={() => handleActiveMarker(index)}
+                    clusterer={clusterer}
+                  >
+                  </Marker>
+                </Fragment>
+              ))
+            }
+          </MarkerClusterer>
+          {markerLabels}
           <SearchMobileCard
             data={roomData}
             closeModal={(value) => {
@@ -124,7 +188,7 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
           />
         </GoogleMap>
       ) : null}
-      
+      {loadError ? null : null}
     </div>
   );
 };
