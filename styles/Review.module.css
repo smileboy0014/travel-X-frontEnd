@@ -15,6 +15,17 @@
   margin-bottom : 50px;
 }
 
+.HeaderBack {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 1.25rem;
+  height: 1.25rem;
+  background-image: url(../public/icon/ico_header_back.svg);
+  background-size: 1.25rem 1.25rem;
+}
+
 .formWrapper{
   width: 60%;
   margin: 0 auto;

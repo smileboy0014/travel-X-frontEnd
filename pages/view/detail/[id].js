@@ -159,13 +159,14 @@ const DetailView = () => {
                     <AiFillStar className={Style.searchResult_star} />
                     <strong>{rooms.reviewSummary.averageScore}</strong>
                     <span className={Style.DetailHeaderInfoAddress}>
-                      후기 {rooms.reviewSummary.averageScore}개
+                      후기 {rooms.reviewSummary.reviewCount}개
                     </span>
                   </button>
 
                   <ReviewModal
                     isOpen={reviewModalOpen}
                     onRequestClose={() => setReviewModalOpen(false)}
+                    id={id}
                   ></ReviewModal>
 
                   <div className={Style.DetailHeaderInfo}>

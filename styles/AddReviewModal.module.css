@@ -22,6 +22,15 @@
   z-index: 1000;
 }
 
+.dialogForm{
+  overflow-y: initial !important
+}
+
+.form{
+  max-height: calc(120vh - 200px);
+  overflow-y: auto;
+}
+
 .formWrapper {
   border-top: 1px solid #eaeaea;
 }
@@ -29,6 +38,10 @@
 .noticeWapper {
   background-color: #eaeaea;
   height: 200px;
+}
+
+.area{
+  margin-top: 10px;
 }
 
 .submitButton {

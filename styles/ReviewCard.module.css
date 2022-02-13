@@ -6,9 +6,12 @@
   height: 56px; width: 56px;
 }
 
+.cardTitle{
+  text-align: left;
+}
+
 .cardBody{
   line-height: 24px;
   text-align: left;
-  margin-top: 20px;
   margin-bottom: 20px;
 }

@@ -4,7 +4,12 @@ import cardStyle from '../../../styles/ReviewCard.module.css'
 const manImg = '/img/man.png';
 
 const ReviewCard = (props) => {
-  const {img, name, date, content} = props;
+  const {img, name, date, title, contents} = props;
+
+  function handleFormattingDate(date) {
+    let dateArr = date.split('T');
+    return dateArr[0];
+  }
 
   // console.log(props);
   return (
@@ -16,12 +21,15 @@ const ReviewCard = (props) => {
         <div>
           {name}
           <div>
-            {date}
+            {handleFormattingDate(date)}
           </div>
         </div>
       </div>
+      <div className={cardStyle.cardTitle}>
+        {title}
+      </div>
       <div className={cardStyle.cardBody}>
-        {content}
+        {contents}
       </div>
     </div>
   )
