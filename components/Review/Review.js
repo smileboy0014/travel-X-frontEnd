@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import Axios from "axios";
 import reviewStyle from "../../styles/Review.module.css";
 import ReviewCard from "../Card/Review/ReviewCard";
 import AddReviewModal from "../Modal/Review/AddReviewModal";
@@ -8,337 +10,61 @@ import * as reviewData from "../../redux/store/modules/reviewContent";
 import { useSelector, useDispatch } from "react-redux";
 
 const Review = () => {
-  const [totalPoint, setTotalPoint] = useState(5);
+  
+  // const {id} = props;
+  const router = useRouter();
+  const { id } = router.query;
+  const [totalPoint, setTotalPoint] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
-  const [point1, setPoint1] = useState(4);
-  const [point2, setPoint2] = useState(3.5);
-  const [point3, setPoint3] = useState(4.5);
-  const [point4, setPoint4] = useState(3);
-  const [point5, setPoint5] = useState(5);
-  const [review, setReview] = useState("");
+  const [point1, setPoint1] = useState(0);
+  const [point2, setPoint2] = useState(0);
+  const [point3, setPoint3] = useState(0);
+  const [point4, setPoint4] = useState(0);
+  const [point5, setPoint5] = useState(0);
+  const [review, setReview] = useState(false);
   const [AddReviewModalOpen, setAddReviewModalOpen] = useState(false);
   const [reviewDetailModalOpen, setReviewDetailModalOpen] = useState(false);
   const dispatch = useDispatch();
-  const data = useSelector(({ reviewContent }) => reviewContent.data);
+  // const data = useSelector(({ reviewContent }) => reviewContent.data);
 
-  const [viewContent, setViewContent] = useState([
-    {
-      img: "사진1",
-      name: "단팥",
-      date: "2021년 12월",
-      content: "위치가 너무 좋아요!! 다음에 또 올게요",
-    },
-    {
-      img: "사진2",
-      name: "소보로",
-      date: "2021년 12월",
-      content: "깔끔합니다!!",
-    },
-    {
-      img: "사진3",
-      name: "바게트",
-      date: "2021년 12월",
-      content: "우리집인줄",
-    },
-    {
-      img: "사진4",
-      name: "고로케",
-      date: "2021년 11월",
-      content: "너무 친절해요 ㅎㅎ",
-    },
-    {
-      img: "사진5",
-      name: "퀸아망",
-      date: "2021년 11월",
-      content: "빵이 너무 맛있었어요 :)",
-    },
-    {
-      img: "사진6",
-      name: "마들레",
-      date: "2021년 11월",
-      content: "위치가 정말 좋아요!!!",
-    },
-    {
-      img: "사진6",
-      name: "마들레",
-      date: "2021년 11월",
-      content: "위치가 정말 좋아요!!!",
-    },
-    {
-      img: "사진6",
-      name: "마들레",
-      date: "2021년 11월",
-      content: "위치가 정말 좋아요!!!",
-    },
-    {
-      img: "사진6",
-      name: "마들레",
-      date: "2021년 11월",
-      content: "위치가 정말 좋아요!!!",
-    },
-    {
-      img: "사진6",
-      name: "마들레",
-      date: "2021년 11월",
-      content: "위치가 정말 좋아요!!!",
-    },
-    {
-      img: "사진1",
-      name: "단팥",
-      date: "2021년 12월",
-      content: "위치가 너무 좋아요!! 다음에 또 올게요",
-    },
-    {
-      img: "사진2",
-      name: "소보로",
-      date: "2021년 12월",
-      content: "깔끔합니다!!",
-    },
-    {
-      img: "사진3",
-      name: "바게트",
-      date: "2021년 12월",
-      content: "우리집인줄",
-    },
-    {
-      img: "사진4",
-      name: "고로케",
-      date: "2021년 11월",
-      content: "너무 친절해요 ㅎㅎ",
-    },
-    {
-      img: "사진5",
-      name: "퀸아망",
-      date: "2021년 11월",
-      content: "빵이 너무 맛있었어요 :)",
-    },
-    {
-      img: "사진6",
-      name: "마들레",
-      date: "2021년 11월",
-      content: "위치가 정말 좋아요!!!",
-    },
-    {
-      img: "사진6",
-      name: "마들레",
-      date: "2021년 11월",
-      content: "위치가 정말 좋아요!!!",
-    },
-    {
-      img: "사진6",
-      name: "마들레",
-      date: "2021년 11월",
-      content: "위치가 정말 좋아요!!!",
-    },
-    {
-      img: "사진6",
-      name: "마들레",
-      date: "2021년 11월",
-      content: "위치가 정말 좋아요!!!",
-    },
-    {
-      img: "사진6",
-      name: "마들레",
-      date: "2021년 11월",
-      content: "위치가 정말 좋아요!!!",
-    },
-    {
-      img: "사진1",
-      name: "단팥",
-      date: "2021년 12월",
-      content: "위치가 너무 좋아요!! 다음에 또 올게요",
-    },
-    {
-      img: "사진2",
-      name: "소보로",
-      date: "2021년 12월",
-      content: "깔끔합니다!!",
-    },
-    {
-      img: "사진3",
-      name: "바게트",
-      date: "2021년 12월",
-      content: "우리집인줄",
-    },
-    {
-      img: "사진4",
-      name: "고로케",
-      date: "2021년 11월",
-      content: "너무 친절해요 ㅎㅎ",
-    },
-    {
-      img: "사진5",
-      name: "퀸아망",
-      date: "2021년 11월",
-      content: "빵이 너무 맛있었어요 :)",
-    },
-    {
-      img: "사진6",
-      name: "마들레",
-      date: "2021년 11월",
-      content: "위치가 정말 좋아요!!!",
-    },
-    {
-      img: "사진6",
-      name: "마들레",
-      date: "2021년 11월",
-      content: "위치가 정말 좋아요!!!",
-    },
-    {
-      img: "사진6",
-      name: "마들레",
-      date: "2021년 11월",
-      content: "위치가 정말 좋아요!!!",
-    },
-    {
-      img: "사진6",
-      name: "마들레",
-      date: "2021년 11월",
-      content: "위치가 정말 좋아요!!!",
-    },
-    {
-      img: "사진6",
-      name: "마들레",
-      date: "2021년 11월",
-      content: "위치가 정말 좋아요!!!",
-    },
-    {
-      img: "사진1",
-      name: "단팥",
-      date: "2021년 12월",
-      content: "위치가 너무 좋아요!! 다음에 또 올게요",
-    },
-    {
-      img: "사진2",
-      name: "소보로",
-      date: "2021년 12월",
-      content: "깔끔합니다!!",
-    },
-    {
-      img: "사진3",
-      name: "바게트",
-      date: "2021년 12월",
-      content: "우리집인줄",
-    },
-    {
-      img: "사진4",
-      name: "고로케",
-      date: "2021년 11월",
-      content: "너무 친절해요 ㅎㅎ",
-    },
-    {
-      img: "사진5",
-      name: "퀸아망",
-      date: "2021년 11월",
-      content: "빵이 너무 맛있었어요 :)",
-    },
-    {
-      img: "사진6",
-      name: "마들레",
-      date: "2021년 11월",
-      content: "위치가 정말 좋아요!!!",
-    },
-    {
-      img: "사진6",
-      name: "마들레",
-      date: "2021년 11월",
-      content: "위치가 정말 좋아요!!!",
-    },
-    {
-      img: "사진6",
-      name: "마들레",
-      date: "2021년 11월",
-      content: "위치가 정말 좋아요!!!",
-    },
-    {
-      img: "사진6",
-      name: "마들레",
-      date: "2021년 11월",
-      content: "위치가 정말 좋아요!!!",
-    },
-    {
-      img: "사진6",
-      name: "마들레",
-      date: "2021년 11월",
-      content: "위치가 정말 좋아요!!!",
-    },
-    {
-      img: "사진1",
-      name: "단팥",
-      date: "2021년 12월",
-      content: "위치가 너무 좋아요!! 다음에 또 올게요",
-    },
-    {
-      img: "사진2",
-      name: "소보로",
-      date: "2021년 12월",
-      content: "깔끔합니다!!",
-    },
-    {
-      img: "사진3",
-      name: "바게트",
-      date: "2021년 12월",
-      content: "우리집인줄",
-    },
-    {
-      img: "사진4",
-      name: "고로케",
-      date: "2021년 11월",
-      content: "너무 친절해요 ㅎㅎ",
-    },
-    {
-      img: "사진5",
-      name: "퀸아망",
-      date: "2021년 11월",
-      content: "빵이 너무 맛있었어요 :)",
-    },
-    {
-      img: "사진6",
-      name: "마들레",
-      date: "2021년 11월",
-      content: "위치가 정말 좋아요!!!",
-    },
-    {
-      img: "사진6",
-      name: "마들레",
-      date: "2021년 11월",
-      content: "위치가 정말 좋아요!!!",
-    },
-    {
-      img: "사진6",
-      name: "마들레",
-      date: "2021년 11월",
-      content: "위치가 정말 좋아요!!!",
-    },
-    {
-      img: "사진6",
-      name: "마들레",
-      date: "2021년 11월",
-      content: "위치가 정말 좋아요!!!",
-    },
-    {
-      img: "사진6",
-      name: "마들레",
-      date: "2021년 11월",
-      content: "위치가 정말 좋아요!!!",
-    },
-  ]);
+  const [viewContent, setViewContent] = useState([]);
 
   useEffect(() => {
-    // console.log(data);
-    if (data.content != "" && data.title != "") {
-      setViewContent(
-        viewContent.concat({
-          ...data,
-        })
-      );
-      dispatch(reviewData.setData({ title: "", content: "" }));
+    if (id !== undefined) {
+      setReview(false);
+      
+      Axios({
+        method: "GET",
+        url: "http://shineware.iptime.org:8081/review/get",
+        params: {
+          roomId: id,
+          useType: "NIGHT",
+          from: "0",
+          size: "100",
+        },
+      }).then((res) => {
+        console.log(res.data);
+        setViewContent(res.data);
+      });
     }
-  }, [data]);
+  }, [id, review]);
+
+
+  // useEffect(() => {
+  //   // console.log(data);
+  //   if (data.content != "" && data.title != "") {
+  //     setViewContent(
+  //       viewContent.concat({
+  //         ...data,
+  //       })
+  //     );
+  //     dispatch(reviewData.setData({ title: "", content: "" }));
+  //   }
+  // }, [data]);
 
   useEffect(() => {
-    setTotalCount(viewContent.length);
-  }, []);
+  handleScore();
+  }, [viewContent]);
 
   const handleOpenModal = (type) => {
     if (type == "view") {
@@ -347,6 +73,41 @@ const Review = () => {
       setAddReviewModalOpen(true);
     }
   };
+
+  const handleScore = () =>{
+
+    let kindnessScore = 0;
+    let cleanScore = 0;
+    let comfortScore = 0;
+    let facilityScore = 0;
+    let priceScore = 0;
+
+    if (viewContent != undefined && viewContent.length > 0) {
+      for (let scores of viewContent) {
+        kindnessScore += scores.kindnessScore;
+        cleanScore += scores.cleanScore;
+        comfortScore += scores.comfortScore;
+        facilityScore += scores.facilityScore;
+        priceScore += scores.priceScore;
+      }
+
+    comfortScore = (comfortScore / viewContent.length).toFixed(2) > 5 ? 5 : (comfortScore / viewContent.length).toFixed(2);
+    kindnessScore = (kindnessScore / viewContent.length).toFixed(2) > 5 ? 5 : (kindnessScore / viewContent.length).toFixed(2);
+    cleanScore = (cleanScore / viewContent.length).toFixed(2) > 5 ? 5 : (cleanScore / viewContent.length).toFixed(2);
+    facilityScore = (facilityScore / viewContent.length).toFixed(2) > 5 ? 5 : (facilityScore / viewContent.length).toFixed(2);
+    priceScore = (priceScore / viewContent.length).toFixed(2) > 5 ? 5 : (priceScore / viewContent.length).toFixed(2);
+
+   
+
+    setPoint1(comfortScore);
+    setPoint2(kindnessScore);
+    setPoint3(cleanScore);
+    setPoint4(facilityScore);
+    setPoint5(priceScore);
+    setTotalPoint(((Number(comfortScore) + Number(kindnessScore) + Number(cleanScore) + Number(facilityScore) + Number(priceScore)) / 5).toFixed(2));
+    setTotalCount(viewContent.length);
+  }
+}
 
   const handleProgressBar = (type) => {
     switch (type) {
@@ -389,12 +150,13 @@ const Review = () => {
   };
 
   const reviewCard = viewContent.map((review, index) =>
-    index < 4 ? <ReviewCard key={index} {...review} /> : null
+    index < 3 ? <ReviewCard key={index} {...review} /> : null
   );
 
   return (
     <div className={reviewStyle.App}>
       <h1>[ 숙소 후기 ]</h1>
+      {/* <div className={reviewStyle.HeaderBack} onClick={() => router.back()} /> */}
       <div className={reviewStyle.formHeader}>
         <svg
           className="w-6 h-6"
@@ -429,7 +191,7 @@ const Review = () => {
       <AddReviewModal
         isOpen={AddReviewModalOpen}
         onRequestClose={() => setAddReviewModalOpen(false)}
-        setData={setReview}
+        isSave={() =>setReview(true)}
         myStyle={reviewStyle}
       />
 
