@@ -37,6 +37,11 @@ const Post = ({ item }) => {
   const observer = useRef();
   const [searchValue, setSearchValue] = useState();
   const [searchAutoComptValue, setSearchAutoComptValue] = useState([]);
+  const [
+    searchAutoComptPropertyNameValue,
+    setSearchAutoComptPropertyNameValue,
+  ] = useState([]);
+
   const [searchTxt, setSearchTxt] = useState("");
   const [calendarModalOpen, setCalendarModalOpen] = useState(false);
   const [viewMap, setViewMap] = useState(false);
@@ -89,6 +94,9 @@ const Post = ({ item }) => {
                 }}
                 getSearchAutoComptValue={(value) => {
                   setSearchAutoComptValue(value);
+                }}
+                getSearchAutoComptPropertyNameValue={(value) => {
+                  setSearchAutoComptPropertyNameValue(value);
                 }}
                 sendTextValue={id}
                 getRecentListView={(value) => {
@@ -143,6 +151,9 @@ const Post = ({ item }) => {
                     <RecentSearch
                       sendSearchValue={searchValue}
                       sendSearchAutoComptValue={searchAutoComptValue}
+                      sendSearchAutoComptPropertyNameValue={
+                        searchAutoComptPropertyNameValue
+                      }
                       getSearchValue={(value) => {
                         setSearchValue(value);
                       }}
@@ -187,6 +198,9 @@ const Post = ({ item }) => {
                       <RecentSearch
                         sendSearchValue={searchValue}
                         sendSearchAutoComptValue={searchAutoComptValue}
+                        sendSearchAutoComptPropertyNameValue={
+                          searchAutoComptPropertyNameValue
+                        }
                         getSearchValue={(value) => {
                           setSearchValue(value);
                         }}

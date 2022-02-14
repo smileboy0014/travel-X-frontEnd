@@ -5,15 +5,27 @@ import Style from "../../styles/RecentSearch.module.css";
 const RecentSearch = ({
   sendSearchValue,
   sendSearchAutoComptValue,
+  sendSearchAutoComptPropertyNameValue,
   getSearchValue,
   sendSearchTxt,
 }) => {
   const [keywords, setKeywords] = useState([]);
   const [autoCompltData, setAutoCompltData] = useState([]);
+  const [autoCompltPropertyNameData, setAutoCompltPropertyNameData] = useState(
+    []
+  );
 
   useEffect(() => {
     setAutoCompltData(sendSearchAutoComptValue);
-  }, [sendSearchAutoComptValue]);
+    setAutoCompltPropertyNameData(sendSearchAutoComptPropertyNameValue);
+
+    console.log("sendSearchAutoComptValue:" + sendSearchAutoComptValue);
+
+    console.log(
+      "sendSearchAutoComptPropertyNameValue:" +
+        sendSearchAutoComptPropertyNameValue
+    );
+  }, [sendSearchAutoComptValue, sendSearchAutoComptPropertyNameValue]);
 
   useEffect(() => {
     // addKeyword(sendSearchValue);
@@ -97,24 +109,35 @@ const RecentSearch = ({
                 ))}
               </ul>
             </div>
-            <div className={Style.TotalSearchRelatedItem}>
-              <div className={Style.TotalSearchRelatedItemTitle}>호텔</div>
-              <ul className="TotalSearchRelatedList">
-                {autoCompltData.map((item, index) => (
-                  <li className={Style.TotalSearchRelatedList_item} key={index}>
-                    <Link href="/view/search/[id]" as={`/view/search/${item}`}>
-                      <a
-                        className={Style.TotalSearchRelatedList_link}
-                        onClick={() => addKeyword(item)}
+
+            {autoCompltPropertyNameData.length > 0 ? (
+              <div className={Style.TotalSearchRelatedItem}>
+                <div className={Style.TotalSearchRelatedItemTitle}>호텔</div>
+                <ul className="TotalSearchRelatedList">
+                  {autoCompltPropertyNameData.map((item, index) => (
+                    <li
+                      className={Style.TotalSearchRelatedList_item}
+                      key={index}
+                    >
+                      <Link
+                        href="/view/search/[id]"
+                        as={`/view/search/${item}`}
                       >
-                        <mark>{sendSearchTxt}</mark>
-                        {item.replace(sendSearchTxt, "")}
-                      </a>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
+                        <a
+                          className={Style.TotalSearchRelatedList_link}
+                          onClick={() => addKeyword(item)}
+                        >
+                          <mark>{sendSearchTxt}</mark>
+                          {item.replace(sendSearchTxt, "")}
+                        </a>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : (
+              ""
+            )}
           </div>
         </div>
       ) : (

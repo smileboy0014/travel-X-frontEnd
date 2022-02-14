@@ -17,6 +17,10 @@ const Search = () => {
   const { searchDate } = useSelector((state) => state.date);
   const [searchValue, setSearchValue] = useState();
   const [searchAutoComptValue, setSearchAutoComptValue] = useState([]);
+  const [
+    searchAutoComptPropertyNameValue,
+    setSearchAutoComptPropertyNameValue,
+  ] = useState([]);
   const [searchTxt, setSearchTxt] = useState("");
   const [calendarModalOpen, setCalendarModalOpen] = useState(false);
 
@@ -50,6 +54,9 @@ const Search = () => {
                 getSearchAutoComptValue={(value) => {
                   setSearchAutoComptValue(value);
                 }}
+                getSearchAutoComptPropertyNameValue={(value) => {
+                  setSearchAutoComptPropertyNameValue(value);
+                }}
                 getRecentListView={(value) => {
                   setRecentListView(value);
                 }}
@@ -74,6 +81,9 @@ const Search = () => {
           <RecentSearch
             sendSearchValue={searchValue}
             sendSearchAutoComptValue={searchAutoComptValue}
+            sendSearchAutoComptPropertyNameValue={
+              searchAutoComptPropertyNameValue
+            }
             getSearchValue={(value) => {
               setSearchValue(value);
             }}

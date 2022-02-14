@@ -9,6 +9,7 @@ import { AiOutlineSearch, AiOutlineClose, AiOutlineLeft } from "react-icons/ai";
 const SearchBar = ({
   getSearchValue,
   getSearchAutoComptValue,
+  getSearchAutoComptPropertyNameValue,
   sendTextValue,
   getRecentListView,
   getSearchTxt,
@@ -43,6 +44,7 @@ const SearchBar = ({
         console.log("res.data: " + JSON.stringify(res.data["address"]));
 
         getSearchAutoComptValue(res.data["address"]);
+        getSearchAutoComptPropertyNameValue(res.data["propertyName"]);
       })
       .catch((Error) => {
         console.log(Error);
