@@ -40,7 +40,9 @@ const SearchBar = ({
       "http://shineware.iptime.org:5051/autocomplete?query=" + searchValue
     )
       .then((res) => {
-        getSearchAutoComptValue(res.data);
+        console.log("res.data: " + JSON.stringify(res.data["address"]));
+
+        getSearchAutoComptValue(res.data["address"]);
       })
       .catch((Error) => {
         console.log(Error);
