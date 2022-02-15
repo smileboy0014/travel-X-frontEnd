@@ -14,6 +14,8 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber) {
   const dispatch = useDispatch();
   const { searchDate } = useSelector((state) => state.date);
 
+  const searchTypeValue = useSelector(({ searchType }) => searchType.value);
+
   const adultCounterValue = useSelector(
     ({ adultCounter }) => adultCounter.value
   );
@@ -60,9 +62,10 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber) {
         checkinDate: FormattingDate(new Date(searchDate.start)),
         checkoutDate: FormattingDate(new Date(searchDate.end)),
         adult: adultCounterValue,
-        // child: childCounterValue,
+        child: childCounterValue,
         query: query,
-        // from: fromPageNumber,
+        searchType:
+          searchTypeValue == null ? "RANKING" : searchTypeValue.searchTypeValue,
         size: toPageNumber,
       },
     })
@@ -82,7 +85,14 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber) {
         console.log(error);
         setError(true);
       });
-  }, [query, toPageNumber, searchDate]);
+  }, [
+    query,
+    toPageNumber,
+    searchDate,
+    adultCounterValue,
+    childCounterValue,
+    searchTypeValue,
+  ]);
 
   return { loading, error, rooms, hasMore };
 }
