@@ -24,7 +24,9 @@ const RoomOrderbyModal = ({ isOpen, onRequestClose }) => {
               onClick={() => onRequestClose(false)}
             ></button>
           </div>
-          <RoomOrderby></RoomOrderby>
+          <RoomOrderby
+            onRequestClose={(value) => onRequestClose(value)}
+          ></RoomOrderby>
         </div>
       </Modal>
     </div>

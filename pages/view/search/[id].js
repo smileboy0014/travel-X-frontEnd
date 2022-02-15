@@ -69,14 +69,14 @@ const Post = ({ item }) => {
     setRecentListView(false);
   }, [searchAutoComptValue]);
 
-  useEffect(() => {
-    dispatch(
-      dateActions.setDetailDate({
-        start: searchDate.start,
-        end: searchDate.end,
-      })
-    );
-  }, []);
+  // useEffect(() => {
+  //   dispatch(
+  //     dateActions.setDetailDate({
+  //       start: searchDate.start,
+  //       end: searchDate.end,
+  //     })
+  //   );
+  // }, []);
 
   useEffect(() => {
     rooms.item && console.log(rooms.item.length);
