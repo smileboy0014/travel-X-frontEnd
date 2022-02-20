@@ -36,7 +36,7 @@ const RoomOrderby = ({ onRequestClose }) => {
           <li className={Style.FilterPopList_item}>
             <label className={Style.FilterRadio}>
               <input
-                className={Style.FilterCheck_input}
+                className={Style.FilterRadio_input}
                 type="radio"
                 name="filter"
                 value="RANKING"
@@ -46,23 +46,23 @@ const RoomOrderby = ({ onRequestClose }) => {
               <span className={Style.FilterRadio_text}>인기순</span>
             </label>
           </li>
-          <li className={Style.FilterPopList_item}>
+          {/* <li className={Style.FilterPopList_item}>
             <label className={Style.FilterRadio}>
               <input
-                className={Style.FilterCheck_input}
+                className={Style.FilterRadio_input}
                 type="radio"
                 name="filter"
-                value="FilterRadio"
+                value="RECENT"
                 checked={searchTypeValue === "GEO_DISTANCE"}
                 onChange={onChangeValue}
               />
               <span className={Style.FilterRadio_text}>최신순</span>
             </label>
-          </li>
+          </li> */}
           <li className={Style.FilterPopList_item}>
             <label className={Style.FilterRadio}>
               <input
-                className={Style.FilterCheck_input}
+                className={Style.FilterRadio_input}
                 type="radio"
                 name="filter"
                 value="GEO_DISTANCE"
@@ -75,20 +75,21 @@ const RoomOrderby = ({ onRequestClose }) => {
           <li className={Style.FilterPopList_item}>
             <label className={Style.FilterRadio}>
               <input
-                className={Style.FilterCheck_input}
+                className={Style.FilterRadio_input}
                 type="radio"
                 name="filter"
-                value="FilterRadio"
-                checked={searchTypeValue === "FilterRadio"}
+                value="GEO_BOUNDING"
+                checked={searchTypeValue === "GEO_BOUNDING"}
                 onChange={onChangeValue}
               />
-              <span className={Style.FilterRadio_text}>평점순</span>
+              <span className={Style.FilterRadio_text}>영역순</span>
             </label>
           </li>
+          {/* 평점순 추가 예정 */}
           <li className={Style.FilterPopList_item}>
             <label className={Style.FilterRadio}>
               <input
-                className={Style.FilterCheck_input}
+                className={Style.FilterRadio_input}
                 type="radio"
                 name="filter"
                 value="PRICE_ASC"
@@ -101,7 +102,7 @@ const RoomOrderby = ({ onRequestClose }) => {
           <li className={Style.FilterPopList_item}>
             <label className={Style.FilterRadio}>
               <input
-                className={Style.FilterCheck_input}
+                className={Style.FilterRadio_input}
                 type="radio"
                 name="filter"
                 value="PRICE_DESC"
