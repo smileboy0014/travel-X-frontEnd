@@ -5,19 +5,19 @@ import Style from "../../../styles/CommonModal.module.css";
 
 const ReviewModal = ({ isOpen, onRequestClose}) => {
 
-  // 모달 오버레이에서 스크롤 방지
-  useEffect(() => {
-    document.body.style.cssText = `
-      position: fixed; 
-      top: -${window.scrollY}px;
-      overflow-y: scroll;
-      width: 100%;`;
-    return () => {
-      const scrollY = document.body.style.top;
-      document.body.style.cssText = '';
-      window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
-    };
-  }, []);
+  // 모달 오버레이에서 스크롤 방지 but PDP header css 안 먹힘...
+  // useEffect(() => {
+  //   document.body.style.cssText = `
+  //     position: fixed; 
+  //     top: -${window.scrollY}px;
+  //     overflow-y: scroll;
+  //     width: 100%;`;
+  //   return () => {
+  //     const scrollY = document.body.style.top;
+  //     document.body.style.cssText = '';
+  //     window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
+  //   };
+  // }, []);
 
   
   return (
