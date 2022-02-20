@@ -16,8 +16,6 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber, f
 
   const searchTypeValue = useSelector(({ searchType }) => searchType.value);
 
-  
-
   const adultCounterValue = useSelector(
     ({ adultCounter }) => adultCounter.value
   );
@@ -30,14 +28,12 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber, f
     if (value >= 10) {
       return value;
     }
-
     return `0${value}`;
   }
 
   function paramsSerializer(paramObj){
 
       return paramObj = paramObj.join(",");
-   
   }
 
   function FormattingDate(date) {
@@ -48,6 +44,35 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber, f
     return `${year}-${month}-${day}`;
   }
 
+  function setParam(){
+    const parmas = {};
+    if(filterValue.hotel && filterValue.hotel.length > 0){
+      return parmas = {
+        day: filterValue.rent&& filterValue.rent.includes('hDay') ? true : false ,
+        checkinDate: FormattingDate(new Date(searchDate.start)),
+        checkoutDate: FormattingDate(new Date(searchDate.end)),
+        adult: adultCounterValue,
+        child: childCounterValue,
+        query: query,
+        searchType:
+          searchTypeValue == null ? "RANKING" : searchTypeValue.searchTypeValue,
+        size: toPageNumber,
+        types:paramsSerializer(filterValue.hotel).length > 0 ? paramsSerializer(filterValue.hotel): "HOTEL"
+      }
+    } else {
+      return  parmas = {
+        day: filterValue.rent&& filterValue.rent.includes('hDay') ? true : false ,
+        checkinDate: FormattingDate(new Date(searchDate.start)),
+        checkoutDate: FormattingDate(new Date(searchDate.end)),
+        adult: adultCounterValue,
+        child: childCounterValue,
+        query: query,
+        searchType:
+          searchTypeValue == null ? "RANKING" : searchTypeValue.searchTypeValue,
+        size: toPageNumber
+      }
+    }
+  }
   
 
   useEffect(() => {
@@ -65,22 +90,12 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber, f
     setLoading(true);
     setError(false);
 
+    let param = setParam();
+    // debugger;
     axios({
       method: "GET",
       url: "http://shineware.iptime.org:5050/search",
-      params: {
-        day: filterValue.rent&& filterValue.rent.includes('hDay') ? true : false ,
-        checkinDate: FormattingDate(new Date(searchDate.start)),
-        checkoutDate: FormattingDate(new Date(searchDate.end)),
-        adult: adultCounterValue,
-        child: childCounterValue,
-        query: query,
-        searchType:
-          searchTypeValue == null ? "RANKING" : searchTypeValue.searchTypeValue,
-        size: toPageNumber,
-        types:filterValue.hotel&&  paramsSerializer(filterValue.hotel).length > 0 ? paramsSerializer(filterValue.hotel): "HOTEL"
-
-      },
+      params: param
     })
       .then((res) => {
         console.log(res);

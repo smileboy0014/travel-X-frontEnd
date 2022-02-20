@@ -63,8 +63,8 @@ const SearchBar = ({
     (e) => {
       e.preventDefault();
       // 필터 초기화 하기
-      dispatch(roomFilterActions.initValue());
-      debugger;
+      // dispatch(roomFilterActions.initValue());
+      // debugger;
       router.push(`/view/search/${searchValue}`);
       getSearchValue(searchValue);
       setSearchValue("");
