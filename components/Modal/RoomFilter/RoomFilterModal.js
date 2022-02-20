@@ -35,6 +35,7 @@ const RoomFilterModal = ({ isOpen, onRequestClose }) => {
             onSetClear={(value) => {
               setClear(value);
             }}
+            onRequestClose={() => onRequestClose(false)}
           ></RoomFilter>
         </div>
       </Modal>
