@@ -1,20 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/router";
-import { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import * as roomFilterActions from "../../../redux/store/modules/roomFilter";
 import Style from "../../../styles/FilterButton.module.css";
-import axios from "axios";
+
 
 
 const RoomFilter = ({ onRequestClear, onSetClear, onRequestClose }) => {
   const router = useRouter();
-  const [checkedRentInputs, setCheckedRentInputs] = useState(['fDay']);
-  const [checkedHotelInputs, setCheckedHotelInputs] = useState(['HOTEL']);
-  const [radioInputs, setRadioInputs] = useState("");
-  const [toPageNumber, setToPageNumber] = useState(10);
+  const [checkedRentInputs, setCheckedRentInputs] = useState([]);
+  const [checkedHotelInputs, setCheckedHotelInputs] = useState([]);
   const dispatch = useDispatch();
-
   const filterValue = useSelector(({roomFilter}) => roomFilter);
 
   useEffect(()=>{
@@ -28,11 +24,6 @@ const RoomFilter = ({ onRequestClear, onSetClear, onRequestClose }) => {
     }
 
   },[filterValue]);
-
-  const handleClickRadioButton = (radioBtnName) => {
-    setRadioInputs(radioBtnName);
-  };
-  const { id } = router.query;
 
   const changeCheckHandler = (checked, type ,id) => {
     switch(type){
@@ -52,22 +43,6 @@ const RoomFilter = ({ onRequestClear, onSetClear, onRequestClose }) => {
         break;
     }
   };
-
-  function addZero(value) {
-    if (value >= 10) {
-      return value;
-    }
-
-    return `0${value}`;
-  }
-
-  function FormattingDate(date) {
-    const year = date.getFullYear();
-    const month = addZero(date.getMonth() + 1);
-    const day = addZero(date.getDate());
-
-    return `${year}-${month}-${day}`;
-  }
 
   useEffect(() => {
     if (onRequestClear) {

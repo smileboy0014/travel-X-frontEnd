@@ -4,6 +4,17 @@ import { GoogleMap, useLoadScript, LoadScript, Marker, InfoWindow } from '@react
 var MARKER_ICON_URL =
   "https://ssl.pstatic.net/static/maps/img/icons/sp_pins_spot_v3.png";
 
+const mapOption = {
+  // 옆에 +/- 버튼
+  zoomControl: true,
+  // 지도/위성
+  mapTypeControl: false,
+  // 사람 모양 컨트롤러
+  streetViewControl: false,
+  // 풀스크린 컨트롤러
+  fullscreenControl: false
+};
+
 const containerStyle = { width: "100%", height: "20rem" };
 
 const DetailMap = ({ lat, lng }) => {
@@ -12,6 +23,12 @@ const DetailMap = ({ lat, lng }) => {
     const { isLoaded, loadError } = useLoadScript({
       googleMapsApiKey: "AIzaSyBVi31CDrC3Dyi8f166yV_-6WKocsk7I8E"
     });
+
+    // const map = new google.maps.Map(document.getElementById("roomMap"), {
+    //   zoom: 15,
+    //   center: { lat: lat, lng: lat },
+    //   disableDefaultUI: true,
+    // });
 
     const [marker, setMarker] = useState({ lat: lat, lng: lng });
     const [mapCenter, setMapCenter] = useState({ lat: lat, lng: lng });
@@ -28,6 +45,15 @@ const DetailMap = ({ lat, lng }) => {
             mapContainerStyle={containerStyle}
             center={mapCenter}
             zoom={15}
+            options={mapOption}
+            // panControl={mapOption.panControl}
+            // zoomControl={mapOption.zoomControl}
+            // mapTypeControl={mapOption.mapTypeControl}
+            // scaleControl={mapOption.scaleControl}
+            // streetViewControl={mapOption.streetViewControl}
+            // overviewMapControl={mapOption.overviewMapControl}
+            // {...mapOption}
+            
           >
             <Marker
               position={marker}
