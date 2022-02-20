@@ -29,13 +29,15 @@ const RecentSearch = ({
 
   useEffect(() => {
     // addKeyword(sendSearchValue);
-
     if (sendSearchValue !== undefined) {
       const newKeyword = {
         id: Date.now(),
         text: sendSearchValue,
       };
-      setKeywords([...keywords, newKeyword]);
+      const nextKeyword = keywords.filter((keyword) => {
+        return keyword.text != newKeyword.text;
+      });
+      setKeywords([newKeyword, ...nextKeyword]);
     }
   }, [sendSearchValue]);
 
@@ -52,16 +54,24 @@ const RecentSearch = ({
     localStorage.setItem("keywords", JSON.stringify(keywords));
   }, [keywords]);
 
-  const addKeyword = (value) => {
+  const addKeyword = (value, type) => {
     console.log("value: " + value);
 
     if (value !== undefined) {
-      const newKeyword = {
-        id: Date.now(),
-        text: value,
-      };
-      setKeywords([...keywords, newKeyword]);
-      console.log("newKeyword: " + JSON.stringify(newKeyword));
+      if (type == 'autocomplete') {
+        const newKeyword = {
+          id: Date.now(),
+          text: value,
+        };
+        const nextKeyword = keywords.filter((keyword) => {
+          return keyword.text != newKeyword.text;
+        });
+        setKeywords([newKeyword, ...nextKeyword]);
+        console.log("newKeyword: " + JSON.stringify(newKeyword));
+      }
+
+      
+      
       if (getSearchValue !== undefined) {
         getSearchValue(value);
       }
@@ -99,7 +109,7 @@ const RecentSearch = ({
                     <Link href="/view/search/[id]" as={`/view/search/${item}`}>
                       <a
                         className={Style.TotalSearchRelatedList_link}
-                        onClick={() => addKeyword(item)}
+                        onClick={() => addKeyword(item, 'autocomplete')}
                       >
                         <mark>{sendSearchTxt}</mark>
                         {item.replace(sendSearchTxt, "")}
@@ -163,18 +173,28 @@ const RecentSearch = ({
 
           <div>
             {keywords.length ? (
-              keywords.map((k) => (
-                <div className={Style.TotalSearchRecentList_item} key={k.id}>
-                  <div className={Style.TotalSearchRecentList_link}>
-                    {k.text}
-                  </div>
+              keywords.map((item) => (
+                <div className={Style.TotalSearchRecentList_item} key={item.id}>
+                  <Link
+                    href="/view/search/[id]"
+                    as={`/view/search/${item.text}`}
+                  >
+                    <a
+                      className={Style.TotalSearchRecentList_link}
+                      onClick={() => addKeyword(item.text)}
+                    >
+                      {item.text}
+                    </a>
+                  </Link>
+                  
+                  <button
+                    className={Style.TotalSearchRecentList_del}
+                    onClick={() => handleRemoveKeyword(item.id)}
+                  ></button>
                   {/* <AiOutlineClockCircle />
                   {k.text} */}
 
-                  <button
-                    className={Style.TotalSearchRecentList_del}
-                    onClick={() => handleRemoveKeyword(k.id)}
-                  ></button>
+                  
                 </div>
               ))
             ) : (
