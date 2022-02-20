@@ -3,7 +3,7 @@ import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import * as searchResultActions from "../../redux/store/modules/searchResult";
 
-export default function useInfiniteSearch(query, fromPageNumber, toPageNumber) {
+export default function useInfiniteSearch(query, fromPageNumber, toPageNumber, filterValue) {
   const [fromPage, setFromPage] = useState(0);
   const [totalHitCount, setTotalHitCount] = useState(1);
   const [roomCnt, setroomCnt] = useState(0);
@@ -15,6 +15,8 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber) {
   const { searchDate } = useSelector((state) => state.date);
 
   const searchTypeValue = useSelector(({ searchType }) => searchType.value);
+
+  
 
   const adultCounterValue = useSelector(
     ({ adultCounter }) => adultCounter.value
@@ -32,6 +34,12 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber) {
     return `0${value}`;
   }
 
+  function paramsSerializer(paramObj){
+
+      return paramObj = paramObj.join(",");
+   
+  }
+
   function FormattingDate(date) {
     const year = date.getFullYear();
     const month = addZero(date.getMonth() + 1);
@@ -39,6 +47,8 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber) {
 
     return `${year}-${month}-${day}`;
   }
+
+  
 
   useEffect(() => {
     if (rooms.item !== undefined) {
@@ -59,6 +69,7 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber) {
       method: "GET",
       url: "http://shineware.iptime.org:5050/search",
       params: {
+        day: filterValue.rent&& filterValue.rent.includes('hDay') ? true : false ,
         checkinDate: FormattingDate(new Date(searchDate.start)),
         checkoutDate: FormattingDate(new Date(searchDate.end)),
         adult: adultCounterValue,
@@ -67,6 +78,8 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber) {
         searchType:
           searchTypeValue == null ? "RANKING" : searchTypeValue.searchTypeValue,
         size: toPageNumber,
+        types:filterValue.hotel&&  paramsSerializer(filterValue.hotel).length > 0 ? paramsSerializer(filterValue.hotel): "HOTEL"
+
       },
     })
       .then((res) => {
@@ -92,6 +105,7 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber) {
     adultCounterValue,
     childCounterValue,
     searchTypeValue,
+    filterValue
   ]);
 
   return { loading, error, rooms, hasMore };
