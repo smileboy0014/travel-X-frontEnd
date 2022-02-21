@@ -1,14 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import Style from "../../../styles/FilterButton.module.css";
+import RoomOrderbyModal from "../../Modal/RoomOrderby/RoomOrderbyModal";
 
 const OrderByFilterButton = () => {
+  const [roomOrderbyModalOpen, setRoomOrderbyModalOpen] = useState(false);
   return (
     <li className={Style.ListFilterButton_item}>
-      <select className={Style.ListFilterButtonItem_select}>
-        <option value="정렬기준">정렬기준</option>
-        <option value="오름차순">오름차순</option>
-        <option value="내림차순">내림차순</option>
-      </select>
+      <button
+        className={Style.ListFilterButtonItem_select}
+        onClick={() => {
+          setRoomOrderbyModalOpen(true);
+        }}
+      >
+        정렬기준
+      </button>
+      <RoomOrderbyModal
+        isOpen={roomOrderbyModalOpen}
+        onRequestClose={() => setRoomOrderbyModalOpen(false)}
+      ></RoomOrderbyModal>
     </li>
   );
 };

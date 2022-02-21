@@ -1,23 +1,46 @@
-import React, { useState, useEffect } from "react";
-import { useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 import * as roomFilterActions from "../../../redux/store/modules/roomFilter";
 import Style from "../../../styles/FilterButton.module.css";
 
-const RoomFilter = ({ onRequestClear, onSetClear }) => {
-  const [checkedInputs, setCheckedInputs] = useState([]);
-  const [radioInputs, setRadioInputs] = useState("");
+
+
+const RoomFilter = ({ onRequestClear, onSetClear, onRequestClose }) => {
+  const router = useRouter();
+  const [checkedRentInputs, setCheckedRentInputs] = useState([]);
+  const [checkedHotelInputs, setCheckedHotelInputs] = useState([]);
   const dispatch = useDispatch();
+  const filterValue = useSelector(({roomFilter}) => roomFilter);
 
-  const handleClickRadioButton = (radioBtnName) => {
-    setRadioInputs(radioBtnName);
-  };
+  useEffect(()=>{
+   
+    if(filterValue != null && filterValue.rent != null && filterValue.rent.length > 0){
+      setCheckedRentInputs(filterValue.rent);
+    }
 
-  const changeCheckHandler = (checked, id) => {
-    if (checked) {
-      setCheckedInputs([...checkedInputs, id]);
-    } else {
-      setCheckedInputs(checkedInputs.filter((el) => el !== id));
+    if(filterValue != null && filterValue.hotel != null && filterValue.hotel.length > 0){
+      setCheckedHotelInputs(filterValue.hotel);
+    }
+
+  },[filterValue]);
+
+  const changeCheckHandler = (checked, type ,id) => {
+    switch(type){
+      case "rent":
+        if (checked) {
+          setCheckedRentInputs([...checkedRentInputs, id]);
+        } else {
+          setCheckedRentInputs(checkedRentInputs.filter((el) => el !== id));
+        }
+        break;
+      case "hotel":
+        if (checked) {
+          setCheckedHotelInputs([...checkedHotelInputs, id]);
+        } else {
+          setCheckedHotelInputs(checkedHotelInputs.filter((el) => el !== id));
+        }
+        break;
     }
   };
 
@@ -28,14 +51,22 @@ const RoomFilter = ({ onRequestClear, onSetClear }) => {
   }, [onRequestClear]);
 
   const onClearClick = () => {
-    setCheckedInputs([]);
+    // setCheckedInputs([]);
+    setCheckedRentInputs([]);
+    setCheckedHotelInputs([]);
     if (onSetClear !== undefined) {
       onSetClear(false);
     }
   };
 
+
   const sendConfirm = () => {
-    console.log(checkedInputs);
+    const filter = {rent:checkedRentInputs, hotel:checkedHotelInputs};
+    dispatch(roomFilterActions.sendConfirm(filter));
+    onRequestClose(false);
+
+    console.log(checkedRentInputs);
+    console.log(checkedHotelInputs);
   };
 
   return (
@@ -52,9 +83,9 @@ const RoomFilter = ({ onRequestClear, onSetClear }) => {
                   id="hDay"
                   name="hDay"
                   onChange={(e) => {
-                    changeCheckHandler(e.currentTarget.checked, "hDay");
+                    changeCheckHandler(e.currentTarget.checked,"rent" ,"hDay");
                   }}
-                  checked={checkedInputs.includes("hDay") ? true : false}
+                  checked={checkedRentInputs.includes("hDay") ? true : false}
                 />
                 <span className={Style.FilterCheck_text}>대실</span>
               </label>
@@ -67,9 +98,9 @@ const RoomFilter = ({ onRequestClear, onSetClear }) => {
                   id="fDay"
                   name="fDay"
                   onChange={(e) => {
-                    changeCheckHandler(e.currentTarget.checked, "fDay");
+                    changeCheckHandler(e.currentTarget.checked,"rent", "fDay");
                   }}
-                  checked={checkedInputs.includes("fDay") ? true : false}
+                  checked={checkedRentInputs.includes("fDay") ? true : false}
                 />
                 <span className={Style.FilterCheck_text}>숙박</span>
               </label>
@@ -78,19 +109,19 @@ const RoomFilter = ({ onRequestClear, onSetClear }) => {
         </div>
 
         <div className={Style.FilterPopItem}>
-          <div className={Style.FilterPopItem_title}>숙박 유형</div>
+          <div className={Style.FilterPopItem_title}>숙소 유형</div>
           <ul className={Style.FilterPopList}>
             <li className={Style.FilterPopList_item}>
               <label className={Style.FilterCheck}>
                 <input
                   className={Style.FilterCheck_input}
                   type="checkbox"
-                  id="hotel"
-                  name="hotel"
+                  id="HOTEL"
+                  name="HOTEL"
                   onChange={(e) => {
-                    changeCheckHandler(e.currentTarget.checked, "hotel");
+                    changeCheckHandler(e.currentTarget.checked,"hotel" ,"HOTEL");
                   }}
-                  checked={checkedInputs.includes("hotel") ? true : false}
+                  checked={checkedHotelInputs.includes("HOTEL") ? true : false}
                 />
                 <span className={Style.FilterCheck_text}>호텔</span>
               </label>
@@ -100,12 +131,12 @@ const RoomFilter = ({ onRequestClear, onSetClear }) => {
                 <input
                   className={Style.FilterCheck_input}
                   type="checkbox"
-                  id="motel"
-                  name="motel"
+                  id="MOTEL"
+                  name="MOTEL"
                   onChange={(e) => {
-                    changeCheckHandler(e.currentTarget.checked, "motel");
+                    changeCheckHandler(e.currentTarget.checked, "hotel","MOTEL");
                   }}
-                  checked={checkedInputs.includes("motel") ? true : false}
+                  checked={checkedHotelInputs.includes("MOTEL") ? true : false}
                 />
                 <span className={Style.FilterCheck_text}>모텔</span>
               </label>
@@ -115,12 +146,12 @@ const RoomFilter = ({ onRequestClear, onSetClear }) => {
                 <input
                   className={Style.FilterCheck_input}
                   type="checkbox"
-                  id="pension"
-                  name="pension"
+                  id="PENSION"
+                  name="PENSION"
                   onChange={(e) => {
-                    changeCheckHandler(e.currentTarget.checked, "pension");
+                    changeCheckHandler(e.currentTarget.checked,"hotel", "PENSION");
                   }}
-                  checked={checkedInputs.includes("pension") ? true : false}
+                  checked={checkedHotelInputs.includes("PENSION") ? true : false}
                 />
                 <span className={Style.FilterCheck_text}>펜션</span>
               </label>
@@ -130,12 +161,12 @@ const RoomFilter = ({ onRequestClear, onSetClear }) => {
                 <input
                   className={Style.FilterCheck_input}
                   type="checkbox"
-                  id="guestHose"
-                  name="guestHose"
+                  id="GUESTHOUSE"
+                  name="GUESTHOUSE"
                   onChange={(e) => {
-                    changeCheckHandler(e.currentTarget.checked, "guestHose");
+                    changeCheckHandler(e.currentTarget.checked,"hotel", "GUESTHOUSE");
                   }}
-                  checked={checkedInputs.includes("guestHose") ? true : false}
+                  checked={checkedHotelInputs.includes("GUESTHOUSE") ? true : false}
                 />
                 <span className={Style.FilterCheck_text}>게스트하우스</span>
               </label>
@@ -145,12 +176,12 @@ const RoomFilter = ({ onRequestClear, onSetClear }) => {
                 <input
                   className={Style.FilterCheck_input}
                   type="checkbox"
-                  id="resort"
-                  name="resort"
+                  id="RESORT"
+                  name="RESORT"
                   onChange={(e) => {
-                    changeCheckHandler(e.currentTarget.checked, "resort");
+                    changeCheckHandler(e.currentTarget.checked,"hotel", "RESORT");
                   }}
-                  checked={checkedInputs.includes("resort") ? true : false}
+                  checked={checkedHotelInputs.includes("RESORT") ? true : false}
                 />
                 <span className={Style.FilterCheck_text}>리조트</span>
               </label>
@@ -160,12 +191,12 @@ const RoomFilter = ({ onRequestClear, onSetClear }) => {
                 <input
                   className={Style.FilterCheck_input}
                   type="checkbox"
-                  id="camping"
-                  name="camping"
+                  id="CAMPING"
+                  name="CAMPING"
                   onChange={(e) => {
-                    changeCheckHandler(e.currentTarget.checked, "camping");
+                    changeCheckHandler(e.currentTarget.checked,"hotel", "CAMPING");
                   }}
-                  checked={checkedInputs.includes("camping") ? true : false}
+                  checked={checkedHotelInputs.includes("CAMPING") ? true : false}
                 />
                 <span className={Style.FilterCheck_text}>캠핑장</span>
               </label>

@@ -28,16 +28,32 @@ const Post = ({ item }) => {
   const { id } = router.query;
   const dispatch = useDispatch();
   const { searchDate } = useSelector((state) => state.date);
+
   const [toPageNumber, setToPageNumber] = useState(10);
   const [fromPageNumber, setFromPageNumber] = useState(0);
+
+  const filterValue = useSelector(({roomFilter}) => roomFilter);
+
+  useEffect(()=>{
+    // debugger;
+    setToPageNumber(10);
+
+  },[filterValue]);
+
   const { rooms, hasMore, loading, error } = useInfiniteSearch(
     id,
     fromPageNumber,
-    toPageNumber
+    toPageNumber,
+    filterValue
   );
   const observer = useRef();
   const [searchValue, setSearchValue] = useState();
   const [searchAutoComptValue, setSearchAutoComptValue] = useState([]);
+  const [
+    searchAutoComptPropertyNameValue,
+    setSearchAutoComptPropertyNameValue,
+  ] = useState([]);
+
   const [searchTxt, setSearchTxt] = useState("");
   const [calendarModalOpen, setCalendarModalOpen] = useState(false);
   const [viewMap, setViewMap] = useState(false);
@@ -65,14 +81,14 @@ const Post = ({ item }) => {
     setRecentListView(false);
   }, [searchAutoComptValue]);
 
-  useEffect(() => {
-    dispatch(
-      dateActions.setDetailDate({
-        start: searchDate.start,
-        end: searchDate.end,
-      })
-    );
-  }, []);
+  // useEffect(() => {
+  //   dispatch(
+  //     dateActions.setDetailDate({
+  //       start: searchDate.start,
+  //       end: searchDate.end,
+  //     })
+  //   );
+  // }, []);
 
   useEffect(() => {
     rooms.item && console.log(rooms.item.length);
@@ -90,6 +106,9 @@ const Post = ({ item }) => {
                 }}
                 getSearchAutoComptValue={(value) => {
                   setSearchAutoComptValue(value);
+                }}
+                getSearchAutoComptPropertyNameValue={(value) => {
+                  setSearchAutoComptPropertyNameValue(value);
                 }}
                 sendTextValue={id}
                 getRecentListView={(value) => {
@@ -144,6 +163,9 @@ const Post = ({ item }) => {
                     <RecentSearch
                       sendSearchValue={searchValue}
                       sendSearchAutoComptValue={searchAutoComptValue}
+                      sendSearchAutoComptPropertyNameValue={
+                        searchAutoComptPropertyNameValue
+                      }
                       getSearchValue={(value) => {
                         setSearchValue(value);
                       }}
@@ -188,6 +210,9 @@ const Post = ({ item }) => {
                       <RecentSearch
                         sendSearchValue={searchValue}
                         sendSearchAutoComptValue={searchAutoComptValue}
+                        sendSearchAutoComptPropertyNameValue={
+                          searchAutoComptPropertyNameValue
+                        }
                         getSearchValue={(value) => {
                           setSearchValue(value);
                         }}

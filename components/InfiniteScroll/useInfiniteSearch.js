@@ -3,7 +3,7 @@ import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import * as searchResultActions from "../../redux/store/modules/searchResult";
 
-export default function useInfiniteSearch(query, fromPageNumber, toPageNumber) {
+export default function useInfiniteSearch(query, fromPageNumber, toPageNumber, filterValue) {
   const [fromPage, setFromPage] = useState(0);
   const [totalHitCount, setTotalHitCount] = useState(1);
   const [roomCnt, setroomCnt] = useState(0);
@@ -13,6 +13,8 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber) {
   const [hasMore, setHasMore] = useState(false);
   const dispatch = useDispatch();
   const { searchDate } = useSelector((state) => state.date);
+
+  const searchTypeValue = useSelector(({ searchType }) => searchType.value);
 
   const adultCounterValue = useSelector(
     ({ adultCounter }) => adultCounter.value
@@ -26,8 +28,12 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber) {
     if (value >= 10) {
       return value;
     }
-
     return `0${value}`;
+  }
+
+  function paramsSerializer(paramObj){
+
+      return paramObj = paramObj.join(",");
   }
 
   function FormattingDate(date) {
@@ -37,6 +43,37 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber) {
 
     return `${year}-${month}-${day}`;
   }
+
+  function setParam(){
+    const parmas = {};
+    if(filterValue.hotel && filterValue.hotel.length > 0){
+      return parmas = {
+        day: filterValue.rent&& filterValue.rent.includes('hDay') ? true : false ,
+        checkinDate: FormattingDate(new Date(searchDate.start)),
+        checkoutDate: FormattingDate(new Date(searchDate.end)),
+        adult: adultCounterValue,
+        child: childCounterValue,
+        query: query,
+        searchType:
+          searchTypeValue == null ? "RANKING" : searchTypeValue.searchTypeValue,
+        size: toPageNumber,
+        types:paramsSerializer(filterValue.hotel).length > 0 ? paramsSerializer(filterValue.hotel): "HOTEL"
+      }
+    } else {
+      return  parmas = {
+        day: filterValue.rent&& filterValue.rent.includes('hDay') ? true : false ,
+        checkinDate: FormattingDate(new Date(searchDate.start)),
+        checkoutDate: FormattingDate(new Date(searchDate.end)),
+        adult: adultCounterValue,
+        child: childCounterValue,
+        query: query,
+        searchType:
+          searchTypeValue == null ? "RANKING" : searchTypeValue.searchTypeValue,
+        size: toPageNumber
+      }
+    }
+  }
+  
 
   useEffect(() => {
     if (rooms.item !== undefined) {
@@ -53,18 +90,12 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber) {
     setLoading(true);
     setError(false);
 
+    let param = setParam();
+    // debugger;
     axios({
       method: "GET",
       url: "http://shineware.iptime.org:5050/search",
-      params: {
-        checkinDate: FormattingDate(new Date(searchDate.start)),
-        checkoutDate: FormattingDate(new Date(searchDate.end)),
-        adult: adultCounterValue,
-        // child: childCounterValue,
-        query: query,
-        // from: fromPageNumber,
-        size: toPageNumber,
-      },
+      params: param
     })
       .then((res) => {
         console.log(res);
@@ -82,7 +113,15 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber) {
         console.log(error);
         setError(true);
       });
-  }, [query, toPageNumber, searchDate]);
+  }, [
+    query,
+    toPageNumber,
+    searchDate,
+    adultCounterValue,
+    childCounterValue,
+    searchTypeValue,
+    filterValue
+  ]);
 
   return { loading, error, rooms, hasMore };
 }

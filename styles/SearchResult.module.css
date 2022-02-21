@@ -48,6 +48,8 @@
 
 .ListFilterButton_list {
   margin: 0 -0.125rem;
+  font-size: 0;
+  line-height: 0;
 }
 
 .ListFilterButton_list::after {

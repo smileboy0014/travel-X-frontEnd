@@ -8,7 +8,8 @@ import map from "./map";
 import reviewContent from "./reviewContent";
 import scrollY from "./scrollY";
 import searchResult from "./searchResult";
-import date from './date';
+import date from "./date";
+import searchType from "./searchType";
 
 const reducer = (state, action) => {
   if (action.type === HYDRATE) {
@@ -23,7 +24,8 @@ const reducer = (state, action) => {
     reviewContent,
     scrollY,
     searchResult,
-    date
+    date,
+    searchType,
   })(state, action);
 };
 

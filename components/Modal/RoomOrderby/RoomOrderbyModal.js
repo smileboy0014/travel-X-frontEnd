@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import RoomFilter from "./RoomFilter";
 import Modal from "react-modal";
 import Style from "../../../styles/CommonModal.module.css";
+import RoomOrderby from "./RoomOrderby";
 
-const RoomFilterModal = ({ isOpen, onRequestClose }) => {
+const RoomOrderbyModal = ({ isOpen, onRequestClose }) => {
   const [clear, setClear] = useState(false);
 
   return (
@@ -18,29 +18,19 @@ const RoomFilterModal = ({ isOpen, onRequestClose }) => {
       >
         <div className={Style.site_container}>
           <div className={Style.FilterPopHeader}>
-            <button
-              className={Style.FilterPopHeader_reset}
-              onClick={() => setClear(true)}
-            >
-              초기화
-            </button>
             <div className={Style.FilterPopHeader_title}>필터</div>
             <button
               className={Style.FilterPopHeader_close}
               onClick={() => onRequestClose(false)}
             ></button>
           </div>
-          <RoomFilter
-            onRequestClear={clear}
-            onSetClear={(value) => {
-              setClear(value);
-            }}
-            onRequestClose={() => onRequestClose(false)}
-          ></RoomFilter>
+          <RoomOrderby
+            onRequestClose={(value) => onRequestClose(value)}
+          ></RoomOrderby>
         </div>
       </Modal>
     </div>
   );
 };
 
-export default RoomFilterModal;
+export default RoomOrderbyModal;

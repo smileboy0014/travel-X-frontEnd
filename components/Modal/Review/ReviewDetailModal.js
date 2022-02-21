@@ -97,11 +97,11 @@ const ReviewDetailModal = (props) => {
             {handleProgressBar(4)}
             {handleProgressBar(5)}
           </div>
-          <div className="rightDetail">
+          <div className={Style.rightDetailDialog}>
             <div className="keywordSearch">
               <ReviewSearchBar />
             </div>
-            <div className="reviewContent">
+            <div className={Style.rightDetail}>
               {content
                 ? content.map((review, index) => (
                     <ReviewCard key={index} {...review} />

@@ -2,13 +2,15 @@ import React, { useCallback, useState, useEffect } from "react";
 import Axios from "axios";
 import { useRouter } from "next/router";
 import PesonalModal from "../../components/Modal/Personal/PersonalModal";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Style from "../../styles/SearchBar.module.css";
+import * as roomFilterActions from "../../redux/store/modules/roomFilter";
 import { AiOutlineSearch, AiOutlineClose, AiOutlineLeft } from "react-icons/ai";
 
 const SearchBar = ({
   getSearchValue,
   getSearchAutoComptValue,
+  getSearchAutoComptPropertyNameValue,
   sendTextValue,
   getRecentListView,
   getSearchTxt,
@@ -19,6 +21,7 @@ const SearchBar = ({
   const [checkBackStep, setCheckBackStep] = useState(true);
   const { searchDate } = useSelector((state) => state.date);
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const onChangeSearch = useCallback((e) => {
     setSearchValue(e.target.value);
@@ -43,6 +46,7 @@ const SearchBar = ({
         console.log("res.data: " + JSON.stringify(res.data["address"]));
 
         getSearchAutoComptValue(res.data["address"]);
+        getSearchAutoComptPropertyNameValue(res.data["propertyName"]);
       })
       .catch((Error) => {
         console.log(Error);
@@ -58,6 +62,9 @@ const SearchBar = ({
   const onSubmit = useCallback(
     (e) => {
       e.preventDefault();
+      // 필터 초기화 하기
+      // dispatch(roomFilterActions.initValue());
+      // debugger;
       router.push(`/view/search/${searchValue}`);
       getSearchValue(searchValue);
       setSearchValue("");
