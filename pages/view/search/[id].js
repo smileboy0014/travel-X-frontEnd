@@ -18,8 +18,7 @@ import DetailTopNavbar from "../../../components/NavBar/DetailTopNavbar";
 import SearchMapModal from "../../../components/Modal/Map/SearchMapModal";
 import CalendarModal from "../../../components/Modal/Calendar/CalendarModal";
 import * as dateActions from "../../../redux/store/modules/date";
-// import ListDetailMap from "../../../components/Modal/Map/ListDetailMap";
-import ListDetailMap from "../../../components/Modal/Map/ListDetailGoogleMap";
+import ListDetailMap from "../../../components/Modal/Map/ListDetailMap";
 
 const Post = ({ item }) => {
   const [showModal, setShowModal] = useState(false);
