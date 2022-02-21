@@ -160,7 +160,7 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
             options={options}
             averageCenter
             enableRetinaIcons
-            gridSize={100}
+            gridSize={0}
             maxZoom={20}
             zoomOnClick={false} 
           >
