@@ -84,7 +84,7 @@ export default function useInfiniteSearch(
         checkoutDate: FormattingDate(new Date(searchDate.end)),
         adult: adultCounterValue,
         child: childCounterValue,
-        query: query,
+        //query: query,
         top: mapBoundNorthEastValue["lat"],
         right: mapBoundNorthEastValue["lng"],
         bottom: mapBoundSouthWestValue["lat"],
