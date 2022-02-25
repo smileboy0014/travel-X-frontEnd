@@ -84,15 +84,12 @@ export default function useInfiniteSearch(
         checkoutDate: FormattingDate(new Date(searchDate.end)),
         adult: adultCounterValue,
         child: childCounterValue,
-        //query: query,
-
-        left: mapBoundNorthEastValue["lat"],
+        query: query,
+        top: mapBoundNorthEastValue["lat"],
         right: mapBoundNorthEastValue["lng"],
-        top: mapBoundSouthWestValue["lat"],
-        bottom: mapBoundSouthWestValue["lng"],
-
-        searchType:
-          searchTypeValue == null ? "RANKING" : searchTypeValue.searchTypeValue,
+        bottom: mapBoundSouthWestValue["lat"],
+        left: mapBoundSouthWestValue["lng"],
+        searchType: "GEO_BOUNDING",
         size: toPageNumber,
       });
     } else {
