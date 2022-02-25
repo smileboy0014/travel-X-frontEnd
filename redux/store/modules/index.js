@@ -10,6 +10,7 @@ import scrollY from "./scrollY";
 import searchResult from "./searchResult";
 import date from "./date";
 import searchType from "./searchType";
+import mapBound from "./mapBound";
 
 const reducer = (state, action) => {
   if (action.type === HYDRATE) {
@@ -26,6 +27,7 @@ const reducer = (state, action) => {
     searchResult,
     date,
     searchType,
+    mapBound,
   })(state, action);
 };
 
