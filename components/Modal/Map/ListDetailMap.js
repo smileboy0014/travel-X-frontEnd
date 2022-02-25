@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
-import { useSelector } from "react-redux";
 import SearchMobileCard from "../../Card/SearchMobileCard";
 import { MarkerOverlapRecognizer } from "./MarkerOverlappingRecognizer";
-import Style from "../../../styles/CommonModal.module.css";
+import Style from "../../../styles/SearchMobileCard.module.css";
+import { useSelector, useDispatch } from "react-redux";
+import * as mapBoundActions from "../../../redux/store/modules/mapBound";
 
 var markers = [];
 var infoWindows = [];
@@ -19,6 +20,20 @@ var MARKER_HIGHLIGHT_ICON_URL =
 const DetailMap = ({ lat, lng, onRequestClosed }) => {
   const searchDataValue = useSelector(({ searchResult }) => searchResult.data);
   const [roomData, setRoomData] = useState([]);
+
+  const [test, setTest] = useState([]);
+
+  const [mapSouthWest, setMapSouthWest] = useState({
+    lat: "",
+    lng: "",
+  });
+
+  const [mapNorthEast, setMapNorthEast] = useState({
+    lat: "",
+    lng: "",
+  });
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     console.log("searchDataValue: " + searchDataValue);
@@ -116,8 +131,26 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
       });
     }
 
-    naver.maps.Event.addListener(roomMap, "dragend", function (e) {
-      console.log("dragend: " + e.coord);
+    naver.maps.Event.addListener(roomMap, "bounds_changed", function (e) {
+      var bounds = roomMap.getBounds();
+      var southWest = bounds.getSW();
+      var northEast = bounds.getNE();
+
+      console.log(bounds);
+      console.log(southWest);
+      console.log(northEast);
+
+      setTest(bounds);
+
+      setMapSouthWest({
+        lat: southWest._lat,
+        lng: southWest._lng,
+      });
+
+      setMapNorthEast({
+        lat: northEast._lat,
+        lng: northEast._lng,
+      });
     });
 
     for (var i = 0, ii = markers.length; i < ii; i++) {
@@ -153,36 +186,34 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
     }
   };
 
-  const getGeocode = () => {
-    naver.maps.Service.geocode(
-      {
-        address: "불정로 6",
-      },
-      function (status, response) {
-        if (status !== naver.maps.Service.Status.OK) {
-          return alert("Something wrong!");
-        } else {
-          var result = response.result, // 검색 결과의 컨테이너
-            items = result.items; // 검색 결과의 배열
-
-          // console.log("result: " + items);
-          // console.log("result: " + JSON.stringify(result.items[0].point));
-          return result.items[0].point;
-        }
-
-        // do Something
-      }
-    );
-  };
-
   useEffect(() => {
     initMap();
     addRoomMapMarker();
   }, [searchDataValue]);
 
+  useEffect(() => {
+    console.log("aaaa: " + JSON.stringify(mapSouthWest));
+    console.log("bbbb: " + JSON.stringify(mapNorthEast));
+    console.log(test);
+  }, [mapSouthWest, mapNorthEast, test]);
+
+  const onSearchMap = () => {
+    dispatch(mapBoundActions.increment());
+    dispatch(mapBoundActions.setNorthEast(mapNorthEast));
+    dispatch(mapBoundActions.setSouthWest(mapSouthWest));
+  };
+
   return (
     <div>
       <div id="roomMap" style={{ width: "100%", height: "50rem" }}>
+        <div className={Style.MapSectionInfo}>
+          <div className={Style.site_container}>
+            <button className={Style.ListFixButton2} onClick={onSearchMap}>
+              지도 검색
+            </button>
+          </div>
+        </div>
+
         <SearchMobileCard
           data={roomData}
           closeModal={(value) => {

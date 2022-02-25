@@ -2,8 +2,14 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import * as searchResultActions from "../../redux/store/modules/searchResult";
+import mapBound from "../../redux/store/modules/mapBound";
 
-export default function useInfiniteSearch(query, fromPageNumber, toPageNumber, filterValue) {
+export default function useInfiniteSearch(
+  query,
+  fromPageNumber,
+  toPageNumber,
+  filterValue
+) {
   const [fromPage, setFromPage] = useState(0);
   const [totalHitCount, setTotalHitCount] = useState(1);
   const [roomCnt, setroomCnt] = useState(0);
@@ -24,6 +30,14 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber, f
     ({ childCounter }) => childCounter.value
   );
 
+  const mapBoundValue = useSelector(({ mapBound }) => mapBound.value);
+  const mapBoundSouthWestValue = useSelector(
+    ({ mapBound }) => mapBound.southWest
+  );
+  const mapBoundNorthEastValue = useSelector(
+    ({ mapBound }) => mapBound.northEast
+  );
+
   function addZero(value) {
     if (value >= 10) {
       return value;
@@ -31,9 +45,8 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber, f
     return `0${value}`;
   }
 
-  function paramsSerializer(paramObj){
-
-      return paramObj = paramObj.join(",");
+  function paramsSerializer(paramObj) {
+    return (paramObj = paramObj.join(","));
   }
 
   function FormattingDate(date) {
@@ -44,11 +57,12 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber, f
     return `${year}-${month}-${day}`;
   }
 
-  function setParam(){
+  function setParam() {
     const parmas = {};
-    if(filterValue.hotel && filterValue.hotel.length > 0){
-      return parmas = {
-        day: filterValue.rent&& filterValue.rent.includes('hDay') ? true : false ,
+    if (filterValue.hotel && filterValue.hotel.length > 0) {
+      return (parmas = {
+        day:
+          filterValue.rent && filterValue.rent.includes("hDay") ? true : false,
         checkinDate: FormattingDate(new Date(searchDate.start)),
         checkoutDate: FormattingDate(new Date(searchDate.end)),
         adult: adultCounterValue,
@@ -57,11 +71,34 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber, f
         searchType:
           searchTypeValue == null ? "RANKING" : searchTypeValue.searchTypeValue,
         size: toPageNumber,
-        types:paramsSerializer(filterValue.hotel).length > 0 ? paramsSerializer(filterValue.hotel): "HOTEL"
-      }
+        types:
+          paramsSerializer(filterValue.hotel).length > 0
+            ? paramsSerializer(filterValue.hotel)
+            : "HOTEL",
+      });
+    } else if (mapBoundValue > 0) {
+      return (parmas = {
+        day:
+          filterValue.rent && filterValue.rent.includes("hDay") ? true : false,
+        checkinDate: FormattingDate(new Date(searchDate.start)),
+        checkoutDate: FormattingDate(new Date(searchDate.end)),
+        adult: adultCounterValue,
+        child: childCounterValue,
+        //query: query,
+
+        left: mapBoundNorthEastValue["lat"],
+        right: mapBoundNorthEastValue["lng"],
+        top: mapBoundSouthWestValue["lat"],
+        bottom: mapBoundSouthWestValue["lng"],
+
+        searchType:
+          searchTypeValue == null ? "RANKING" : searchTypeValue.searchTypeValue,
+        size: toPageNumber,
+      });
     } else {
-      return  parmas = {
-        day: filterValue.rent&& filterValue.rent.includes('hDay') ? true : false ,
+      return (parmas = {
+        day:
+          filterValue.rent && filterValue.rent.includes("hDay") ? true : false,
         checkinDate: FormattingDate(new Date(searchDate.start)),
         checkoutDate: FormattingDate(new Date(searchDate.end)),
         adult: adultCounterValue,
@@ -69,11 +106,10 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber, f
         query: query,
         searchType:
           searchTypeValue == null ? "RANKING" : searchTypeValue.searchTypeValue,
-        size: toPageNumber
-      }
+        size: toPageNumber,
+      });
     }
   }
-  
 
   useEffect(() => {
     if (rooms.item !== undefined) {
@@ -87,6 +123,15 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber, f
   }, [query]);
 
   useEffect(() => {
+    console.log("9999999: " + mapBoundValue);
+
+    console.log("88888888: " + mapBoundNorthEastValue["lat"]);
+    console.log("88888888: " + mapBoundNorthEastValue["lng"]);
+    console.log("99999999: " + mapBoundSouthWestValue["lat"]);
+    console.log("99999999: " + mapBoundSouthWestValue["lng"]);
+  }, [mapBoundValue]);
+
+  useEffect(() => {
     setLoading(true);
     setError(false);
 
@@ -95,7 +140,7 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber, f
     axios({
       method: "GET",
       url: "http://shineware.iptime.org:5050/search",
-      params: param
+      params: param,
     })
       .then((res) => {
         console.log(res);
@@ -120,7 +165,8 @@ export default function useInfiniteSearch(query, fromPageNumber, toPageNumber, f
     adultCounterValue,
     childCounterValue,
     searchTypeValue,
-    filterValue
+    filterValue,
+    mapBoundValue,
   ]);
 
   return { loading, error, rooms, hasMore };
