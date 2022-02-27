@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import Style from "../../styles/SearchMobileCard.module.css";
+import MapResultCarousel from "./Carousel/MapResultCarousel";
 
 const SearchMobileCard = ({ data, closeModal }) => {
   useEffect(() => {
@@ -18,7 +19,11 @@ const SearchMobileCard = ({ data, closeModal }) => {
         <button className={Style.ListFixButton} onClick={onClickClosed}>
           리스트 보기
         </button>
-        {data[0] !== undefined && (
+        {data[0] !== undefined && 
+        <MapResultCarousel
+          data={data}
+        />}
+        {/* {data[0] !== undefined && (
           <div className={Style.MapList}>
             <div className={Style.MapList_link}>
               <div className={Style.MapListThumb}>
@@ -48,7 +53,7 @@ const SearchMobileCard = ({ data, closeModal }) => {
               </div>
             </div>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );

@@ -181,7 +181,9 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
 
     function getClickHandler(seq) {
       return function (e) {
-        setRoomData(mobileWindows[seq]);
+        // console.log(`mobileData is : ${mobileWindows}`);
+        setRoomData(searchDataValue[0]);
+        // setRoomData(mobileWindows[seq]);
       };
     }
   };
@@ -213,7 +215,6 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
             </button>
           </div>
         </div>
-
         <SearchMobileCard
           data={roomData}
           closeModal={(value) => {
