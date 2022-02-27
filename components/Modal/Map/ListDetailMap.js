@@ -7,20 +7,26 @@ import { useSelector, useDispatch } from "react-redux";
 import * as mapBoundActions from "../../../redux/store/modules/mapBound";
 
 var markers = [];
-var infoWindows = [];
 var mobileWindows = [];
 var roomMap;
 var recognizer;
+var selectedId = "";
+var selectedMarker;
 
-var MARKER_ICON_URL =
-  "https://ssl.pstatic.net/static/maps/img/icons/sp_pins_spot_v3.png";
-var MARKER_HIGHLIGHT_ICON_URL =
-  "https://ssl.pstatic.net/static/maps/img/icons/sp_pins_spot_v3_over.png";
+const mapContainerStyle = {
+  width: "100%",
+  height: "100%",
+  position:'absolute',
+	left:0,
+	right:0,
+	bottom:0
+};
 
 const DetailMap = ({ lat, lng, onRequestClosed }) => {
   const searchDataValue = useSelector(({ searchResult }) => searchResult.data);
   const [slide, setSlide] = useState(false);
   const [roomData, setRoomData] = useState([]);
+  const [mapObserver, setMapObserver] = useState(0);
 
   const [test, setTest] = useState([]);
 
@@ -37,7 +43,7 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log("searchDataValue: " + searchDataValue);
+    console.log("searchDataValue: ", searchDataValue);
   }, [searchDataValue]);
 
   const initMap = () => {
@@ -51,95 +57,135 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
       tolerance: 5,
     });
     recognizer.setMap(roomMap);
+
+    markers = [];
+    mobileWindows = [];
+    selectedId = "";
+    selectedMarker;
   };
 
+  const clusteringByLocation = (rooms) => {
+    let clusters = [];
+    let prev = { lat: 0, lon: 0};
+    let curIndex = -1;
+
+    rooms.sort((a, b) => {
+      return a.basePrice - b.basePrice;
+    });
+
+    rooms.sort((a, b) => {
+      if (a.location.lat == b.location.lat) {
+        return a.location.lon - b.location.lon;
+      }
+      return a.location.lat - b.location.lat;
+    });
+    
+    rooms.map((room) => {
+      if ((room.location.lat == prev.lat) && (room.location.lon == prev.lon)) {
+        clusters[curIndex].items.push(room);
+        clusters[curIndex].count++;
+      } else {
+        let cluster = {
+          index: ++curIndex,
+          count: 1,
+          minPrice: room.basePrice,
+          items: [room]
+        };
+
+        clusters.push(cluster);
+        prev = room.location;
+      }
+    });
+
+    return clusters;
+  };
+
+  const priceComma = (price) => {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
   const addRoomMapMarker = () => {
-    console.log(searchDataValue[0]);
+    console.log('addRoomMapMarker Function : ', searchDataValue[0]);
     if (searchDataValue[0] !== undefined) {
       roomMap = new naver.maps.Map("roomMap", {
         center: new naver.maps.LatLng(
           searchDataValue[0][0].location.lat,
           searchDataValue[0][0].location.lon
         ),
-        zoom: 12,
+        zoom: 14,
       });
 
-      if (roomMap != null) {
-        var w = window.outerWidth;
-        var h = window.outerHeight;
-        // 지도 element
-        var el = document.getElementById("roomMap");
-        el.style.width = "100%";
-        el.style.height = h + "px";
-      }
+      // if (roomMap != null) {
+      //   var w = window.outerWidth;
+      //   var h = window.outerHeight;
+      //   // 지도 element
+      //   var el = document.getElementById("roomMap");
+      //   el.style.width = "100%";
+      //   el.style.height = h + "px";
+      // }
 
-      searchDataValue[0].map((room, index) => {
+      let clusters = clusteringByLocation(Array.from(searchDataValue[0]));
+      
+      clusters.map((cluster) => {
+        let price = cluster.count == 1 ? `${cluster.minPrice}` : `${cluster.minPrice} ~`;
         var roomMapMarker = new naver.maps.Marker({
           map: roomMap,
-          title: room.propertyName,
+          title: cluster.items[0].propertyName,
           icon: {
-            url: MARKER_ICON_URL,
+            content: 
+              `<button id="map_${cluster.items[0].roomId}" class="MapPin">` +
+                '<span class="MapPin-count">' + 
+                  cluster.count +
+                '</span>' +
+                '<span class="MapPin-price">' + 
+                  priceComma(price) + 
+                '</span>' +
+              '</button>',
             size: new naver.maps.Size(24, 37),
             anchor: new naver.maps.Point(12, 37),
+            elementId: `map_${cluster.items[0].roomId}`
           },
-          // icon: {
-          //   content:
-          //     '<table class="__se_tbl" style="border-width: 1px 1px 0px 0px; border-style: solid solid none none; border-color: rgb(204, 204, 204) rgb(204, 204, 204) currentColor currentColor; border-image: none;" border="0" cellspacing="0" cellpadding="0"><tbody>' +
-          //     '<tr><td style="border-width: 0px 0px 1px 1px; border-style: none none solid solid; border-color: currentColor currentColor rgb(204, 204, 204) rgb(204, 204, 204); border-image: none; width: 40.06px; height: 32.4px; background-color: rgb(255, 255, 255);"><p>' +
-          //     '<img style="left: 0px; top: 0px; width: 30px; height: 30px;" alt="" src="https://cdn-icons-png.flaticon.com/512/684/684908.png"></p></td>' +
-          //     '<td style="border-width: 0px 0px 1px 1px; border-style: none none solid solid; border-color: currentColor currentColor rgb(204, 204, 204) rgb(204, 204, 204); border-image: none; width: 106.63px; height: 32.4px; background-color: rgb(255, 255, 255);"><p>지역: ' +
-          //     room.propertyType +
-          //     " 가격:" +
-          //     room.basePrice +
-          //     "</p></td>" +
-          //     "</tr>" +
-          //     "</tbody>" +
-          //     "</table>",
-          //   size: new naver.maps.Size(22, 35),
-          //   anchor: new naver.maps.Point(11, 35),
-          // },
-          position: new naver.maps.LatLng(room.location.lat, room.location.lon),
+          position: new naver.maps.LatLng(cluster.items[0].location.lat, cluster.items[0].location.lon),
         });
 
-        var mobileContent;
-
-        mobileContent = [
-          {
+        let mobileWindow = [];
+        cluster.items.map(room => {
+          mobileWindow.push({
             img: room.images[0],
-            tpye: room.propertyType,
+            type: room.propertyType,
             name: room.propertyName,
             averageScore: room.reviewSummary.averageScore,
             reviewCount: room.reviewSummary.reviewCount,
             price: room.basePrice,
-          },
-        ];
+          });
+        });
 
+        mobileWindows.push(mobileWindow);
         markers.push(roomMapMarker);
 
-        mobileWindows.push(mobileContent);
-
         roomMapMarker.addListener("click", function (e) {
+          if (selectedId != "" && selectedMarker != null && e.domEvent.target.parentElement.id != selectedId) {
+            document.getElementById(selectedId).className = "MapPin";
+            selectedMarker.setZIndex(100);
+          }
+          
           highlightMarker(e.overlay);
-        });
-        roomMapMarker.addListener("mouseout", function (e) {
-          unhighlightMarker(e.overlay);
+          selectedId = e.domEvent.target.parentElement.id;
+          selectedMarker = e.overlay;
         });
 
         recognizer.add(roomMapMarker);
-        // roomMapMarker.addListener("click", function (e) {
-        //   var m = e.overlay;
-        // });
       });
-    }
+    };
 
     naver.maps.Event.addListener(roomMap, "bounds_changed", function (e) {
       var bounds = roomMap.getBounds();
       var southWest = bounds.getSW();
       var northEast = bounds.getNE();
 
-      console.log(bounds);
-      console.log(southWest);
-      console.log(northEast);
+      // console.log(bounds);
+      // console.log(southWest);
+      // console.log(northEast);
 
       setTest(bounds);
 
@@ -154,47 +200,30 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
       });
     });
 
-    for (var i = 0, ii = markers.length; i < ii; i++) {
+    for (var i = 0, ii = clusters.length; i < ii; i++) {
       naver.maps.Event.addListener(markers[i], "click", getClickHandler(i));
     }
 
     function highlightMarker(roomMapMarker) {
-      var icon = roomMapMarker.getIcon();
-
-      if (icon.url !== MARKER_HIGHLIGHT_ICON_URL) {
-        icon.url = MARKER_HIGHLIGHT_ICON_URL;
-        roomMapMarker.setIcon(icon);
+      console.log(document.getElementById(roomMapMarker.icon.elementId));
+      if (document.getElementById(roomMapMarker.icon.elementId) != null) {
+        document.getElementById(roomMapMarker.icon.elementId).className = "MapPin is-Active";
       }
 
       roomMapMarker.setZIndex(1000);
-    }
-
-    function unhighlightMarker(roomMapMarker) {
-      var icon = roomMapMarker.getIcon();
-
-      if (icon.url === MARKER_HIGHLIGHT_ICON_URL) {
-        icon.url = MARKER_ICON_URL;
-        roomMapMarker.setIcon(icon);
-      }
-
-      roomMapMarker.setZIndex(100);
+      setMapObserver(mapObserver++);
     }
 
     function getClickHandler(seq) {
-      return function (e) {
-        // console.log(`mobileData is : ${mobileWindows}`);
-        setRoomData(searchDataValue[0]);
-        // setRoomData(mobileWindows[seq]);
-      };
+      return (e) => {
+        console.log('mobileData :', mobileWindows[seq]);
+        setRoomData(mobileWindows[seq]);
+      }
     }
   };
 
   useEffect(() => {
     setSlide(true);
-    console.log("click initMap 1단게!");
-    // return () =>{
-    //   setSlide(false);
-    // }
   }, [roomData]);
 
   useEffect(() => {
@@ -203,9 +232,9 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
   }, [searchDataValue]);
 
   useEffect(() => {
-    console.log("aaaa: " + JSON.stringify(mapSouthWest));
-    console.log("bbbb: " + JSON.stringify(mapNorthEast));
-    console.log(test);
+    // console.log("aaaa: " + JSON.stringify(mapSouthWest));
+    // console.log("bbbb: " + JSON.stringify(mapNorthEast));
+    // console.log(test);
   }, [mapSouthWest, mapNorthEast, test]);
 
   const onSearchMap = () => {
@@ -216,7 +245,7 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
 
   return (
     <div>
-      <div id="roomMap" style={{ width: "100%", height: "50rem" }}>
+      <div id="roomMap" style={mapContainerStyle} observer={mapObserver}>
         <div className={Style.MapSectionInfo}>
           <div className={Style.site_container}>
             <button className={Style.ListFixButton2} onClick={onSearchMap}>
