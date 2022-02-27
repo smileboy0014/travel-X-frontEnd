@@ -19,6 +19,7 @@ var MARKER_HIGHLIGHT_ICON_URL =
 
 const DetailMap = ({ lat, lng, onRequestClosed }) => {
   const searchDataValue = useSelector(({ searchResult }) => searchResult.data);
+  const [slide, setSlide] = useState(false);
   const [roomData, setRoomData] = useState([]);
 
   const [test, setTest] = useState([]);
@@ -189,6 +190,14 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
   };
 
   useEffect(() => {
+    setSlide(true);
+    console.log("click initMap 1단게!");
+    // return () =>{
+    //   setSlide(false);
+    // }
+  }, [roomData]);
+
+  useEffect(() => {
     initMap();
     addRoomMapMarker();
   }, [searchDataValue]);
@@ -220,6 +229,7 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
           closeModal={(value) => {
             onRequestClosed(value);
           }}
+          initSlide={slide}
         ></SearchMobileCard>
       </div>
     </div>

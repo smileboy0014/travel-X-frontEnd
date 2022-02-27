@@ -74,9 +74,12 @@ body .ListFixButton::before {
   border-radius: 0.5rem 0.5rem;
   overflow: hidden;
   position: relative;
-  box-shadow: 0 0.125rem 0.625rem 0 rgba(0, 0, 0, 0.3);
+  width: 250%;
+  right: 75%;
+  /* box-shadow: 0 0.125rem 0.625rem 0 rgba(0, 0, 0, 0.3); */
   text-align: left;
   z-index: 200;
+  border-radius: 20%
 }
 
 .MapList_link {
@@ -91,6 +94,8 @@ body .ListFixButton::before {
   overflow: hidden;
   position: relative;
   z-index: 210;
+  border-top-left-radius : 10%;
+  border-bottom-left-radius : 10%;
 }
 
 
@@ -104,6 +109,8 @@ body .ListFixButton::before {
 }
 
 .MapListCont {
+  border-top-right-radius: 10%;
+  border-bottom-right-radius : 10%;
   background-color: #fff;
   flex: 1;
   padding: 0.8125rem 0.75rem;
