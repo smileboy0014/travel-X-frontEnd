@@ -1,10 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Style from "../../styles/SearchMobileCard.module.css";
 import MapResultCarousel from "./Carousel/MapResultCarousel";
 
-const SearchMobileCard = ({ data, closeModal }) => {
+const SearchMobileCard = ({ data, closeModal, initSlide }) => {
+  // const [slide, setSlide] = useState(false);
+
   useEffect(() => {
-    console.log("data: " + JSON.stringify(data));
+    // console.log("data: " + JSON.stringify(data));
+    // setSlide(false);
+    // return () =>{
+    //   setSlide(true);
+    // }
   }, [data]);
 
   const onClickClosed = () => {
@@ -22,6 +28,7 @@ const SearchMobileCard = ({ data, closeModal }) => {
         {data[0] !== undefined && 
         <MapResultCarousel
           data={data}
+          initSlide={initSlide}
         />}
         {/* {data[0] !== undefined && (
           <div className={Style.MapList}>
