@@ -76,22 +76,6 @@ export default function useInfiniteSearch(
             ? paramsSerializer(filterValue.hotel)
             : "HOTEL",
       });
-    } else if (mapBoundValue > 0) {
-      return (parmas = {
-        day:
-          filterValue.rent && filterValue.rent.includes("hDay") ? true : false,
-        checkinDate: FormattingDate(new Date(searchDate.start)),
-        checkoutDate: FormattingDate(new Date(searchDate.end)),
-        adult: adultCounterValue,
-        child: childCounterValue,
-        //query: query,
-        top: mapBoundNorthEastValue["lat"],
-        right: mapBoundNorthEastValue["lng"],
-        bottom: mapBoundSouthWestValue["lat"],
-        left: mapBoundSouthWestValue["lng"],
-        searchType: "GEO_BOUNDING",
-        size: toPageNumber,
-      });
     } else {
       return (parmas = {
         day:
@@ -163,8 +147,48 @@ export default function useInfiniteSearch(
     childCounterValue,
     searchTypeValue,
     filterValue,
-    mapBoundValue,
   ]);
+
+  useEffect(() => {
+    setLoading(true);
+    setError(false);
+
+    var param = {
+      day: filterValue.rent && filterValue.rent.includes("hDay") ? true : false,
+      checkinDate: FormattingDate(new Date(searchDate.start)),
+      checkoutDate: FormattingDate(new Date(searchDate.end)),
+      adult: adultCounterValue,
+      child: childCounterValue,
+      top: mapBoundNorthEastValue["lat"],
+      right: mapBoundNorthEastValue["lng"],
+      bottom: mapBoundSouthWestValue["lat"],
+      left: mapBoundSouthWestValue["lng"],
+      searchType: "GEO_BOUNDING",
+      size: toPageNumber,
+    };
+    // debugger;
+    axios({
+      method: "GET",
+      url: "http://shineware.iptime.org:5050/search",
+      params: param,
+    })
+      .then((res) => {
+        console.log(res);
+        dispatch(searchResultActions.saveData(res.data.roomDocumentList));
+
+        setTotalHitCount(res.data.totalHitCount);
+        setRooms((prevState) => ({
+          ...prevState,
+          item: res.data.roomDocumentList,
+        }));
+
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setError(true);
+      });
+  }, [mapBoundValue]);
 
   return { loading, error, rooms, hasMore };
 }

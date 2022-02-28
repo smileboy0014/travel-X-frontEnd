@@ -16,10 +16,10 @@ var selectedMarker;
 const mapContainerStyle = {
   width: "100%",
   height: "100%",
-  position:'absolute',
-	left:0,
-	right:0,
-	bottom:0
+  position: "absolute",
+  left: 0,
+  right: 0,
+  bottom: 0,
 };
 
 const DetailMap = ({ lat, lng, onRequestClosed }) => {
@@ -27,9 +27,6 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
   const [slide, setSlide] = useState(false);
   const [roomData, setRoomData] = useState([]);
   const [mapObserver, setMapObserver] = useState(0);
-
-  const [test, setTest] = useState([]);
-
   const [mapSouthWest, setMapSouthWest] = useState({
     lat: "",
     lng: "",
@@ -66,7 +63,7 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
 
   const clusteringByLocation = (rooms) => {
     let clusters = [];
-    let prev = { lat: 0, lon: 0};
+    let prev = { lat: 0, lon: 0 };
     let curIndex = -1;
 
     rooms.sort((a, b) => {
@@ -79,9 +76,9 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
       }
       return a.location.lat - b.location.lat;
     });
-    
+
     rooms.map((room) => {
-      if ((room.location.lat == prev.lat) && (room.location.lon == prev.lon)) {
+      if (room.location.lat == prev.lat && room.location.lon == prev.lon) {
         clusters[curIndex].items.push(room);
         clusters[curIndex].count++;
       } else {
@@ -89,7 +86,7 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
           index: ++curIndex,
           count: 1,
           minPrice: room.basePrice,
-          items: [room]
+          items: [room],
         };
 
         clusters.push(cluster);
@@ -101,11 +98,11 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
   };
 
   const priceComma = (price) => {
-    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  }
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
 
   const addRoomMapMarker = () => {
-    console.log('addRoomMapMarker Function : ', searchDataValue[0]);
+    console.log("addRoomMapMarker Function : ", searchDataValue[0]);
     if (searchDataValue[0] !== undefined) {
       roomMap = new naver.maps.Map("roomMap", {
         center: new naver.maps.LatLng(
@@ -125,31 +122,35 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
       // }
 
       let clusters = clusteringByLocation(Array.from(searchDataValue[0]));
-      
+
       clusters.map((cluster) => {
-        let price = cluster.count == 1 ? `${cluster.minPrice}` : `${cluster.minPrice} ~`;
+        let price =
+          cluster.count == 1 ? `${cluster.minPrice}` : `${cluster.minPrice} ~`;
         var roomMapMarker = new naver.maps.Marker({
           map: roomMap,
           title: cluster.items[0].propertyName,
           icon: {
-            content: 
+            content:
               `<button id="map_${cluster.items[0].roomId}" class="MapPin">` +
-                '<span class="MapPin-count">' + 
-                  cluster.count +
-                '</span>' +
-                '<span class="MapPin-price">' + 
-                  priceComma(price) + 
-                '</span>' +
-              '</button>',
+              '<span class="MapPin-count">' +
+              cluster.count +
+              "</span>" +
+              '<span class="MapPin-price">' +
+              priceComma(price) +
+              "</span>" +
+              "</button>",
             size: new naver.maps.Size(24, 37),
             anchor: new naver.maps.Point(12, 37),
-            elementId: `map_${cluster.items[0].roomId}`
+            elementId: `map_${cluster.items[0].roomId}`,
           },
-          position: new naver.maps.LatLng(cluster.items[0].location.lat, cluster.items[0].location.lon),
+          position: new naver.maps.LatLng(
+            cluster.items[0].location.lat,
+            cluster.items[0].location.lon
+          ),
         });
 
         let mobileWindow = [];
-        cluster.items.map(room => {
+        cluster.items.map((room) => {
           mobileWindow.push({
             img: room.images[0],
             type: room.propertyType,
@@ -164,11 +165,15 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
         markers.push(roomMapMarker);
 
         roomMapMarker.addListener("click", function (e) {
-          if (selectedId != "" && selectedMarker != null && e.domEvent.target.parentElement.id != selectedId) {
+          if (
+            selectedId != "" &&
+            selectedMarker != null &&
+            e.domEvent.target.parentElement.id != selectedId
+          ) {
             document.getElementById(selectedId).className = "MapPin";
             selectedMarker.setZIndex(100);
           }
-          
+
           highlightMarker(e.overlay);
           selectedId = e.domEvent.target.parentElement.id;
           selectedMarker = e.overlay;
@@ -176,18 +181,12 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
 
         recognizer.add(roomMapMarker);
       });
-    };
+    }
 
     naver.maps.Event.addListener(roomMap, "bounds_changed", function (e) {
       var bounds = roomMap.getBounds();
       var southWest = bounds.getSW();
       var northEast = bounds.getNE();
-
-      // console.log(bounds);
-      // console.log(southWest);
-      // console.log(northEast);
-
-      setTest(bounds);
 
       setMapSouthWest({
         lat: southWest._lat,
@@ -207,7 +206,8 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
     function highlightMarker(roomMapMarker) {
       console.log(document.getElementById(roomMapMarker.icon.elementId));
       if (document.getElementById(roomMapMarker.icon.elementId) != null) {
-        document.getElementById(roomMapMarker.icon.elementId).className = "MapPin is-Active";
+        document.getElementById(roomMapMarker.icon.elementId).className =
+          "MapPin is-Active";
       }
 
       roomMapMarker.setZIndex(1000);
@@ -216,9 +216,9 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
 
     function getClickHandler(seq) {
       return (e) => {
-        console.log('mobileData :', mobileWindows[seq]);
+        console.log("mobileData :", mobileWindows[seq]);
         setRoomData(mobileWindows[seq]);
-      }
+      };
     }
   };
 
@@ -231,11 +231,7 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
     addRoomMapMarker();
   }, [searchDataValue]);
 
-  useEffect(() => {
-    // console.log("aaaa: " + JSON.stringify(mapSouthWest));
-    // console.log("bbbb: " + JSON.stringify(mapNorthEast));
-    // console.log(test);
-  }, [mapSouthWest, mapNorthEast, test]);
+  // useEffect(() => {}, [mapSouthWest, mapNorthEast, test]);
 
   const onSearchMap = () => {
     dispatch(mapBoundActions.increment());
