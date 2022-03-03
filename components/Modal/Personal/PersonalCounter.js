@@ -3,21 +3,22 @@ import { useSelector, useDispatch } from "react-redux";
 import * as adultCounterActions from "../../../redux/store/modules/adultCounter";
 import * as childCounterActions from "../../../redux/store/modules/chlidCounter";
 import Style from "../../../styles/FilterButton.module.css";
+import cx from 'classnames';
 
 export default function PersonalCounter() {
   const dispatch = useDispatch();
-  const adiltValue = useSelector(({ adultCounter }) => adultCounter.value);
+  const adultValue = useSelector(({ adultCounter }) => adultCounter.value);
   const childValue = useSelector(({ childCounter }) => childCounter.value);
 
   const adultPlus = useCallback(
-    ({ adiltValue }) => {
-      dispatch(adultCounterActions.increment({ adiltValue }));
+    ({ adultValue }) => {
+      dispatch(adultCounterActions.increment({ adultValue }));
     },
     [dispatch]
   );
   const adultMinus = useCallback(
-    ({ adiltValue }) => {
-      dispatch(adultCounterActions.decrement({ adiltValue }));
+    ({ adultValue }) => {
+      dispatch(adultCounterActions.decrement({ adultValue }));
     },
     [dispatch]
   );
@@ -50,15 +51,18 @@ export default function PersonalCounter() {
             <dd className={Style.FilterNumberListCont}>
               <div className={Style.BasicCount}>
                 <button
+                  disabled={adultValue == 0}
                   onClick={adultMinus}
-                  className={Style.BasicCount_button_minus}
-                ></button>
-                <span className={Style.BasicCount_text}>{adiltValue}</span>
+                  className={adultValue == 0 ? Style.is_disabled_BasicCount_button_minus : Style.BasicCount_button_minus}
+                >
+                  <span className={Style.ab_text}>minus</span>
+                </button>
+                <span className={Style.BasicCount_text}>{adultValue}</span>
                 <button
                   onClick={adultPlus}
                   className={Style.BasicCount_button_plus}
                 >
-                  <span className={Style.ab_text}>pluse</span>
+                  <span className={Style.ab_text}>plus</span>
                 </button>
               </div>
             </dd>
@@ -78,8 +82,9 @@ export default function PersonalCounter() {
             <dd className={Style.FilterNumberListCont}>
               <div className={Style.BasicCount}>
                 <button
+                  disabled={childValue == 0}
                   onClick={childMinus}
-                  className={Style.BasicCount_button_minus}
+                  className={childValue == 0 ? Style.is_disabled_BasicCount_button_minus : Style.BasicCount_button_minus}
                 ></button>
                 <span className={Style.BasicCount_text}>{childValue}</span>
                 <button
@@ -106,10 +111,11 @@ export default function PersonalCounter() {
             <dd className={Style.FilterNumberListCont}>
               <div className={Style.BasicCount}>
                 <button
+                  disabled={adultValue == 0}
                   onClick={adultMinus}
-                  className={Style.BasicCount_button_minus}
+                  className={adultValue == 0 ? Style.is_disabled_BasicCount_button_minus : Style.BasicCount_button_minus}
                 ></button>
-                <span className={Style.BasicCount_text}>{adiltValue}</span>
+                <span className={Style.BasicCount_text}>{adultValue}</span>
                 <button
                   onClick={adultPlus}
                   className={Style.BasicCount_button_plus}
