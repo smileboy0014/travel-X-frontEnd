@@ -4,20 +4,13 @@ const childCounter = createSlice({
   name: "childCounter",
   initialState,
   reducers: {
-    increment: (state) => {
-      if (state.value >= 0) {
-        state.value += 1;
-      }
-    },
-    decrement: (state) => {
-      if (state.value > 0) {
-        state.value -= 1;
-      }
+    setCount: (state, action) => {
+      state.value = action.payload;
     },
     reset: (state) => {
-      state.value = 0;
+      state.value = 1;
     },
   },
 });
-export const { increment, decrement, reset } = childCounter.actions; // 액션 생성함수
+export const { setCount, reset } = childCounter.actions; // 액션 생성함수
 export default childCounter.reducer; // 리듀서
