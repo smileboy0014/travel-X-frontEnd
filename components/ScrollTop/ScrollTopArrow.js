@@ -29,7 +29,7 @@ const ScrollTopArrow = () => {
       className={style.scrollTop}
       onClick={scrollTop}
       size="40"
-      style={{ height: 100, display: showScroll ? "flex" : "none" }}
+      style={{ height: 50, display: showScroll ? "flex" : "none" }}
     />
   );
 };

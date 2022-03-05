@@ -1,203 +1,214 @@
-import React, { useState, useEffect } from "react";
-import { useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 import * as roomFilterActions from "../../../redux/store/modules/roomFilter";
+import Style from "../../../styles/FilterButton.module.css";
 
-const RoomFilter = () => {
-  const [checkedInputs, setCheckedInputs] = useState([]);
-  const [radioInputs, setRadioInputs] = useState("");
+
+
+const RoomFilter = ({ onRequestClear, onSetClear, onRequestClose }) => {
+  const router = useRouter();
+  const [checkedRentInputs, setCheckedRentInputs] = useState([]);
+  const [checkedHotelInputs, setCheckedHotelInputs] = useState([]);
   const dispatch = useDispatch();
+  const filterValue = useSelector(({roomFilter}) => roomFilter);
 
-  const handleClickRadioButton = (radioBtnName) => {
-    setRadioInputs(radioBtnName);
-  };
+  useEffect(()=>{
+   
+    if(filterValue != null && filterValue.rent != null && filterValue.rent.length > 0){
+      setCheckedRentInputs(filterValue.rent);
+    }
 
-  const changeCheckHandler = (checked, id) => {
-    if (checked) {
-      setCheckedInputs([...checkedInputs, id]);
-    } else {
-      setCheckedInputs(checkedInputs.filter((el) => el !== id));
+    if(filterValue != null && filterValue.hotel != null && filterValue.hotel.length > 0){
+      setCheckedHotelInputs(filterValue.hotel);
+    }
+
+  },[filterValue]);
+
+  const changeCheckHandler = (checked, type ,id) => {
+    switch(type){
+      case "rent":
+        if (checked) {
+          setCheckedRentInputs([...checkedRentInputs, id]);
+        } else {
+          setCheckedRentInputs(checkedRentInputs.filter((el) => el !== id));
+        }
+        break;
+      case "hotel":
+        if (checked) {
+          setCheckedHotelInputs([...checkedHotelInputs, id]);
+        } else {
+          setCheckedHotelInputs(checkedHotelInputs.filter((el) => el !== id));
+        }
+        break;
     }
   };
 
+  useEffect(() => {
+    if (onRequestClear) {
+      onClearClick();
+    }
+  }, [onRequestClear]);
+
   const onClearClick = () => {
-    setCheckedInputs([]);
-    setRadioInputs("popularity");
+    // setCheckedInputs([]);
+    setCheckedRentInputs([]);
+    setCheckedHotelInputs([]);
+    if (onSetClear !== undefined) {
+      onSetClear(false);
+    }
   };
 
+
   const sendConfirm = () => {
-    console.log(checkedInputs);
-    dispatch(roomFilterActions.sendConfirm(checkedInputs));
+    const filter = {rent:checkedRentInputs, hotel:checkedHotelInputs};
+    dispatch(roomFilterActions.sendConfirm(filter));
+    onRequestClose(false);
+
+    console.log(checkedRentInputs);
+    console.log(checkedHotelInputs);
   };
 
   return (
     <div>
-      <div>
-        숙박 유형
-        <div>
-          <label>{"대실"}</label>
-          <input
-            // className={styles.checkbox}
-            type="checkbox"
-            id="hDay"
-            name="hDay"
-            onChange={(e) => {
-              changeCheckHandler(e.currentTarget.checked, "hDay");
-            }}
-            checked={checkedInputs.includes("hDay") ? true : false}
-          />
-          <label>{"숙박"}</label>
-          <input
-            // className={styles.checkbox}
-            type="checkbox"
-            id="fDay"
-            name="fDay"
-            onChange={(e) => {
-              changeCheckHandler(e.currentTarget.checked, "fDay");
-            }}
-            checked={checkedInputs.includes("fDay") ? true : false}
-          />
+      <div className={Style.FilterPopBody}>
+        <div className={Style.FilterPopItem}>
+          <div className={Style.FilterPopItem_title}>숙박 유형</div>
+          <ul className={Style.FilterPopList}>
+            <li className={Style.FilterPopList_item}>
+              <label className={Style.FilterCheck}>
+                <input
+                  className={Style.FilterCheck_input}
+                  type="checkbox"
+                  id="hDay"
+                  name="hDay"
+                  onChange={(e) => {
+                    changeCheckHandler(e.currentTarget.checked,"rent" ,"hDay");
+                  }}
+                  checked={checkedRentInputs.includes("hDay") ? true : false}
+                />
+                <span className={Style.FilterCheck_text}>대실</span>
+              </label>
+            </li>
+            <li className={Style.FilterPopList_item}>
+              <label className={Style.FilterCheck}>
+                <input
+                  className={Style.FilterCheck_input}
+                  type="checkbox"
+                  id="fDay"
+                  name="fDay"
+                  onChange={(e) => {
+                    changeCheckHandler(e.currentTarget.checked,"rent", "fDay");
+                  }}
+                  checked={checkedRentInputs.includes("fDay") ? true : false}
+                />
+                <span className={Style.FilterCheck_text}>숙박</span>
+              </label>
+            </li>
+          </ul>
+        </div>
+
+        <div className={Style.FilterPopItem}>
+          <div className={Style.FilterPopItem_title}>숙소 유형</div>
+          <ul className={Style.FilterPopList}>
+            <li className={Style.FilterPopList_item}>
+              <label className={Style.FilterCheck}>
+                <input
+                  className={Style.FilterCheck_input}
+                  type="checkbox"
+                  id="HOTEL"
+                  name="HOTEL"
+                  onChange={(e) => {
+                    changeCheckHandler(e.currentTarget.checked,"hotel" ,"HOTEL");
+                  }}
+                  checked={checkedHotelInputs.includes("HOTEL") ? true : false}
+                />
+                <span className={Style.FilterCheck_text}>호텔</span>
+              </label>
+            </li>
+            <li className={Style.FilterPopList_item}>
+              <label className={Style.FilterCheck}>
+                <input
+                  className={Style.FilterCheck_input}
+                  type="checkbox"
+                  id="MOTEL"
+                  name="MOTEL"
+                  onChange={(e) => {
+                    changeCheckHandler(e.currentTarget.checked, "hotel","MOTEL");
+                  }}
+                  checked={checkedHotelInputs.includes("MOTEL") ? true : false}
+                />
+                <span className={Style.FilterCheck_text}>모텔</span>
+              </label>
+            </li>
+            <li className={Style.FilterPopList_item}>
+              <label className={Style.FilterCheck}>
+                <input
+                  className={Style.FilterCheck_input}
+                  type="checkbox"
+                  id="PENSION"
+                  name="PENSION"
+                  onChange={(e) => {
+                    changeCheckHandler(e.currentTarget.checked,"hotel", "PENSION");
+                  }}
+                  checked={checkedHotelInputs.includes("PENSION") ? true : false}
+                />
+                <span className={Style.FilterCheck_text}>펜션</span>
+              </label>
+            </li>
+            <li className={Style.FilterPopList_item}>
+              <label className={Style.FilterCheck}>
+                <input
+                  className={Style.FilterCheck_input}
+                  type="checkbox"
+                  id="GUESTHOUSE"
+                  name="GUESTHOUSE"
+                  onChange={(e) => {
+                    changeCheckHandler(e.currentTarget.checked,"hotel", "GUESTHOUSE");
+                  }}
+                  checked={checkedHotelInputs.includes("GUESTHOUSE") ? true : false}
+                />
+                <span className={Style.FilterCheck_text}>게스트하우스</span>
+              </label>
+            </li>
+            <li className={Style.FilterPopList_item}>
+              <label className={Style.FilterCheck}>
+                <input
+                  className={Style.FilterCheck_input}
+                  type="checkbox"
+                  id="RESORT"
+                  name="RESORT"
+                  onChange={(e) => {
+                    changeCheckHandler(e.currentTarget.checked,"hotel", "RESORT");
+                  }}
+                  checked={checkedHotelInputs.includes("RESORT") ? true : false}
+                />
+                <span className={Style.FilterCheck_text}>리조트</span>
+              </label>
+            </li>
+            <li className={Style.FilterPopList_item}>
+              <label className={Style.FilterCheck}>
+                <input
+                  className={Style.FilterCheck_input}
+                  type="checkbox"
+                  id="CAMPING"
+                  name="CAMPING"
+                  onChange={(e) => {
+                    changeCheckHandler(e.currentTarget.checked,"hotel", "CAMPING");
+                  }}
+                  checked={checkedHotelInputs.includes("CAMPING") ? true : false}
+                />
+                <span className={Style.FilterCheck_text}>캠핑장</span>
+              </label>
+            </li>
+          </ul>
         </div>
       </div>
-      <p></p>
-      <div>
-        숙소 타입
-        <div>
-          <label>{"호텔"}</label>
-          <input
-            // className={styles.checkbox}
-            type="checkbox"
-            id="hotel"
-            name="hotel"
-            onChange={(e) => {
-              changeCheckHandler(e.currentTarget.checked, "hotel");
-            }}
-            checked={checkedInputs.includes("hotel") ? true : false}
-          />
-
-          <label>{"모델"}</label>
-          <input
-            // className={styles.checkbox}
-            type="checkbox"
-            id="motel"
-            name="motel"
-            onChange={(e) => {
-              changeCheckHandler(e.currentTarget.checked, "motel");
-            }}
-            checked={checkedInputs.includes("motel") ? true : false}
-          />
-
-          <label>{"펜션"}</label>
-          <input
-            // className={styles.checkbox}
-            type="checkbox"
-            id="pension"
-            name="pension"
-            onChange={(e) => {
-              changeCheckHandler(e.currentTarget.checked, "pension");
-            }}
-            checked={checkedInputs.includes("pension") ? true : false}
-          />
-        </div>
-        <div>
-          <label>{"게스트하우스"}</label>
-          <input
-            // className={styles.checkbox}
-            type="checkbox"
-            id="guestHose"
-            name="guestHose"
-            onChange={(e) => {
-              changeCheckHandler(e.currentTarget.checked, "guestHose");
-            }}
-            checked={checkedInputs.includes("guestHose") ? true : false}
-          />
-
-          <label>{"리조트"}</label>
-          <input
-            // className={styles.checkbox}
-            type="checkbox"
-            id="resort"
-            name="resort"
-            onChange={(e) => {
-              changeCheckHandler(e.currentTarget.checked, "resort");
-            }}
-            checked={checkedInputs.includes("resort") ? true : false}
-          />
-
-          <label>{"캠핑장"}</label>
-          <input
-            // className={styles.checkbox}
-            type="checkbox"
-            id="camping"
-            name="camping"
-            onChange={(e) => {
-              changeCheckHandler(e.currentTarget.checked, "camping");
-            }}
-            checked={checkedInputs.includes("camping") ? true : false}
-          />
-        </div>
+      <div className={Style.FilterPopFooter}>
+        <button className={Style.FilterPopFooter_button} onClick={sendConfirm}>
+          선택하기
+        </button>
       </div>
-      <p></p>
-
-      <div>
-        <input
-          id="popularity"
-          value="popularity"
-          name="popularity"
-          type="radio"
-          checked={radioInputs === "popularity"}
-          onChange={() => handleClickRadioButton("popularity")}
-        />
-        인기순
-        <input
-          id="recent"
-          value="recent"
-          name="recent"
-          type="radio"
-          checked={radioInputs === "recent"}
-          onChange={() => handleClickRadioButton("recent")}
-        />
-        최신순
-        <input
-          id="distance"
-          value="distance"
-          name="distance"
-          type="radio"
-          checked={radioInputs === "distance"}
-          onChange={() => handleClickRadioButton("distance")}
-        />
-        거리순
-        <input
-          id="rating"
-          value="rating"
-          name="rating"
-          type="radio"
-          checked={radioInputs === "rating"}
-          onChange={() => handleClickRadioButton("rating")}
-        />
-        평점순
-        <input
-          id="low_price"
-          value="low_price"
-          name="low_price"
-          type="radio"
-          checked={radioInputs === "low_price"}
-          onChange={() => handleClickRadioButton("low_price")}
-        />
-        낮은 가격순
-        <input
-          id="high_price"
-          value="high_price"
-          name="high_price"
-          type="radio"
-          checked={radioInputs === "high_price"}
-          onChange={() => handleClickRadioButton("high_price")}
-        />
-        높은 가격순
-      </div>
-      <p></p>
-      <button onClick={onClearClick}>초기화</button>
-      <button onClick={sendConfirm}>적용</button>
     </div>
   );
 };

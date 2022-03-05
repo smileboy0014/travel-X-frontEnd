@@ -1,0 +1,13 @@
+.progressDiv {
+  background-color: rgb(233, 233, 233);
+  border-radius: .5rem;
+  height: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.progress {
+  background-color: rgb(62, 122, 235);
+  height: 20px;
+  border-radius: 1rem;
+}

@@ -1,188 +1,104 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import Link from "next/link";
-import { useRouter } from "next/router";
-// import Modal from "../components/Modal/RoomFilterModal";
-import PesonalModal from "../components/Modal/Personal/PersonalModal";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useState, useRef, useCallback, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import Style from "../styles/SearchResult.module.css";
+import SearchBar from "./search/SearchBar";
+import RecentSearch from "./search/RecentSearch";
+import PersonalFilterButton from "../components/Button/OptionFilter/PersonalFilterButton";
+import CalendarFilterButton from "../components/Button/OptionFilter/CalendarFilterButton";
+import OptionFilterButton from "../components/Button/OptionFilter/OptionFilterButton";
+import OrderByFilterButton from "../components/Button/OptionFilter/OrderByFilterButton";
+import MapFixButton from "../components/Button/Fix/MapFixButton";
+import CalendarModal from "../components/Modal/Calendar/CalendarModal";
+import * as dateActions from "../redux/store/modules/date";
 
-import RoomFilterModal from "../components/Modal/RoomFilter/RoomFilterModal";
-
-const search = () => {
-  const [keywords, setKeywords] = useState([]);
-  const [searchValue, setSearchValue] = useState("");
-  const [autoCompltData, setAutoCompltData] = useState([]);
-  const [showPersonalModal, setPersonalShowModal] = useState(false);
-  const [showRoomFilterModal, setRoomFilterShowModal] = useState(false);
-  const router = useRouter();
-  const adultCounterValue = useSelector(
-    ({ adultCounter }) => adultCounter.value
-  );
-  const childCounterValue = useSelector(
-    ({ childCounter }) => childCounter.value
-  );
-  const roomFilterValue = useSelector(({ roomFilter }) => roomFilter.filter);
+const Search = () => {
+  const [recentListView, setRecentListView] = useState(false);
+  const dispatch = useDispatch();
+  const { searchDate } = useSelector((state) => state.date);
+  const [searchValue, setSearchValue] = useState();
+  const [searchAutoComptValue, setSearchAutoComptValue] = useState([]);
+  const [
+    searchAutoComptPropertyNameValue,
+    setSearchAutoComptPropertyNameValue,
+  ] = useState([]);
+  const [searchTxt, setSearchTxt] = useState("");
+  const [calendarModalOpen, setCalendarModalOpen] = useState(false);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const result = localStorage.getItem("keywords") || "[]";
-      setKeywords(JSON.parse(result));
-    }
+    setSearchAutoComptValue([]);
+  }, [searchValue]);
+
+  useEffect(() => {
+    setRecentListView(false);
+  }, [searchAutoComptValue]);
+
+  useEffect(() => {
+    dispatch(
+      dateActions.setDetailDate({
+        start: searchDate.start,
+        end: searchDate.end,
+      })
+    );
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem("keywords", JSON.stringify(keywords));
-  }, [keywords]);
-
-  const handleAddKeyword = () => {
-    router.push(`/view/${searchValue}`);
-    const newKeyword = {
-      id: Date.now(),
-      text:
-        searchValue +
-        "(성인: " +
-        adultCounterValue +
-        "어린이 " +
-        childCounterValue +
-        ")",
-    };
-    setKeywords([newKeyword, ...keywords]);
-  };
-
-  // 단일 검색어 삭제
-  const handleRemoveKeyword = (id) => {
-    const nextKeyword = keywords.filter((keyword) => {
-      return keyword.id != id;
-    });
-    setKeywords(nextKeyword);
-  };
-
-  //검색어 전체 삭제
-  const handleClearKeywords = () => {
-    setKeywords([]);
-  };
-
-  const onChangeSearch = (e) => {
-    setSearchValue(e.target.value);
-  };
-
-  useEffect(() => {
-    console.log(searchValue);
-  }, [searchValue]);
-
-  useEffect(() => {
-    const timerId = setTimeout(() => {
-      getAutoComplt();
-    }, 100);
-    return () => clearTimeout(timerId);
-  }, [searchValue]);
-
-  const getAutoComplt = () => {
-    axios
-      .get("http://shineware.iptime.org:5051/autocomplete?query=" + searchValue)
-      .then((res) => {
-        console.log(res.data);
-        setAutoCompltData(res.data);
-      })
-      .catch((Error) => {
-        console.log(Error);
-      });
-  };
-
-  const onKeyPress = (e) => {
-    if (e.key == "Enter") {
-      handleAddKeyword();
-    }
-  };
-
-  const onListClick = (value) => {
-    const newKeyword = {
-      id: Date.now(),
-      text:
-        value +
-        "(성인: " +
-        adultCounterValue +
-        "어린이 " +
-        childCounterValue +
-        ")",
-    };
-    setKeywords([newKeyword, ...keywords]);
-  };
-
   return (
-    <div>
-      <div>
-        <input
-          type="search"
-          onChange={onChangeSearch}
-          onKeyPress={onKeyPress}
-          placeholder="조회조건"
-        />
+    <div className={Style.site}>
+      <div className={Style.site_body}>
+        <div className={Style.ListFilter}>
+          <div className={Style.site_container}>
+            <div>
+              <SearchBar
+                getSearchValue={(value) => {
+                  setSearchValue(value);
+                }}
+                getSearchAutoComptValue={(value) => {
+                  setSearchAutoComptValue(value);
+                }}
+                getSearchAutoComptPropertyNameValue={(value) => {
+                  setSearchAutoComptPropertyNameValue(value);
+                }}
+                getRecentListView={(value) => {
+                  setRecentListView(value);
+                }}
+                getSearchTxt={(value) => {
+                  setSearchTxt(value);
+                }}
+              ></SearchBar>
 
-        <button onClick={handleAddKeyword}>
-          <div>{"확인"}</div>
-        </button>
-
-        <button onClick={() => setRoomFilterShowModal(true)}>룸타입</button>
-        <RoomFilterModal
-          onClose={() => setRoomFilterShowModal(false)}
-          show={showRoomFilterModal}
-        ></RoomFilterModal>
-
-        <button onClick={() => setPersonalShowModal(true)}>인원수</button>
-        <PesonalModal
-          onClose={() => setPersonalShowModal(false)}
-          show={showPersonalModal}
-        ></PesonalModal>
-        <p />
-        <div>
-          <div>
-            {"성인: " + adultCounterValue}
-            {"어린이: " + childCounterValue}
+              <div className={Style.ListFilterValue}>
+                <div className={Style.ListFilterValue_list}>
+                  <CalendarFilterButton
+                    open={() => setCalendarModalOpen(true)}
+                  ></CalendarFilterButton>
+                  <PersonalFilterButton></PersonalFilterButton>
+                </div>
+              </div>
+            </div>
           </div>
-          <div>{"룸필터값: " + roomFilterValue}</div>
         </div>
-      </div>
-      {autoCompltData.length > 0 ? (
-        autoCompltData.map((item, index) => (
-          <Link href="/view/[id]" as={`/view/${item}`} key={index}>
-            <a onClick={() => onListClick(item)}>
-              <div>{item}</div>
-              <p></p>
-            </a>
-          </Link>
-        ))
-      ) : (
-        <React.Fragment>
-          <div>
-            <h2>최근 검색어</h2>
-            {keywords.length ? (
-              <button type="button" onClick={handleClearKeywords}>
-                전체 삭제
-              </button>
-            ) : (
-              ""
-            )}
-          </div>
 
-          <ul>
-            {keywords.length ? (
-              keywords.map((k) => (
-                <li key={k.id}>
-                  {k.text}
-                  <button onClick={() => handleRemoveKeyword(k.id)}>
-                    삭제
-                  </button>
-                </li>
-              ))
-            ) : (
-              <div>최근 검색어가 없습니다</div>
-            )}
-          </ul>
-        </React.Fragment>
-      )}
+        <div className={Style.TotalSearch}>
+          <RecentSearch
+            sendSearchValue={searchValue}
+            sendSearchAutoComptValue={searchAutoComptValue}
+            sendSearchAutoComptPropertyNameValue={
+              searchAutoComptPropertyNameValue
+            }
+            getSearchValue={(value) => {
+              setSearchValue(value);
+            }}
+            sendSearchTxt={searchTxt}
+          />
+        </div>
+
+        <MapFixButton />
+        <CalendarModal
+          isOpen={calendarModalOpen}
+          onRequestClose={() => setCalendarModalOpen(false)}
+        />
+      </div>
     </div>
   );
 };
 
-export default search;
+export default Search;
