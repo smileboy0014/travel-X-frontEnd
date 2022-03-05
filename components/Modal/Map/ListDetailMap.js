@@ -103,7 +103,7 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
 
   const addRoomMapMarker = () => {
     console.log("addRoomMapMarker Function : ", searchDataValue[0]);
-    if (searchDataValue[0] !== undefined) {
+    if (searchDataValue[0][0] !== undefined) {
       roomMap = new naver.maps.Map("roomMap", {
         center: new naver.maps.LatLng(
           searchDataValue[0][0].location.lat,
@@ -199,8 +199,12 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
       });
     });
 
-    for (var i = 0, ii = clusters.length; i < ii; i++) {
-      naver.maps.Event.addListener(markers[i], "click", getClickHandler(i));
+
+
+    if (clusters != undefined) {
+      for (var i = 0, ii = clusters.length; i < ii; i++) {
+        naver.maps.Event.addListener(markers[i], "click", getClickHandler(i));
+      }
     }
 
     function highlightMarker(roomMapMarker) {
