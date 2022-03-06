@@ -5,33 +5,30 @@ import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import useInfiniteSearch from "../../../components/InfiniteScroll/useInfiniteSearch";
 import Style from "../../../styles/SearchResult.module.css";
-import LodingStyles from "../../../styles/CommonModal.module.css";
-import Modal from "react-modal";
 import SearchBar from "../../search/SearchBar";
 import RecentSearch from "../../search/RecentSearch";
 import PersonalFilterButton from "../../../components/Button/OptionFilter/PersonalFilterButton";
 import CalendarFilterButton from "../../../components/Button/OptionFilter/CalendarFilterButton";
 import OptionFilterButton from "../../../components/Button/OptionFilter/OptionFilterButton";
 import OrderByFilterButton from "../../../components/Button/OptionFilter/OrderByFilterButton";
-import DetailTopNavbar from "../../../components/NavBar/DetailTopNavbar";
-// import MapFixButton from "../../../components/Button/Fix/MapFixButton";
-import SearchMapModal from "../../../components/Modal/Map/SearchMapModal";
 import CalendarModal from "../../../components/Modal/Calendar/CalendarModal";
-import * as dateActions from "../../../redux/store/modules/date";
 import ListDetailMap from "../../../components/Modal/Map/ListDetailMap";
 
 const Post = ({ item }) => {
   const [showModal, setShowModal] = useState(false);
   const [recentListView, setRecentListView] = useState(false);
+  const [listFilterIsUp, setListFilterIsUp] = useState(false);
+  const [lastScrollTop, setLastScrollTop] = useState(0);
   const router = useRouter();
   const { id } = router.query;
   const dispatch = useDispatch();
-  const { searchDate } = useSelector((state) => state.date);
+  const scrollYValue = useSelector(({ scrollY }) => scrollY.value);
 
   const [toPageNumber, setToPageNumber] = useState(10);
   const [fromPageNumber, setFromPageNumber] = useState(0);
 
   const filterValue = useSelector(({roomFilter}) => roomFilter);
+  const DELTA = 5;
 
   useEffect(()=>{
     // debugger;
@@ -80,14 +77,22 @@ const Post = ({ item }) => {
     setRecentListView(false);
   }, [searchAutoComptValue]);
 
-  // useEffect(() => {
-  //   dispatch(
-  //     dateActions.setDetailDate({
-  //       start: searchDate.start,
-  //       end: searchDate.end,
-  //     })
-  //   );
-  // }, []);
+  useEffect(() => {
+    if (Math.abs(lastScrollTop - scrollYValue <= DELTA)) {
+      return;
+    }
+    let yValue = scrollYValue.scrollYValue;
+    let navbarHeight = document.getElementById("ListFilter").offsetHeight;
+
+    if (yValue > lastScrollTop && yValue > navbarHeight){
+      setListFilterIsUp(true);
+		} else {
+			if(yValue + window.outerHeight < document.documentElement.scrollHeight) {
+        setListFilterIsUp(false);
+			}
+		}
+		setLastScrollTop(scrollYValue.scrollYValue);
+  }, [scrollYValue])
 
   useEffect(() => {
     rooms.item && console.log(rooms.item.length);
@@ -96,7 +101,7 @@ const Post = ({ item }) => {
   return (
     <div className={Style.site}>
       <div className={Style.site_body}>
-        <div className={Style.ListFilter}>
+        <div id="ListFilter" className={Style.ListFilter}>
           <div className={Style.site_container}>
             <div>
               <SearchBar
@@ -118,7 +123,7 @@ const Post = ({ item }) => {
                 }}
               ></SearchBar>
 
-              <div className={Style.ListFilterValue}>
+              <div className={listFilterIsUp ? Style.ListFilterValue_is_up : Style.ListFilterValue}>
                 <div className={Style.ListFilterValue_list}>
                   <CalendarFilterButton
                     open={() => setCalendarModalOpen(true)}

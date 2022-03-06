@@ -77,6 +77,11 @@
   margin-top: 0.625rem;
 }
 
+.ListFilterValue_is_up {
+  margin-top: 0.625rem;
+	display:none;
+}
+
 .ListFilterValue_list::after {
   content: "";
   display: table;

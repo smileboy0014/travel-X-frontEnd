@@ -10,4 +10,5 @@ const scrollYSlice = createSlice({
   },
 });
 export const { scrollY } = scrollYSlice.actions; // 액션 생성함수
+export const scrollYValue = (state) => state.value.value;
 export default scrollYSlice.reducer; // 리듀서
