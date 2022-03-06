@@ -39,26 +39,43 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    console.log("searchDataValue: ", searchDataValue);
-  }, [searchDataValue]);
-
-  const initMap = () => {
-    roomMap = new naver.maps.Map("roomMap", {
-      center: new naver.maps.LatLng(lat, lng),
-      zoom: 10,
-    });
-
-    recognizer = new MarkerOverlapRecognizer({
-      highlightRect: false,
-      tolerance: 5,
-    });
-    recognizer.setMap(roomMap);
-
+  const initVars = () => {
     markers = [];
     mobileWindows = [];
+    recognizer = null;
     selectedId = "";
-    selectedMarker;
+    selectedMarker = null;
+  };
+
+  const initMap = () => {
+    if (searchDataValue[0] !== undefined && searchDataValue[0][0] !== undefined) {
+      if (roomMap == null) {
+        roomMap = new naver.maps.Map("roomMap", {
+          center: new naver.maps.LatLng(
+            searchDataValue[0][0].location.lat,
+            searchDataValue[0][0].location.lon
+          ),
+          zoom: 14,
+        });
+      } else {
+        roomMap.center = new naver.maps.LatLng(
+          searchDataValue[0][0].location.lat,
+          searchDataValue[0][0].location.lon
+        );
+      }
+      
+
+      recognizer = new MarkerOverlapRecognizer({
+        highlightRect: false,
+        tolerance: 5,
+      });
+      recognizer.setMap(roomMap);
+  
+      markers = [];
+      mobileWindows = [];
+      selectedId = "";
+      selectedMarker;
+    }
   };
 
   const clusteringByLocation = (rooms) => {
@@ -104,23 +121,7 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
   const addRoomMapMarker = () => {
     console.log("addRoomMapMarker Function : ", searchDataValue[0]);
     if (searchDataValue[0] !== undefined) {
-      roomMap = new naver.maps.Map("roomMap", {
-        center: new naver.maps.LatLng(
-          searchDataValue[0][0].location.lat,
-          searchDataValue[0][0].location.lon
-        ),
-        zoom: 14,
-      });
-
-      // if (roomMap != null) {
-      //   var w = window.outerWidth;
-      //   var h = window.outerHeight;
-      //   // 지도 element
-      //   var el = document.getElementById("roomMap");
-      //   el.style.width = "100%";
-      //   el.style.height = h + "px";
-      // }
-
+      
       let clusters = clusteringByLocation(Array.from(searchDataValue[0]));
 
       clusters.map((cluster) => {
@@ -204,7 +205,6 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
     }
 
     function highlightMarker(roomMapMarker) {
-      console.log(document.getElementById(roomMapMarker.icon.elementId));
       if (document.getElementById(roomMapMarker.icon.elementId) != null) {
         document.getElementById(roomMapMarker.icon.elementId).className =
           "MapPin is-Active";
@@ -216,7 +216,6 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
 
     function getClickHandler(seq) {
       return (e) => {
-        console.log("mobileData :", mobileWindows[seq]);
         setRoomData(mobileWindows[seq]);
       };
     }
@@ -227,8 +226,11 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
   }, [roomData]);
 
   useEffect(() => {
+    console.log("searchDataValue: ", searchDataValue);
+    initVars();
     initMap();
     addRoomMapMarker();
+    setRoomData([]);
   }, [searchDataValue]);
 
   // useEffect(() => {}, [mapSouthWest, mapNorthEast, test]);
