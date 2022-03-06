@@ -113,32 +113,41 @@ export default function useInfiniteSearch(
   }, [mapBoundValue]);
 
   useEffect(() => {
-    setLoading(true);
-    setError(false);
-
-    let param = setParam();
-    // debugger;
-    axios({
-      method: "GET",
-      url: "http://shineware.iptime.org:5050/search",
-      params: param,
-    })
-      .then((res) => {
-        console.log(res);
-        dispatch(searchResultActions.saveData(res.data.roomDocumentList));
-
-        setTotalHitCount(res.data.totalHitCount);
-        setRooms((prevState) => ({
-          ...prevState,
-          item: res.data.roomDocumentList,
-        }));
-
-        setLoading(false);
+    if (query != undefined) {
+      setLoading(true);
+      setError(false);
+      console.log('query', query);
+      console.log('toPageNumber', toPageNumber);
+      console.log('searchDate', searchDate);
+      console.log('adultCounterValue', adultCounterValue);
+      console.log('childCounterValue', childCounterValue);
+      console.log('searchTypeValue', searchTypeValue);
+      console.log('filterValue', filterValue);
+      let param = setParam();
+      // debugger;
+      axios({
+        method: "GET",
+        url: "http://shineware.iptime.org:5050/search",
+        params: param,
       })
-      .catch((error) => {
-        console.log(error);
-        setError(true);
-      });
+        .then((res) => {
+          console.log(res);
+          dispatch(searchResultActions.saveData(res.data.roomDocumentList));
+  
+          setTotalHitCount(res.data.totalHitCount);
+          setRooms((prevState) => ({
+            ...prevState,
+            item: res.data.roomDocumentList,
+          }));
+  
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.log(error);
+          setError(true);
+        });
+    }
+    
   }, [
     query,
     toPageNumber,
