@@ -467,7 +467,8 @@ body {
   width: 0.3125rem !important;
   height: 0.3125rem !important;
   border-radius: 100% !important;
-  background-color: #fff !important;
+  /* background-color: #fff !important; */
+  background-color: rgb(216, 216, 216) !important;
   display: inline-block !important;
   margin: 0 0.125rem !important;
   opacity: 1 !important;
