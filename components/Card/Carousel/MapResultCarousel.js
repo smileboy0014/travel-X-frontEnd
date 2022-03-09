@@ -7,7 +7,7 @@ import "swiper/css";
 import "swiper/css";
 import "swiper/css/pagination";
 import 'swiper/css/scrollbar';
-// import 'swiper/css/virtual';
+
 
 const sampleImage =
   "http://image.goodchoice.kr/resize_490x348/adimg_new/891/279402/934791805cb0b0b25a27081f1dd3f584.jpg";
@@ -29,16 +29,16 @@ const MapResultCarousel = (props, ref) => {
       <div className={CardStyle.MapList}>
         <div className={CardStyle.MapList_link}>
         <Swiper
-          // modules={[Pagination]}
-          // pagination={true}
-          loop={true}
-          spaceBetween={30}
-          slidesPerView={3}
-          navigation
+          modules={[Pagination]}
+          pagination={true}
+          // loop={true}
+          // spaceBetween={30}
+          // slidesPerView={1}
+          // navigation
           // pagination={{ clickable: true }}
           // scrollbar={{ draggable: true }}
-          onSwiper={(swiper) => console.log(swiper)}
-          onSlideChange={() => console.log('slide change')}
+          // onSwiper={(swiper) => console.log(swiper)}
+          // onSlideChange={() => console.log('slide change')}
           
           className="swiper-container"
         >
