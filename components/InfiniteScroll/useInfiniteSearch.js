@@ -105,7 +105,6 @@ export default function useInfiniteSearch(
 
   useEffect(() => {
     console.log("9999999: " + mapBoundValue);
-
     console.log("88888888: " + mapBoundNorthEastValue["lat"]);
     console.log("88888888: " + mapBoundNorthEastValue["lng"]);
     console.log("99999999: " + mapBoundSouthWestValue["lat"]);
@@ -159,44 +158,48 @@ export default function useInfiniteSearch(
   ]);
 
   useEffect(() => {
-    setLoading(true);
-    setError(false);
-
-    var param = {
-      day: filterValue.rent && filterValue.rent.includes("hDay") ? true : false,
-      checkinDate: FormattingDate(new Date(searchDate.start)),
-      checkoutDate: FormattingDate(new Date(searchDate.end)),
-      adult: adultCounterValue,
-      child: childCounterValue,
-      top: mapBoundNorthEastValue["lat"],
-      right: mapBoundNorthEastValue["lng"],
-      bottom: mapBoundSouthWestValue["lat"],
-      left: mapBoundSouthWestValue["lng"],
-      searchType: "GEO_BOUNDING",
-      size: toPageNumber,
-    };
-    // debugger;
-    axios({
-      method: "GET",
-      url: "http://shineware.iptime.org:5050/search",
-      params: param,
-    })
-      .then((res) => {
-        console.log(res);
-        dispatch(searchResultActions.saveData(res.data.roomDocumentList));
-
-        setTotalHitCount(res.data.totalHitCount);
-        setRooms((prevState) => ({
-          ...prevState,
-          item: res.data.roomDocumentList,
-        }));
-
-        setLoading(false);
+    if (mapBoundValue > 0) {
+      var param = {
+        day: filterValue.rent && filterValue.rent.includes("hDay") ? true : false,
+        checkinDate: FormattingDate(new Date(searchDate.start)),
+        checkoutDate: FormattingDate(new Date(searchDate.end)),
+        adult: adultCounterValue,
+        child: childCounterValue,
+        top: mapBoundNorthEastValue["lat"],
+        right: mapBoundNorthEastValue["lng"],
+        bottom: mapBoundSouthWestValue["lat"],
+        left: mapBoundSouthWestValue["lng"],
+        searchType: "GEO_BOUNDING",
+        size: toPageNumber,
+      };
+      // debugger;
+      axios({
+        method: "GET",
+        url: "http://shineware.iptime.org:5050/search",
+        params: param,
       })
-      .catch((error) => {
-        console.log(error);
-        setError(true);
-      });
+        .then((res) => {
+
+          console.log(res);
+
+          if (res.data.totalHitCount < 1) {
+            alert('검색 결과가 없습니다.');
+            return;
+          }
+
+          dispatch(searchResultActions.saveData(res.data.roomDocumentList));
+
+          setTotalHitCount(res.data.totalHitCount);
+          setRooms((prevState) => ({
+            ...prevState,
+            item: res.data.roomDocumentList,
+          }));
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+
   }, [mapBoundValue]);
 
   return { loading, error, rooms, hasMore };

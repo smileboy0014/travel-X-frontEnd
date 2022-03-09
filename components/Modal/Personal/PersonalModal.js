@@ -7,25 +7,11 @@ import * as adultCounterActions from "../../../redux/store/modules/adultCounter"
 import * as childCounterActions from "../../../redux/store/modules/chlidCounter";
 
 const PersonalModal = ({ isOpen, onRequestClose }) => {
+
+  const [clear, setClear] = useState(false);
   const dispatch = useDispatch();
-  const handleSaveClick = (e) => {
-    e.preventDefault();
-    onRequestClose(false);
-  };
 
-  const handleCloseClick = useCallback(
-    (e) => {
-      onClickReset();
-      e.preventDefault();
-      onRequestClose(false);
-    },
-    [dispatch]
-  );
 
-  const onClickReset = () => {
-    dispatch(adultCounterActions.reset());
-    dispatch(childCounterActions.reset());
-  };
 
   return (
     <div>
@@ -41,25 +27,27 @@ const PersonalModal = ({ isOpen, onRequestClose }) => {
           <div className={Style.FilterPopHeader}>
             <button
               className={Style.FilterPopHeader_reset}
-              onClick={onClickReset}
+              onClick={() => setClear(true)}
             >
               초기화
             </button>
             <div className={Style.FilterPopHeader_title}>인원수 선택</div>
             <button
               className={Style.FilterPopHeader_close}
-              onClick={handleCloseClick}
+
+              onClick={() => onRequestClose(false)}
             ></button>
           </div>
-          <PersonalCounter></PersonalCounter>
-          <div className={Style.FilterPopFooter}>
-            <button
-              className={Style.FilterPopFooter_button}
-              onClick={handleSaveClick}
-            >
-              선택하기
-            </button>
-          </div>
+          <PersonalCounter
+            onRequestClear={clear}
+            onSetClear={(value) => {
+              setClear(value);
+            }}
+
+            onRequestClose={(value) => onRequestClose(value)}
+
+          ></PersonalCounter>
+
         </div>
       </Modal>
     </div>

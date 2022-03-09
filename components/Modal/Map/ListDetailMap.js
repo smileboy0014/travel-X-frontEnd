@@ -120,8 +120,28 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
 
   const addRoomMapMarker = () => {
     console.log("addRoomMapMarker Function : ", searchDataValue[0]);
+
     if (searchDataValue[0] !== undefined) {
       
+//     if (searchDataValue[0][0] !== undefined) {
+//       roomMap = new naver.maps.Map("roomMap", {
+//         center: new naver.maps.LatLng(
+//           searchDataValue[0][0].location.lat,
+//           searchDataValue[0][0].location.lon
+//         ),
+//         zoom: 14,
+//       });
+
+//       // if (roomMap != null) {
+//       //   var w = window.outerWidth;
+//       //   var h = window.outerHeight;
+//       //   // 지도 element
+//       //   var el = document.getElementById("roomMap");
+//       //   el.style.width = "100%";
+//       //   el.style.height = h + "px";
+//       // }
+
+
       let clusters = clusteringByLocation(Array.from(searchDataValue[0]));
 
       clusters.map((cluster) => {
@@ -200,8 +220,12 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
       });
     });
 
-    for (var i = 0, ii = clusters.length; i < ii; i++) {
-      naver.maps.Event.addListener(markers[i], "click", getClickHandler(i));
+
+
+    if (clusters != undefined) {
+      for (var i = 0, ii = clusters.length; i < ii; i++) {
+        naver.maps.Event.addListener(markers[i], "click", getClickHandler(i));
+      }
     }
 
     function highlightMarker(roomMapMarker) {
