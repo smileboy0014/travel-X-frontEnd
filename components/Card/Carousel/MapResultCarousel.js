@@ -48,24 +48,24 @@ const MapResultCarousel = (props, ref) => {
                 <div className={CardStyle.MapListThumb}>
                     <img
                       className={CardStyle.MapListThumb_img}
-                      src={"http://" + item.images[0]}
+                      src={"http://" + item.img}
                       alt="room-img"
                     />
                 
                 </div>
                 <div className={CardStyle.MapListCont}>
-                  <div className={CardStyle.MapListCont_meta}>{item.propertyType}</div>
-                  <div className={CardStyle.MapListCont_title}>{item.propertyName}</div>
+                  <div className={CardStyle.MapListCont_meta}>{item.type}</div>
+                  <div className={CardStyle.MapListCont_title}>{item.name}</div>
                   <div className={CardStyle.MapListContGrade}>
                     <span className={CardStyle.MapListContGrade_current}>
-                      {item.reviewSummary.averageScore.toFixed(1)}
+                      {item.averageScore.toFixed(1)}
                     </span>
                     <span className={CardStyle.MapListContGrade_total}>
-                      {"(" + item.reviewSummary.reviewCount + ")"}
+                      {"(" + item.reviewCount + ")"}
                     </span>
                   </div>
                   <div className={CardStyle.MapListCont_price}>
-                    {item.basePrice
+                    {item.price
                       .toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                     원

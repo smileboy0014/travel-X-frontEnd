@@ -76,22 +76,6 @@ export default function useInfiniteSearch(
             ? paramsSerializer(filterValue.hotel)
             : "HOTEL",
       });
-    } else if (mapBoundValue > 0) {
-      return (parmas = {
-        day:
-          filterValue.rent && filterValue.rent.includes("hDay") ? true : false,
-        checkinDate: FormattingDate(new Date(searchDate.start)),
-        checkoutDate: FormattingDate(new Date(searchDate.end)),
-        adult: adultCounterValue,
-        child: childCounterValue,
-        //query: query,
-        top: mapBoundNorthEastValue["lat"],
-        right: mapBoundNorthEastValue["lng"],
-        bottom: mapBoundSouthWestValue["lat"],
-        left: mapBoundSouthWestValue["lng"],
-        searchType: "GEO_BOUNDING",
-        size: toPageNumber,
-      });
     } else {
       return (parmas = {
         day:
@@ -129,10 +113,68 @@ export default function useInfiniteSearch(
   }, [mapBoundValue]);
 
   useEffect(() => {
+    if (query != undefined) {
+      setLoading(true);
+      setError(false);
+      console.log('query', query);
+      console.log('toPageNumber', toPageNumber);
+      console.log('searchDate', searchDate);
+      console.log('adultCounterValue', adultCounterValue);
+      console.log('childCounterValue', childCounterValue);
+      console.log('searchTypeValue', searchTypeValue);
+      console.log('filterValue', filterValue);
+      let param = setParam();
+      // debugger;
+      axios({
+        method: "GET",
+        url: "http://shineware.iptime.org:5050/search",
+        params: param,
+      })
+        .then((res) => {
+          console.log(res);
+          dispatch(searchResultActions.saveData(res.data.roomDocumentList));
+  
+          setTotalHitCount(res.data.totalHitCount);
+          setRooms((prevState) => ({
+            ...prevState,
+            item: res.data.roomDocumentList,
+          }));
+  
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.log(error);
+          setError(true);
+        });
+    }
+    
+  }, [
+    query,
+    toPageNumber,
+    searchDate,
+    adultCounterValue,
+    childCounterValue,
+    searchTypeValue,
+    filterValue,
+  ]);
+
+  useEffect(() => {
     setLoading(true);
     setError(false);
 
-    let param = setParam();
+    var param = {
+      day: filterValue.rent && filterValue.rent.includes("hDay") ? true : false,
+      checkinDate: FormattingDate(new Date(searchDate.start)),
+      checkoutDate: FormattingDate(new Date(searchDate.end)),
+      adult: adultCounterValue,
+      child: childCounterValue,
+      top: mapBoundNorthEastValue["lat"],
+      right: mapBoundNorthEastValue["lng"],
+      bottom: mapBoundSouthWestValue["lat"],
+      left: mapBoundSouthWestValue["lng"],
+      searchType: "GEO_BOUNDING",
+      size: toPageNumber,
+    };
     // debugger;
     axios({
       method: "GET",
@@ -155,16 +197,7 @@ export default function useInfiniteSearch(
         console.log(error);
         setError(true);
       });
-  }, [
-    query,
-    toPageNumber,
-    searchDate,
-    adultCounterValue,
-    childCounterValue,
-    searchTypeValue,
-    filterValue,
-    mapBoundValue,
-  ]);
+  }, [mapBoundValue]);
 
   return { loading, error, rooms, hasMore };
 }

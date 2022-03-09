@@ -163,7 +163,7 @@ q {
 }
 
 input:focus,
-button:focus {
+button:active {
   border: none;
 }
 
