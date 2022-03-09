@@ -4,22 +4,6 @@ const now = new Date();
 const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toJSON();
 const nextDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1).toJSON();
 
-function addZero(value) { 
-  if (value >= 10) { 
-    return value; 
-  } 
-  
-  return `0${value}`; 
-} 
-
-function FormattingDate(source) { 
-  const year = source.getFullYear(); 
-  const month = addZero(source.getMonth() + 1); 
-  const day = addZero(source.getDate()); 
-  
-  return `${year}${month}${day}`; 
-}
-
 const initialState = {
   searchDate: { 
     start: today, 
