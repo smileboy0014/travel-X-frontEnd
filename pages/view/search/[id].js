@@ -18,6 +18,7 @@ const Post = ({ item }) => {
   const [showModal, setShowModal] = useState(false);
   const [recentListView, setRecentListView] = useState(false);
   const [listFilterIsUp, setListFilterIsUp] = useState(false);
+  const [isTop,setIsTop] = useState(false);
   const [lastScrollTop, setLastScrollTop] = useState(0);
   const router = useRouter();
   const { id } = router.query;
@@ -40,7 +41,7 @@ const Post = ({ item }) => {
     id,
     fromPageNumber,
     toPageNumber,
-    filterValue
+    filterValue,
   );
   const observer = useRef();
   const [searchValue, setSearchValue] = useState();
@@ -78,6 +79,16 @@ const Post = ({ item }) => {
   }, [searchAutoComptValue]);
 
   useEffect(() => {
+    
+    // SRP에서 스크롤을 최상단으로 올렸을 때 새로 쿼리 날리기
+    if(scrollYValue.scrollYValue === 0){
+      console.log("##################################");
+      console.log("##################################");
+      console.log("refresh!!!")
+      setToPageNumber(10);
+      setListFilterIsUp(false);
+    }
+
     if (Math.abs(lastScrollTop - scrollYValue <= DELTA)) {
       return;
     }
