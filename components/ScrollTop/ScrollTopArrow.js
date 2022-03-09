@@ -21,7 +21,8 @@ const ScrollTopArrow = () => {
   };
 
   const scrollTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    // window.scrollTo({ top: 0.5, behavior: "smooth" });
+    window.scrollTo({ top: 0.5, behavior: "smooth" });
   };
 
   return (
