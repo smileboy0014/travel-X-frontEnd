@@ -32,7 +32,7 @@ const MapResultCarousel = (props, ref) => {
           modules={[Pagination]}
           pagination={true}
           // loop={true}
-          // spaceBetween={30}
+          spaceBetween={50}
           // slidesPerView={1}
           // navigation
           // pagination={{ clickable: true }}
