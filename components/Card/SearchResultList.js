@@ -52,14 +52,18 @@ const SearchResultList = (props, ref) => {
                       stock={room.stock}
                       useType={room.useType}
                       averageScore={
-                        room.reviewSummary.averageScore !== undefined
-                          ? room.reviewSummary.averageScore
-                          : 0
+                        room.reviewSummary != null ?
+                          room.reviewSummary.averageScore !== undefined
+                            ? room.reviewSummary.averageScore
+                            : 0
+                        : 0
                       }
                       reviewCount={
-                        room.reviewSummary.reviewCount !== undefined
-                          ? room.reviewSummary.reviewCount
-                          : 0
+                        room.reviewSummary != null ?
+                          room.reviewSummary.reviewCount !== undefined
+                            ? room.reviewSummary.reviewCount
+                            : 0
+                        : 0
                       }
                     />
                   </a>
