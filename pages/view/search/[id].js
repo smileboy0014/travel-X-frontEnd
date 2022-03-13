@@ -13,6 +13,7 @@ import OptionFilterButton from "../../../components/Button/OptionFilter/OptionFi
 import OrderByFilterButton from "../../../components/Button/OptionFilter/OrderByFilterButton";
 import CalendarModal from "../../../components/Modal/Calendar/CalendarModal";
 import ListDetailMap from "../../../components/Modal/Map/ListDetailMap";
+import PullToRefresh from 'react-simple-pull-to-refresh';
 
 const Post = ({ item }) => {
   const [showModal, setShowModal] = useState(false);
@@ -79,15 +80,6 @@ const Post = ({ item }) => {
   }, [searchAutoComptValue]);
 
   useEffect(() => {
-    
-    // SRP에서 스크롤을 최상단으로 올렸을 때 새로 쿼리 날리기
-    if(scrollYValue.scrollYValue === 0){
-      console.log("##################################");
-      console.log("##################################");
-      console.log("refresh!!!")
-      setToPageNumber(10);
-      setListFilterIsUp(false);
-    }
 
     if (Math.abs(lastScrollTop - scrollYValue <= DELTA)) {
       return;
@@ -144,15 +136,15 @@ const Post = ({ item }) => {
               </div>
 
               {!recentListView ? (
-                <React.Fragment>
+                <>
                   {searchAutoComptValue.length < 1 ? (
                     <div className={Style.ListFilterButton}>
                       <div className={Style.ListFilterButton_list}>
                         {!viewMap ? (
-                          <React.Fragment>
+                          <>
                             <OptionFilterButton />
                             <OrderByFilterButton />
-                          </React.Fragment>
+                          </>
                         ) : (
                           ""
                         )}
@@ -161,7 +153,7 @@ const Post = ({ item }) => {
                   ) : (
                     ""
                   )}
-                </React.Fragment>
+                </>
               ) : (
                 ""
               )}
@@ -169,9 +161,9 @@ const Post = ({ item }) => {
           </div>
         </div>
 
-        <React.Fragment>
+        <>
           {viewMap == false ? (
-            <React.Fragment>
+            <>
               {recentListView ? (
                 <div className={Style.TotalSearch}>
                   <div className={Style.is_Focus}>
@@ -188,25 +180,27 @@ const Post = ({ item }) => {
                   </div>
                 </div>
               ) : (
-                <React.Fragment>
+                <>
                   {searchAutoComptValue.length < 1 ? (
                     <div className={Style.ProductList}>
                       <div className={Style.site_container}>
-                        <React.Fragment>
+                        <>
                           {rooms.item && rooms.item.length > 0 ? (
-                            <ul>
-                              <SearchResultList
-                                ref={lastroomElementRef}
-                                rooms={rooms}
-                              />
-                            </ul>
+                            <PullToRefresh onRefresh={() => window.location.reload()}>
+                              <ul>
+                                <SearchResultList
+                                  ref={lastroomElementRef}
+                                  rooms={rooms}
+                                />
+                              </ul>
+                            </PullToRefresh>
                           ) : (
                             <div className={Style.TotalSearch_noTag}>
                               검색결과가 없습니다.
                               <p>지역, 지하철역, 숙소명을 입력해주세요.</p>
                             </div>
                           )}
-                        </React.Fragment>
+                        </>
                         <>
                           {/* <Modal
                             className={LodingStyles.Modal}
@@ -235,9 +229,9 @@ const Post = ({ item }) => {
                       />
                     </div>
                   )}
-                </React.Fragment>
+                </>
               )}
-            </React.Fragment>
+            </>
           ) : (
             <ListDetailMap
               lat={37.4959854}
@@ -247,7 +241,7 @@ const Post = ({ item }) => {
               }}
             />
           )}
-        </React.Fragment>
+        </>
 
         {viewMap == false ? (
           <button
