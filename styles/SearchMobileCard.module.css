@@ -76,7 +76,7 @@ body .ListFixButton::before {
   position: relative;
   /* width: 250%; */
   /* right: 75%; */
-  box-shadow: 0 0.125rem 0.625rem 0 rgba(0, 0, 0, 0.3);
+  /* box-shadow: 0 0.125rem 0.625rem 0 rgba(0, 0, 0, 0.3); */
   text-align: left;
   z-index: 200;
   /* border-radius: 20% */
