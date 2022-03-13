@@ -176,8 +176,8 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
             img: room.images[0],
             type: room.propertyType,
             name: room.propertyName,
-            averageScore: room.reviewSummary.averageScore,
-            reviewCount: room.reviewSummary.reviewCount,
+            averageScore: room.reviewSummary ? room.reviewSummary.averageScore : 0,
+            reviewCount: room.reviewSummary ? room.reviewSummary.reviewCount : 0,
             price: room.basePrice,
           });
         });
