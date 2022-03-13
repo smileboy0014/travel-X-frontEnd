@@ -1,11 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Flex from './Flex';
 import Style from '../../../../styles/CalendarModal.module.css'
 
 import { getTileClasses } from './shared/utils';
 import { tileGroupProps } from './shared/propTypes';
+import classNames from 'classnames/bind';
+import { v4 as uuid_v4 } from "uuid";
+
+const cx = classNames.bind(Style);
 
 export default function TileGroup({
   className,
@@ -33,10 +36,7 @@ export default function TileGroup({
     tiles.push(
       <Tile
         key={date.getTime()}
-        // classes={classes}
-        classes={getTileClasses({
-          value, valueType, date, dateType, hover
-        })}
+        classes={classes}
         date={date}
         point={point}
         value={value}
@@ -77,46 +77,32 @@ export default function TileGroup({
 
   return (
     <>
-      {convertList(tiles).map((child, index) => (
-        <div className={Style.CheckCalenderBody_row} key={index}>
-          {
-            React.Children.map(child, (child2, index2) => (  
-              <div className={Style.CheckCalenderBody_col}>
-                {
-                  // console.log(child2)
-                }
-                {
-                  child2 && (
-                    <div className={(
-                      child2.props.classes.length == 0 ?
-                      Style.CheckCalenderBody_item : 
-                      Style[`${child2.props.classes[0]}_CheckCalenderBody_item`])}>
-                      {
-                        child2 && React.cloneElement(
-                          child2,
-                          {
-                            ...child2.props
-                          }
-                        )
-                      }
+      {convertList(tiles).map((child) => (
+        <div className={Style["CheckCalenderBody-row"]} key={uuid_v4()}>
+          {React.Children.map(child, child2 => (  
+            <div className={child2 != null ?
+              child2.props.classes.length == 0 ? 
+              Style["CheckCalenderBody-col"] : 
+              cx(child2.props.classes[0], 'CheckCalenderBody-col') : Style["CheckCalenderBody-col"]}
+            >
+              {/* {
+                console.log(child2)
+              } */}
+              {child2 && (
+                <div 
+                  className={Style["CheckCalenderBody-item"]}
+                  key={child2.key}
+                >
+                  {child2 && React.cloneElement(
+                    child2, {...child2.props}
+                  )}
                 </div>
-                  )
-                }
-                
-              </div>
-            ))
-          }
+              )}
+            </div>
+          ))}
         </div>
       ))}
     </>
-    // <Flex
-    //   className={className}
-    //   count={count}
-    //   offset={offset}
-    //   wrap
-    // >
-    //   {tiles}
-    // </Flex>
   );
 }
 

@@ -49,18 +49,18 @@ function getRangeClassNames(valueRange, dateRange, baseClassName, disabledDates)
     const isRangeEnd = isValueWithinRange(valueRange[1], dateRange);
 
     if (isRangeStart) {
-      classes.push('isStart');
+      classes.push('is-Start');
     }
 
     if (isRangeEnd) {
-      classes.push('isEnd');
+      classes.push('is-End');
     }
 
     if (isRangeStart && isRangeEnd) {
       classes.push(`${baseClassName}BothEnds`);
     }
 
-    if (baseClassName == 'isLong') {
+    if (baseClassName == 'is-Long') {
       classes.push(baseClassName);
     }
   }
@@ -102,7 +102,7 @@ export function getTileClasses({
   
   if (isRangeWithinRange(valueRange, dateRange)) {
     // classes.push(`${className}--active`);
-    classes.push('isLong');
+    classes.push('is-Long');
   } else if (doRangesOverlap(valueRange, dateRange)) {
     // classes.push(`${className}--hasActive`);
   }
@@ -117,7 +117,7 @@ export function getTileClasses({
   if (hover && valueArray.length === 1) {
     const hoverRange = hover > valueRange[0] ? [valueRange[0], hover] : [hover, valueRange[0]];
     // const hoverRangeClassNames = getRangeClassNames(hoverRange, dateRange, `${className}--hover`);
-    const hoverRangeClassNames = getRangeClassNames(hoverRange, dateRange, 'isLong');
+    const hoverRangeClassNames = getRangeClassNames(hoverRange, dateRange, 'is-Long');
 
     classes.push(...hoverRangeClassNames);
   }

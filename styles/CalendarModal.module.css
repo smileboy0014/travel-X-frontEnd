@@ -64,7 +64,7 @@
 	padding:1.5625rem 2.5rem;
 }
 
-.CalenderPopHeaderTitle_title{
+.CalenderPopHeaderTitle-title{
 	font-size:0.875rem;
 	line-height:1.2em;
 	color:#000;
@@ -72,7 +72,7 @@
 	text-align:center;
 }
 
-.CalenderPopHeaderTitle_close{
+.CalenderPopHeaderTitle-close{
 	width:1.375rem;
 	height:1.375rem;
 	position:absolute;
@@ -90,7 +90,7 @@
 }
 
 
-.CalenderHeader_day{
+.CalenderHeader-day{
 	width:14.2857%;
 	text-align:center;
 	font-size:0.875rem;
@@ -99,11 +99,11 @@
 	font-weight:500;
 }
 
-.CalenderHeader_day:first-child{
+.CalenderHeader-day:first-child{
 	color:#f10000;
 }
 
-.CalenderHeader_day:last-child{
+.CalenderHeader-day:last-child{
 	color:#0066ff;
 }
 
@@ -144,23 +144,23 @@
 	clear:both;
 }
 
-.CalenderPopFooterCheck_item_Start{
+.CalenderPopFooterCheck-item.Start{
 	float:left;
 }
 
-.CalenderPopFooterCheck_item_End{
+.CalenderPopFooterCheck-item.End{
 	float:right;
 	text-align:right;
 }
 
-.CalenderPopFooterCheck_day{
+.CalenderPopFooterCheck-day{
 	font-size:1rem;
 	line-height:1.2em;
 	color:#000;
 	font-weight:bold;
 }
 
-.CalenderPopFooterCheck_text{
+.CalenderPopFooterCheck-text{
 	font-size:1.25rem;
 	line-height:1.2em;
 	color:#000;
@@ -169,7 +169,7 @@
 	margin-right:0.3125rem;
 }
 
-.CalenderPopFooterCheck_title{
+.CalenderPopFooterCheck-title{
 	font-size:0.75rem;
 	line-height:1.2em;
 	color:#666;
@@ -180,7 +180,7 @@
 	padding:1.25rem 0;
 }
 
-.CalenderPopFooterBtn_button{
+.CalenderPopFooterBtn-button{
 	padding: 1.0625rem 0.9375rem;
     border-radius: 0.25rem;
     background-color: #6957e8;
@@ -206,7 +206,7 @@
     width: 100%;
 }
 
-.CalenderPopFooter_title{
+.CalenderPopFooter-title{
 	font-size:1rem;
 	line-height:1.5em;
 	color:#000;
@@ -249,17 +249,17 @@
 	margin-bottom:0.9375rem;
 }
 
-.CheckCalenderBody_row{
+.CheckCalenderBody-row{
 	display: flex;
 }
 
-.CheckCalenderBody_col{
+.CheckCalenderBody-col{
 	width:14.2857%;
 	text-align:center;
 	position:relative;
 }
 
-.CheckCalenderBody_item{
+.CheckCalenderBody-item{
 	width:100%;
 	height:40px;
 	border:solid 0.0625rem transparent;
@@ -267,7 +267,7 @@
 	border-right:none;
 }
 
-.CheckCalenderBody_text{
+.CheckCalenderBody-text{
 	font-size:1rem;
 	line-height:1.2em;
 	color:#000;
@@ -280,7 +280,7 @@
 	transform:translate(-50%, -50%);
 }
 
-.CheckCalenderBody_text:disabled{
+.CheckCalenderBody-text:disabled{
 	font-size:1rem;
 	line-height:1.2em;
 	color:rgb(153, 153, 153);
@@ -293,24 +293,24 @@
 	transform:translate(-50%, -50%);
 }
 
-.CheckCalenderBody_col:first-child .CheckCalenderBody_text{
+.CheckCalenderBody-col:first-child .CheckCalenderBody-text{
 	color:#f10000;
 }
 
-.CheckCalenderBody_col:last-child .CheckCalenderBody_text{
+.CheckCalenderBody-col:last-child .CheckCalenderBody-text{
 	color:#0066ff;
 }
 
-.CheckCalenderBody_col:first-child .CheckCalenderBody_text:disabled{
+.CheckCalenderBody-col:first-child .CheckCalenderBody-text:disabled{
 	color:rgb(153, 153, 153);
 }
 
-.CheckCalenderBody_col:last-child .CheckCalenderBody_text:disabled{
+.CheckCalenderBody-col:last-child .CheckCalenderBody-text:disabled{
 	color:rgb(153, 153, 153);
 }
 
 /*Start*/
-.isStart_CheckCalenderBody_item{
+.is-Start .CheckCalenderBody-item{
 	width:100%;
 	height:40px;
 	border:solid 0.0625rem transparent;
@@ -322,7 +322,7 @@
 	box-shadow: 0px 0.125rem 0px rgb(0 0 0 / 10%);
 }
 
-.isStart_is_Checking.CheckCalenderBody_item{
+.is-Start.is-Checking .CheckCalenderBody-item{
 	width:100%;
 	height:40px;
 	border:solid 0.0625rem transparent;
@@ -331,7 +331,7 @@
 	border-radius:2.5rem 2.5rem;
 }
 
-.isStart_CheckCalenderBody_text{
+.is-Start .CheckCalenderBody-text{
 	color:#5f7bff;
 	font-size:1rem;
 	line-height:1.2em;
@@ -345,7 +345,7 @@
 }
 
 /*End*/
-.isEnd_CheckCalenderBody_item{
+.is-End .CheckCalenderBody-item{
 	width:100%;
 	height:40px;
 	border:solid 0.0625rem transparent;
@@ -357,7 +357,7 @@
 	box-shadow: 0px 0.125rem 0px rgb(0 0 0 / 10%);
 }
 
-.isEnd_CheckCalenderBody_text{
+.is-End .CheckCalenderBody-text{
 	font-size:1rem;
 	line-height:1.2em;
 	font-weight:500;
@@ -371,7 +371,7 @@
 }
 
 /*Long*/
-.isLong_CheckCalenderBody_item{
+.is-Long .CheckCalenderBody-item{
 	width:100%;
 	height:40px;
 	border:solid 0.0625rem transparent;
@@ -382,7 +382,7 @@
 	box-shadow: 0px 0.125rem 0px rgb(0 0 0 / 10%);
 }
 
-.isLong_CheckCalenderBody_text{
+.is-Long .CheckCalenderBody-text{
 	font-size:1rem;
 	line-height:1.2em;
 	font-weight:500;

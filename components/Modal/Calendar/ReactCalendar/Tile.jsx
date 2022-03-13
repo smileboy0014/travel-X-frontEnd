@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import mergeClassNames from 'merge-class-names';
 
 import { tileProps } from './shared/propTypes';
 import Style from '../../../../styles/CalendarModal.module.css';
+import classNames from 'classnames/bind';
+
+const cx = classNames.bind(Style);
 
 function getValue(nextProps, prop) {
   const { activeStartDate, date, view } = nextProps;
@@ -54,11 +56,10 @@ export default class Tile extends Component {
       value
     } = this.props;
     const { tileClassName, tileContent } = this.state;
-    // console.log(classes);
+    
     return (
       <button
-        // className={Style.CheckCalenderBody_text}
-        className={classes.length == 2 ? Style.CheckCalenderBody_text : Style[`${classes[0]}_CheckCalenderBody_text`]}
+        className={Style["CheckCalenderBody-text"]}
         disabled={
           (minDate && minDateTransform(minDate) > date)
           || (maxDate && maxDateTransform(maxDate) < date)
