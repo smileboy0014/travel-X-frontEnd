@@ -28,6 +28,7 @@ const Post = ({ item }) => {
 
   const [toPageNumber, setToPageNumber] = useState(10);
   const [fromPageNumber, setFromPageNumber] = useState(0);
+  const [pullReload, setPullReload] = useState(false);
 
   const filterValue = useSelector(({roomFilter}) => roomFilter);
   const DELTA = 5;
@@ -43,6 +44,7 @@ const Post = ({ item }) => {
     fromPageNumber,
     toPageNumber,
     filterValue,
+    pullReload
   );
   const observer = useRef();
   const [searchValue, setSearchValue] = useState();
@@ -71,6 +73,10 @@ const Post = ({ item }) => {
     [loading, hasMore]
   );
 
+  const handlePullRefresh = () => {
+    return new Promise((res) => res(setPullReload(true)));
+  }
+
   useEffect(() => {
     setSearchAutoComptValue([]);
   }, [searchValue]);
@@ -80,7 +86,6 @@ const Post = ({ item }) => {
   }, [searchAutoComptValue]);
 
   useEffect(() => {
-
     if (Math.abs(lastScrollTop - scrollYValue <= DELTA)) {
       return;
     }
@@ -99,6 +104,7 @@ const Post = ({ item }) => {
 
   useEffect(() => {
     rooms.item && console.log(rooms.item.length);
+    setPullReload(false);
   }, [rooms]);
 
   return (
@@ -186,7 +192,7 @@ const Post = ({ item }) => {
                       <div className={Style.site_container}>
                         <>
                           {rooms.item && rooms.item.length > 0 ? (
-                            <PullToRefresh onRefresh={() => window.location.reload()}>
+                            <PullToRefresh onRefresh={handlePullRefresh} resistance={6} maxPullDownDistance={70} pullingContent="">
                               <ul>
                                 <SearchResultList
                                   ref={lastroomElementRef}
