@@ -5,6 +5,7 @@ import DetailTopNavbar from "../../../components/NavBar/DetailTopNavbar";
 import ReserveButton from "../../../components/Button/Reserve/ReserveButton";
 import Style from "../../../styles/Detail.module.css";
 import Axios from "axios";
+import Link from "next/link";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import { RiHotelLine } from "react-icons/ri";
@@ -150,11 +151,18 @@ const DetailView = () => {
                     {rooms.roomInfo.propertyName}
                   </div>
 
+                  {/* 필터 페이지로 이동하는 부분  */}
+                  <Link
+                   href={{
+                    pathname: "/view/review/[id]",
+                    query: { id: id },
+                  }}
+                  >
                   <button
                     className={Style.searchResult_stars}
-                    onClick={() => {
-                      setReviewModalOpen(true);
-                    }}
+                    // onClick={() => {
+                    //   setReviewModalOpen(true);
+                    // }}
                   >
                     <AiFillStar className={Style.searchResult_star} />
                     <strong>{rooms.reviewSummary.averageScore}</strong>
@@ -162,12 +170,14 @@ const DetailView = () => {
                       후기 {rooms.reviewSummary.reviewCount}개
                     </span>
                   </button>
-
-                  <ReviewModal
+                  </Link>
+                  
+                  {/*  // 필터 페이지로 이동하는 부분  */}
+                  {/* <ReviewModal
                     isOpen={reviewModalOpen}
                     onRequestClose={() => setReviewModalOpen(false)}
                     id={id}
-                  ></ReviewModal>
+                  ></ReviewModal> */}
 
                   <div className={Style.DetailHeaderInfo}>
                     <div className={Style.DetailHeaderInfoAddress}>
@@ -206,19 +216,16 @@ const DetailView = () => {
                       />
                       {`${new Date(detailDate.start).getMonth() + 1}.${new Date(
                         detailDate.start
-                      ).getDate()}(${
-                        week[new Date(detailDate.start).getDay()]
-                      }) - ${
-                        new Date(detailDate.end).getMonth() + 1
-                      }.${new Date(detailDate.end).getDate()}(${
-                        week[new Date(detailDate.end).getDay()]
-                      })`}
+                      ).getDate()}(${week[new Date(detailDate.start).getDay()]
+                        }) - ${new Date(detailDate.end).getMonth() + 1
+                        }.${new Date(detailDate.end).getDate()}(${week[new Date(detailDate.end).getDay()]
+                        })`}
                     </span>
                     <span className={Style.DetailPaymentDate_day}>
                       {Math.ceil(
                         (new Date(detailDate.end).getTime() -
                           new Date(detailDate.start).getTime()) /
-                          (1000 * 60 * 60 * 24)
+                        (1000 * 60 * 60 * 24)
                       )}
                       박
                     </span>

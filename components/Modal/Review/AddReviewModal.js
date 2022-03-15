@@ -22,6 +22,9 @@ const AddReviewModal = ({ isOpen, isSave, onRequestClose }) => {
   ]);
   const [data, setData] = useState("");
 
+  const [imgBase64, setImgBase64] = useState([]); // 파일 base64
+  const [imgFile, setImgFile] = useState(null);	//파일	
+
   // 경험
   const [rating1, setRating1] = useState(0);
   const [hoverRating1, setHoverRating1] = useState(0);
@@ -79,12 +82,9 @@ const AddReviewModal = ({ isOpen, isSave, onRequestClose }) => {
   };
   const handleInput = () => {
 
-    // dispatch(
-    //   reviewData.setData({
-    //     title: reviewContent.title,
-    //     content: reviewContent.content,
-    //   })
-    // );
+    const formData = new FormData();
+
+    let imageList = [];
 
     let review = {
       date: formattingDate(),
@@ -95,16 +95,48 @@ const AddReviewModal = ({ isOpen, isSave, onRequestClose }) => {
       priceScore: formattingScore(rating1),
       title: reviewContent.title,
       contents: reviewContent.content,
-      imageList: [],
       roomId: id,
       useType: "NIGHT",
       userId: "미정"
     }
 
-    axios.post("http://shineware.iptime.org:8081/review/post", review, {
-      headers: { "Content-Type": `application/json` }
+    if(imgFile != undefined){
+      for (let i = 0; i < imgFile.length; i++) {
+        formData.append('imageList['+i+']', imgFile[i]);
+        // imageList.push(imgFile[i]);
+      }
     }
-    ).then((res) => {
+   
+
+    // formData.append('imageList[0]', imgFile[0]);
+    // formData.append('review', review);
+    // formData.append('review.date', formattingDate());
+    formData.append('review.cleanScore',formattingScore(rating3));
+    formData.append('review.comfortScore',formattingScore(rating5));
+    formData.append('review.facilityScore',formattingScore(rating4));
+    formData.append('review.kindnessScore',formattingScore(rating2));
+    formData.append('review.priceScore',formattingScore(rating1));
+    formData.append('review.title',reviewContent.title);
+    formData.append('review.contents',reviewContent.content);
+    formData.append('review.roomId',id);
+    formData.append('review.useType',"NIGHT");
+    formData.append('review.userId',"미정");
+
+
+    debugger;
+
+    // axios.post("http://shineware.iptime.org:8081/review/post", review, {
+    //   headers: { "Content-Type": `multipart/form-data` }
+    // }
+
+    axios({
+      method: "POST",
+      url: "http://shineware.iptime.org:8081/review/register",
+      data: formData,
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
+    }).then((res) => {
       console.log(`save is successed!!`);
       isSave(true);
       console.log(res);
@@ -134,6 +166,35 @@ const AddReviewModal = ({ isOpen, isSave, onRequestClose }) => {
     //   });
   };
 
+  const handleChangeFile = (event) => {
+    console.log(event.target.files)
+    setImgFile(event.target.files);
+    //fd.append("file", event.target.files)
+    setImgBase64([]);
+    for (var i = 0; i < event.target.files.length; i++) {
+      if (event.target.files[i]) {
+        let reader = new FileReader();
+        reader.readAsDataURL(event.target.files[i]); // 1. 파일을 읽어 버퍼에 저장합니다.
+        // 파일 상태 업데이트
+        reader.onloadend = () => {
+          // 2. 읽기가 완료되면 아래코드가 실행됩니다.
+          const base64 = reader.result;
+          console.log(base64)
+          if (base64) {
+            //  images.push(base64.toString())
+            var base64Sub = base64.toString()
+
+            setImgBase64(imgBase64 => [...imgBase64, base64Sub]);
+            //  setImgBase64(newObj);
+            // 파일 base64 상태 업데이트
+            //  console.log(images)
+          }
+        }
+      }
+    }
+
+  }
+
   function formattingDate() {
 
     function pad(n) {
@@ -159,9 +220,9 @@ const AddReviewModal = ({ isOpen, isSave, onRequestClose }) => {
     }
   };
 
-  const formattingScore = (idx) =>{
-    let adjScore = idx%5;
-    switch(adjScore){
+  const formattingScore = (idx) => {
+    let adjScore = idx % 5;
+    switch (adjScore) {
       case 1:
         return 1;
       case 2:
@@ -289,6 +350,7 @@ const AddReviewModal = ({ isOpen, isSave, onRequestClose }) => {
                   placeholder="제목을 입력해 주세요."
                 />
               </div>
+              <input type="file" id="file" onChange={handleChangeFile} multiple="multiple" />
               <textarea
                 className={Style.area}
                 name="content"
