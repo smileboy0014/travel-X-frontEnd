@@ -100,10 +100,13 @@ const AddReviewModal = ({ isOpen, isSave, onRequestClose }) => {
       userId: "미정"
     }
 
-    for (let i = 0; i < imgFile.length; i++) {
-      formData.append('imageList['+i+']', imgFile[i]);
-      // imageList.push(imgFile[i]);
+    if(imgFile != undefined){
+      for (let i = 0; i < imgFile.length; i++) {
+        formData.append('imageList['+i+']', imgFile[i]);
+        // imageList.push(imgFile[i]);
+      }
     }
+   
 
     // formData.append('imageList[0]', imgFile[0]);
     // formData.append('review', review);
@@ -113,13 +116,14 @@ const AddReviewModal = ({ isOpen, isSave, onRequestClose }) => {
     formData.append('review.facilityScore',formattingScore(rating4));
     formData.append('review.kindnessScore',formattingScore(rating2));
     formData.append('review.priceScore',formattingScore(rating1));
-    formData.append('review.title',formattingScore(reviewContent.title));
-    formData.append('review.contents',formattingScore(reviewContent.content));
-    formData.append('review.roomId',formattingScore(id));
+    formData.append('review.title',reviewContent.title);
+    formData.append('review.contents',reviewContent.content);
+    formData.append('review.roomId',id);
     formData.append('review.useType',"NIGHT");
     formData.append('review.userId',"미정");
 
 
+    debugger;
 
     // axios.post("http://shineware.iptime.org:8081/review/post", review, {
     //   headers: { "Content-Type": `multipart/form-data` }
