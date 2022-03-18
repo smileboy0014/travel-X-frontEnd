@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
-import Style from "../../../styles/CommonModal.module.css";
+import Style from "../../../styles/Component.module.css";
 import KakaoShre from "./KakaoShare";
 
 const ShareModal = ({ isOpen, onRequestClose }) => {
@@ -18,8 +18,8 @@ const ShareModal = ({ isOpen, onRequestClose }) => {
   return (
     <div>
       <Modal
-        className={Style.Modal}
-        overlayClassName={Style.Overlay}
+        className={Style["Modal"]}
+        overlayClassName={Style["Overlay"]}
         isOpen={isOpen}
         ariaHideApp={false}
         onRequestClose={() => onRequestClose(false)}

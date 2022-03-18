@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { getUserLocale } from 'get-user-locale';
-import Style from '../../../../../styles/CalendarModal.module.css'
+import Style from '../../../../../styles/Component.module.css'
 
 import {
   getCenturyLabel,
@@ -62,7 +62,7 @@ export default function Navigation({
   }
 
   function renderButton() {
-    const labelClassName = Style.CheckCalenderHeader;
+    const labelClassName = Style["CheckCalenderHeader"];
     return (
       <div
         aria-label={navigationAriaLabel}

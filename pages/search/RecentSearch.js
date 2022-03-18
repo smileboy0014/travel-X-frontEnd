@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import Style from "../../styles/RecentSearch.module.css";
+import Style from "../../styles/Component.module.css";
 
 const RecentSearch = ({
   sendSearchValue,
@@ -19,12 +19,12 @@ const RecentSearch = ({
     setAutoCompltData(sendSearchAutoComptValue);
     setAutoCompltPropertyNameData(sendSearchAutoComptPropertyNameValue);
 
-    console.log("sendSearchAutoComptValue:" + sendSearchAutoComptValue);
+    // console.log("sendSearchAutoComptValue:" + sendSearchAutoComptValue);
 
-    console.log(
-      "sendSearchAutoComptPropertyNameValue:" +
-        sendSearchAutoComptPropertyNameValue
-    );
+    // console.log(
+    //   "sendSearchAutoComptPropertyNameValue:" +
+    //     sendSearchAutoComptPropertyNameValue
+    // );
   }, [sendSearchAutoComptValue, sendSearchAutoComptPropertyNameValue]);
 
   useEffect(() => {
@@ -92,26 +92,26 @@ const RecentSearch = ({
   };
 
   return (
-    <div className={Style.site_container}>
+    <div className="site-container">
       {autoCompltData.length > 0 ? (
-        <div className={Style.TotalSearchRelated}>
-          <div className={Style.TotalSearchRelatedHeader}>
-            <div className={Style.TotalSearchRelatedHeader_title}>
+        <div className={Style["TotalSearchRelated"]}>
+          <div className={Style["TotalSearchRelatedHeader"]}>
+            <div className={Style["TotalSearchRelatedHeader-title"]}>
               관련 검색어
             </div>
           </div>
-          <div className="TotalSearchRelatedBody">
-            <div className={Style.TotalSearchRelatedItem}>
-              <div className={Style.TotalSearchRelatedItemTitle}>도서/지역</div>
+          <div className="TotalSearchRelatedHeaderBody">
+            <div className={Style["TotalSearchRelatedItem"]}>
+              <div className={Style["TotalSearchRelatedItemTitle"]}>도서/지역</div>
               <ul className="TotalSearchRelatedList">
                 {autoCompltData.map((item, index) => (
-                  <li className={Style.TotalSearchRelatedList_item} key={index}>
+                  <li className={Style["TotalSearchRelatedList-item"]} key={index}>
                     <Link href="/view/search/[id]" as={`/view/search/${item}`}>
                       <a
-                        className={Style.TotalSearchRelatedList_link}
+                        className={Style["TotalSearchRelatedList-link"]}
                         onClick={() => addKeyword(item, 'autocomplete')}
                       >
-                        <mark>{sendSearchTxt}</mark>
+                        {/* <mark>{sendSearchTxt}</mark> */}
                         {item.replace(sendSearchTxt, "")}
                       </a>
                     </Link>
@@ -121,12 +121,12 @@ const RecentSearch = ({
             </div>
 
             {autoCompltPropertyNameData.length > 0 ? (
-              <div className={Style.TotalSearchRelatedItem}>
-                <div className={Style.TotalSearchRelatedItemTitle}>호텔</div>
+              <div className={Style["TotalSearchRelatedItem"]}>
+                <div className={Style["TotalSearchRelatedItemTitle"]}>호텔</div>
                 <ul className="TotalSearchRelatedList">
                   {autoCompltPropertyNameData.map((item, index) => (
                     <li
-                      className={Style.TotalSearchRelatedList_item}
+                      className={Style["TotalSearchRelatedList-item"]}
                       key={index}
                     >
                       <Link
@@ -134,7 +134,7 @@ const RecentSearch = ({
                         as={`/view/search/${item}`}
                       >
                         <a
-                          className={Style.TotalSearchRelatedList_link}
+                          className={Style["TotalSearchRelatedList-link"]}
                           onClick={() => addKeyword(item)}
                         >
                           <mark>{sendSearchTxt}</mark>
@@ -146,66 +146,60 @@ const RecentSearch = ({
                 </ul>
               </div>
             ) : (
-              ""
+              null
             )}
           </div>
         </div>
       ) : (
-        <React.Fragment>
-          <div className={Style.TotalSearchRecent}>
-            <div className={Style.TotalSearchRecentHeader}>
-              <div className={Style.TotalSearchRecentHeader_title}>
+          <div className={Style["TotalSearchRecent"]}>
+            <div className={Style["TotalSearchRecentHeader"]}>
+              <div className={Style["TotalSearchRecentHeader-title"]}>
                 최근 검색어
               </div>
-              {keywords.length ? (
-                <button
-                  type="button"
-                  className={Style.TotalSearchRecentHeader_close}
-                  onClick={handleClearKeywords}
-                >
-                  전체 삭제
-                </button>
-              ) : (
-                ""
-              )}
+              <button
+                type="button"
+                className={Style["TotalSearchRecentHeader-close"]}
+                onClick={handleClearKeywords}
+              >
+                전체삭제
+              </button>
+            </div>
+            <div className={Style["TotalSearchRecentBody"]}>
+							<ul className={Style["TotalSearchRecentList"]}>
+                {keywords.length ? (
+                  keywords.map((item) => (
+                    <li className={Style["TotalSearchRelatedList-item"]} key={item.id}>
+                      <Link
+                        href="/view/search/[id]"
+                        as={`/view/search/${item.text}`}
+                      >
+                        <a
+                          className={Style["TotalSearchRecentList-link"]}
+                          onClick={() => addKeyword(item.text)}
+                        >
+                          {item.text}
+                        </a>
+                      </Link>
+                      
+                      <button
+                        type="button"
+                        className={Style["TotalSearchRecentList-del"]}
+                        onClick={() => handleRemoveKeyword(item.id)}
+                      >
+                        <span className="ab-text">del</span>
+                      </button>
+                    </li>
+                  ))
+                ) : (
+                  <div className={Style["TotalSearchRecentBody"]}>
+                    <div className={Style["TotalSearchRecent-noTag"]}>
+                      최근 검색한 내역이 없습니다.
+                    </div>
+                  </div>
+                )}
+              </ul>
             </div>
           </div>
-
-          <div>
-            {keywords.length ? (
-              keywords.map((item) => (
-                <div className={Style.TotalSearchRecentList_item} key={item.id}>
-                  <Link
-                    href="/view/search/[id]"
-                    as={`/view/search/${item.text}`}
-                  >
-                    <a
-                      className={Style.TotalSearchRecentList_link}
-                      onClick={() => addKeyword(item.text)}
-                    >
-                      {item.text}
-                    </a>
-                  </Link>
-                  
-                  <button
-                    className={Style.TotalSearchRecentList_del}
-                    onClick={() => handleRemoveKeyword(item.id)}
-                  ></button>
-                  {/* <AiOutlineClockCircle />
-                  {k.text} */}
-
-                  
-                </div>
-              ))
-            ) : (
-              <div className="TotalSearchRecentBody">
-                <div className={Style.TotalSearchRecent_noTag}>
-                  최근 검색한 내역이 없습니다.
-                </div>
-              </div>
-            )}
-          </div>
-        </React.Fragment>
       )}
     </div>
   );

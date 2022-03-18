@@ -8,8 +8,7 @@ export default function useInfiniteSearch(
   query,
   fromPageNumber,
   toPageNumber,
-  filterValue,
-  pullReload
+  filterValue
 ) {
   const [fromPage, setFromPage] = useState(0);
   const [totalHitCount, setTotalHitCount] = useState(1);
@@ -157,37 +156,6 @@ export default function useInfiniteSearch(
     searchTypeValue,
     filterValue
   ]);
-
-  useEffect(() => {
-    if (pullReload) {
-      setLoading(true);
-      setError(false);
-      let param = setParam();
-      // debugger;
-      axios({
-        method: "GET",
-        url: "http://shineware.iptime.org:5050/search",
-        params: param,
-      })
-        .then((res) => {
-          console.log(res);
-          dispatch(searchResultActions.saveData(res.data.roomDocumentList));
-  
-          setTotalHitCount(res.data.totalHitCount);
-          setRooms((prevState) => ({
-            ...prevState,
-            item: res.data.roomDocumentList,
-          }));
-  
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.log(error);
-          setError(true);
-        });
-    }
-    
-  }, [pullReload]);
 
   useEffect(() => {
     if (mapBoundValue > 0) {

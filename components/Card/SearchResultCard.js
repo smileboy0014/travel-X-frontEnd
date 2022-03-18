@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import Style from "../../styles/RoomScoreStar.module.css";
+import Style from "../../styles/Component.module.css";
 
 const CalcStarWidth = (score) => {
   return String(score * 20.0) + "%";
@@ -9,9 +9,9 @@ const CalcStarWidth = (score) => {
 const RatingScoreStar = ({ ratingScoreAvg }) => {
   return (
     <div className="row">
-      <span className={Style.roomListScoreStarsBackground}>
+      <span className={Style["roomListScoreStarsBackground"]}>
         <i
-          className={Style.roomListScoreStars}
+          className={Style["roomListScoreStars"]}
           style={{ width: CalcStarWidth(ratingScoreAvg) }}
         ></i>
       </span>

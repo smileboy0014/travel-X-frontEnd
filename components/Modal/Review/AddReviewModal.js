@@ -319,8 +319,8 @@ const AddReviewModal = ({ isOpen, isSave, onRequestClose }) => {
   return (
     <>
       <Modal
-        className={Style.Modal}
-        overlayClassName={Style.Overlay}
+        className={Style["Modal"]}
+        overlayClassName={Style["Overlay"]}
         isOpen={isOpen}
         ariaHideApp={false}
         onRequestClose={() => onRequestClose(false)}

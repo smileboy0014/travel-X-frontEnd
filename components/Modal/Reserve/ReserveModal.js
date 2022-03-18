@@ -1,13 +1,13 @@
 import React from "react";
 import Modal from "react-modal";
-import Style from "../../../styles/ReserveModal.module.css";
+import Style from "../../../styles/Component.module.css";
 
 const ReserveModal = ({ isOpen, onRequestClose }) => {
   return (
     <div>
       <Modal
-        className={Style.Modal}
-        overlayClassName={Style.Overlay}
+        className={Style["Modal"]}
+        overlayClassName={Style["Overlay"]}
         isOpen={isOpen}
         ariaHideApp={false}
         onRequestClose={() => onRequestClose(false)}

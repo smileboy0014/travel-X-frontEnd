@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import ScrollTopArrow from "../components/ScrollTop/ScrollTopArrow";
 import { wrapper } from "../redux/store";
 import "../styles/globals.css";
-import "../styles/ListDetailMap.css";
 import * as scrollYActions from "../redux/store/modules/scrollY";
 import { useDispatch, useSelector } from "react-redux";
 import Script from 'next/script';

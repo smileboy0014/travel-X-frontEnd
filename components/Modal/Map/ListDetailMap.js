@@ -2,9 +2,12 @@ import React, { useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
 import SearchMobileCard from "../../Card/SearchMobileCard";
 import { MarkerOverlapRecognizer } from "./MarkerOverlappingRecognizer";
-import Style from "../../../styles/SearchMobileCard.module.css";
+import Style from "../../../styles/Component.module.css";
 import { useSelector, useDispatch } from "react-redux";
 import * as mapBoundActions from "../../../redux/store/modules/mapBound";
+import classNames from 'classnames/bind';
+
+const cx = classNames.bind(Style);
 
 var markers = [];
 var mobileWindows = [];
@@ -21,6 +24,10 @@ const mapContainerStyle = {
   right: 0,
   bottom: 0,
 };
+
+const mapPinStyle = Style["MapPin"];
+const mapPinCountStyle = Style["MapPin-count"];
+const mapPinPriceStyle = Style["MapPin-price"];
 
 const DetailMap = ({ lat, lng, onRequestClosed }) => {
   const searchDataValue = useSelector(({ searchResult }) => searchResult.data);
@@ -122,28 +129,8 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
     console.log("addRoomMapMarker Function : ", searchDataValue[0]);
 
     if (searchDataValue[0] !== undefined) {
-      
-//     if (searchDataValue[0][0] !== undefined) {
-//       roomMap = new naver.maps.Map("roomMap", {
-//         center: new naver.maps.LatLng(
-//           searchDataValue[0][0].location.lat,
-//           searchDataValue[0][0].location.lon
-//         ),
-//         zoom: 14,
-//       });
-
-//       // if (roomMap != null) {
-//       //   var w = window.outerWidth;
-//       //   var h = window.outerHeight;
-//       //   // 지도 element
-//       //   var el = document.getElementById("roomMap");
-//       //   el.style.width = "100%";
-//       //   el.style.height = h + "px";
-//       // }
-
-
       let clusters = clusteringByLocation(Array.from(searchDataValue[0]));
-
+      
       clusters.map((cluster) => {
         let price =
           cluster.count == 1 ? `${cluster.minPrice}` : `${cluster.minPrice} ~`;
@@ -152,13 +139,11 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
           title: cluster.items[0].propertyName,
           icon: {
             content:
-              `<button id="map_${cluster.items[0].roomId}" class="MapPin">` +
-              '<span class="MapPin-count">' +
-              cluster.count +
-              "</span>" +
-              '<span class="MapPin-price">' +
-              priceComma(price) +
-              "</span>" +
+              `<button id="map_${cluster.items[0].roomId}" class="${mapPinStyle}">` +
+                (cluster.count > 1 ?
+                `<span class="${mapPinCountStyle}">${cluster.count}</span>` 
+                : "") +
+                `<span class="${mapPinPriceStyle}">${priceComma(price)}</span>` +
               "</button>",
             size: new naver.maps.Size(24, 37),
             anchor: new naver.maps.Point(12, 37),
@@ -175,7 +160,8 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
           mobileWindow.push({
             img: room.images[0],
             type: room.propertyType,
-            name: room.propertyName,
+            name: room.roomName,
+            propertyName: room.propertyName,
             averageScore: room.reviewSummary ? room.reviewSummary.averageScore : 0,
             reviewCount: room.reviewSummary ? room.reviewSummary.reviewCount : 0,
             price: room.basePrice,
@@ -191,7 +177,7 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
             selectedMarker != null &&
             e.domEvent.target.parentElement.id != selectedId
           ) {
-            document.getElementById(selectedId).className = "MapPin";
+            document.getElementById(selectedId).className = Style["MapPin"];
             selectedMarker.setZIndex(100);
           }
 
@@ -231,7 +217,7 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
     function highlightMarker(roomMapMarker) {
       if (document.getElementById(roomMapMarker.icon.elementId) != null) {
         document.getElementById(roomMapMarker.icon.elementId).className =
-          "MapPin is-Active";
+          cx("MapPin", "is-Active");
       }
 
       roomMapMarker.setZIndex(1000);
@@ -266,22 +252,27 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
   };
 
   return (
-    <div>
-      <div id="roomMap" style={mapContainerStyle} observer={mapObserver}>
-        <div className={Style.MapSectionInfo}>
-          <div className={Style.site_container}>
-            <button className={Style.ListFixButton2} onClick={onSearchMap}>
-              지도 검색
-            </button>
-          </div>
+    <div className={Style["MapSection"]}>
+      <button className={cx("ListFixButton", "Current-search")} onClick={onSearchMap}>
+        현 지도에서 검색
+      </button>
+      <div 
+        id="roomMap" 
+        style={mapContainerStyle} 
+        // className={Style["MapSection-map"]}
+        observer={mapObserver}
+      >
+      </div>
+      <div className={Style["MapSectionInfo"]}>
+        <div className="site-container">
+          <SearchMobileCard
+            data={roomData}
+            closeModal={(value) => {
+              onRequestClosed(value);
+            }}
+            initSlide={slide}
+          ></SearchMobileCard>
         </div>
-        <SearchMobileCard
-          data={roomData}
-          closeModal={(value) => {
-            onRequestClosed(value);
-          }}
-          initSlide={slide}
-        ></SearchMobileCard>
       </div>
     </div>
   );
