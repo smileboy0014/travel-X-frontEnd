@@ -239,7 +239,7 @@
   padding: 0.5rem 1.875rem 0.5rem 0.625rem;
   position: relative;
   text-align: left;
-  /* background-image:url(../images/icon/ico_search_arrow.svg); */
+  /* background-image:url(../public/icon/ico_search_arrow.svg); */
   background-position: calc(100% - 0.625rem) center;
   background-repeat: no-repeat;
   background-size: 0.875rem 0.875rem;

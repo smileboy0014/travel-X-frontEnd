@@ -56,7 +56,7 @@ export default function Home() {
           /> */}
           <Link href={"/search"} as={`/search`}>
             <a>
-              <img className={Style.img} src="/SearchBar2.jpg" />
+              <div className={Style.img}></div>
             </a>
           </Link>
           <div>

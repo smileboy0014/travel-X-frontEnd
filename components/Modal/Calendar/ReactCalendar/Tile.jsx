@@ -2,10 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { tileProps } from './shared/propTypes';
-import Style from '../../../../styles/CalendarModal.module.css';
-import classNames from 'classnames/bind';
-
-const cx = classNames.bind(Style);
+import Style from '../../../../styles/Component.module.css';
 
 function getValue(nextProps, prop) {
   const { activeStartDate, date, view } = nextProps;

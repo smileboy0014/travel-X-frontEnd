@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
-import Style from "../../../styles/CommonModal.module.css";
+import Style from "../../../styles/Component.module.css";
 import RoomOrderby from "./RoomOrderby";
 
 const RoomOrderbyModal = ({ isOpen, onRequestClose }) => {
@@ -9,18 +9,18 @@ const RoomOrderbyModal = ({ isOpen, onRequestClose }) => {
   return (
     <div>
       <Modal
-        className={Style.Modal}
-        overlayClassName={Style.Overlay}
+        className={Style["Modal"]}
+        overlayClassName={Style["Overlay"]}
         isOpen={isOpen}
         ariaHideApp={false}
         onRequestClose={() => onRequestClose(false)}
         closeTimeoutMS={200}
       >
-        <div className={Style.site_container}>
-          <div className={Style.FilterPopHeader}>
-            <div className={Style.FilterPopHeader_title}>필터</div>
+        <div className="site-container">
+          <div className={Style["FilterPopHeader"]}>
+            <div className={Style["FilterPopHeader-title"]}>필터</div>
             <button
-              className={Style.FilterPopHeader_close}
+              className={Style["FilterPopHeader-close"]}
               onClick={() => onRequestClose(false)}
             ></button>
           </div>

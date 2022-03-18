@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Style from '../../../../styles/CalendarModal.module.css'
+import Style from '../../../../styles/Component.module.css'
 
 import { getTileClasses } from './shared/utils';
 import { tileGroupProps } from './shared/propTypes';

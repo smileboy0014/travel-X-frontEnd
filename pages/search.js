@@ -1,15 +1,16 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Style from "../styles/SearchResult.module.css";
+import Style from "../styles/Component.module.css";
 import SearchBar from "./search/SearchBar";
 import RecentSearch from "./search/RecentSearch";
 import PersonalFilterButton from "../components/Button/OptionFilter/PersonalFilterButton";
 import CalendarFilterButton from "../components/Button/OptionFilter/CalendarFilterButton";
-import OptionFilterButton from "../components/Button/OptionFilter/OptionFilterButton";
-import OrderByFilterButton from "../components/Button/OptionFilter/OrderByFilterButton";
 import MapFixButton from "../components/Button/Fix/MapFixButton";
 import CalendarModal from "../components/Modal/Calendar/CalendarModal";
 import * as dateActions from "../redux/store/modules/date";
+import classNames from 'classnames/bind';
+
+const cx = classNames.bind(Style);
 
 const Search = () => {
   const [recentListView, setRecentListView] = useState(false);
@@ -42,10 +43,10 @@ const Search = () => {
   }, []);
 
   return (
-    <div className={Style.site}>
-      <div className={Style.site_body}>
-        <div className={Style.ListFilter}>
-          <div className={Style.site_container}>
+    <div className="site">
+      <div className="site-body">
+        <div className={Style["ListFilter"]}>
+          <div className="site-container">
             <div>
               <SearchBar
                 getSearchValue={(value) => {
@@ -65,8 +66,8 @@ const Search = () => {
                 }}
               ></SearchBar>
 
-              <div className={Style.ListFilterValue}>
-                <div className={Style.ListFilterValue_list}>
+              <div className={Style["ListFilterValue"]}>
+                <div className={Style["ListFilterValue-list"]}>
                   <CalendarFilterButton
                     open={() => setCalendarModalOpen(true)}
                   ></CalendarFilterButton>
@@ -77,7 +78,7 @@ const Search = () => {
           </div>
         </div>
 
-        <div className={Style.TotalSearch}>
+        <div className={cx("TotalSearch", "is-Focus")}>
           <RecentSearch
             sendSearchValue={searchValue}
             sendSearchAutoComptValue={searchAutoComptValue}
