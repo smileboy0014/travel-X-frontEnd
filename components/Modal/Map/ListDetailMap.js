@@ -47,6 +47,11 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
   const dispatch = useDispatch();
 
   const initVars = () => {
+    markers.map(marker => {
+      marker.setMap(null);
+    });
+    recognizer.setMap(null);
+
     markers = [];
     mobileWindows = [];
     recognizer = null;
@@ -65,23 +70,19 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
           zoom: 14,
         });
       } else {
-        roomMap.center = new naver.maps.LatLng(
+        let newCenter = new naver.maps.LatLng(
           searchDataValue[0][0].location.lat,
           searchDataValue[0][0].location.lon
         );
+
+        roomMap.setCenter(newCenter);
       }
-      
 
       recognizer = new MarkerOverlapRecognizer({
         highlightRect: false,
         tolerance: 5,
       });
       recognizer.setMap(roomMap);
-  
-      markers = [];
-      mobileWindows = [];
-      selectedId = "";
-      selectedMarker;
     }
   };
 
@@ -237,11 +238,23 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
 
   useEffect(() => {
     console.log("searchDataValue: ", searchDataValue);
-    initVars();
     initMap();
     addRoomMapMarker();
     setRoomData([]);
+    
+    return () => {
+      initVars();
+    }
   }, [searchDataValue]);
+
+  useEffect(() => {
+    /* 리스트 보기로 화면이 닫혔을 때만 clean up. 
+       재 검색 때마다 naver map 중복 할당하여 레이어 겹치는 버그 방지 */
+    return () => {
+      roomMap.destroy();
+      roomMap = null;
+    }
+  }, []);
 
   // useEffect(() => {}, [mapSouthWest, mapNorthEast, test]);
 
