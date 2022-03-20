@@ -71,7 +71,7 @@ const ReviewDetailModal = (props) => {
         onRequestClose={() => onRequestClose(false)}
       >
         <label onClick={() => onRequestClose(false)}>X</label>
-        <div className={Style["Modal"]Body}>
+        <div className={Style["Modal"]}>
           <div className={Style.leftDetail}>
             <div className={Style.formHeader}>
               <svg
