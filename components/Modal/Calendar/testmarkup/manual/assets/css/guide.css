@@ -1,0 +1,205 @@
+@charset "UTF-8";
+
+/*=========================================================
+  Style
+=========================================================*/
+.ComponentBoxHeader {
+  margin-bottom: 20px;
+}
+
+.c-TitleBgLine {
+  position: relative;
+  font-size: 0;
+  line-height: 0;
+}
+
+.c-TitleBgLine:before {
+  content: "";
+  width: 100%;
+  height: 1px;
+  background-color: #000;
+  position: absolute;
+  top: 50%;
+  left: 0;
+}
+
+.c-TitleBgLine-title {
+  position: relative;
+  z-index: 1;
+  background-color: #fff;
+  display: inline-block;
+  font-size: 16px;
+  line-height: 1.2em;
+  color: #000;
+  font-weight: 500;
+  padding-right: 24px;
+}
+
+.ab-text {
+  position: absolute;
+  clip: rect(0 0 0 0);
+  margin: -1px;
+  border: 0;
+  overflow: hidden;
+  padding: 0;
+  width: 1px;
+  height: 1px;
+  white-space: nowrap;
+}
+
+.ComponentBox {
+  margin-top: 70px;
+}
+
+.ComponentBox:first-child {
+  margin-top: 0px;
+}
+
+.ComponentBoxView {
+  border: solid 1px #dddddd;
+}
+
+.ComponentBoxView-content {
+  padding: 20px 20px;
+  position: relative;
+}
+
+.ComponentBoxView-content:after{
+	content:"";
+	display:table;
+	clear:both;
+}
+
+.ComponentBoxView-footer {
+  padding: 10px 20px;
+  border-top: dashed 1px #dddddd;
+}
+
+.ComponentBoxView-link {
+  width: 20px;
+  height: 20px;
+  background-image: url(../images/expand.svg);
+  background-size: 20px 20px;
+  display: block;
+  margin: 0 auto;
+}
+
+.is-view .ComponentBoxView-link {
+  background-image: url(../images/unexpand.svg);
+}
+
+.ComponentBoxCode {
+  display: none;
+  padding: 10px 20px;
+  border: solid 1px #dddddd;
+  border-top: none;
+  font-size:14px;
+  font-weight:normal;
+}
+
+.is-view .ComponentBoxCode {
+  display: block;
+}
+
+.ComponentBoxLinker{
+  border:solid 1px #333;
+  border-left:solid 3px #333;
+  margin-top:10px;
+}
+
+.ComponentBoxLinker:first-child{
+  margin-top:0;
+}
+
+.ComponentBoxLinker-link{
+  display: block;
+  font-size:14px;
+  line-height:1.4em;
+  color:#333;
+  padding:8px 15px;
+}
+
+/*=========================================================
+  Content
+=========================================================*/
+.site{
+	padding:20px 20px;
+	max-width:808px;
+	margin:0 auto;
+}
+
+.mb15{
+	margin-bottom:15px;
+}
+
+a{
+	color:#3b3bc1;
+}
+
+.Component strong{
+	color:#000;
+}
+
+
+.ComponentBox > h3.BulletText{
+	font-size:20px;
+	color:#333;
+	line-height:1.4em;
+	font-weight:bold;
+}
+
+.BulletText{
+	display:block;
+}
+
+.BulletText:after{
+	content:"";
+	display:table;
+	clear:both;
+}
+
+.BulletText-bullet{
+	float:left;
+	margin-right:10px;
+	display:block;
+}
+
+.BulletText-text{
+	overflow:hidden;
+	display:block;
+}
+
+.BasicImage{
+	line-height:0;
+	border:solid 1px #333;
+	max-width:1000px;
+	width:100%;
+}
+
+.TextList-item{
+	margin-top:3px;
+}
+
+.TextList-item:first-child{
+	margin-top:0;
+}
+
+.HeaderMenu-sub .HeaderMenu-link{
+	font-size:12px;
+}
+
+.HeaderMenu-sub{
+	display:none;
+}
+
+.BasicButton{
+	display:inline-block;
+	border:solid 1px #333;
+	padding:7px 20px 9px;
+	font-size:13px;
+	line-height:1.2em;
+	color:#333;
+	vertical-align:middle;
+}
+
+

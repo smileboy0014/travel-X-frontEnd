@@ -1,0 +1,232 @@
+.searchResult_star {
+  color: red;
+}
+
+.searchResult_stars {
+  display: flex;
+  align-items: center;
+}
+
+/*=========================================================
+  ProductList
+=========================================================*/
+.ProductList {
+  padding-top: 9.375rem;
+  padding-bottom: 11.25rem;
+}
+
+.ProductList_item {
+  margin-top: 1rem;
+}
+
+.ProductList_item::first-child {
+  margin-top: 0;
+}
+
+/*=========================================================
+  ProductList:Slide
+=========================================================*/
+.ProductSlide {
+  position: relative;
+}
+
+.ProductSlide_link {
+  display: block;
+  overflow: hidden;
+  line-height: 0;
+  position: relative;
+}
+
+.ProductSlide_link::after {
+  content: "";
+  display: block;
+  padding-bottom: 42%;
+}
+
+.ProductSlide_link::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 15%;
+  opacity: 0.6;
+  mix-blend-mode: multiply;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0), #000 31%);
+  z-index: 1;
+}
+
+.ProductSlide_link_img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+}
+
+/*=========================================================
+  ProductList:item
+=========================================================*/
+.ProductItem {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.9375rem;
+  box-shadow: 0 0.125rem 0.5rem 0 rgba(0, 0, 0, 0.1);
+}
+
+.ProductItem_address {
+  position: absolute;
+  top: 0.625rem;
+  left: 1rem;
+  right: 1rem;
+  font-size: 0.625rem;
+  line-height: 1.2em;
+  color: #fff;
+  font-weight: 500;
+  padding-left: 1rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  z-index: 5;
+}
+
+.ProductItem_address_icon {
+  content: "";
+  width: 0.75rem;
+  height: 0.75rem;
+  /* background-image: url(../images/icon/ico_pin.svg); */
+  background-size: 0.75rem 0.75rem;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+}
+
+.ProductItemCont {
+  padding: 0.75rem 1rem;
+}
+
+.ProductItemMeta {
+  margin-bottom: 0.8125rem;
+  font-size: 0;
+  line-height: 0;
+}
+
+.ProductItemMeta::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.ProductItemMeta_item {
+  font-size: 0.75rem;
+  line-height: 1.4em;
+  color: #6f6f6f;
+  font-weight: 500;
+  display: inline-block;
+  padding-right: 0.5rem;
+  margin-right: 0.5rem;
+  position: relative;
+}
+
+.ProductItemMeta_item::after {
+  content: "";
+  width: 0.0625rem;
+  height: 0.625rem;
+  background-color: #6f6f6f;
+  opacity: 0.5;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  margin-top: 0.0625rem;
+  transform: translateY(-50%);
+}
+
+.ProductItemMeta_item:last-child {
+  padding-right: 0;
+  margin-right: 0;
+}
+
+.ProductItemMeta_item:last-child::after {
+  display: none;
+}
+
+.ProductItemTitle {
+  margin-bottom: 0.125rem;
+  font-size: 1rem;
+  line-height: 1.4em;
+  color: #000;
+  font-weight: bold;
+}
+
+.ProductItemFilter {
+  font-size: 0;
+  line-height: 0;
+}
+
+.ProductItemFilter::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.ProductItemFilter_item {
+  font-size: 0.75rem;
+  line-height: 1.4em;
+  color: #6f6f6f;
+  font-weight: 500;
+  display: inline-block;
+  padding-right: 0.3125rem;
+  margin-right: 0.3125rem;
+  position: relative;
+}
+
+.ProductItemFilter_item::after {
+  content: "";
+  width: 0.0625rem;
+  height: 0.625rem;
+  background-color: #6f6f6f;
+  opacity: 0.5;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  margin-top: 0.0625rem;
+  transform: translateY(-50%);
+}
+
+.ProductItemFilter_item:last-child {
+  padding-right: 0;
+  margin-right: 0;
+}
+
+.ProductItemFilter_item:last-child::after {
+  display: none;
+}
+
+.ProductItemPrice {
+  margin-top: 1.125rem;
+  display: table;
+  width: 100%;
+}
+
+.ProductItemPrice_current {
+  display: table-cell;
+  vertical-align: middle;
+  width: 0.0625rem;
+  white-space: nowrap;
+  font-size: 1.25rem;
+  line-height: 1.2em;
+  color: #6957e8;
+  font-weight: bold;
+  font-family: "Roboto", "Noto Sans KR";
+  padding-right: 0.5rem;
+}
+
+.ProductItemPrice_condition {
+  display: table-cell;
+  vertical-align: middle;
+  font-size: 0.75rem;
+  line-height: 1.4em;
+  color: #6f6f6f;
+  font-weight: normal;
+}

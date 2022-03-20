@@ -1,12 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
 import Modal from "react-modal";
-import Style from "../../../styles/Component.module.css";
+import Style from "../../../styles/CalendarModal.module.css";
 import Calendar from "./ReactCalendar/Calendar";
 import { useDispatch, useSelector } from "react-redux";
 import * as dateActions from "../../../redux/store/modules/date";
-import classNames from 'classnames/bind';
-
-const cx = classNames.bind(Style);
 
 const DetailCalendarModal = ({ isOpen, onRequestClose, availableDates }) => {
   const { detailDate } = useSelector((state) => state.date);
@@ -51,41 +48,41 @@ const DetailCalendarModal = ({ isOpen, onRequestClose, availableDates }) => {
   return (
     <div>
       <Modal
-        className={Style["CalenderPop"]}
-        overlayClassName={Style["Overlay"]}
+        className={Style.CalenderPop}
+        overlayClassName={Style.Overlay}
         isOpen={isOpen}
         ariaHideApp={false}
         onRequestClose={() => onRequestClose(false)}
         closeTimeoutMS={200}
       >
-        <div className={Style["CalenderPopHeader"]}>
+        <div className={Style.CalenderPopHeader}>
           <div className="site-container">
-            <div className={Style["CalenderPopHeaderTitle"]}>
-              <div className={Style["CalenderPopHeaderTitle-title"]}>
+            <div className={Style.CalenderPopHeaderTitle}>
+              <div className={Style.CalenderPopHeaderTitle_title}>
                 날짜 선택
               </div>
               <button
                 type="button"
-                className={Style["CalenderPopHeaderTitle-close"]}
+                className={Style.CalenderPopHeaderTitle_close}
                 onClick={() => onRequestClose(false)}
               >
                 <span className="ab-text">Close</span>
               </button>
             </div>
-            <div className={Style["CalenderHeader"]}>
-              <div className={Style["CalenderHeader-day"]}>일</div>
-              <div className={Style["CalenderHeader-day"]}>월</div>
-              <div className={Style["CalenderHeader-day"]}>화</div>
-              <div className={Style["CalenderHeader-day"]}>수</div>
-              <div className={Style["CalenderHeader-day"]}>목</div>
-              <div className={Style["CalenderHeader-day"]}>금</div>
-              <div className={Style["CalenderHeader-day"]}>토</div>
+            <div className={Style.CalenderHeader}>
+              <div className={Style.CalenderHeader_day}>일</div>
+              <div className={Style.CalenderHeader_day}>월</div>
+              <div className={Style.CalenderHeader_day}>화</div>
+              <div className={Style.CalenderHeader_day}>수</div>
+              <div className={Style.CalenderHeader_day}>목</div>
+              <div className={Style.CalenderHeader_day}>금</div>
+              <div className={Style.CalenderHeader_day}>토</div>
             </div>
           </div>
         </div>
-        <div className={Style["CalenderPopBody"]}>
+        <div className={Style.CalenderPopBody}>
           <div className="site-container">
-            <div className={Style["CheckCalender"]}>
+            <div className={Style.CheckCalender}>
               <Calendar
                 selectRange
                 onChange={onChange}
@@ -111,41 +108,41 @@ const DetailCalendarModal = ({ isOpen, onRequestClose, availableDates }) => {
             </div>
           </div>
         </div>
-        <div className={Style["CalenderPopFooter"]}>
+        <div className={Style.CalenderPopFooter}>
           <div className="site-container">
-            <div className={Style["CalenderPopFooterCheck"]}>
-              <dl className={cx('CalenderPopFooterCheck-item', 'Start')}>
+            <div className={Style.CalenderPopFooterCheck}>
+              <dl className={Style.CalenderPopFooterCheck_item_Start}>
                 <dt
                   className={
                     value[0]
-                      ? Style["CalenderPopFooterCheck-title"]
-                      : Style["CalenderPopFooter-title"]
+                      ? Style.CalenderPopFooterCheck_title
+                      : Style.CalenderPopFooter_title
                   }
                 >
                   체크인
                 </dt>
                 {value[0] && (
-                  <dd className={Style["CalenderPopFooterCheck-day"]}>
-                    <span className={Style["CalenderPopFooterCheck-text"]}>
+                  <dd className={Style.CalenderPopFooterCheck_day}>
+                    <span className={Style.CalenderPopFooterCheck_text}>
                       {value[0].getMonth() + 1}.{value[0].getDate()}
                     </span>
                     ({week[value[0].getDay()]})
                   </dd>
                 )}
               </dl>
-              <dl className={cx('CalenderPopFooterCheck-item', 'End')}>
+              <dl className={Style.CalenderPopFooterCheck_item_End}>
                 <dt
                   className={
                     value[1]
-                      ? Style["CalenderPopFooterCheck-title"]
-                      : Style["CalenderPopFooter-title"]
+                      ? Style.CalenderPopFooterCheck_title
+                      : Style.CalenderPopFooter_title
                   }
                 >
                   체크아웃
                 </dt>
                 {value[1] && (
-                  <dd className={Style["CalenderPopFooterCheck-day"]}>
-                    <span className={Style["CalenderPopFooterCheck-text"]}>
+                  <dd className={Style.CalenderPopFooterCheck_day}>
+                    <span className={Style.CalenderPopFooterCheck_text}>
                       {value[1].getMonth() + 1}.{value[1].getDate()}
                     </span>
                     ({week[value[1].getDay()]})
@@ -153,11 +150,11 @@ const DetailCalendarModal = ({ isOpen, onRequestClose, availableDates }) => {
                 )}
               </dl>
             </div>
-            <div className={Style["CalenderPopFooterBtn"]}>
+            <div className={Style.CalenderPopFooterBtn}>
               {value[0] ? (
                 <button
                   type="button"
-                  className={Style["CalenderPopFooterBtn-button"]}
+                  className={Style.CalenderPopFooterBtn_button}
                   onClick={() => {
                     dispatch(
                       dateActions.setDetailDate({
@@ -175,7 +172,7 @@ const DetailCalendarModal = ({ isOpen, onRequestClose, availableDates }) => {
                   박 선택 완료
                 </button>
               ) : (
-                <div className={Style["CalenderPopFooterinfo"]}>
+                <div className={Style.CalenderPopFooterinfo}>
                   날짜를 선택해 주세요
                 </div>
               )}

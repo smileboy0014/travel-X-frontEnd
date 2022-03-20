@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import mergeClassNames from 'merge-class-names';
 
@@ -606,7 +606,7 @@ export default class Calendar extends Component {
         
         {
           showStartDateList && showStartDateList.map(date => (
-            <Fragment key={date}>
+            <>
               {this.renderNavigation(date)}
               <div
                 className={`${baseClassName}__viewContainer`}
@@ -616,7 +616,7 @@ export default class Calendar extends Component {
                 {this.renderContent(date)}
               </div>
               <br/>
-            </Fragment>
+            </>
           ))
         }
       </div>

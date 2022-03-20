@@ -154,7 +154,7 @@ export default function useInfiniteSearch(
     adultCounterValue,
     childCounterValue,
     searchTypeValue,
-    filterValue
+    filterValue,
   ]);
 
   useEffect(() => {

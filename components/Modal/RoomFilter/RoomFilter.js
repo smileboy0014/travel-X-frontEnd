@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 import * as roomFilterActions from "../../../redux/store/modules/roomFilter";
-import Style from "../../../styles/Component.module.css";
+import Style from "../../../styles/FilterButton.module.css";
 
 
 
@@ -70,15 +70,15 @@ const RoomFilter = ({ onRequestClear, onSetClear, onRequestClose }) => {
   };
 
   return (
-    <>
-      <div className={Style["FilterPopBody"]}>
-        <div className={Style["FilterPopItem"]}>
-          <div className={Style["FilterPopItem-title"]}>숙박 유형</div>
-          <ul className={Style["FilterPopList"]}>
-            <li className={Style["FilterPopList-item"]}>
-              <label className={Style["FilterCheck"]}>
+    <div>
+      <div className={Style.FilterPopBody}>
+        <div className={Style.FilterPopItem}>
+          <div className={Style.FilterPopItem_title}>숙박 유형</div>
+          <ul className={Style.FilterPopList}>
+            <li className={Style.FilterPopList_item}>
+              <label className={Style.FilterCheck}>
                 <input
-                  className={Style["FilterCheck-input"]}
+                  className={Style.FilterCheck_input}
                   type="checkbox"
                   id="hDay"
                   name="hDay"
@@ -87,13 +87,13 @@ const RoomFilter = ({ onRequestClear, onSetClear, onRequestClose }) => {
                   }}
                   checked={checkedRentInputs.includes("hDay") ? true : false}
                 />
-                <span className={Style["FilterCheck-text"]}>대실</span>
+                <span className={Style.FilterCheck_text}>대실</span>
               </label>
             </li>
-            <li className={Style["FilterPopList-item"]}>
-              <label className={Style["FilterCheck"]}>
+            <li className={Style.FilterPopList_item}>
+              <label className={Style.FilterCheck}>
                 <input
-                  className={Style["FilterCheck-input"]}
+                  className={Style.FilterCheck_input}
                   type="checkbox"
                   id="fDay"
                   name="fDay"
@@ -102,19 +102,19 @@ const RoomFilter = ({ onRequestClear, onSetClear, onRequestClose }) => {
                   }}
                   checked={checkedRentInputs.includes("fDay") ? true : false}
                 />
-                <span className={Style["FilterCheck-text"]}>숙박</span>
+                <span className={Style.FilterCheck_text}>숙박</span>
               </label>
             </li>
           </ul>
         </div>
 
-        <div className={Style["FilterPopItem"]}>
-          <div className={Style["FilterPopItem-title"]}>숙소 유형</div>
-          <ul className={Style["FilterPopList"]}>
-            <li className={Style["FilterPopList-item"]}>
-              <label className={Style['FilterCheck']}>
+        <div className={Style.FilterPopItem}>
+          <div className={Style.FilterPopItem_title}>숙소 유형</div>
+          <ul className={Style.FilterPopList}>
+            <li className={Style.FilterPopList_item}>
+              <label className={Style.FilterCheck}>
                 <input
-                  className={Style["FilterCheck-input"]}
+                  className={Style.FilterCheck_input}
                   type="checkbox"
                   id="HOTEL"
                   name="HOTEL"
@@ -123,13 +123,13 @@ const RoomFilter = ({ onRequestClear, onSetClear, onRequestClose }) => {
                   }}
                   checked={checkedHotelInputs.includes("HOTEL") ? true : false}
                 />
-                <span className={Style["FilterCheck-text"]}>호텔</span>
+                <span className={Style.FilterCheck_text}>호텔</span>
               </label>
             </li>
-            <li className={Style["FilterPopList-item"]}>
-              <label className={Style["FilterCheck"]}>
+            <li className={Style.FilterPopList_item}>
+              <label className={Style.FilterCheck}>
                 <input
-                  className={Style["FilterCheck-input"]}
+                  className={Style.FilterCheck_input}
                   type="checkbox"
                   id="MOTEL"
                   name="MOTEL"
@@ -138,13 +138,13 @@ const RoomFilter = ({ onRequestClear, onSetClear, onRequestClose }) => {
                   }}
                   checked={checkedHotelInputs.includes("MOTEL") ? true : false}
                 />
-                <span className={Style["FilterCheck-text"]}>모텔</span>
+                <span className={Style.FilterCheck_text}>모텔</span>
               </label>
             </li>
-            <li className={Style["FilterPopList-item"]}>
-              <label className={Style["FilterCheck"]}>
+            <li className={Style.FilterPopList_item}>
+              <label className={Style.FilterCheck}>
                 <input
-                  className={Style["FilterCheck-input"]}
+                  className={Style.FilterCheck_input}
                   type="checkbox"
                   id="PENSION"
                   name="PENSION"
@@ -153,13 +153,13 @@ const RoomFilter = ({ onRequestClear, onSetClear, onRequestClose }) => {
                   }}
                   checked={checkedHotelInputs.includes("PENSION") ? true : false}
                 />
-                <span className={Style["FilterCheck-text"]}>펜션</span>
+                <span className={Style.FilterCheck_text}>펜션</span>
               </label>
             </li>
-            <li className={Style["FilterPopList-item"]}>
-              <label className={Style["FilterCheck"]}>
+            <li className={Style.FilterPopList_item}>
+              <label className={Style.FilterCheck}>
                 <input
-                  className={Style["FilterCheck-input"]}
+                  className={Style.FilterCheck_input}
                   type="checkbox"
                   id="GUESTHOUSE"
                   name="GUESTHOUSE"
@@ -168,13 +168,13 @@ const RoomFilter = ({ onRequestClear, onSetClear, onRequestClose }) => {
                   }}
                   checked={checkedHotelInputs.includes("GUESTHOUSE") ? true : false}
                 />
-                <span className={Style["FilterCheck-text"]}>게스트하우스</span>
+                <span className={Style.FilterCheck_text}>게스트하우스</span>
               </label>
             </li>
-            <li className={Style["FilterPopList-item"]}>
-              <label className={Style["FilterCheck"]}>
+            <li className={Style.FilterPopList_item}>
+              <label className={Style.FilterCheck}>
                 <input
-                  className={Style["FilterCheck-input"]}
+                  className={Style.FilterCheck_input}
                   type="checkbox"
                   id="RESORT"
                   name="RESORT"
@@ -183,13 +183,13 @@ const RoomFilter = ({ onRequestClear, onSetClear, onRequestClose }) => {
                   }}
                   checked={checkedHotelInputs.includes("RESORT") ? true : false}
                 />
-                <span className={Style["FilterCheck-text"]}>리조트</span>
+                <span className={Style.FilterCheck_text}>리조트</span>
               </label>
             </li>
-            <li className={Style["FilterPopList-item"]}>
-              <label className={Style["FilterCheck"]}>
+            <li className={Style.FilterPopList_item}>
+              <label className={Style.FilterCheck}>
                 <input
-                  className={Style["FilterCheck-input"]}
+                  className={Style.FilterCheck_input}
                   type="checkbox"
                   id="CAMPING"
                   name="CAMPING"
@@ -198,18 +198,18 @@ const RoomFilter = ({ onRequestClear, onSetClear, onRequestClose }) => {
                   }}
                   checked={checkedHotelInputs.includes("CAMPING") ? true : false}
                 />
-                <span className={Style["FilterCheck-text"]}>캠핑장</span>
+                <span className={Style.FilterCheck_text}>캠핑장</span>
               </label>
             </li>
           </ul>
         </div>
       </div>
-      <div className={Style["FilterPopFooter"]}>
-        <button className={Style["FilterPopFooter-button"]} onClick={sendConfirm}>
+      <div className={Style.FilterPopFooter}>
+        <button className={Style.FilterPopFooter_button} onClick={sendConfirm}>
           선택하기
         </button>
       </div>
-    </>
+    </div>
   );
 };
 

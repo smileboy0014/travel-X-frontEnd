@@ -64,14 +64,14 @@ const ReviewDetailModal = (props) => {
   return (
     <>
       <Modal
-        className={Style["Modal"]}
-        overlayClassName={Style["Overlay"]}
+        className={Style.Modal}
+        overlayClassName={Style.Overlay}
         isOpen={isOpen}
         ariaHideApp={false}
         onRequestClose={() => onRequestClose(false)}
       >
         <label onClick={() => onRequestClose(false)}>X</label>
-        <div className={Style["Modal"]}>
+        <div className={Style.modalBody}>
           <div className={Style.leftDetail}>
             <div className={Style.formHeader}>
               <svg

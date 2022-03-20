@@ -1,0 +1,500 @@
+.site {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.site_container {
+  max-width: 50rem;
+  padding: 0 1rem;
+  margin: 0 auto;
+  position: relative;
+}
+
+/*=========================================================
+  Single:Header
+=========================================================*/
+.Header_inner {
+  padding: 22px 65px 22px;
+  position: relative;
+  height: 60px;
+}
+.site_header {
+  background-color: #00ff0000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+}
+
+.site_header1 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  box-shadow: 0 3px 8px 0 rgb(0 0 0 / 8%);
+  opacity: 0.5;
+  background-color: #fff;
+  z-index: 10;
+}
+
+.site_header2 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  box-shadow: 0 3px 8px 0 rgb(0 0 0 / 8%);
+  background-color: #fff;
+  z-index: 10;
+}
+
+.site_body {
+  flex: 1;
+}
+
+.SinglePage {
+  overflow: hidden;
+}
+
+/*=========================================================
+  DetailHeader
+=========================================================*/
+.DetailHeader {
+  padding: 2rem 0 2rem;
+  background-color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.DetailHeaderMeta {
+  margin-bottom: 0.8125rem;
+  font-size: 0;
+  line-height: 0;
+}
+
+.DetailHeaderMeta::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.DetailHeaderMeta_item {
+  font-size: 0.75rem;
+  line-height: 1.4em;
+  color: #6f6f6f;
+  font-weight: 500;
+  display: inline-block;
+  padding-right: 0.5rem;
+  margin-right: 0.5rem;
+  position: relative;
+}
+
+.DetailHeaderMeta_item::after {
+  content: "";
+  width: 0.0625rem;
+  height: 0.625rem;
+  background-color: #6f6f6f;
+  opacity: 0.5;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  margin-top: 0.0625rem;
+  transform: translateY(-50%);
+}
+
+.DetailHeaderMeta_item::last-child {
+  padding-right: 0;
+  margin-right: 0;
+}
+
+.DetailHeaderMeta_item::last-child::after {
+  display: none;
+}
+
+.DetailHeaderMeta_item_icoHotel {
+  padding-left: 1.125rem;
+}
+
+.DetailHeaderMeta_item_icoHotel::before {
+  content: "";
+  width: 1rem;
+  height: 1rem;
+  background-size: 1rem 1rem;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+}
+
+.DetailHeaderTitle {
+  margin-bottom: 0.125rem;
+  font-size: 1.125rem;
+  line-height: 1.4em;
+  color: #000;
+  font-weight: bold;
+}
+
+.DetailHeaderInfo {
+  margin-top: 1.5625rem;
+}
+
+.DetailHeaderInfoAddress {
+  position: relative;
+  font-size: 0.75rem;
+  line-height: 1.4em;
+  color: #6f6f6f;
+  font-weight: 500;
+  padding-left: 1.125rem;
+}
+
+.DetailHeaderInfoAddress_Icon {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 0.75rem;
+  height: 0.75rem;
+  background-size: 0.75rem 0.75rem;
+}
+
+.DetailHeaderInfoFilter {
+  margin-top: 0.375rem;
+  font-size: 0;
+  line-height: 0;
+  padding-left: 1.125rem;
+  position: relative;
+}
+
+.DetailHeaderInfoFilter_Icon {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 0.75rem;
+  height: 0.75rem;
+  background-size: 0.75rem 0.75rem;
+}
+
+.DetailHeaderInfoFilter::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.DetailHeaderInfoFilter_item {
+  font-size: 0.75rem;
+  line-height: 1.4em;
+  color: #6f6f6f;
+  font-weight: 500;
+  display: inline-block;
+  padding-right: 0.3125rem;
+  margin-right: 0.3125rem;
+  position: relative;
+}
+
+.DetailHeaderInfoFilter_item::after {
+  content: "";
+  width: 0.0625rem;
+  height: 0.625rem;
+  background-color: #6f6f6f;
+  opacity: 0.5;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  margin-top: 0.0625rem;
+  transform: translateY(-50%);
+}
+
+.DetailHeaderInfoFilter_item::last-child {
+  padding-right: 0;
+  margin-right: 0;
+}
+
+.DetailHeaderInfoFilter_item::last-child:after {
+  display: none;
+}
+
+/*=========================================================
+  DetailPayment
+=========================================================*/
+.DetailPayment {
+  background-color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.DetailPaymentDate {
+  padding: 1.625rem 3.375rem 1.625rem 0.625rem;
+  position: relative;
+  font-size: 0;
+  line-height: 0;
+  border-bottom: solid 0.0625rem #e9e9e9;
+}
+
+.DetailPaymentDate_button {
+  border: solid 0.0625rem #c4c4c4;
+  padding: 0.4375rem 0.875rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  line-height: 1.2em;
+  color: #000;
+  font-weight: 500;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+}
+
+.DetailPaymentDate_schedule {
+  display: inline-block;
+  padding-right: 0.875rem;
+  margin-right: 0.8125rem;
+  position: relative;
+  padding-left: 2.5rem;
+  font-size: 0.875rem;
+  line-height: 1.3em;
+  font-weight: bold;
+  color: #6957e8;
+}
+
+.DetailPaymentDate_schedule_Icon {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 1.875rem;
+  height: 1.875rem;
+  background-size: 1.875rem 1.875rem;
+}
+
+.DetailPaymentDate-schedule::after {
+  content: "";
+  width: 0.0625rem;
+  height: 0.75rem;
+  background-color: #6f6f6f;
+  opacity: 0.6;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+}
+
+.DetailPaymentDate_day {
+  font-size: 0.875rem;
+  line-height: 1.3em;
+  font-weight: bold;
+  color: #6f6f6f;
+}
+
+.DetailPaymentFree {
+  padding: 1.875rem 0 2.1875rem;
+}
+
+.DetailPaymentFree_inner {
+  display: table;
+  width: 100%;
+}
+
+.DetailPaymentFreeTotal {
+  display: table-cell;
+  vertical-align: top;
+  width: 1%;
+  padding-right: 2.5625rem;
+  white-space: nowrap;
+}
+
+.DetailPaymentFreeList {
+  display: table-cell;
+  vertical-align: top;
+}
+
+.DetailPaymentFreeTotal_title {
+  font-size: 0.75rem;
+  line-height: 1.2em;
+  color: #000;
+  font-weight: 500;
+  margin-bottom: 0.625rem;
+}
+
+.DetailPaymentFreeTotal_price {
+  font-size: 1.25rem;
+  line-height: 1.2em;
+  color: #6957e8;
+  font-weight: bold;
+  font-family: "Roboto", "Noto Sans KR";
+}
+
+.DetailPaymentFreeList_title {
+  font-size: 0.75rem;
+  line-height: 1.2em;
+  color: #a5a5a5;
+  font-weight: 500;
+  margin-bottom: 1.0625rem;
+}
+
+.DetailPaymentFreeList_price {
+  font-size: 0.75rem;
+  line-height: 1.2em;
+  color: #000;
+  font-family: "Roboto", "Noto Sans KR";
+}
+
+.DetailPaymentFreeList_list {
+  overflow: hidden;
+  margin: 0 -1.25rem;
+}
+
+.DetailPaymentFreeList_item {
+  padding: 0 1.25rem;
+  float: left;
+  position: relative;
+}
+
+.DetailPaymentFreeList_item::after {
+  content: "+";
+  font-size: 0.75rem;
+  line-height: #000;
+  position: absolute;
+  top: 50%;
+  right: -3px;
+  transform: translateY(-50%);
+}
+
+.DetailPaymentFreeList_item:last-child::after {
+  display: none;
+}
+
+/*=========================================================
+  DetailInfo
+=========================================================*/
+.DetailInfo {
+  background-color: #fff;
+  padding: 30px 0 95px;
+}
+
+.DetailInfoItem {
+  margin-top: 1.875rem;
+}
+
+.DetailInfoItem::first-child {
+  margin-top: 0;
+}
+
+.DetailInfoItem_title {
+  font-size: 1rem;
+  line-height: 1.4em;
+  color: #000;
+  font-weight: 500;
+  margin-bottom: 0.9375rem;
+}
+
+.DetailInfoItem_text {
+  font-size: 0.875rem;
+  line-height: 1.6em;
+  color: #6f6f6f;
+  font-weight: 500;
+}
+
+.DetailInfoItem_item {
+  font-size: 0.875rem;
+  line-height: 1.6em;
+  color: #6f6f6f;
+  padding-left: 0.625rem;
+  position: relative;
+  font-weight: 500;
+}
+
+.DetailInfoItem_item::before {
+  content: "-";
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/*=========================================================
+  SinglePage
+=========================================================*/
+.SinglePage {
+  overflow: hidden;
+}
+
+/*=========================================================
+  SinglePage:Slide
+=========================================================*/
+.DetailSlide {
+  position: relative;
+}
+
+.DetailSlide_thumb {
+  width: 100%;
+  display: block;
+  overflow: hidden;
+  line-height: 0;
+  position: relative;
+}
+
+.DetailSlide_thumb:after {
+  content: "";
+  display: block;
+  padding-bottom: 69%;
+}
+
+.DetailSlide_thumb:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  opacity: 0.6;
+  mix-blend-mode: multiply;
+  background-image: linear-gradient(to top, rgba(0, 0, 0, 0), #000 27%);
+  z-index: 1;
+}
+
+.DetailSlide_thumb img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+}
+
+.DetailSlide_pagination {
+  position: absolute;
+  bottom: 0.625rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  text-align: center;
+  font-size: 0;
+  line-height: 0;
+}
+
+.DetailSlide_pagination .swiper_pagination_bullet {
+  width: 0.3125rem;
+  height: 0.3125rem;
+  border-radius: 100%;
+  background-color: #fff;
+  display: inline-block;
+  margin: 0 0.125rem;
+}
+
+.DetailSlide_pagination
+  .swiper_pagination-bullet.swiper_pagination_bullet_active {
+  background-color: #6957e8;
+}
+
+/*=========================================================
+ 리뷰 별 수정 임시용
+=========================================================*/
+.searchResult_star {
+  color: red;
+}
+
+.searchResult_stars {
+  display: flex;
+  align-items: center;
+}

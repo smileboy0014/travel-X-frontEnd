@@ -8,6 +8,7 @@ import {
 } from '@wojtekmaj/date-utils';
 
 import WeekNumber from './WeekNumber';
+import Flex from '../Flex';
 
 import {
   getBeginOfWeek,
