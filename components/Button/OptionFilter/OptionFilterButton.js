@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import Style from "../../../styles/FilterButton.module.css";
+import Style from "../../../styles/Component.module.css";
 import RoomFilterModal from "../../Modal/RoomFilter/RoomFilterModal";
 
 const OptionFilterButton = () => {
   const [roomFilterModalOpen, setRoomFilterModalOpen] = useState(false);
 
   return (
-    <li className={Style.ListFilterButton_item}>
+    <li className={Style["ListFilterButton-item"]}>
       <button
-        className={Style.ListFilterButton_filter}
+        className={Style["ListFilterButton-filter"]}
         onClick={() => {
           setRoomFilterModalOpen(true);
         }}

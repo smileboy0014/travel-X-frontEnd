@@ -10,10 +10,9 @@ import {
   formatLongDate as defaultFormatLongDate,
 } from '../shared/dateFormatter';
 import { tileProps } from '../shared/propTypes';
-import Style from '../../../../../styles/CalendarModal.module.css';
 
 // const className = 'react-calendar__month-view__days__day';
-const className = Style.CheckCalenderBody_text;
+// const className = Style["CheckCalenderBody-text"];
 
 export default function Day({
   formatDay = defaultFormatDay,
@@ -30,7 +29,7 @@ export default function Day({
       {...otherProps}
       classes={[].concat(
         classes,
-        className,
+        // className,
         // isWeekend(date, calendarType) ? `${className}--weekend` : null,
         date.getMonth() !== currentMonthIndex ? `${className}--neighboringMonth` : null,
       )}
@@ -39,7 +38,7 @@ export default function Day({
       minDateTransform={getDayStart}
       view="month"
     >
-      {formatDay(locale, date)}
+      {formatDay('en-US', date)}
     </Tile>
   );
 }

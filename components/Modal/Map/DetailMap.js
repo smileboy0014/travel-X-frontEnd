@@ -105,11 +105,11 @@ const DetailMap = ({ lat, lng }) => {
   }, []);
 
   return (
-    <div>
+    <>
       <div id="roomMap">
         <div style={{ width: "100%", height: "20rem" }}></div>
       </div>
-    </div>
+    </>
   );
 };
 

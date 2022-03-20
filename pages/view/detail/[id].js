@@ -3,7 +3,7 @@ import DetailMap from "../../../components/Modal/Map/DetailMap";
 import CarouselDetail from "../../../components/Card/Carousel/DetailCarousel";
 import DetailTopNavbar from "../../../components/NavBar/DetailTopNavbar";
 import ReserveButton from "../../../components/Button/Reserve/ReserveButton";
-import Style from "../../../styles/Detail.module.css";
+import Style from "../../../styles/Component.module.css";
 import Axios from "axios";
 import Link from "next/link";
 import { useSelector } from "react-redux";
@@ -11,21 +11,33 @@ import { useRouter } from "next/router";
 import { RiHotelLine } from "react-icons/ri";
 import { BsPerson, BsCalendar, BsGeoAlt } from "react-icons/bs";
 import { AiFillStar } from "react-icons/ai";
-import ReviewModal from "../../../components/Modal/Review/ReviewModal";
 import DetailCalendarModal from "../../../components/Modal/Calendar/DetailCalendarModal";
+import classNames from 'classnames/bind';
+
+const cx = classNames.bind(Style);
 
 const DetailView = () => {
   const [rooms, setRooms] = useState([]);
   const [slide, setSlide] = useState(false);
-  const [title, setTitle] = useState("");
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
   const [calendarModalOpen, setCalendarModalOpen] = useState(false);
+  const [personalModalOpen, setPersonalModalOpen] = useState(false);
   const scrollYValue = useSelector(({ scrollY }) => scrollY.value);
-  const [changeStyle, setChangeStyle] = useState(Style.site_header);
+  const [changeStyle, setChangeStyle] = useState(false);
   const router = useRouter();
   const { id } = router.query;
   const { detailDate } = useSelector((state) => state.date);
   const week = new Array("일", "월", "화", "수", "목", "금", "토");
+  const adultCounterValue = useSelector(
+    ({ adultCounter }) => adultCounter.value
+  );
+  const childCounterValue = useSelector(
+    ({ childCounter }) => childCounter.value
+  );
+
+  const priceComma = (price) => {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
 
   function addZero(value) {
     if (value >= 10) {
@@ -46,22 +58,16 @@ const DetailView = () => {
   useEffect(() => {
     if (rooms.roomInfo !== undefined) {
       if (scrollYValue.scrollYValue == 0) {
-        setChangeStyle(Style.site_header);
-        setTitle("");
-      } else if (scrollYValue.scrollYValue <= 100) {
-        setChangeStyle(Style.site_header1);
-        setTitle(rooms.roomInfo.propertyName);
+        setChangeStyle(false);
       } else {
-        setChangeStyle(Style.site_header2);
-        setTitle(rooms.roomInfo.propertyName);
+        setChangeStyle(true);
       }
     }
   }, [scrollYValue]);
 
   useEffect(() => {
     if (scrollYValue.scrollYValue > 0) {
-      setChangeStyle(Style.site_header);
-      setTitle("");
+      setChangeStyle(true);
     }
   }, []);
 
@@ -113,64 +119,57 @@ const DetailView = () => {
       {rooms.roomInfo == undefined ? (
         "로딩중"
       ) : (
-        <div className={Style.site}>
+        <div className="site">
           {/* <!-- Header --> */}
-          <div className={changeStyle}>
-            <div className={Style.site_container}>
-              <div className={Style.Header_inner}>
-                <DetailTopNavbar HeaderTitle={title} />
+          <div className={changeStyle ? cx("site-header", "Transparent") : cx("site-header", "Transparent", "is-Transparent")}>
+            <div className="site-container">
+              <div className={Style["Header-inner"]}>
+                <DetailTopNavbar HeaderTitle={rooms.roomInfo.propertyName} />
               </div>
             </div>
           </div>
           {/* <!-- .Header --> */}
           {/* <!-- Body --> */}
-          <div className={Style.site_body}>
+          <div className="site-body">
             {/* <!-- 컨텐츠 시작 --> */}
-            <div className={Style.SinglePage}>
+            <div className={Style["SinglePage"]}>
               {/* <!-- Slide --> */}
               <div className="DetailSlide">
                 <CarouselDetail items={rooms.item} initSlide={slide} />
               </div>
-              {/* <!-- .Slide -->
-				<!-- DetailHeader --> */}
-              <div className={Style.DetailHeader}>
-                <div className={Style.site_container}>
-                  <div className={Style.DetailHeaderMeta}>
-                    <RiHotelLine size={10} />
-                    <span className={Style.DetailHeaderMeta_item}>
+              {/* <!-- .Slide -->*/}
+              {/*<!-- DetailHeader --> */}
+              <div className={Style["DetailHeader"]}>
+                <div className="site-container">
+                  <div className={Style["DetailHeaderMeta"]}>
+                    {/* <RiHotelLine size={10} /> */}
+                    <span className={cx("DetailHeaderMeta-item", "icoHotel")}>
                       {rooms.propertyInfo.type !== undefined
                         ? rooms.propertyInfo.type
                         : "숙박 타입: N/A"}
                     </span>
 
-                    <span className={Style.DetailHeaderMeta_item}>
+                    <span className={Style["DetailHeaderMeta-item"]}>
                       {rooms.roomInfo.propertyName}
                     </span>
                   </div>
-                  <div className={Style.DetailHeaderTitle}>
-                    {rooms.roomInfo.propertyName}
+                  <div className={Style["DetailHeaderTitle"]}>
+                    {rooms.roomInfo.name}
                   </div>
 
                   {/* 필터 페이지로 이동하는 부분  */}
-                  <Link
-                   href={{
-                    pathname: "/view/review/[id]",
-                    query: { id: id },
-                  }}
-                  >
-                  <button
-                    className={Style.searchResult_stars}
-                    // onClick={() => {
-                    //   setReviewModalOpen(true);
-                    // }}
-                  >
-                    <AiFillStar className={Style.searchResult_star} />
-                    <strong>{rooms.reviewSummary.averageScore}</strong>
-                    <span className={Style.DetailHeaderInfoAddress}>
-                      후기 {rooms.reviewSummary.reviewCount}개
-                    </span>
-                  </button>
-                  </Link>
+                  
+                    <div className={Style["DetailHeaderGrade"]}>
+                      <span className={Style["DetailHeaderGrade-current"]}>{rooms.reviewSummary.averageScore}</span>
+                      <Link
+                        href={{
+                          pathname: "/view/review/[id]",
+                          query: { id: id },
+                        }}
+                      ><a>
+                        <span className={Style["DetailHeaderGrade-link"]}>후기 {rooms.reviewSummary.reviewCount}개</span>
+                      </a></Link>
+                    </div>
                   
                   {/*  // 필터 페이지로 이동하는 부분  */}
                   {/* <ReviewModal
@@ -179,24 +178,21 @@ const DetailView = () => {
                     id={id}
                   ></ReviewModal> */}
 
-                  <div className={Style.DetailHeaderInfo}>
-                    <div className={Style.DetailHeaderInfoAddress}>
-                      <BsGeoAlt
-                        className={Style.DetailHeaderInfoAddress_Icon}
-                      />
+                  <div className={Style["DetailHeaderInfo"]}>
+                    <div className={Style["DetailHeaderInfoAddress"]}>
                       {rooms.propertyInfo.address !== undefined
                         ? rooms.propertyInfo.address
                         : "주소: N/A"}
                     </div>
-                    <div className={Style.DetailHeaderInfoFilter}>
+                    <div className={Style["DetailHeaderInfoFilter"]}>
                       <BsPerson
-                        className={Style.DetailHeaderInfoAddress_Icon}
+                        className={Style["DetailHeaderInfoAddress-Icon"]}//
                       />
-                      <span className={Style.DetailHeaderInfoFilter_item}>
-                        기준: {rooms.roomInfo.baseUser}인, 최대:{" "}
-                        {rooms.roomInfo.maxUser}인
+                      <span className={Style["DetailHeaderInfoFilter-item"]}>
+                        {rooms.roomInfo.baseUser}인 기준 
+                        최대 {` ${rooms.roomInfo.maxUser}`}인
                       </span>
-                      <span className={Style.DetailHeaderInfoFilter_item}>
+                      <span className={Style["DetailHeaderInfoFilter-item"]}>
                         체크인: {rooms.roomInfo.nightInfo.checkinInfo.MONDAY}{" "}
                         체크아웃:{rooms.roomInfo.nightInfo.checkoutInfo.MONDAY}
                         인
@@ -205,15 +201,12 @@ const DetailView = () => {
                   </div>
                 </div>
               </div>
-              {/* <!-- .DetailHeader -->
-				<!-- .DetailPayment --> */}
-              <div className={Style.DetailPayment}>
-                <div className={Style.site_container}>
-                  <div className={Style.DetailPaymentDate}>
-                    <span className={Style.DetailPaymentDate_schedule}>
-                      <BsCalendar
-                        className={Style.DetailPaymentDate_schedule_Icon}
-                      />
+              {/* <!-- .DetailHeader --> */}
+				      {/* <!-- .DetailPayment --> */}
+              <div className={Style["DetailPayment"]}>
+                <div className="site-container">
+                  <div className={Style["DetailPaymentDate"]}>
+                    <span className={Style["DetailPaymentDate-schedule"]}>
                       {`${new Date(detailDate.start).getMonth() + 1}.${new Date(
                         detailDate.start
                       ).getDate()}(${week[new Date(detailDate.start).getDay()]
@@ -221,7 +214,7 @@ const DetailView = () => {
                         }.${new Date(detailDate.end).getDate()}(${week[new Date(detailDate.end).getDay()]
                         })`}
                     </span>
-                    <span className={Style.DetailPaymentDate_day}>
+                    <span className={Style["DetailPaymentDate-day"]}>
                       {Math.ceil(
                         (new Date(detailDate.end).getTime() -
                           new Date(detailDate.start).getTime()) /
@@ -231,43 +224,59 @@ const DetailView = () => {
                     </span>
                     <button
                       type="button"
-                      className={Style.DetailPaymentDate_button}
+                      className={Style["DetailPaymentDate-button"]}
                       onClick={() => setCalendarModalOpen(true)}
                     >
                       변경
                     </button>
                   </div>
-                  <div className={Style.DetailPaymentFree}>
-                    <div className={Style.DetailPaymentFree_inner}>
-                      <div className={Style.DetailPaymentFreeTotal}>
-                        <dl className={Style.DetailPaymentFreeTotal_inner}>
-                          <dt className={Style.DetailPaymentFreeTotal_title}>
+                  
+                  <div className={Style["DetailPaymentPersonnel"]}>
+                    <span className={Style["DetailPaymentPersonnel-schedule"]}>
+                      {adultCounterValue > 0 ? `성인 ${adultCounterValue}명` : ""}
+                      {adultCounterValue > 0 ? `, ` : ""}
+                      {childCounterValue > 0 ? `어린이 ${childCounterValue}명` : ""}
+                    </span>
+                    <button
+                      type="button"
+                      className={Style["DetailPaymentPersonnel-button"]}
+                      onClick={() => setPersonalModalOpen(true)}
+                    >
+                      변경
+                    </button>
+                  </div>
+
+                  <div className={Style["DetailPaymentFree"]}>
+                    <div className={Style["DetailPaymentFree-inner"]}>
+                      <div className={Style["DetailPaymentFreeTotal"]}>
+                        <dl className={Style["DetailPaymentFreeTotal-inner"]}>
+                          <dt className={Style["DetailPaymentFreeTotal-title"]}>
                             총요금
                           </dt>
-                          <dd className={Style.DetailPaymentFreeTotal_price}>
-                            {rooms.priceDetails.BASE} 원
+                          <dd className={Style["DetailPaymentFreeTotal-price"]}>
+                            {priceComma(rooms.priceDetails.BASE)} 원
                           </dd>
                         </dl>
                       </div>
-                      <div className={Style.DetailPaymentFreeList}>
-                        <ul className={Style.DetailPaymentFreeList_list}>
-                          <li className={Style.DetailPaymentFreeList_item}>
-                            <dl className={Style.DetailPaymentFreeList_inner}>
-                              <dt className={Style.DetailPaymentFreeList_title}>
+                      <div className={Style["DetailPaymentFreeList"]}>
+                        <ul className={Style["DetailPaymentFreeList-list"]}>
+                          <li className={Style["DetailPaymentFreeList-item"]}>
+                            <dl className={Style["DetailPaymentFreeList-inner"]}>
+                              <dt className={Style["DetailPaymentFreeList-title"]}>
                                 기본요금
                               </dt>
-                              <dd className={Style.DetailPaymentFreeList_price}>
-                                {rooms.priceDetails.BASE} 원
+                              <dd className={Style["DetailPaymentFreeList-price"]}>
+                                {priceComma(rooms.priceDetails.BASE)} 원
                               </dd>
                             </dl>
                           </li>
-                          <li className={Style.DetailPaymentFreeList_item}>
-                            <dl className={Style.DetailPaymentFreeList_inner}>
-                              <dt className={Style.DetailPaymentFreeList_title}>
+                          <li className={Style["DetailPaymentFreeList-item"]}>
+                            <dl className={Style["DetailPaymentFreeList-inner"]}>
+                              <dt className={Style["DetailPaymentFreeList-title"]}>
                                 추가요금
                               </dt>
-                              <dd className={Style.DetailPaymentFreeList_price}>
-                                {rooms.priceDetails.EXTRA} 원
+                              <dd className={Style["DetailPaymentFreeList-price"]}>
+                                {priceComma(rooms.priceDetails.EXTRA)} 원
                               </dd>
                             </dl>
                           </li>
@@ -278,71 +287,87 @@ const DetailView = () => {
                 </div>
               </div>
             </div>
-            {/* <!-- .DetailPayment -->
-				<!-- DetailInfo --> */}
-            <div className={Style.DetailInfo}>
-              <div className={Style.site_container}>
+            {/* <!-- .DetailPayment --> */}
+				    {/* <!-- DetailInfo --> */}
+            <div className={Style["DetailInfo"]}>
+              <div className="site-container">
                 {/* <!-- item --> */}
-                <div className={Style.DetailInfoItem}>
-                  <div className={Style.DetailInfoItem_title}>
-                    편의 시설 및 서비스_DB
+                <div className={Style["DetailInfoItem"]}>
+                  <div className={Style["DetailInfoItem-title"]}>
+                    추가 가능 옵션
                   </div>
-                  <ul className={Style.DetailInfoItem_list}>
-                    <li className={Style.DetailInfoItem_item}>
-                      {"체크인 : 15:00 체크아웃 : 12:00_DB"}
+                  <ul className={Style["DetailInfoItemService"]}>
+                    <li className={Style["DetailInfoItemService-item"]}>
+                      <dl className={Style["DetailInfoItemService-inner"]}>
+                        <dt className={Style["DetailInfoItemService-title"]}>와이파이</dt>
+                        <dd className={Style["DetailInfoItemService-text"]}>100,000</dd>
+                      </dl>
                     </li>
-                    <li className={Style.DetailInfoItem_item}>
-                      {"22시 이후 체크인 시 호텔 프론트 문의_DB"}
+                    <li className={Style["DetailInfoItemService-item"]}>
+                      <dl className={Style["DetailInfoItemService-inner"]}>
+                        <dt className={Style["DetailInfoItemService-title"]}>조식</dt>
+                        <dd className={Style["DetailInfoItemService-text"]}>80,000</dd>
+                      </dl>
                     </li>
                   </ul>
                 </div>
                 {/* <!-- .item -->
 						<!-- item --> */}
-                <div className={Style.DetailInfoItem}>
-                  <div className={Style.DetailInfoItem_title}>공지사항</div>
-                  <p className={Style.DetailInfoItem_text}>
+                <div className={Style["DetailInfoItem"]}>
+                  <div className={Style["DetailInfoItem-title"]}>공지사항</div>
+                  <p className={Style["DetailInfoItem-text"]}>
                     {rooms.roomInfo.notice}
                   </p>
                 </div>
                 {/* <!-- .item -->
 						<!-- item --> */}
-                <div className={Style.DetailInfoItem}>
-                  <div className={Style.DetailInfoItem_title}>기본 정보</div>
-                  <p className={Style.DetailInfoItem_text}>
+                <div className={Style["DetailInfoItem"]}>
+                  <div className={Style["DetailInfoItem-title"]}>기본 정보</div>
+                  <p className={Style["DetailInfoItem-text"]}>
                     {rooms.roomInfo.basicInfo}
                   </p>
                 </div>
                 {/* <!-- .item -->
 						<!-- item --> */}
-                <div className={Style.DetailInfoItem}>
-                  <div className={Style.DetailInfoItem_title}>교통 정보</div>
-                  <p className={Style.DetailInfoItem_text}>
+                <div className={Style["DetailInfoItem"]}>
+                  <div className={Style["DetailInfoItem-title"]}>교통 정보</div>
+                  <p className={Style["DetailInfoItem-text"]}>
                     {rooms.roomInfo.trafficInfo}
                   </p>
                 </div>
                 {/* <!-- .item -->
 						<!-- item --> */}
 
-                <div className={Style.DetailInfoItem}>
-                  <div className={Style.DetailInfoItem_title}>기타 정보</div>
-                  <p className={Style.DetailInfoItem_text}>
+                <div className={Style["DetailInfoItem"]}>
+                  <div className={Style["DetailInfoItem-title"]}>기타 정보</div>
+                  <p className={Style["DetailInfoItem-text"]}>
                     {rooms.roomInfo.etcInfo}
                   </p>
                 </div>
                 {/* <!-- .item -->
 						<!-- item --> */}
-                <div className={Style.DetailInfoItem}>
-                  <div className={Style.DetailInfoItem_title}>위치 정보</div>
-                  <DetailMap
-                    lat={rooms.propertyInfo.locationLat}
-                    lng={rooms.propertyInfo.locationLon}
-                  />
+                <div className={Style["DetailInfoItem"]}>
+                  <div className={Style["DetailInfoItem-title"]}>위치 정보</div>
+                  <div className={Style["DetailInfoItem-map"]}>
+                    <DetailMap
+                      lat={rooms.propertyInfo.locationLat}
+                      lng={rooms.propertyInfo.locationLon}
+                    />
+                  </div>
                 </div>
                 {/* <!-- .item --> */}
               </div>
             </div>
-            {/* <!-- .DetailInfo -->
-				<!-- BttonFixButton --> */}
+            {/* <!-- .DetailInfo --> */}
+            {/* <!-- .DetailReview --> */}
+            <div className={Style["DetailReview"]}>
+              <a href="#;" className={Style["DetailReview-link"]}>
+                <div className="site-container">
+                  <div className={Style["DetailReview-score"]}>8.6</div>
+                  <div className={Style["DetailReview-title"]}>100개 상세 후기 보기</div>
+                </div>
+              </a>
+            </div>
 
             <ReserveButton></ReserveButton>
 

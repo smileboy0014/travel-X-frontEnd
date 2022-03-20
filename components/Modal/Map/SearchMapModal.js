@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import Modal from "react-modal";
-import Style from "../../../styles/CommonModal.module.css";
+import ModalStyle from "../../../styles/CommonModal.module.css";
 import ListDetailMap from "./ListDetailMap";
 
 const SearchMapModal = ({ isOpen, onRequestClose }) => {
   return (
     <div>
       <Modal
-        className={Style.Modal}
-        overlayClassName={Style.Overlay}
+        className={Style["Modal"]}
+        overlayClassName={Style["Overlay"]}
         isOpen={isOpen}
         ariaHideApp={false}
         onRequestClose={() => onRequestClose(false)}

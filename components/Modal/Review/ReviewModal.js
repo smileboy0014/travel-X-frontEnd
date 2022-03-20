@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Modal from "react-modal";
 import Review from "../../Review/Review";
-import Style from "../../../styles/CommonModal.module.css";
+import ModalStyle from "../../../styles/CommonModal.module.css";
 
 const ReviewModal = ({ isOpen, onRequestClose}) => {
 
@@ -24,7 +24,7 @@ const ReviewModal = ({ isOpen, onRequestClose}) => {
     <div>
       <Modal
         className={Style.ReveiwModal}
-        overlayClassName={Style.OverlayReview}
+        overlayClassName={Style["Overlay"]Review}
         isOpen={isOpen}
         ariaHideApp={false}
         onRequestClose={() => onRequestClose(false)}
