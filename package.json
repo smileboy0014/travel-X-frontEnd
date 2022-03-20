@@ -33,8 +33,7 @@
     "react-router-dom": "^6.2.1",
     "redux-logger": "^3.0.6",
     "styled-components": "^5.3.3",
-    "swiper": "^7.4.1",
-    "uuidv4": "^6.2.12"
+    "swiper": "^7.4.1"
   },
   "devDependencies": {
     "eslint": "8.5.0",

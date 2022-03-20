@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import mergeClassNames from 'merge-class-names';
 
 import Days from './MonthView/Days';
+import Weekdays from './MonthView/Weekdays';
 import WeekNumbers from './MonthView/WeekNumbers';
 
 import { CALENDAR_TYPES, CALENDAR_TYPE_LOCALES } from './shared/const';
@@ -30,6 +31,17 @@ export default function MonthView(props) {
     showWeekNumbers,
     ...childProps
   } = props;
+
+  function renderWeekdays() {
+    return (
+      <Weekdays
+        calendarType={calendarType}
+        formatShortWeekday={formatShortWeekday}
+        locale={locale}
+        onMouseLeave={onMouseLeave}
+      />
+    );
+  }
 
   function renderWeekNumbers() {
     if (!showWeekNumbers) {
@@ -75,6 +87,7 @@ export default function MonthView(props) {
             width: '100%',
           }}
         >
+          {/* {renderWeekdays()} */}
           {renderDays()}
         </div>
       </div>

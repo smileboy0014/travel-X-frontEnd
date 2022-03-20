@@ -4,7 +4,7 @@ import ScrollTopArrow from "../../../components/ScrollTop/ScrollTopArrow";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import useInfiniteSearch from "../../../components/InfiniteScroll/useInfiniteSearch";
-import Style from "../../../styles/Component.module.css";
+import Style from "../../../styles/SearchResult.module.css";
 import SearchBar from "../../search/SearchBar";
 import RecentSearch from "../../search/RecentSearch";
 import PersonalFilterButton from "../../../components/Button/OptionFilter/PersonalFilterButton";
@@ -13,15 +13,12 @@ import OptionFilterButton from "../../../components/Button/OptionFilter/OptionFi
 import OrderByFilterButton from "../../../components/Button/OptionFilter/OrderByFilterButton";
 import CalendarModal from "../../../components/Modal/Calendar/CalendarModal";
 import ListDetailMap from "../../../components/Modal/Map/ListDetailMap";
-import classNames from 'classnames/bind';
-
-const cx = classNames.bind(Style);
 
 const Post = ({ item }) => {
   const [showModal, setShowModal] = useState(false);
   const [recentListView, setRecentListView] = useState(false);
   const [listFilterIsUp, setListFilterIsUp] = useState(false);
-  const [listFilterIsNone, setListFilterIsNone] = useState(false);
+  const [isTop,setIsTop] = useState(false);
   const [lastScrollTop, setLastScrollTop] = useState(0);
   const router = useRouter();
   const { id } = router.query;
@@ -44,7 +41,7 @@ const Post = ({ item }) => {
     id,
     fromPageNumber,
     toPageNumber,
-    filterValue
+    filterValue,
   );
   const observer = useRef();
   const [searchValue, setSearchValue] = useState();
@@ -73,11 +70,6 @@ const Post = ({ item }) => {
     [loading, hasMore]
   );
 
-  const handleOpenListMap = () => {
-    setViewMap(true);
-    setListFilterIsNone(true);
-  }
-
   useEffect(() => {
     setSearchAutoComptValue([]);
   }, [searchValue]);
@@ -87,6 +79,16 @@ const Post = ({ item }) => {
   }, [searchAutoComptValue]);
 
   useEffect(() => {
+    
+    // SRP에서 스크롤을 최상단으로 올렸을 때 새로 쿼리 날리기
+    if(scrollYValue.scrollYValue === 0){
+      console.log("##################################");
+      console.log("##################################");
+      console.log("refresh!!!")
+      setToPageNumber(10);
+      setListFilterIsUp(false);
+    }
+
     if (Math.abs(lastScrollTop - scrollYValue <= DELTA)) {
       return;
     }
@@ -107,16 +109,12 @@ const Post = ({ item }) => {
     rooms.item && console.log(rooms.item.length);
   }, [rooms]);
 
-  useEffect(() => {
-    console.log(listFilterIsUp);
-  }, [listFilterIsUp]);
-
   return (
-    <div className="site">
-      <div className="site-body">
-        <div id="ListFilter" className={listFilterIsUp ? cx("ListFilter", "is-Up") : Style["ListFilter"]}>
-          <div className="site-container">
-            <>
+    <div className={Style.site}>
+      <div className={Style.site_body}>
+        <div id="ListFilter" className={Style.ListFilter}>
+          <div className={Style.site_container}>
+            <div>
               <SearchBar
                 getSearchValue={(value) => {
                   setSearchValue(value);
@@ -136,8 +134,8 @@ const Post = ({ item }) => {
                 }}
               ></SearchBar>
 
-              <div className={listFilterIsNone ? cx("ListFilterValue", "is-None") : Style["ListFilterValue"]}>
-                <div className={Style["ListFilterValue-list"]}>
+              <div className={listFilterIsUp ? Style.ListFilterValue_is_up : Style.ListFilterValue}>
+                <div className={Style.ListFilterValue_list}>
                   <CalendarFilterButton
                     open={() => setCalendarModalOpen(true)}
                   ></CalendarFilterButton>
@@ -146,107 +144,120 @@ const Post = ({ item }) => {
               </div>
 
               {!recentListView ? (
-                <>
+                <React.Fragment>
                   {searchAutoComptValue.length < 1 ? (
-                    <div className={Style["ListFilterButton"]}>
-                      <div className={Style["ListFilterButton-list"]}>
-                        <OptionFilterButton />
-                        <OrderByFilterButton />
+                    <div className={Style.ListFilterButton}>
+                      <div className={Style.ListFilterButton_list}>
+                        {!viewMap ? (
+                          <React.Fragment>
+                            <OptionFilterButton />
+                            <OrderByFilterButton />
+                          </React.Fragment>
+                        ) : (
+                          ""
+                        )}
                       </div>
                     </div>
                   ) : (
                     ""
                   )}
-                </>
+                </React.Fragment>
               ) : (
                 ""
               )}
-            </>
+            </div>
           </div>
         </div>
 
-        <>
-          {recentListView ? (
-            <div className={cx("TotalSearch", "is-Focus")}>
-              <RecentSearch
-                sendSearchValue={searchValue}
-                sendSearchAutoComptValue={searchAutoComptValue}
-                sendSearchAutoComptPropertyNameValue={
-                  searchAutoComptPropertyNameValue
-                }
-                getSearchValue={(value) => {
-                  setSearchValue(value);
-                }}
-              />
-            </div>
-          ) : (
-            <>
-              {searchAutoComptValue.length < 1 ? (
-                <div className={Style["ProductList"]}>
-                  <div className="site-container">
-                    <>
-                      {rooms.item && rooms.item.length && !viewMap > 0 ? (
-                        <ul>
-                          <SearchResultList
-                            ref={lastroomElementRef}
-                            rooms={rooms}
-                          />
-                        </ul>
-                      ) : (
-                        <div className={Style["TotalSearch-noTag"]}>
-                          검색결과가 없습니다.
-                          <p>지역, 지하철역, 숙소명을 입력해주세요.</p>
-                        </div>
-                      )}
-                    </>
-                    <>
-                      {/* <Modal
-                        className={LodingStyles.Modal}
-                        overlayClassName={LodingStyles.Overlay}
-                        isOpen={loading}
-                        ariaHideApp={false}
-                      >
-                        Loading...
-                      </Modal> */}
-                    </>
-                    <ScrollTopArrow></ScrollTopArrow>
+        <React.Fragment>
+          {viewMap == false ? (
+            <React.Fragment>
+              {recentListView ? (
+                <div className={Style.TotalSearch}>
+                  <div className={Style.is_Focus}>
+                    <RecentSearch
+                      sendSearchValue={searchValue}
+                      sendSearchAutoComptValue={searchAutoComptValue}
+                      sendSearchAutoComptPropertyNameValue={
+                        searchAutoComptPropertyNameValue
+                      }
+                      getSearchValue={(value) => {
+                        setSearchValue(value);
+                      }}
+                    />
                   </div>
                 </div>
               ) : (
-                <div className={cx("TotalSearch", "is-Focus")}>
-                  <RecentSearch
-                    sendSearchValue={searchValue}
-                    sendSearchAutoComptValue={searchAutoComptValue}
-                    sendSearchAutoComptPropertyNameValue={
-                      searchAutoComptPropertyNameValue
-                    }
-                    getSearchValue={(value) => {
-                      setSearchValue(value);
-                    }}
-                    sendSearchTxt={searchTxt}
-                  />
-                </div>
+                <React.Fragment>
+                  {searchAutoComptValue.length < 1 ? (
+                    <div className={Style.ProductList}>
+                      <div className={Style.site_container}>
+                        <React.Fragment>
+                          {rooms.item && rooms.item.length > 0 ? (
+                            <ul>
+                              <SearchResultList
+                                ref={lastroomElementRef}
+                                rooms={rooms}
+                              />
+                            </ul>
+                          ) : (
+                            <div className={Style.TotalSearch_noTag}>
+                              검색결과가 없습니다.
+                              <p>지역, 지하철역, 숙소명을 입력해주세요.</p>
+                            </div>
+                          )}
+                        </React.Fragment>
+                        <>
+                          {/* <Modal
+                            className={LodingStyles.Modal}
+                            overlayClassName={LodingStyles.Overlay}
+                            isOpen={loading}
+                            ariaHideApp={false}
+                          >
+                            Loading...
+                          </Modal> */}
+                        </>
+                        <ScrollTopArrow></ScrollTopArrow>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className={Style.TotalSearch}>
+                      <RecentSearch
+                        sendSearchValue={searchValue}
+                        sendSearchAutoComptValue={searchAutoComptValue}
+                        sendSearchAutoComptPropertyNameValue={
+                          searchAutoComptPropertyNameValue
+                        }
+                        getSearchValue={(value) => {
+                          setSearchValue(value);
+                        }}
+                        sendSearchTxt={searchTxt}
+                      />
+                    </div>
+                  )}
+                </React.Fragment>
               )}
-            </>
+            </React.Fragment>
+          ) : (
+            <ListDetailMap
+              lat={37.4959854}
+              lng={127.0664091}
+              onRequestClosed={(value) => {
+                setViewMap(!value);
+              }}
+            />
           )}
-        </>
-        
-        {viewMap ? (
-          <ListDetailMap
-            lat={37.4959854}
-            lng={127.0664091}
-            onRequestClosed={(value) => {
-              setViewMap(!value);
-              setListFilterIsNone(false);
-            }}
-          />
-        ) : (
+        </React.Fragment>
+
+        {viewMap == false ? (
           <button
             className={Style.MapFixButton}
-            onClick={handleOpenListMap}
+            onClick={() => setViewMap(true)}
           >
             {"지도보기"}
           </button>
+        ) : (
+          ""
         )}
 
         {/* <MapFixButton

@@ -1,287 +1,74 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import Axios from "axios";
 import { useRouter } from "next/router";
-import Style from "../../../styles/Component.module.css";
-import DetailTopNavbar from "../../../components/NavBar/DetailTopNavbar";
-// import reviewStyle from "../../../styles/Review.module.css";
+import reviewStyle from "../../../styles/Review.module.css";
 import ReviewCard from "../../../components/Card/Review/ReviewCard";
 import AddReviewModal from "../../../components/Modal/Review/AddReviewModal";
 import ReviewDetailModal from "../../../components/Modal/Review/ReviewDetailModal";
-import ReviewOrderbyModal from "../../../components/Modal/ReviewOrderBy/ReviewOrderbyModal";
 import ProgressBar from "../../../components/Progress/ProgressBar";
+// import reviewStyle from "../../styles/Review.module.css";
+// import ReviewCard from "../Card/Review/ReviewCard";
+// import AddReviewModal from "../Modal/Review/AddReviewModal";
+// import ReviewDetailModal from "../Modal/Review/ReviewDetailModal";
+// import ProgressBar from "../Progress/ProgressBar";
 import { useSelector, useDispatch } from "react-redux";
-import classNames from 'classnames/bind';
-
-const cx = classNames.bind(Style);
 
 const Review = () => {
-
+  
   // const {id} = props;
   const router = useRouter();
   const { id } = router.query;
+  const [totalPoint, setTotalPoint] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
-  const [reviewScore, setReviewScore] = useState(0);
-  const [priceScore, setPriceScore] = useState(0);
-  const [kindnessScore, setKindnessScore] = useState(0);
-  const [cleanScore, setCleanScore] = useState(0);
-  const [facilityScore, setFacilityScore] = useState(0);
-  const [comfortScore, setComfortScore] = useState(0);
-  const [onlyPicture, setOnlyPicture] = useState(false);
+  const [point1, setPoint1] = useState(0);
+  const [point2, setPoint2] = useState(0);
+  const [point3, setPoint3] = useState(0);
+  const [point4, setPoint4] = useState(0);
+  const [point5, setPoint5] = useState(0);
   const [review, setReview] = useState(false);
-  const [isOpenStyle, setIsOpenStyle] = useState(false);
-  const [reviewOrderbyModalOpen, setReviewOrderbyModalOpen] = useState(false);
   const [AddReviewModalOpen, setAddReviewModalOpen] = useState(false);
   const [reviewDetailModalOpen, setReviewDetailModalOpen] = useState(false);
   const dispatch = useDispatch();
   // const data = useSelector(({ reviewContent }) => reviewContent.data);
+
   const [viewContent, setViewContent] = useState([]);
-  const [viewWithPictureContent, setViewWithPictureContent] = useState([]);
 
-  const getReviewSummary = () => {
-
-    setReview(false);
-
-    Axios({
-      method: "GET",
-      url: "http://shineware.iptime.org:8081/review/summary",
-      params: {
-        roomId: id,
-        useType: "NIGHT"
-      },
-    }).then((res) => {
-      if (res.data !== undefined) {
-        setReviewScore(res.data.averageReviewScore);
-        setPriceScore(res.data.averagePriceScore);
-        setKindnessScore(res.data.averageKindnessScore);
-        setCleanScore(res.data.averageCleanScore);
-        setFacilityScore(res.data.averageFacilityScore);
-        setComfortScore(res.data.averageComfortScore);
-      }
-    });
-  }
-
-  const getReviews = () => {
-
-    Axios({
-      method: "GET",
-      url: "http://shineware.iptime.org:8081/review/get",
-      params: {
-        roomId: id,
-        useType: "NIGHT",
-        from: "0",
-        size: "100",
-      },
-    }).then((res) => {
-      if (res.data !== undefined) {
-        setTotalCount(res.data.length);
+  useEffect(() => {
+    if (id !== undefined) {
+      setReview(false);
+      
+      Axios({
+        method: "GET",
+        url: "http://shineware.iptime.org:8081/review/get",
+        params: {
+          roomId: id,
+          useType: "NIGHT",
+          from: "0",
+          size: "100",
+        },
+      }).then((res) => {
+        console.log(res.data);
         setViewContent(res.data);
-        setViewWithPictureContent(res.data.filter(data => data.hasImage));
-      }
-
-    });
-
-  }
-  const onClickHandler = (type) => {
-    if(type === 'openAll'){
-      setIsOpenStyle(!isOpenStyle);
-    } else {
-      setReviewOrderbyModalOpen(true);
+      });
     }
-    
-  }
+  }, [id, review]);
 
-  const handleBarScore = (score) => {
-    if (score > 5) {
-      return "100%";
-    } else {
-      return String(score * 20) + "%";
-    }
-  }
 
-  const handleIndividualStarScore = (item) => {
-    let averageScore = Math.round((item.kindnessScore + item.cleanScore + item.comfortScore + item.facilityScore + item.priceScore) / 5);
-    item.averageScore = averageScore;
-    if (averageScore < 1) {
-      averageScore = 1;
-    }
-    switch (averageScore) {
-      case 1:
-        return (
-          <>
-            <div className={Style["BasicGradeStar"]}>
-              <span className={cx("BasicGradeStar-item", "check")}></span>
-              <span className={cx("BasicGradeStar-item")}></span>
-              <span className={cx("BasicGradeStar-item")}></span>
-              <span className={cx("BasicGradeStar-item")}></span>
-              <span className={cx("BasicGradeStar-item")}></span>
-            </div>
-            <div className={Style["BasicGradeCount"]}>{averageScore} /5</div>
-          </>
-        )
-      case 2:
-        return (
-          <>
-            <div className={Style["BasicGradeStar"]}>
-              <span className={cx("BasicGradeStar-item", "check")}></span>
-              <span className={cx("BasicGradeStar-item", "check")}></span>
-              <span className={cx("BasicGradeStar-item")}></span>
-              <span className={cx("BasicGradeStar-item")}></span>
-              <span className={cx("BasicGradeStar-item")}></span>
-            </div>
-            <div className={Style["BasicGradeCount"]}>{averageScore} /5</div>
-          </>
-        )
-      case 3:
-        return (
-          <>
-            <div className={Style["BasicGradeStar"]}>
-              <span className={cx("BasicGradeStar-item", "check")}></span>
-              <span className={cx("BasicGradeStar-item", "check")}></span>
-              <span className={cx("BasicGradeStar-item", "check")}></span>
-              <span className={cx("BasicGradeStar-item")}></span>
-              <span className={cx("BasicGradeStar-item")}></span>
-            </div>
-            <div className={Style["BasicGradeCount"]}>{averageScore} /5</div>
-          </>
-        )
-      case 4:
-        return (
-          <>
-            <div className={Style["BasicGradeStar"]}>
-              <span className={cx("BasicGradeStar-item", "check")}></span>
-              <span className={cx("BasicGradeStar-item", "check")}></span>
-              <span className={cx("BasicGradeStar-item", "check")}></span>
-              <span className={cx("BasicGradeStar-item", "check")}></span>
-              <span className={cx("BasicGradeStar-item")}></span>
-            </div>
-            <div className={Style["BasicGradeCount"]}>{averageScore} /5</div>
-          </>
-        )
-      case 5:
-        return (
-          <>
-            <div className={Style["BasicGradeStar"]}>
-              <span className={cx("BasicGradeStar-item", "check")}></span>
-              <span className={cx("BasicGradeStar-item", "check")}></span>
-              <span className={cx("BasicGradeStar-item", "check")}></span>
-              <span className={cx("BasicGradeStar-item", "check")}></span>
-              <span className={cx("BasicGradeStar-item", "check")}></span>
-            </div>
-            <div className={Style["BasicGradeCount"]}>{averageScore} /5</div>
-          </>
-        )
-    }
+  // useEffect(() => {
+  //   // console.log(data);
+  //   if (data.content != "" && data.title != "") {
+  //     setViewContent(
+  //       viewContent.concat({
+  //         ...data,
+  //       })
+  //     );
+  //     dispatch(reviewData.setData({ title: "", content: "" }));
+  //   }
+  // }, [data]);
 
-  }
-
-  const handleFormattingDate = (date) => {
-    let dateArr = date.split('T');
-    return dateArr[0];
-  }
-
-  const onChangeCheckHandler = (checked) => {
-    if (checked) {
-      setOnlyPicture(true);
-    } else {
-      setOnlyPicture(false);
-    }
-  }
-
-  const handleViewConetent = (check) => {
-    debugger;
-    if (check) {
-      return (
-        <>
-          {viewWithPictureContent && viewWithPictureContent.map((item, index) => (
-            // items
-            <div className={Style["ReviewPostItem"]} key={index}>
-              <div className={Style["ReviewPostItemMeta"]}>
-                <div className="ReviewPostItemMetaHead">
-                  <div className={Style["ReviewPostItemMetaHead-name"]}>{item.userId}</div>
-                  <div className={Style["BasicGrade"]}>
-                    {handleIndividualStarScore(item)}
-
-                  </div>
-                </div>
-                <div className={Style["ReviewPostItemMeta-date"]}>{handleFormattingDate(item.date)}</div>
-              </div>
-              <div className={Style["ReviewPostItemText"]}>
-                <button type="button" className={Style["ReviewPostItemTextBtn"]}>...<span className={Style["ReviewPostItemTextBtn-text"]}>더읽기</span></button>
-                {/* <!-- 글이 5줄을 넘을시 노출 --> */}
-                <div className={Style["ReviewPostItemText-crop"]}>
-                  {item.contents}
-                </div>
-              </div>
-              {/* <!-- slide --> */}
-              <div className={Style["ReviewSlide"]}>
-                <div className={cx("swiper-container ReviewSlide-container")}>
-                  <div className="swiper-wrapper ReviewSlide-wrapper">
-
-                    <div className="ReviewSlide-slide swiper-slide">
-                      <div className="ReviewSlide-thumb">
-                        <a href="#;" className={Style["ReviewSlide-link"]}>
-                          <img src="../assets/images/dummy/Mask Group@2x.png" alt="" />
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-              {/* <!-- .slide --> */}
-            </div>
-            //  //items
-          ))}
-        </>
-      )
-    } else {
-      return (
-      <>
-      {viewContent && viewContent.map((item, index) => (
-        // items
-        <div className={Style["ReviewPostItem"]} key={index}>
-          <div className={Style["ReviewPostItemMeta"]}>
-            <div className="ReviewPostItemMetaHead">
-              <div className={Style["ReviewPostItemMetaHead-name"]}>{item.userId}</div>
-              <div className={Style["BasicGrade"]}>
-                {handleIndividualStarScore(item)}
-
-              </div>
-            </div>
-            <div className={Style["ReviewPostItemMeta-date"]}>{handleFormattingDate(item.date)}</div>
-          </div>
-          <div className={Style["ReviewPostItemText"]}>
-            <button type="button" className={Style["ReviewPostItemTextBtn"]}>...<span className={Style["ReviewPostItemTextBtn-text"]}>더읽기</span></button>
-            {/* <!-- 글이 5줄을 넘을시 노출 --> */}
-            <div className={Style["ReviewPostItemText-crop"]}>
-              {item.contents}
-            </div>
-          </div>
-          {/* <!-- slide --> */}
-          <div className={Style["ReviewSlide"]}>
-            <div className={cx("swiper-container ReviewSlide-container")}>
-              <div className="swiper-wrapper ReviewSlide-wrapper">
-
-                <div className="ReviewSlide-slide swiper-slide">
-                  <div className="ReviewSlide-thumb">
-                    <a href="#;" className={Style["ReviewSlide-link"]}>
-                      <img src="../assets/images/dummy/Mask Group@2x.png" alt="" />
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-          {/* <!-- .slide --> */}
-        </div>
-        //  //items
-      ))}
-    </>
-      )
-    }
-
-  }
+  useEffect(() => {
+  handleScore();
+  }, [viewContent]);
 
   const handleOpenModal = (type) => {
     if (type == "view") {
@@ -291,231 +78,140 @@ const Review = () => {
     }
   };
 
+  const handleScore = () =>{
+
+    let kindnessScore = 0;
+    let cleanScore = 0;
+    let comfortScore = 0;
+    let facilityScore = 0;
+    let priceScore = 0;
+
+    if (viewContent != undefined && viewContent.length > 0) {
+      for (let scores of viewContent) {
+        kindnessScore += scores.kindnessScore;
+        cleanScore += scores.cleanScore;
+        comfortScore += scores.comfortScore;
+        facilityScore += scores.facilityScore;
+        priceScore += scores.priceScore;
+      }
+
+    comfortScore = (comfortScore / viewContent.length).toFixed(2) > 5 ? 5 : (comfortScore / viewContent.length).toFixed(2);
+    kindnessScore = (kindnessScore / viewContent.length).toFixed(2) > 5 ? 5 : (kindnessScore / viewContent.length).toFixed(2);
+    cleanScore = (cleanScore / viewContent.length).toFixed(2) > 5 ? 5 : (cleanScore / viewContent.length).toFixed(2);
+    facilityScore = (facilityScore / viewContent.length).toFixed(2) > 5 ? 5 : (facilityScore / viewContent.length).toFixed(2);
+    priceScore = (priceScore / viewContent.length).toFixed(2) > 5 ? 5 : (priceScore / viewContent.length).toFixed(2);
+
+   
+
+    setPoint1(comfortScore);
+    setPoint2(kindnessScore);
+    setPoint3(cleanScore);
+    setPoint4(facilityScore);
+    setPoint5(priceScore);
+    setTotalPoint(((Number(comfortScore) + Number(kindnessScore) + Number(cleanScore) + Number(facilityScore) + Number(priceScore)) / 5).toFixed(2));
+    setTotalCount(viewContent.length);
+  }
+}
+
   const handleProgressBar = (type) => {
     switch (type) {
-      case '친절함':
+      case 1:
         return (
-          <li className={Style["ReviewGraph-item"]}>
-            <dl className={Style["ReviewGraph-inner"]}>
-              <dt className={Style["ReviewGraph-title"]}>친절함</dt>
-              <dd className={Style["ReviewGraph-text"]}>
-                <div className={Style["ReviewGraphBar"]}>
-                  <span className={Style["ReviewGraphBarLine"]}>
-                    <span className={Style["ReviewGraphBarLine-bar"]} style={{ width: handleBarScore(kindnessScore) }}>
-                    </span>
-                  </span>
-                  <span className={Style["ReviewGraphBar-text"]}>{kindnessScore}</span>
-                </div>
-              </dd>
-            </dl>
-          </li>
+          <div className={reviewStyle.progressBarForm}>
+            만족도
+            <ProgressBar width={300} percent={point1 * 0.2} /> {point1}
+          </div>
         );
-      case '청결도':
+      case 2:
         return (
-          <li className={Style["ReviewGraph-item"]}>
-            <dl className={Style["ReviewGraph-inner"]}>
-              <dt className={Style["ReviewGraph-title"]}>청결도</dt>
-              <dd className={Style["ReviewGraph-text"]}>
-                <div className={Style["ReviewGraphBar"]}>
-                  <span className={Style["ReviewGraphBarLine"]}>
-                    <span className={Style["ReviewGraphBarLine-bar"]} style={{ width: handleBarScore(cleanScore) }}>
-                    </span>
-                  </span>
-                  <span className={Style["ReviewGraphBar-text"]}>{cleanScore}</span>
-                </div>
-              </dd>
-            </dl>
-          </li>
+          <div className={reviewStyle.progressBarForm}>
+            친절도
+            <ProgressBar width={300} percent={point2 * 0.2} /> {point2}
+          </div>
         );
-      case '편안함':
+      case 3:
         return (
-          <li className={Style["ReviewGraph-item"]}>
-            <dl className={Style["ReviewGraph-inner"]}>
-              <dt className={Style["ReviewGraph-title"]}>편안함</dt>
-              <dd className={Style["ReviewGraph-text"]}>
-                <div className={Style["ReviewGraphBar"]}>
-                  <span className={Style["ReviewGraphBarLine"]}>
-                    <span className={Style["ReviewGraphBarLine-bar"]} style={{ width: handleBarScore(comfortScore) }}>
-                    </span>
-                  </span>
-                  <span className={Style["ReviewGraphBar-text"]}>{comfortScore}</span>
-                </div>
-              </dd>
-            </dl>
-          </li>
+          <div className={reviewStyle.progressBarForm}>
+            청결도
+            <ProgressBar width={300} percent={point3 * 0.2} /> {point3}
+          </div>
         );
-      case '시설':
+      case 4:
         return (
-          <li className={Style["ReviewGraph-item"]}>
-            <dl className={Style["ReviewGraph-inner"]}>
-              <dt className={Style["ReviewGraph-title"]}>시설</dt>
-              <dd className={Style["ReviewGraph-text"]}>
-                <div className={Style["ReviewGraphBar"]}>
-                  <span className={Style["ReviewGraphBarLine"]}>
-                    <span className={Style["ReviewGraphBarLine-bar"]} style={{ width: handleBarScore(facilityScore) }}>
-                    </span>
-                  </span>
-                  <span className={Style["ReviewGraphBar-text"]}>{facilityScore}</span>
-                </div>
-              </dd>
-            </dl>
-          </li>
+          <div className={reviewStyle.progressBarForm}>
+            편의성
+            <ProgressBar width={300} percent={point4 * 0.2} /> {point4}
+          </div>
         );
-      case '가격':
+      case 5:
         return (
-          <li className={Style["ReviewGraph-item"]}>
-            <dl className={Style["ReviewGraph-inner"]}>
-              <dt className={Style["ReviewGraph-title"]}>가격 대비 만족도</dt>
-              <dd className={Style["ReviewGraph-text"]}>
-                <div className={Style["ReviewGraphBar"]}>
-                  <span className={Style["ReviewGraphBarLine"]}>
-                    <span className={Style["ReviewGraphBarLine-bar"]} style={{ width: handleBarScore(priceScore) }}>
-                    </span>
-                  </span>
-                  <span className={Style["ReviewGraphBar-text"]}>{priceScore}</span>
-                </div>
-              </dd>
-            </dl>
-          </li>
+          <div className={reviewStyle.progressBarForm}>
+            접근성
+            <ProgressBar width={300} percent={point5 * 0.2} /> {point5}
+          </div>
         );
     }
   };
-
 
   const reviewCard = viewContent.map((review, index) =>
     index < 3 ? <ReviewCard key={index} {...review} /> : null
   );
 
-  useEffect(() => {
-    setIsOpenStyle(true);
-    setOnlyPicture(false);
-    setReviewOrderbyModalOpen(false);
-  }, []);
-
-  useEffect(() => {
-    if (id !== undefined) {
-
-      getReviewSummary();
-      getReviews();
-    }
-  }, [id, review]);
-
-
-  useEffect(() => {
-    if (onlyPicture) {
-      // 리스트에 사진 리뷰만 보이게 필터 해주기
-
-    }
-
-  }, [onlyPicture])
-
   return (
-    <div className="site">
-      {/* <!-- Header --> */}
-      <div className={Style["site-header"]}>
-        <div className="site-container">
-          <div className={Style["Header-inner"]}>
-            <DetailTopNavbar HeaderTitle={`이용후기(${totalCount}개)`} />
-          </div>
-        </div>
+    <div className={reviewStyle.App}>
+      <h1>[ 숙소 후기 ]</h1>
+      {/* <div className={reviewStyle.HeaderBack} onClick={() => router.back()} /> */}
+      <div className={reviewStyle.formHeader}>
+        <svg
+          className="w-6 h-6"
+          fill="red"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+          ></path>
+        </svg>
+        <label className={reviewStyle.starPoint}>{totalPoint}</label>
+        <label className={reviewStyle.starPoint}>후기 {totalCount}</label>
       </div>
-      {/* <!-- .Header --> */}
-
-      {/* <!-- Body --> */}
-      <div className="site-body">
-        {/* <!-- 컨텐츠 시작 --> */}
-        <div className={Style["ReviewPage"]}>
-          {/* <!-- ReviewHeader --> */}
-          <div className={Style["ReviewHeader"]}>
-            <div className="site-container">
-              <dl className={isOpenStyle ? "ReviewHeader-inner" : cx("ReviewHeader-inner", "is-Open")}>
-                <dt className={Style["ReviewHeaderTitle"]}>
-                  <div className={Style["ReviewHeaderTitle-text"]}>전체 평점</div>
-                  <button type="button" className={Style["ReviewHeaderTitleGrade"]} onClick={() => onClickHandler('openAll')}>
-                    <span className={Style["ReviewHeaderTitleGrade-text"]}>
-                      {reviewScore}
-                    </span>
-                    /5
-                  </button>
-                </dt>
-                <dd className={Style["ReviewHeaderCont"]}>
-                  <div className={Style["ReviewGraph"]}>
-                    <ul className="ReviewGraph-list">
-                      {handleProgressBar('친절함')}
-                      {handleProgressBar('청결도')}
-                      {handleProgressBar('편안함')}
-                      {handleProgressBar('시설')}
-                      {handleProgressBar('가격')}
-                    </ul>
-                  </div>
-                </dd>
-              </dl>
-            </div>
-          </div>
-          {/* <!-- .ReviewHeader --> */}
-          {/* <!-- ReviewFilter --> */}
-          <div className={Style["ReviewFilter"]}>
-            <div className="site-container">
-              <div className={Style["ReviewFilter-inner"]}>
-                <label className={Style["ReviewFilterCheck"]}>
-                  <input type="checkbox" name="ReviewFilterCheck" onChange={(e) => onChangeCheckHandler(e.currentTarget.checked)}
-                    className={Style["ReviewFilterCheck-input"]} />
-                  <span className={Style["ReviewFilterCheck-text"]}>사진 리뷰만</span>
-                </label>
-                <button type="button" className={Style["ReviewFilterValueItem"]} onClick={() =>onClickHandler('openModal')}>평점높은순</button>
-              </div>
-            </div>
-          </div>
-          {/* <!-- .ReviewFilter --> */}
-          {/* <!-- ReviewPost --> */}
-          <div className="ReviewPost">
-            <div className="site-container">
-              {handleViewConetent(onlyPicture)}
-            </div>
-          </div>
-          {/* <!-- .ReviewPost --> */}
-          {/* <!-- ReviewNoPost --> */}
-          <div className={Style["ReviewNoPost"]}>더 이상의 후기가 없습니다.</div>
-          {/* <!-- .ReviewNoPost --> */}
-        </div>
-        {/* <!-- .컨텐츠 끝 --> */}
-
-        {/* <!-- SortPop --> */}
-        <ReviewOrderbyModal isOpen={reviewOrderbyModalOpen} onRequestClose={() => setReviewOrderbyModalOpen(false)} />
-        {/* <!-- .SortPop --> */}
-
-        {/* <!-- LayerGallery --> */}
-        <div className={Style["LayerGallery"]}>
-          <button type="button" className={Style["LayerGallery-close"]}><span className="ab-text">Close</span></button>
-          {/* <!-- slide --> */}
-          <div className={Style["LayerGallerySlide"]}>
-            <div className="swiper-container LayerGallerySlide-container">
-              <div className="swiper-wrapper LayerGallerySlide-wrapper">
-                <div className="LayerGallerySlide-slide swiper-slide">
-                  <div className="LayerGallerySlide-thumb">
-                    <a href="#;" className="LayerGallerySlide-link">
-                      <img src="../assets/images/dummy/Mask Group@2x.png" alt="" />
-                    </a>
-                  </div>
-                </div>
-                <div className="LayerGallerySlide-slide swiper-slide">
-                  <div className="LayerGallerySlide-thumb">
-                    <a href="#;" className="LayerGallerySlide-link">
-                      <img src="../assets/images/dummy/Mask Group@2x.png" alt="" />
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          {/* <!-- .slide --> */}
-          <div className="LayerGallerySlide-pagination swiper-pagination"></div>
-        </div>
-        {/* <!-- .LayerGallery --> */}
+      <div>
+        {handleProgressBar(1)}
+        {handleProgressBar(2)}
+        {handleProgressBar(3)}
+        {handleProgressBar(4)}
+        {handleProgressBar(5)}
       </div>
-      {/* <!-- .Body --> */}
+
+      <div className={reviewStyle.reviewCotent}>{reviewCard}</div>
+
+      <button onClick={() => handleOpenModal("view")}>전체 리뷰 보기</button>
+      <button onClick={() => handleOpenModal("add")}>리뷰 작성 하기</button>
+
+      <AddReviewModal
+        isOpen={AddReviewModalOpen}
+        onRequestClose={() => setAddReviewModalOpen(false)}
+        isSave={() =>setReview(true)}
+        myStyle={reviewStyle}
+      />
+
+      <ReviewDetailModal
+        data={viewContent}
+        point1={point1}
+        point2={point2}
+        point3={point3}
+        point4={point4}
+        point5={point5}
+        totalPoint={totalPoint}
+        totalCount={totalCount}
+        isOpen={reviewDetailModalOpen}
+        onRequestClose={() => setReviewDetailModalOpen(false)}
+      />
     </div>
-    // </div>
   );
 };
 export default Review;

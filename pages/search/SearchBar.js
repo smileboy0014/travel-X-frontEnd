@@ -2,8 +2,10 @@ import React, { useCallback, useState, useEffect } from "react";
 import Axios from "axios";
 import { useRouter } from "next/router";
 import PesonalModal from "../../components/Modal/Personal/PersonalModal";
-import { useSelector } from "react-redux";
-import Style from "../../styles/Component.module.css";
+import { useSelector, useDispatch } from "react-redux";
+import Style from "../../styles/SearchBar.module.css";
+import * as roomFilterActions from "../../redux/store/modules/roomFilter";
+import { AiOutlineSearch, AiOutlineClose, AiOutlineLeft } from "react-icons/ai";
 
 const SearchBar = ({
   getSearchValue,
@@ -19,6 +21,7 @@ const SearchBar = ({
   const [checkBackStep, setCheckBackStep] = useState(true);
   const { searchDate } = useSelector((state) => state.date);
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const onChangeSearch = useCallback((e) => {
     setSearchValue(e.target.value);
@@ -100,20 +103,16 @@ const SearchBar = ({
   // }, []);
 
   return (
-    <>
-      <div className={Style["ListFilterSearch"]}>
-        <button
-          className={Style["ListFilterBack"]}
+    <div>
+      <div className={Style.ListFilterSearch}>
+        <AiOutlineLeft
+          className={Style.ListFilterSearch_icon1}
           onClick={onClickBackStep}
         />
-        <input 
-          type="submit" 
-          value="Search" 
-          className={Style["ListFilterSearch-submit"]} 
-        />
+        <AiOutlineSearch className={Style.ListFilterSearch_icon2} />
         <input
           type="text"
-          className={Style["ListFilterSearch-text"]}
+          className={Style.ListFilterSearch_text}
           value={searchValue}
           onChange={onChangeSearch}
           onKeyPress={onKeyPress}
@@ -127,7 +126,7 @@ const SearchBar = ({
         />
 
         {!searchValue && searchDate !== undefined && (
-          <span className={Style["ListFilterSearch-date"]}>
+          <span className={Style.ListFilterSearch_date}>
             {`${new Date(searchDate.start).getMonth() + 1}.${new Date(
               searchDate.start
             ).getDate()}(${week[new Date(searchDate.start).getDay()]}) - ${
@@ -139,17 +138,15 @@ const SearchBar = ({
         )}
 
         {searchValue && (
-          <button
+          <AiOutlineClose
             onClick={() => {
               setSearchValue("");
             }}
-            className={Style["ListFilterSearch-close"]}
-            type="button"
-            style={{display: 'block'}}
-          ><span className="ab-text">close</span></button>
+            className={Style.ListFilterSearch_close}
+          ></AiOutlineClose>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

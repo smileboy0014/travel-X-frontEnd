@@ -1,11 +1,8 @@
 import React, { useState } from "react";
-import Style from "../../../styles/Component.module.css";
+import Style from "../../../styles/FilterButton.module.css";
 import { BsPerson } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import PesonalModal from "../../Modal/Personal/PersonalModal";
-import classNames from 'classnames/bind';
-
-const cx = classNames.bind(Style);
 
 const PersonalFilterButton = () => {
   const [personalModalOpen, setPersonalModalOpen] = useState(false);
@@ -17,11 +14,12 @@ const PersonalFilterButton = () => {
   );
 
   return (
-    <li className={Style["ListFilterValue-item"]}>
+    <li className={Style.ListFilterValue_item}>
       <button
-        className={cx("ListFilterValueItem", "icoPersonnel")}
+        className={Style.ListFilterValueItem}
         onClick={() => setPersonalModalOpen(true)}
       >
+        <BsPerson className={Style.ListFilterValueItem_icon} />
         {"성인: " + adultCounterValue + " 아동: " + childCounterValue}
       </button>
       <PesonalModal

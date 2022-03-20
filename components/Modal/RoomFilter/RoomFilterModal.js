@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import RoomFilter from "./RoomFilter";
 import Modal from "react-modal";
-import Style from "../../../styles/Component.module.css";
+import Style from "../../../styles/CommonModal.module.css";
 
 const RoomFilterModal = ({ isOpen, onRequestClose }) => {
   const [clear, setClear] = useState(false);
@@ -9,24 +9,24 @@ const RoomFilterModal = ({ isOpen, onRequestClose }) => {
   return (
     <div>
       <Modal
-        className={Style["Modal"]}
-        overlayClassName={Style["Overlay"]}
+        className={Style.Modal}
+        overlayClassName={Style.Overlay}
         isOpen={isOpen}
         ariaHideApp={false}
         onRequestClose={() => onRequestClose(false)}
         closeTimeoutMS={200}
       >
-        <div className="site-container">
-          <div className={Style["FilterPopHeader"]}>
+        <div className={Style.site_container}>
+          <div className={Style.FilterPopHeader}>
             <button
-              className={Style["FilterPopHeader-reset"]}
+              className={Style.FilterPopHeader_reset}
               onClick={() => setClear(true)}
             >
               초기화
             </button>
-            <div className={Style["FilterPopHeader-title"]}>필터</div>
+            <div className={Style.FilterPopHeader_title}>필터</div>
             <button
-              className={Style["FilterPopHeader-close"]}
+              className={Style.FilterPopHeader_close}
               onClick={() => onRequestClose(false)}
             ></button>
           </div>
