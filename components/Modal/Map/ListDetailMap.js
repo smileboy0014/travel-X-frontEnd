@@ -70,14 +70,14 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
           searchDataValue[0][0].location.lon
         );
       }
-      
+
 
       recognizer = new MarkerOverlapRecognizer({
         highlightRect: false,
         tolerance: 5,
       });
       recognizer.setMap(roomMap);
-  
+
       markers = [];
       mobileWindows = [];
       selectedId = "";
@@ -130,23 +130,27 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
 
     if (searchDataValue[0] !== undefined) {
       let clusters = clusteringByLocation(Array.from(searchDataValue[0]));
-      
+
       clusters.map((cluster) => {
         let price =
           cluster.count == 1 ? `${cluster.minPrice}` : `${cluster.minPrice} ~`;
+
+
         var roomMapMarker = new naver.maps.Marker({
           map: roomMap,
           title: cluster.items[0].propertyName,
           icon: {
             content:
               `<button id="map_${cluster.items[0].roomId}" class="${mapPinStyle}">` +
-                (cluster.count > 1 ?
-                `<span class="${mapPinCountStyle}">${cluster.count}</span>` 
+              (cluster.count > 1 ?
+                `<span class="${mapPinCountStyle}">${cluster.count}</span>`
                 : "") +
-                `<span class="${mapPinPriceStyle}">${priceComma(price)}</span>` +
+              `<span class="${mapPinPriceStyle}">${priceComma(price)}</span>` +
               "</button>",
+
             size: new naver.maps.Size(24, 37),
-            anchor: new naver.maps.Point(12, 37),
+            origin: new naver.maps.Point(0, 0),
+            anchor: new naver.maps.Point(40, 30),
             elementId: `map_${cluster.items[0].roomId}`,
           },
           position: new naver.maps.LatLng(
@@ -256,9 +260,9 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
       <button className={cx("ListFixButton", "Current-search")} onClick={onSearchMap}>
         현 지도에서 검색
       </button>
-      <div 
-        id="roomMap" 
-        style={mapContainerStyle} 
+      <div
+        id="roomMap"
+        style={mapContainerStyle}
         // className={Style["MapSection-map"]}
         observer={mapObserver}
       >
