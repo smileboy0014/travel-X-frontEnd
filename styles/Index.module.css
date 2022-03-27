@@ -43,7 +43,7 @@
   width: 285px;
   height: 72px;
   text-align: center;
-	background-image:url(../public/SearchBar2.jpg);
+	background-image:url(../public/SearchBar2.JPG);
 }
 
 @media screen and (max-width: 480px) {

@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import Axios from "axios";
-import Carousel from '../../components/Card/Carousel/Carousel';
 import MainTap from '../../components/Tap/MainTap';
 
 const Post = ({ items }) => {
@@ -23,10 +22,6 @@ const Post = ({ items }) => {
 
   return (
     <>
-      <Carousel
-      ref={carouselRef}
-      items={items}
-    />
     <MainTap 
     items={tabItem}/>
     </>
