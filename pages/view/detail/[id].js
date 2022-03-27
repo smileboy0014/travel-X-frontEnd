@@ -95,10 +95,10 @@ const DetailView = () => {
         },
       }).then((res) => {
         console.log(res.data);
-        console.log(res.data.availableDates);
-        console.log(res.data.priceDetails);
-        console.log(res.data.propertyInfo);
-        console.log(res.data.roomInfo);
+        // console.log(res.data.availableDates);
+        // console.log(res.data.priceDetails);
+        // console.log(res.data.propertyInfo);
+        // console.log(res.data.roomInfo);
         setRooms((prevState) => ({
           ...prevState,
           item: res.data.roomInfo.images ? res.data.roomInfo.images : [],
@@ -158,19 +158,19 @@ const DetailView = () => {
                   </div>
 
                   {/* 필터 페이지로 이동하는 부분  */}
-                  
-                    <div className={Style["DetailHeaderGrade"]}>
-                      <span className={Style["DetailHeaderGrade-current"]}>{rooms.reviewSummary.averageScore}</span>
-                      <Link
-                        href={{
-                          pathname: "/view/review/[id]",
-                          query: { id: id },
-                        }}
-                      ><a>
+
+                  <div className={Style["DetailHeaderGrade"]}>
+                    <span className={Style["DetailHeaderGrade-current"]}>{rooms.reviewSummary.averageScore}</span>
+                    <Link
+                      href={{
+                        pathname: "/view/review/[id]",
+                        query: { id: id },
+                      }}
+                    ><a>
                         <span className={Style["DetailHeaderGrade-link"]}>후기 {rooms.reviewSummary.reviewCount}개</span>
                       </a></Link>
-                    </div>
-                  
+                  </div>
+
                   {/*  // 필터 페이지로 이동하는 부분  */}
                   {/* <ReviewModal
                     isOpen={reviewModalOpen}
@@ -189,7 +189,7 @@ const DetailView = () => {
                         className={Style["DetailHeaderInfoAddress-Icon"]}//
                       />
                       <span className={Style["DetailHeaderInfoFilter-item"]}>
-                        {rooms.roomInfo.baseUser}인 기준 
+                        {rooms.roomInfo.baseUser}인 기준
                         최대 {` ${rooms.roomInfo.maxUser}`}인
                       </span>
                       <span className={Style["DetailHeaderInfoFilter-item"]}>
@@ -202,7 +202,7 @@ const DetailView = () => {
                 </div>
               </div>
               {/* <!-- .DetailHeader --> */}
-				      {/* <!-- .DetailPayment --> */}
+              {/* <!-- .DetailPayment --> */}
               <div className={Style["DetailPayment"]}>
                 <div className="site-container">
                   <div className={Style["DetailPaymentDate"]}>
@@ -230,7 +230,7 @@ const DetailView = () => {
                       변경
                     </button>
                   </div>
-                  
+
                   <div className={Style["DetailPaymentPersonnel"]}>
                     <span className={Style["DetailPaymentPersonnel-schedule"]}>
                       {adultCounterValue > 0 ? `성인 ${adultCounterValue}명` : ""}
@@ -288,7 +288,7 @@ const DetailView = () => {
               </div>
             </div>
             {/* <!-- .DetailPayment --> */}
-				    {/* <!-- DetailInfo --> */}
+            {/* <!-- DetailInfo --> */}
             <div className={Style["DetailInfo"]}>
               <div className="site-container">
                 {/* <!-- item --> */}
@@ -361,15 +361,38 @@ const DetailView = () => {
             {/* <!-- .DetailInfo --> */}
             {/* <!-- .DetailReview --> */}
             <div className={Style["DetailReview"]}>
-              <a href="#;" className={Style["DetailReview-link"]}>
-                <div className="site-container">
-                  <div className={Style["DetailReview-score"]}>8.6</div>
-                  <div className={Style["DetailReview-title"]}>100개 상세 후기 보기</div>
-                </div>
-              </a>
+              <Link
+                href={{
+                  pathname: "/view/review/[id]",
+                  query: { id: id },
+                }}
+              >
+                <a href="#;" className={Style["DetailReview-link"]}>
+                  <div className="site-container">
+                    <div className={Style["DetailReview-score"]}>8.6</div>
+                    <div className={Style["DetailReview-title"]}>100개 상세 후기 보기</div>
+                  </div>
+                </a>
+              </Link>
             </div>
 
-            <ReserveButton></ReserveButton>
+            {/* <ReserveButton></ReserveButton> */}
+
+            <Link
+              href={{
+                pathname: "/view/reserve/[id]",
+                query: { id: id },
+              }}
+            >
+              <div className={Style["BttonFixButton"]}>
+                <div className="site-container">
+                  <button type="button" className={Style["BttonFixButton-button"]}>
+                    예약하기
+                  </button>
+                </div>
+              </div>
+            </Link>
+
 
             <DetailCalendarModal
               isOpen={calendarModalOpen}
