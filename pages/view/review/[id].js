@@ -3,14 +3,17 @@ import Axios from "axios";
 import { useRouter } from "next/router";
 import Style from "../../../styles/Component.module.css";
 import DetailTopNavbar from "../../../components/NavBar/DetailTopNavbar";
+import LayerGallery from "../../../components/Review/Gallery/LayerGallery";
 // import reviewStyle from "../../../styles/Review.module.css";
 import ReviewCard from "../../../components/Card/Review/ReviewCard";
+import ReviewDetailCarousel from "../../../components/Card/Carousel/ReviewDetailCarousel";
 import AddReviewModal from "../../../components/Modal/Review/AddReviewModal";
 import ReviewDetailModal from "../../../components/Modal/Review/ReviewDetailModal";
 import ReviewOrderbyModal from "../../../components/Modal/ReviewOrderBy/ReviewOrderbyModal";
 import ProgressBar from "../../../components/Progress/ProgressBar";
 import { useSelector, useDispatch } from "react-redux";
 import classNames from 'classnames/bind';
+import { height } from "dom7";
 
 const cx = classNames.bind(Style);
 
@@ -26,9 +29,12 @@ const Review = () => {
   const [cleanScore, setCleanScore] = useState(0);
   const [facilityScore, setFacilityScore] = useState(0);
   const [comfortScore, setComfortScore] = useState(0);
+  const [layerGalleryList,setLayerGalleryList] = useState([]);
   const [onlyPicture, setOnlyPicture] = useState(false);
   const [review, setReview] = useState(false);
   const [isOpenStyle, setIsOpenStyle] = useState(false);
+  const [layerGalleryOpen, setLayerGalleryOpen] = useState(false);
+  const [clickPicture, setClickPicture] = useState(false);
   const [reviewOrderbyModalOpen, setReviewOrderbyModalOpen] = useState(false);
   const [AddReviewModalOpen, setAddReviewModalOpen] = useState(false);
   const [reviewDetailModalOpen, setReviewDetailModalOpen] = useState(false);
@@ -96,6 +102,10 @@ const Review = () => {
     } else {
       return String(score * 20) + "%";
     }
+  }
+
+  const handleSetGalleryPicutre = (data) =>{
+      setLayerGalleryList(data);
   }
 
   const handleIndividualStarScore = (item) => {
@@ -188,7 +198,6 @@ const Review = () => {
   }
 
   const handleViewConetent = (check) => {
-    debugger;
     if (check) {
       return (
         <>
@@ -213,21 +222,7 @@ const Review = () => {
                 </div>
               </div>
               {/* <!-- slide --> */}
-              <div className={Style["ReviewSlide"]}>
-                <div className={cx("swiper-container ReviewSlide-container")}>
-                  <div className="swiper-wrapper ReviewSlide-wrapper">
-
-                    <div className="ReviewSlide-slide swiper-slide">
-                      <div className="ReviewSlide-thumb">
-                        <a href="#;" className={Style["ReviewSlide-link"]}>
-                          <img src="../assets/images/dummy/Mask Group@2x.png" alt="" />
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
+              <ReviewDetailCarousel clickPicture={(data)=>handleSetGalleryPicutre(data)}  data={item.imageIdList} />
               {/* <!-- .slide --> */}
             </div>
             //  //items
@@ -258,21 +253,7 @@ const Review = () => {
             </div>
           </div>
           {/* <!-- slide --> */}
-          <div className={Style["ReviewSlide"]}>
-            <div className={cx("swiper-container ReviewSlide-container")}>
-              <div className="swiper-wrapper ReviewSlide-wrapper">
-
-                <div className="ReviewSlide-slide swiper-slide">
-                  <div className="ReviewSlide-thumb">
-                    <a href="#;" className={Style["ReviewSlide-link"]}>
-                      <img src="../assets/images/dummy/Mask Group@2x.png" alt="" />
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
+          <ReviewDetailCarousel galleryData={layerGalleryList}  data={item.imageIdList} />
           {/* <!-- .slide --> */}
         </div>
         //  //items
@@ -390,6 +371,7 @@ const Review = () => {
     setIsOpenStyle(true);
     setOnlyPicture(false);
     setReviewOrderbyModalOpen(false);
+    setLayerGalleryList([]);
   }, []);
 
   useEffect(() => {
@@ -402,12 +384,16 @@ const Review = () => {
 
 
   useEffect(() => {
-    if (onlyPicture) {
-      // 리스트에 사진 리뷰만 보이게 필터 해주기
+    setLayerGalleryOpen(true);
 
+  }, [layerGalleryList]);
+
+  useEffect(() =>{
+    if(!layerGalleryOpen){
+        setLayerGalleryList([]);
     }
 
-  }, [onlyPicture])
+  }, [layerGalleryOpen]);
 
   return (
     <div className="site">
@@ -462,7 +448,7 @@ const Review = () => {
                     className={Style["ReviewFilterCheck-input"]} />
                   <span className={Style["ReviewFilterCheck-text"]}>사진 리뷰만</span>
                 </label>
-                <button type="button" className={Style["ReviewFilterValueItem"]} onClick={() =>onClickHandler('openModal')}>평점높은순</button>
+                <button type="button" className={Style["ReviewFilterValueItem"]} onClick={() =>onClickHandler('openModal')}>최신순</button>
               </div>
             </div>
           </div>
@@ -485,32 +471,7 @@ const Review = () => {
         {/* <!-- .SortPop --> */}
 
         {/* <!-- LayerGallery --> */}
-        <div className={Style["LayerGallery"]}>
-          <button type="button" className={Style["LayerGallery-close"]}><span className="ab-text">Close</span></button>
-          {/* <!-- slide --> */}
-          <div className={Style["LayerGallerySlide"]}>
-            <div className="swiper-container LayerGallerySlide-container">
-              <div className="swiper-wrapper LayerGallerySlide-wrapper">
-                <div className="LayerGallerySlide-slide swiper-slide">
-                  <div className="LayerGallerySlide-thumb">
-                    <a href="#;" className="LayerGallerySlide-link">
-                      <img src="../assets/images/dummy/Mask Group@2x.png" alt="" />
-                    </a>
-                  </div>
-                </div>
-                <div className="LayerGallerySlide-slide swiper-slide">
-                  <div className="LayerGallerySlide-thumb">
-                    <a href="#;" className="LayerGallerySlide-link">
-                      <img src="../assets/images/dummy/Mask Group@2x.png" alt="" />
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          {/* <!-- .slide --> */}
-          <div className="LayerGallerySlide-pagination swiper-pagination"></div>
-        </div>
+        <LayerGallery data={layerGalleryList} isOpen={layerGalleryOpen} onRequestClose={() => setLayerGalleryOpen(false)} />
         {/* <!-- .LayerGallery --> */}
       </div>
       {/* <!-- .Body --> */}
