@@ -1565,7 +1565,7 @@ body .DetailPaymentPersonnel-button{
 
 .CheckCalenderBody-row{
 	display: flex;
-    justify-content: center;
+    /* justify-content: center; */
 }
 
 .CheckCalenderBody-col{

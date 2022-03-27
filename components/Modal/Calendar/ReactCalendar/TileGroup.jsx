@@ -71,7 +71,8 @@ export default function TileGroup({
         bodyList.push(col);
       }
     }
-    
+    console.log(offset);
+    // console.log(bodyList);
     return bodyList;
   }
 

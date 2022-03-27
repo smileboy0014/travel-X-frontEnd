@@ -30,7 +30,7 @@ export default function Days(props) {
   const dayOfWeek = getDayOfWeek(activeStartDate, calendarType);
 
   const offset = hasFixedNumberOfWeeks ? 0 : dayOfWeek;
-
+  console.log(activeStartDate);
   /**
    * Defines on which day of the month the grid shall start. If we simply show current
    * month, we obviously start on day one, but if showNeighboringMonth is set to

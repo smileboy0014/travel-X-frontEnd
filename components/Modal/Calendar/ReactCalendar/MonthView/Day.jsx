@@ -31,7 +31,7 @@ export default function Day({
         classes,
         // className,
         // isWeekend(date, calendarType) ? `${className}--weekend` : null,
-        date.getMonth() !== currentMonthIndex ? `${className}--neighboringMonth` : null,
+        // date.getMonth() !== currentMonthIndex ? `${className}--neighboringMonth` : null,
       )}
       formatAbbr={formatLongDate}
       maxDateTransform={getDayEnd}
