@@ -12,7 +12,6 @@ import {
 import { tileProps } from '../shared/propTypes';
 
 // const className = 'react-calendar__month-view__days__day';
-// const className = Style["CheckCalenderBody-text"];
 
 export default function Day({
   formatDay = defaultFormatDay,

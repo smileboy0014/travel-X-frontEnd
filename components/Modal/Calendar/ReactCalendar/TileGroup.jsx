@@ -29,6 +29,7 @@ export default function TileGroup({
   const tiles = [];
   for (let point = start; point <= end; point += step) {
     const date = dateTransform(point);
+    console.log(date.getTime() == (new Date).getTime())
     const classes = getTileClasses({
       value, valueType, date, dateType, hover
     });
@@ -71,8 +72,9 @@ export default function TileGroup({
         bodyList.push(col);
       }
     }
-    console.log(offset);
-    // console.log(bodyList);
+    
+    
+
     return bodyList;
   }
 
