@@ -12,7 +12,6 @@ import {
 import { tileProps } from '../shared/propTypes';
 
 // const className = 'react-calendar__month-view__days__day';
-// const className = Style["CheckCalenderBody-text"];
 
 export default function Day({
   formatDay = defaultFormatDay,
@@ -31,7 +30,7 @@ export default function Day({
         classes,
         // className,
         // isWeekend(date, calendarType) ? `${className}--weekend` : null,
-        date.getMonth() !== currentMonthIndex ? `${className}--neighboringMonth` : null,
+        // date.getMonth() !== currentMonthIndex ? `${className}--neighboringMonth` : null,
       )}
       formatAbbr={formatLongDate}
       maxDateTransform={getDayEnd}

@@ -1565,7 +1565,7 @@ body .DetailPaymentPersonnel-button{
 
 .CheckCalenderBody-row{
 	display: flex;
-    justify-content: center;
+    /* justify-content: center; */
 }
 
 .CheckCalenderBody-col{
@@ -1617,7 +1617,7 @@ body .DetailPaymentPersonnel-button{
 }
 
 .is-Start .CheckCalenderBody-text{
-	color:#6957e8;
+	color:#6957e8 !important;
 }
 
 /*End*/
@@ -1658,12 +1658,12 @@ body .DetailPaymentPersonnel-button{
 }
 
 /*is-Pass*/
-.is-Pass .CheckCalenderBody-text{
+.is-Pass.CheckCalenderBody-text{
 	position:relative;
 	color:#cacacb !important;
 }
 
-.is-Pass .CheckCalenderBody-text:after{
+.is-Pass.CheckCalenderBody-text:after{
 	content:"";
 	position:absolute;
 	top:50%;

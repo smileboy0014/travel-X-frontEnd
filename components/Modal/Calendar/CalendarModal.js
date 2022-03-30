@@ -13,10 +13,10 @@ const CalendarModal = ({ isOpen, onRequestClose }) => {
   const now = new Date();
   const week = new Array("일", "월", "화", "수", "목", "금", "토");
   const defaultDateList = new Array(
-    now,
-    new Date(now.getFullYear(), now.getMonth() + 1, now.getDate()),
-    new Date(now.getFullYear(), now.getMonth() + 2, now.getDate()),
-    new Date(now.getFullYear(), now.getMonth() + 3, now.getDate())
+    new Date(now.getFullYear(), now.getMonth(), 1),
+    new Date(now.getFullYear(), now.getMonth() + 1, 1),
+    new Date(now.getFullYear(), now.getMonth() + 2, 1),
+    new Date(now.getFullYear(), now.getMonth() + 3, 1)
   );
   const dispatch = useDispatch();
 
@@ -24,12 +24,6 @@ const CalendarModal = ({ isOpen, onRequestClose }) => {
     new Date(searchDate.start),
     new Date(searchDate.end),
   ]);
-  const [rangeEnd, setRangeEnd] = useState(false);
-  // const [startDisabledDate, setStartDisabledDate] = useState(new Date(now.getFullYear(), now.getMonth()+1, now.getDate()));
-
-  useEffect(() => {
-    // setRangeEnd(true);
-  }, [value]);
 
   return (
     <div>
@@ -74,7 +68,6 @@ const CalendarModal = ({ isOpen, onRequestClose }) => {
                 onChange={onChange}
                 value={value}
                 calendarType="US"
-                handleRangeEnd={rangeEnd}
                 showNeighboringMonth={false}
                 showStartDateList={defaultDateList}
               />
