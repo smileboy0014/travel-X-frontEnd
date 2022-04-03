@@ -6,6 +6,7 @@ import "swiper/css";
 import "swiper/css";
 import "swiper/css/pagination";
 import 'swiper/css/scrollbar';
+import Link from "next/link";
 
 
 const MapResultCarousel = (props) => {
@@ -38,34 +39,41 @@ const MapResultCarousel = (props) => {
       {data &&
         data.map((item, index) => (
           <SwiperSlide key={index}>
-            <div className={Style["MapList"]} style={{width: '100%'}}>
-              <div className={Style["MapList-link"]}>
-                <div className={Style["MapListThumb"]}>
-                  <img
-                    src={"http://" + item.img}
-                    alt="room-img"
-                  />
-                </div>
-                <div className={Style["MapListCont"]}>
-                  <div className={Style["MapListCont-meta"]}>{item.type}</div>
-                  <div className={Style["MapListCont-title"]}>{item.name}</div>
-                  <div className={Style["MapListContGrade"]}>
-                    <span className={Style["MapListContGrade-current"]}>
-                      {/* {item.averageScore.toFixed(1)} */}
-                    </span>
-                    <span className={Style["MapListContGrade-total"]}>
-                      {/* {"(" + item.reviewCount + ")"} */}
-                    </span>
+            <Link
+              href={{
+                pathname: "/view/detail/[id]",
+                query: { id: item.id },
+              }}
+            >
+              <div className={Style["MapList"]} style={{width: '100%'}}>
+                <div className={Style["MapList-link"]} style={{ cursor: "pointer" }}>
+                  <div className={Style["MapListThumb"]}>
+                    <img
+                      src={"http://" + item.img}
+                      alt="room-img"
+                    />
                   </div>
-                  <div className={Style["MapListCont-price"]}>
-                    {item.price
-                      .toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                    원
+                  <div className={Style["MapListCont"]}>
+                    <div className={Style["MapListCont-meta"]}>{item.type}</div>
+                    <div className={Style["MapListCont-title"]}>{item.name}</div>
+                    <div className={Style["MapListContGrade"]}>
+                      <span className={Style["MapListContGrade-current"]}>
+                        {/* {item.averageScore.toFixed(1)} */}
+                      </span>
+                      <span className={Style["MapListContGrade-total"]}>
+                        {/* {"(" + item.reviewCount + ")"} */}
+                      </span>
+                    </div>
+                    <div className={Style["MapListCont-price"]}>
+                      {item.price
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                      원
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </Link>
           </SwiperSlide>
         ))}
     </Swiper>
