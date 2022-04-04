@@ -3055,11 +3055,11 @@ body .ReservationInput-input{
 
 .Review-link{
 	display:flex;
-	height:8.125rem;
+	height:100%;
 }
 
 .ReviewThumb{
-	width:6.875rem;
+	width:100%;
 	overflow:hidden;
 	position:relative;
 }
@@ -3070,7 +3070,10 @@ body .ReservationInput-input{
 	left:50%;
 	transform:translate(-50%, -50%);
 	height:100%;
+	width: 100%;
 }
+
+
 
 /*	ReviewHeader
 =========================================================*/
@@ -3467,6 +3470,31 @@ body .ReviewSlide-slide:last-child{
 	visibility:visible;
 }
 
+.LayerGalleryModal{
+	position: fixed;
+  min-width: 100%;
+	min-height: 100%;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgb(36, 36, 36);
+  border-radius: 0.625rem 0.625rem 0 0;
+  z-index: 5;
+  transition-property: transform;
+  transition-duration: 0.2s;
+}
+
+.LayerGalleryOverlay{
+	position: fixed;
+  min-width: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 2000;
+}
+
 .LayerGallerySlide{
 	position:absolute;
 	top:50%;
@@ -3510,7 +3538,35 @@ body .LayerGallery-close{
 	background-color:#6957e8;
 }
 
+.GalleryList{
+	margin-top:1.25rem;
+	border-radius:0.5rem 0.5rem;
+	overflow:hidden;
+	position:relative;
+	width:auto;
+	box-shadow: 0 0.125rem 0.625rem 0 rgba(0, 0, 0, 0.3);
+	text-align:left;
+}
 
+.Gallery-link{
+	display:flex;
+	height:100%;
+}
+
+.GalleryThumb{
+	width:100%;
+	overflow:hidden;
+	position:relative;
+}
+
+.GalleryThumb img{
+	position:relative;
+	top:50%;
+	left:50%;
+	transform:translate(-50%, -50%);
+	height:150px;
+	width: 150px;
+}
 
 
 /*=========================================================

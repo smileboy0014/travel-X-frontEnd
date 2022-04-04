@@ -8,6 +8,8 @@ import LayerGallery from "../../../components/Review/Gallery/LayerGallery";
 import ReviewCard from "../../../components/Card/Review/ReviewCard";
 import ReviewDetailCarousel from "../../../components/Card/Carousel/ReviewDetailCarousel";
 import AddReviewModal from "../../../components/Modal/Review/AddReviewModal";
+import UpdateReviewModal from "../../../components/Modal/Review/UpdateReviewModal";
+import DeleteReviewModal from "../../../components/Modal/Review/DeleteReviewModal";
 import ReviewDetailModal from "../../../components/Modal/Review/ReviewDetailModal";
 import ReviewOrderbyModal from "../../../components/Modal/ReviewOrderBy/ReviewOrderbyModal";
 import ProgressBar from "../../../components/Progress/ProgressBar";
@@ -16,6 +18,7 @@ import classNames from 'classnames/bind';
 import { height } from "dom7";
 
 const cx = classNames.bind(Style);
+const getImgApiUrl = "http://shineware.iptime.org:8081/image/get";
 
 const Review = () => {
 
@@ -29,14 +32,18 @@ const Review = () => {
   const [cleanScore, setCleanScore] = useState(0);
   const [facilityScore, setFacilityScore] = useState(0);
   const [comfortScore, setComfortScore] = useState(0);
-  const [layerGalleryList,setLayerGalleryList] = useState([]);
+  const [layerGalleryList, setLayerGalleryList] = useState([]);
   const [onlyPicture, setOnlyPicture] = useState(false);
-  const [review, setReview] = useState(false);
+
+  const [registerReview, setRegisterReview] = useState(false);
   const [isOpenStyle, setIsOpenStyle] = useState(false);
   const [layerGalleryOpen, setLayerGalleryOpen] = useState(false);
   const [clickPicture, setClickPicture] = useState(false);
   const [reviewOrderbyModalOpen, setReviewOrderbyModalOpen] = useState(false);
-  const [AddReviewModalOpen, setAddReviewModalOpen] = useState(false);
+  const [addReviewModalOpen, setAddReviewModalOpen] = useState(false);
+  const [updateReviewModalOpen, setUpdateReviewModalOpen] = useState(false);
+  const [updatedata, setUpdateData] = useState(null);
+  const [deleteReviewModalOpen, setDeleteReviewModalOpen] = useState(false);
   const [reviewDetailModalOpen, setReviewDetailModalOpen] = useState(false);
   const dispatch = useDispatch();
   // const data = useSelector(({ reviewContent }) => reviewContent.data);
@@ -45,7 +52,7 @@ const Review = () => {
 
   const getReviewSummary = () => {
 
-    setReview(false);
+    setRegisterReview(false);
 
     Axios({
       method: "GET",
@@ -63,6 +70,8 @@ const Review = () => {
         setFacilityScore(res.data.averageFacilityScore);
         setComfortScore(res.data.averageComfortScore);
       }
+    }).catch((error) => {
+      console.log(error);
     });
   }
 
@@ -79,21 +88,71 @@ const Review = () => {
       },
     }).then((res) => {
       if (res.data !== undefined) {
+        
         setTotalCount(res.data.length);
         setViewContent(res.data);
-        setViewWithPictureContent(res.data.filter(data => data.hasImage));
-      }
 
+        // debugger;
+        // for(let viewData of viewContent){
+
+        //   if(viewData.hasImage || viewData.imageIdList > 0){
+        //     for(let imgId of viewData.imageIdList){
+        //       if(!imgId.includes(".kr")&& !imgId.includes(".com")){
+        //         getImg(imgId);
+        //       }
+        //     }
+        //   }
+        // }
+
+        setViewWithPictureContent(res.data.filter(data => data.hasImage));
+
+       
+      }
+    }).catch((error) => {
+      console.log(error);
     });
 
   }
-  const onClickHandler = (type) => {
-    if(type === 'openAll'){
+
+  const getImg = (imgId) =>{
+    Axios({
+      method: "GET",
+      url: getImgApiUrl,
+      responseType: 'blob', // important
+      params: {
+        id: imgId
+      },
+    }).then((res) => {
+      if (res.data !== undefined) {
+
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement('a');
+        imgId = url;
+        console.log(`imgurl is ${imgId}`)
+
+      }
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+  
+
+  const onClickHandler = (type, data) => {
+    if (type === 'openAll') {
       setIsOpenStyle(!isOpenStyle);
-    } else {
+    } else if (type === 'addReview') {
+      setAddReviewModalOpen(true);
+    } else if (type === 'update') {
+      setUpdateData(data);
+      setUpdateReviewModalOpen(true);
+    } else if (type === 'delete') {
+      setUpdateData(data);
+      setDeleteReviewModalOpen(true);
+    }
+    else {
       setReviewOrderbyModalOpen(true);
     }
-    
+
   }
 
   const handleBarScore = (score) => {
@@ -104,8 +163,8 @@ const Review = () => {
     }
   }
 
-  const handleSetGalleryPicutre = (data) =>{
-      setLayerGalleryList(data);
+  const handleSetGalleryPicutre = (data) => {
+    setLayerGalleryList(data);
   }
 
   const handleIndividualStarScore = (item) => {
@@ -197,80 +256,56 @@ const Review = () => {
     }
   }
 
-  const handleViewConetent = (check) => {
-    if (check) {
-      return (
-        <>
-          {viewWithPictureContent && viewWithPictureContent.map((item, index) => (
-            // items
-            <div className={Style["ReviewPostItem"]} key={index}>
-              <div className={Style["ReviewPostItemMeta"]}>
-                <div className="ReviewPostItemMetaHead">
-                  <div className={Style["ReviewPostItemMetaHead-name"]}>{item.userId}</div>
-                  <div className={Style["BasicGrade"]}>
-                    {handleIndividualStarScore(item)}
-
-                  </div>
-                </div>
-                <div className={Style["ReviewPostItemMeta-date"]}>{handleFormattingDate(item.date)}</div>
-              </div>
-              <div className={Style["ReviewPostItemText"]}>
-                <button type="button" className={Style["ReviewPostItemTextBtn"]}>...<span className={Style["ReviewPostItemTextBtn-text"]}>더읽기</span></button>
-                {/* <!-- 글이 5줄을 넘을시 노출 --> */}
-                <div className={Style["ReviewPostItemText-crop"]}>
-                  {item.contents}
-                </div>
-              </div>
-              {/* <!-- slide --> */}
-              <ReviewDetailCarousel clickPicture={(data)=>handleSetGalleryPicutre(data)}  data={item.imageIdList} />
-              {/* <!-- .slide --> */}
-            </div>
-            //  //items
-          ))}
-        </>
-      )
+  const handleViewDetailCarousel = (item) =>{
+    if(item.hasImage || item.imageIdList.length != 0){
+      return(<ReviewDetailCarousel galleryData={(data) => setLayerGalleryList(data)} data={item.imageIdList} />);
     } else {
-      return (
-      <>
-      {viewContent && viewContent.map((item, index) => (
-        // items
-        <div className={Style["ReviewPostItem"]} key={index}>
-          <div className={Style["ReviewPostItemMeta"]}>
-            <div className="ReviewPostItemMetaHead">
-              <div className={Style["ReviewPostItemMetaHead-name"]}>{item.userId}</div>
-              <div className={Style["BasicGrade"]}>
-                {handleIndividualStarScore(item)}
-
-              </div>
-            </div>
-            <div className={Style["ReviewPostItemMeta-date"]}>{handleFormattingDate(item.date)}</div>
-          </div>
-          <div className={Style["ReviewPostItemText"]}>
-            <button type="button" className={Style["ReviewPostItemTextBtn"]}>...<span className={Style["ReviewPostItemTextBtn-text"]}>더읽기</span></button>
-            {/* <!-- 글이 5줄을 넘을시 노출 --> */}
-            <div className={Style["ReviewPostItemText-crop"]}>
-              {item.contents}
-            </div>
-          </div>
-          {/* <!-- slide --> */}
-          <ReviewDetailCarousel galleryData={layerGalleryList}  data={item.imageIdList} />
-          {/* <!-- .slide --> */}
-        </div>
-        //  //items
-      ))}
-    </>
-      )
+      return null;
     }
-
   }
 
-  const handleOpenModal = (type) => {
-    if (type == "view") {
-      setReviewDetailModalOpen(true);
-    } else if (type == "add") {
-      setAddReviewModalOpen(true);
+  const handleViewConetent = (check) => {
+    let contents = null;
+    if (check) {
+      contents = viewWithPictureContent;
+    } else {
+      contents = viewContent;
     }
-  };
+    return (
+      <>
+        {contents && contents.map((item, index) => (
+          <div className={Style["ReviewPostItem"]} key={index}>
+            {/* temporary area */}
+            <button type="button" style={{ position: 'relative' }} className={Style["DetailPaymentDate-button"]} onClick={() => onClickHandler('update', item)}>리뷰 수정</button>
+            <button type="button" style={{ position: 'relative' }} className={Style["DetailPaymentDate-button"]} onClick={() => onClickHandler('delete', item)}>리뷰 삭제</button>
+            {/* temporary area */}
+            <div className={Style["ReviewPostItemMeta"]}>
+              <div className="ReviewPostItemMetaHead">
+                <div className={Style["ReviewPostItemMetaHead-name"]}>{item.userId}</div>
+                <div className={Style["BasicGrade"]}>
+                  {handleIndividualStarScore(item)}
+
+                </div>
+              </div>
+              <div className={Style["ReviewPostItemMeta-date"]}>{handleFormattingDate(item.date)}</div>
+            </div>
+            <div className={Style["ReviewPostItemText"]}>
+              <button type="button" className={Style["ReviewPostItemTextBtn"]}>...<span className={Style["ReviewPostItemTextBtn-text"]}>더읽기</span></button>
+              {/* <!-- 글이 5줄을 넘을시 노출 --> */}
+              <div className={Style["ReviewPostItemText-crop"]}>
+                {item.contents}
+              </div>
+            </div>
+            {/* <!-- slide --> */}
+            <div>
+              {handleViewDetailCarousel(item)}
+            </div>
+            {/* <!-- .slide --> */}
+          </div>
+        ))}
+      </>
+    )
+  }
 
   const handleProgressBar = (type) => {
     switch (type) {
@@ -380,20 +415,37 @@ const Review = () => {
       getReviewSummary();
       getReviews();
     }
-  }, [id, review]);
+  }, [id, registerReview]);
 
 
   useEffect(() => {
-    setLayerGalleryOpen(true);
-
+    if(layerGalleryList != null && layerGalleryList.length > 0){
+      setLayerGalleryOpen(true);
+    }
   }, [layerGalleryList]);
 
-  useEffect(() =>{
-    if(!layerGalleryOpen){
-        setLayerGalleryList([]);
+  useEffect(() => {
+    if (!layerGalleryOpen) {
+      setLayerGalleryList([]);
     }
 
   }, [layerGalleryOpen]);
+
+  useEffect(()=>{
+
+    // if(viewContent.length > 0){
+    //   for(let viewData of viewContent){
+    //     if(viewData.imageIdList > 0){
+    //       for(let imgId of viewData.imageIdList){
+    //         if(!imgId.includes(".kr")&& !imgId.includes(".com")){
+    //           getImg(imgId);
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
+
+  }, [viewContent])
 
   return (
     <div className="site">
@@ -414,6 +466,16 @@ const Review = () => {
           {/* <!-- ReviewHeader --> */}
           <div className={Style["ReviewHeader"]}>
             <div className="site-container">
+              {/* temporary area */}
+              <div className="testArea">
+                <button type="button"
+                  style={{ position: 'relative', marginTop: "20px" }}
+                  className={Style["DetailPaymentDate-button"]}
+                  onClick={() => onClickHandler('addReview')}>
+                  리뷰 등록
+                </button>
+              </div>
+              {/* temporary area */}
               <dl className={isOpenStyle ? "ReviewHeader-inner" : cx("ReviewHeader-inner", "is-Open")}>
                 <dt className={Style["ReviewHeaderTitle"]}>
                   <div className={Style["ReviewHeaderTitle-text"]}>전체 평점</div>
@@ -448,7 +510,7 @@ const Review = () => {
                     className={Style["ReviewFilterCheck-input"]} />
                   <span className={Style["ReviewFilterCheck-text"]}>사진 리뷰만</span>
                 </label>
-                <button type="button" className={Style["ReviewFilterValueItem"]} onClick={() =>onClickHandler('openModal')}>최신순</button>
+                <button type="button" className={Style["ReviewFilterValueItem"]} onClick={() => onClickHandler('openModal')}>최신순</button>
               </div>
             </div>
           </div>
@@ -475,6 +537,9 @@ const Review = () => {
         {/* <!-- .LayerGallery --> */}
       </div>
       {/* <!-- .Body --> */}
+      <AddReviewModal isSave={() => setRegisterReview(true)} isOpen={addReviewModalOpen} onRequestClose={() => setAddReviewModalOpen(false)} />
+      <UpdateReviewModal isSave={() => setRegisterReview(true)} isOpen={updateReviewModalOpen} onRequestClose={() => setUpdateReviewModalOpen(false)} updateData={updatedata} />
+      <DeleteReviewModal isSave={() => setRegisterReview(true)} isOpen={deleteReviewModalOpen} onRequestClose={() => setDeleteReviewModalOpen(false)} reviewId={updatedata} />
     </div>
     // </div>
   );
