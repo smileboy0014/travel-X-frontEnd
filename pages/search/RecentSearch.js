@@ -70,8 +70,8 @@ const RecentSearch = ({
         console.log("newKeyword: " + JSON.stringify(newKeyword));
       }
 
-      
-      
+
+
       if (getSearchValue !== undefined) {
         getSearchValue(value);
       }
@@ -112,7 +112,7 @@ const RecentSearch = ({
                         onClick={() => addKeyword(item, 'autocomplete')}
                       >
                         {/* <mark>{sendSearchTxt}</mark> */}
-                        {item.replace(sendSearchTxt, "")}
+                        {item}
                       </a>
                     </Link>
                   </li>
@@ -137,8 +137,8 @@ const RecentSearch = ({
                           className={Style["TotalSearchRelatedList-link"]}
                           onClick={() => addKeyword(item)}
                         >
-                          <mark>{sendSearchTxt}</mark>
-                          {item.replace(sendSearchTxt, "")}
+                          {/* <mark>{sendSearchTxt}</mark> */}
+                          {item}
                         </a>
                       </Link>
                     </li>
@@ -151,55 +151,55 @@ const RecentSearch = ({
           </div>
         </div>
       ) : (
-          <div className={Style["TotalSearchRecent"]}>
-            <div className={Style["TotalSearchRecentHeader"]}>
-              <div className={Style["TotalSearchRecentHeader-title"]}>
-                최근 검색어
-              </div>
-              <button
-                type="button"
-                className={Style["TotalSearchRecentHeader-close"]}
-                onClick={handleClearKeywords}
-              >
-                전체삭제
-              </button>
+        <div className={Style["TotalSearchRecent"]}>
+          <div className={Style["TotalSearchRecentHeader"]}>
+            <div className={Style["TotalSearchRecentHeader-title"]}>
+              최근 검색어
             </div>
-            <div className={Style["TotalSearchRecentBody"]}>
-							<ul className={Style["TotalSearchRecentList"]}>
-                {keywords.length ? (
-                  keywords.map((item) => (
-                    <li className={Style["TotalSearchRelatedList-item"]} key={item.id}>
-                      <Link
-                        href="/view/search/[id]"
-                        as={`/view/search/${item.text}`}
-                      >
-                        <a
-                          className={Style["TotalSearchRecentList-link"]}
-                          onClick={() => addKeyword(item.text)}
-                        >
-                          {item.text}
-                        </a>
-                      </Link>
-                      
-                      <button
-                        type="button"
-                        className={Style["TotalSearchRecentList-del"]}
-                        onClick={() => handleRemoveKeyword(item.id)}
-                      >
-                        <span className="ab-text">del</span>
-                      </button>
-                    </li>
-                  ))
-                ) : (
-                  <div className={Style["TotalSearchRecentBody"]}>
-                    <div className={Style["TotalSearchRecent-noTag"]}>
-                      최근 검색한 내역이 없습니다.
-                    </div>
-                  </div>
-                )}
-              </ul>
-            </div>
+            <button
+              type="button"
+              className={Style["TotalSearchRecentHeader-close"]}
+              onClick={handleClearKeywords}
+            >
+              전체삭제
+            </button>
           </div>
+          <div className={Style["TotalSearchRecentBody"]}>
+            <ul className={Style["TotalSearchRecentList"]}>
+              {keywords.length ? (
+                keywords.map((item) => (
+                  <li className={Style["TotalSearchRelatedList-item"]} key={item.id}>
+                    <Link
+                      href="/view/search/[id]"
+                      as={`/view/search/${item.text}`}
+                    >
+                      <a
+                        className={Style["TotalSearchRecentList-link"]}
+                        onClick={() => addKeyword(item.text)}
+                      >
+                        {item.text}
+                      </a>
+                    </Link>
+
+                    <button
+                      type="button"
+                      className={Style["TotalSearchRecentList-del"]}
+                      onClick={() => handleRemoveKeyword(item.id)}
+                    >
+                      <span className="ab-text">del</span>
+                    </button>
+                  </li>
+                ))
+              ) : (
+                <div className={Style["TotalSearchRecentBody"]}>
+                  <div className={Style["TotalSearchRecent-noTag"]}>
+                    최근 검색한 내역이 없습니다.
+                  </div>
+                </div>
+              )}
+            </ul>
+          </div>
+        </div>
       )}
     </div>
   );

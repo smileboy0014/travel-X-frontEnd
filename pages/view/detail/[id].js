@@ -12,6 +12,8 @@ import { RiHotelLine } from "react-icons/ri";
 import { BsPerson, BsCalendar, BsGeoAlt } from "react-icons/bs";
 import { AiFillStar } from "react-icons/ai";
 import DetailCalendarModal from "../../../components/Modal/Calendar/DetailCalendarModal";
+import PesonalModal from "../../../components/Modal/Personal/PersonalModal";
+
 import classNames from 'classnames/bind';
 
 const cx = classNames.bind(Style);
@@ -234,7 +236,7 @@ const DetailView = () => {
                   <div className={Style["DetailPaymentPersonnel"]}>
                     <span className={Style["DetailPaymentPersonnel-schedule"]}>
                       {adultCounterValue > 0 ? `성인 ${adultCounterValue}명` : ""}
-                      {adultCounterValue > 0 ? `, ` : ""}
+                      {childCounterValue > 0 ? `, ` : ""}
                       {childCounterValue > 0 ? `어린이 ${childCounterValue}명` : ""}
                     </span>
                     <button
@@ -399,6 +401,14 @@ const DetailView = () => {
               onRequestClose={() => setCalendarModalOpen(false)}
               availableDates={rooms.availableDates}
             />
+
+
+
+            <PesonalModal
+              isOpen={personalModalOpen}
+              onRequestClose={() => setPersonalModalOpen(false)}
+            />
+
             {/* <!-- .BttonFixButton --> */}
           </div>
           {/* <!-- .컨텐츠 끝 --> */}
