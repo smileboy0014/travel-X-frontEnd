@@ -10,7 +10,7 @@ const sampleImage =
   "http://image.goodchoice.kr/resize_490x348/adimg_new/891/279402/934791805cb0b0b25a27081f1dd3f584.jpg";
 
 const SearchResultCarousel = (props) => {
-  const { items, roomId } = props;
+  const { items, roomId, useType } = props;
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
@@ -33,7 +33,7 @@ const SearchResultCarousel = (props) => {
               <Link
                 href={{
                   pathname: "/view/detail/[id]",
-                  query: { id: roomId },
+                  query: { id: roomId, useType: useType },
                 }}
               >
                 <a className={Style["ProductSlide-link"]}>
