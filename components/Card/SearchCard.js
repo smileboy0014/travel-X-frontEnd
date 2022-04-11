@@ -7,7 +7,7 @@ import classNames from 'classnames/bind';
 const cx = classNames.bind(style);
 
 function SearchResult(props) {
-
+  console.log()
   return (
     <li className={style["ProductList-item"]}>
       <div className={style["ProductItem"]}>
@@ -16,12 +16,12 @@ function SearchResult(props) {
         </div>
         
         <div className={style["ProductSlide"]}>
-          <SearchResultCarousel items={props.images} roomId={props.id} />
+          <SearchResultCarousel items={props.images} roomId={props.id} useType={props.useType} />
           <div className={style["ProductItemCont"]}>
             <Link
               href={{
                 pathname: "/view/detail/[id]",
-                query: { id: props.id },
+                query: { id: props.id, useType: props.useType },
               }}
             >
               <a className={style["ProductItemCont-link"]}>

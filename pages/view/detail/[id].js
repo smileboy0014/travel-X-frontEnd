@@ -6,11 +6,9 @@ import ReserveButton from "../../../components/Button/Reserve/ReserveButton";
 import Style from "../../../styles/Component.module.css";
 import Axios from "axios";
 import Link from "next/link";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
-import { RiHotelLine } from "react-icons/ri";
-import { BsPerson, BsCalendar, BsGeoAlt } from "react-icons/bs";
-import { AiFillStar } from "react-icons/ai";
+import * as scrollY from "../../../redux/store/modules/scrollY";
 import DetailCalendarModal from "../../../components/Modal/Calendar/DetailCalendarModal";
 import PesonalModal from "../../../components/Modal/Personal/PersonalModal";
 
@@ -27,7 +25,8 @@ const DetailView = () => {
   const scrollYValue = useSelector(({ scrollY }) => scrollY.value);
   const [changeStyle, setChangeStyle] = useState(false);
   const router = useRouter();
-  const { id } = router.query;
+  const dispatch = useDispatch();
+  const { id, useType, person } = router.query;
   const { detailDate } = useSelector((state) => state.date);
   const week = new Array("일", "월", "화", "수", "목", "금", "토");
   const adultCounterValue = useSelector(
@@ -68,14 +67,10 @@ const DetailView = () => {
   }, [scrollYValue]);
 
   useEffect(() => {
-    if (scrollYValue.scrollYValue > 0) {
-      setChangeStyle(true);
-    }
-  }, []);
-
-  useEffect(() => {
     setSlide(false);
+    dispatch(scrollY.scrollY(0));
     console.log(rooms);
+
     return () => {
       setSlide(true);
     };
@@ -88,12 +83,12 @@ const DetailView = () => {
         url: "http://shineware.iptime.org:8081/pdp/info",
         params: {
           roomId: id,
-          useType: "NIGHT",
+          useType: useType,
           checkinDate: FormattingDate(new Date(detailDate.start)),
           checkoutDate: FormattingDate(new Date(detailDate.end)),
-          children: "0",
+          children: childCounterValue,
           baby: "0",
-          adult: "2",
+          adult: adultCounterValue,
         },
       }).then((res) => {
         console.log(res.data);
@@ -187,9 +182,6 @@ const DetailView = () => {
                         : "주소: N/A"}
                     </div>
                     <div className={Style["DetailHeaderInfoFilter"]}>
-                      <BsPerson
-                        className={Style["DetailHeaderInfoAddress-Icon"]}//
-                      />
                       <span className={Style["DetailHeaderInfoFilter-item"]}>
                         {rooms.roomInfo.baseUser}인 기준
                         최대 {` ${rooms.roomInfo.maxUser}`}인
