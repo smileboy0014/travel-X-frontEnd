@@ -13,6 +13,7 @@ import OptionFilterButton from "../../../components/Button/OptionFilter/OptionFi
 import OrderByFilterButton from "../../../components/Button/OptionFilter/OrderByFilterButton";
 import CalendarModal from "../../../components/Modal/Calendar/CalendarModal";
 import ListDetailMap from "../../../components/Modal/Map/ListDetailMap";
+import * as scrollY from "../../../redux/store/modules/scrollY";
 import classNames from 'classnames/bind';
 
 const cx = classNames.bind(Style);
@@ -79,6 +80,10 @@ const Post = ({ item }) => {
   }
 
   useEffect(() => {
+    dispatch(scrollY.scrollY(0));
+  }, []);
+
+  useEffect(() => {
     setSearchAutoComptValue([]);
   }, [searchValue]);
 
@@ -96,7 +101,7 @@ const Post = ({ item }) => {
     if (yValue > lastScrollTop && yValue > navbarHeight){
       setListFilterIsUp(true);
 		} else {
-			if(yValue + window.outerHeight < document.documentElement.scrollHeight) {
+			if(yValue + window.outerHeight < document.documentElement.scrollHeight || yValue == 0) {
         setListFilterIsUp(false);
 			}
 		}
