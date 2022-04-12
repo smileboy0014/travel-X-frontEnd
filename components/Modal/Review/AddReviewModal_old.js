@@ -13,12 +13,11 @@ import { number } from "prop-types";
 const cx = classNames.bind(CommonStyle);
 
 const AddReviewModal = ({ isOpen, isSave, onRequestClose }) => {
-  // console.log(typeof(isSave));
   const router = useRouter();
   const { id } = router.query;
   const dispatch = useDispatch();
   const [reviewContent, setReviewContent] = useState({
-    // title: "",
+    title: "",
     content: "",
   });
   const [notice, setNotice] = useState([
@@ -37,6 +36,31 @@ const AddReviewModal = ({ isOpen, isSave, onRequestClose }) => {
   const [facilityScore, setFacilityScore] = useState(0);
   const [comfortScore, setComfortScore] = useState(0);
 
+  // 경험
+  const [rating1, setRating1] = useState(0);
+  const [hoverRating1, setHoverRating1] = useState(0);
+  const [starNumber1, setStarNumber1] = useState([1, 2, 3, 4, 5]);
+
+  // 서비스 && 친절도
+  const [rating2, setRating2] = useState(0);
+  const [hoverRating2, setHoverRating2] = useState(0);
+  const [starNumber2, setStarNumber2] = useState([6, 7, 8, 9, 10]);
+
+  // 청결도
+  const [rating3, setRating3] = useState(0);
+  const [hoverRating3, setHoverRating3] = useState(0);
+  const [starNumber3, setStarNumber3] = useState([11, 12, 13, 14, 15]);
+
+  // 시설 && 편의성
+  const [rating4, setRating4] = useState(0);
+  const [hoverRating4, setHoverRating4] = useState(0);
+  const [starNumber4, setStarNumber4] = useState([16, 17, 18, 19, 20]);
+
+  // 교통 && 위치 접근성
+  const [rating5, setRating5] = useState(0);
+  const [hoverRating5, setHoverRating5] = useState(0);
+  const [starNumber5, setStarNumber5] = useState([21, 22, 23, 24, 25]);
+
   const [countNum, setCountNum] = useState(0);
 
   useEffect(() => {
@@ -47,7 +71,18 @@ const AddReviewModal = ({ isOpen, isSave, onRequestClose }) => {
   }, [data]);
 
   useEffect(() => {
-   
+    setRating1(0);
+    setHoverRating1(0);
+    setRating2(0);
+    setHoverRating2(0);
+    setRating3(0);
+    setHoverRating3(0);
+    setRating4(0);
+    setHoverRating4(0);
+    setRating5(0);
+    setHoverRating5(0);
+    setCountNum(0);
+    setKindnessScore(3)
   }, [onRequestClose]);
 
   const handleCount = () => {
@@ -61,6 +96,22 @@ const AddReviewModal = ({ isOpen, isSave, onRequestClose }) => {
 
     const formData = new FormData();
 
+    let imageList = [];
+
+    let review = {
+      date: formattingDate(),
+      cleanScore: formattingScore(rating3),
+      comfortScore: formattingScore(rating5),
+      facilityScore: formattingScore(rating4),
+      kindnessScore: formattingScore(rating2),
+      priceScore: formattingScore(rating1),
+      title: reviewContent.title,
+      contents: reviewContent.content,
+      roomId: id,
+      useType: "NIGHT",
+      userId: "미정"
+    }
+
     if(imgFile != undefined){
       for (let i = 0; i < imgFile.length; i++) {
         formData.append('imageList['+i+']', imgFile[i]);
@@ -72,18 +123,18 @@ const AddReviewModal = ({ isOpen, isSave, onRequestClose }) => {
     // formData.append('imageList[0]', imgFile[0]);
     // formData.append('review', review);
     // formData.append('review.date', formattingDate());
-    formData.append('review.cleanScore',cleanScore);
-    formData.append('review.comfortScore',comfortScore);
-    formData.append('review.facilityScore',facilityScore);
-    formData.append('review.kindnessScore',kindnessScore);
-    formData.append('review.priceScore',priceScore);
-    // formData.append('review.title',reviewContent.title);
+    formData.append('review.cleanScore',formattingScore(rating3));
+    formData.append('review.comfortScore',formattingScore(rating5));
+    formData.append('review.facilityScore',formattingScore(rating4));
+    formData.append('review.kindnessScore',formattingScore(rating2));
+    formData.append('review.priceScore',formattingScore(rating1));
+    formData.append('review.title',reviewContent.title);
     formData.append('review.contents',reviewContent.content);
     formData.append('review.roomId',id);
     formData.append('review.useType',"NIGHT");
-    formData.append('review.userId',"1234");
+    formData.append('review.userId',"미정");
 
-    // debugger;
+
 
     // axios.post("http://shineware.iptime.org:8081/review/post", review, {
     //   headers: { "Content-Type": `multipart/form-data` }
@@ -105,11 +156,25 @@ const AddReviewModal = ({ isOpen, isSave, onRequestClose }) => {
         console.log(error);
       })
       .finally(() => {
-        setReviewContent({ 
-          // title: "", 
-          content: "" });
+        setReviewContent({ title: "", content: "" });
         onRequestClose(false);
       })
+
+    //         axios({
+    //   method: "POST",
+    //   url: "http://shineware.iptime.org:8081/review/post",
+    //   header: {"Content-Type": `application/json`},
+    //   body: JSON.stringify(review)
+    // }).then((res) => {
+    //   console.log(`save is successed!!`);
+    //   setReview(true);
+    // }).catch((error) => {
+    //     console.log(error);
+    //   })
+    //   .finally(() => {
+    //     setReviewContent({ title: "", content: "" });
+    //     onRequestClose(false);
+    //   });
   };
 
   const handleChangeFile = (event) => {
@@ -125,7 +190,7 @@ const AddReviewModal = ({ isOpen, isSave, onRequestClose }) => {
         reader.onloadend = () => {
           // 2. 읽기가 완료되면 아래코드가 실행됩니다.
           const base64 = reader.result;
-          // console.log(base64)
+          console.log(base64)
           if (base64) {
             //  images.push(base64.toString())
             var base64Sub = base64.toString()
@@ -151,6 +216,45 @@ const AddReviewModal = ({ isOpen, isSave, onRequestClose }) => {
     return now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate()) + 'T' + pad(now.getHours()) + ":" + pad(now.getMinutes()) + ":" + pad(now.getSeconds());
   }
 
+  const onSaveRating = (type, index) => {
+    switch (type) {
+      case 1:
+        setRating1(index);
+      case 2:
+        setRating2(index);
+      case 3:
+        setRating3(index);
+      case 4:
+        setRating4(index);
+      case 5:
+        setRating5(index);
+    }
+  };
+
+  const formattingScore = (idx) => {
+    let adjScore = idx % 5;
+    switch (adjScore) {
+      case 1:
+        return 1;
+      case 2:
+        return 2;
+      case 3:
+        return 3;
+      case 4:
+        return 4;
+      case 0:
+        return 5;
+    }
+  }
+
+  const handleBarScore = (score) => {
+    if (score > 5) {
+      return "100%";
+    } else {
+      return String(score * 20) + "%";
+    }
+  }
+
   const getTitleValue = (e) => {
     const { name, value } = e.target;
     setReviewContent({
@@ -171,21 +275,6 @@ const AddReviewModal = ({ isOpen, isSave, onRequestClose }) => {
     // console.log(reviewContent);
   };
 
-  const getScoreValue = (score, type) =>{
-    if(type === 'kind'){
-      setKindnessScore(score)
-    } else if(type === 'clean'){
-      setCleanScore(score)
-    } else if(type === 'comfortable'){
-      setComfortScore(score)
-    } else if(type === 'facility'){
-      setFacilityScore(score)
-    } else {
-      setPriceScore(score)
-    }
-
-  }
-
   return (
     <>
       <Modal
@@ -200,59 +289,45 @@ const AddReviewModal = ({ isOpen, isSave, onRequestClose }) => {
             <label onClick={() => onRequestClose(false)}>X</label>
             <h2>[ 리뷰 작성 ]</h2>
             <br />
+            <label>이곳에서의 경험은 어떠셨나요?</label>
+            <input name="title"
+                  onChange={getTitleValue}
+                  type="number"
+                  placeholder="제목을 입력해 주세요."
+                />
+            {/* <div className="box flex">{handleStarRating(1)}</div> */}
             <label>서비스&친절도는 어떠셨나요?</label>
             <input name="title"
-                  type="number"
-                  style={{marginLeft:"50px"}}
-                  placeholder="점수 입력"
-                  onChange={(e) => getScoreValue(e.target.value, "kind")}
+                  onChange={getTitleValue}
+                  placeholder="제목을 입력해 주세요."
                 />
-                <br />
-            {/* <div className="box flex">{handleStarRating(1)}</div> */}
+            {/* <div className="box flex">{handleStarRating(2)}</div> */}
             <label>숙소&객실 청결도는 어떠셨나요?</label>
             <input name="title"
-                 type="number"
-                 style={{marginLeft:"50px"}}
-                 placeholder="점수 입력"
-                 onChange={(e) => getScoreValue(e.target.value, "clean")}
+                  onChange={getTitleValue}
+                  placeholder="제목을 입력해 주세요."
                 />
-                <br />
-            {/* <div className="box flex">{handleStarRating(2)}</div> */}
-            <label>편안함은 어떠셨나요?</label>
-            <input name="title"
-                 type="number"
-                 style={{marginLeft:"50px"}}
-                 placeholder="점수 입력"
-                 onChange={(e) => getScoreValue(e.target.value, "comfortable")}
-                />
-                <br />
             {/* <div className="box flex">{handleStarRating(3)}</div> */}
             <label>시설&편의성는 어떠셨나요?</label>
             <input name="title"
-                 type="number"
-                 style={{marginLeft:"50px"}}
-                 placeholder="점수 입력"
-                 onChange={(e) => getScoreValue(e.target.value, "facility")}
+                  onChange={getTitleValue}
+                  placeholder="제목을 입력해 주세요."
                 />
-                <br />
             {/* <div className="box flex">{handleStarRating(4)}</div> */}
-            <label>가격만족도는 어떠셨나요?</label>
+            <label>교통&위치접근성은 어떠셨나요?</label>
             <input name="title"
-                type="number"
-                style={{marginLeft:"50px"}}
-                placeholder="점수 입력"
-                onChange={(e) => getScoreValue(e.target.value, "price")}
+                  onChange={getTitleValue}
+                  placeholder="제목을 입력해 주세요."
                 />
-                <br />
             {/* <div className={cx("box", "flex")}>{handleStarRating(5)}</div> */}
             <div className={Style["formWrapper"]}>
               <br />
               <h2>후기를 작성해주세요.</h2>
               <div>
-                {/* <input name="title"
+                <input name="title"
                   onChange={getTitleValue}
                   placeholder="제목을 입력해 주세요."
-                /> */}
+                />
               </div>
               <input type="file" id="file" onChange={handleChangeFile} multiple="multiple" />
               <textarea

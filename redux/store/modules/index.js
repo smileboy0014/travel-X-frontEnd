@@ -10,6 +10,7 @@ import scrollY from "./scrollY";
 import searchResult from "./searchResult";
 import date from "./date";
 import searchType from "./searchType";
+import reviewSearchType from "./reviewSearchType";
 import mapBound from "./mapBound";
 
 const reducer = (state, action) => {
@@ -27,7 +28,8 @@ const reducer = (state, action) => {
     searchResult,
     date,
     searchType,
-    mapBound,
+    reviewSearchType,
+    mapBound
   })(state, action);
 };
 

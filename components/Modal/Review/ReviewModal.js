@@ -24,7 +24,7 @@ const ReviewModal = ({ isOpen, onRequestClose}) => {
     <div>
       <Modal
         className={Style.ReveiwModal}
-        overlayClassName={Style["Overlay"]Review}
+        overlayClassName={Style["Overlay"]}
         isOpen={isOpen}
         ariaHideApp={false}
         onRequestClose={() => onRequestClose(false)}

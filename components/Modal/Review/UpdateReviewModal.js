@@ -12,13 +12,13 @@ import { number } from "prop-types";
 
 const cx = classNames.bind(CommonStyle);
 
-const AddReviewModal = ({ isOpen, isSave, onRequestClose }) => {
-  // console.log(typeof(isSave));
+const UpdateReviewModal = ({ isOpen, isSave, onRequestClose, ...updateData}) => {
+  
   const router = useRouter();
   const { id } = router.query;
   const dispatch = useDispatch();
   const [reviewContent, setReviewContent] = useState({
-    // title: "",
+    title: "",
     content: "",
   });
   const [notice, setNotice] = useState([
@@ -45,6 +45,22 @@ const AddReviewModal = ({ isOpen, isSave, onRequestClose }) => {
       content: data,
     });
   }, [data]);
+
+  useEffect(() => {
+    if(isOpen){
+      debugger;
+      setKindnessScore(updateData.updateData.kindnessScore);
+      setCleanScore(updateData.updateData.cleanScore);
+      setFacilityScore(updateData.updateData.facilityScore);
+      setComfortScore(updateData.updateData.comfortScore);
+      setPriceScore(updateData.updateData.priceScore);
+      setReviewContent({
+        ...reviewContent,
+        // title: updateData.updateData.title,
+        content: updateData.updateData.contents
+      });
+    }
+  }, [isOpen]);
 
   useEffect(() => {
    
@@ -82,16 +98,13 @@ const AddReviewModal = ({ isOpen, isSave, onRequestClose }) => {
     formData.append('review.roomId',id);
     formData.append('review.useType',"NIGHT");
     formData.append('review.userId',"1234");
+    formData.append('review.id', String(updateData.updateData.id));
 
-    // debugger;
-
-    // axios.post("http://shineware.iptime.org:8081/review/post", review, {
-    //   headers: { "Content-Type": `multipart/form-data` }
-    // }
+    debugger;
 
     axios({
       method: "POST",
-      url: "http://shineware.iptime.org:8081/review/register",
+      url: "http://shineware.iptime.org:8081/review/update",
       data: formData,
       headers: {
         "Content-Type": "multipart/form-data"
@@ -105,9 +118,7 @@ const AddReviewModal = ({ isOpen, isSave, onRequestClose }) => {
         console.log(error);
       })
       .finally(() => {
-        setReviewContent({ 
-          // title: "", 
-          content: "" });
+        setReviewContent({ title: "", content: "" });
         onRequestClose(false);
       })
   };
@@ -198,13 +209,14 @@ const AddReviewModal = ({ isOpen, isSave, onRequestClose }) => {
         <div className={Style["dialogForm"]}>
           <div className={Style["form"]}>
             <label onClick={() => onRequestClose(false)}>X</label>
-            <h2>[ 리뷰 작성 ]</h2>
+            <h2>[ 리뷰 수정 ]</h2>
             <br />
             <label>서비스&친절도는 어떠셨나요?</label>
             <input name="title"
                   type="number"
                   style={{marginLeft:"50px"}}
                   placeholder="점수 입력"
+                  value={kindnessScore}
                   onChange={(e) => getScoreValue(e.target.value, "kind")}
                 />
                 <br />
@@ -214,6 +226,7 @@ const AddReviewModal = ({ isOpen, isSave, onRequestClose }) => {
                  type="number"
                  style={{marginLeft:"50px"}}
                  placeholder="점수 입력"
+                 value={cleanScore}
                  onChange={(e) => getScoreValue(e.target.value, "clean")}
                 />
                 <br />
@@ -223,6 +236,7 @@ const AddReviewModal = ({ isOpen, isSave, onRequestClose }) => {
                  type="number"
                  style={{marginLeft:"50px"}}
                  placeholder="점수 입력"
+                 value={comfortScore}
                  onChange={(e) => getScoreValue(e.target.value, "comfortable")}
                 />
                 <br />
@@ -232,6 +246,7 @@ const AddReviewModal = ({ isOpen, isSave, onRequestClose }) => {
                  type="number"
                  style={{marginLeft:"50px"}}
                  placeholder="점수 입력"
+                 value={facilityScore}
                  onChange={(e) => getScoreValue(e.target.value, "facility")}
                 />
                 <br />
@@ -241,6 +256,7 @@ const AddReviewModal = ({ isOpen, isSave, onRequestClose }) => {
                 type="number"
                 style={{marginLeft:"50px"}}
                 placeholder="점수 입력"
+                value={priceScore}
                 onChange={(e) => getScoreValue(e.target.value, "price")}
                 />
                 <br />
@@ -251,6 +267,7 @@ const AddReviewModal = ({ isOpen, isSave, onRequestClose }) => {
               <div>
                 {/* <input name="title"
                   onChange={getTitleValue}
+                  value={reviewContent.title}
                   placeholder="제목을 입력해 주세요."
                 /> */}
               </div>
@@ -259,6 +276,7 @@ const AddReviewModal = ({ isOpen, isSave, onRequestClose }) => {
                 className={Style["area"]}
                 name="content"
                 onChange={getContentValue}
+                value={reviewContent.content}
                 placeholder="개인 정보 보호를 위해 개인 정보를 입력하지 마세요."
               />
               <br />
@@ -281,4 +299,4 @@ const AddReviewModal = ({ isOpen, isSave, onRequestClose }) => {
   );
 };
 
-export default AddReviewModal;
+export default UpdateReviewModal;
