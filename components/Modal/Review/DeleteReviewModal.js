@@ -4,33 +4,21 @@ import { useSelector, useDispatch } from "react-redux";
 import Modal from "react-modal";
 import axios from "axios";
 import Style from "../../../styles/Component.module.css";
-import * as searchType from "../../../redux/store/modules/searchType";
 
-const DeleteReviewModal = ({ isSave, isOpen, onRequestClose, ...updataData }) => {
-  const [searchTypeValue, setSearchTypeValue] = useState("SCORE_DESC");
-  const dispatch = useDispatch();
-
-  const getSearchTypeValue = useSelector(({ searchType }) => searchType.value);
-
-  const handleSaveClick = (e) => {
-    console.log(" e.target.value: " + e.target.value);
-
-    dispatch(searchType.setSearchType({ searchTypeValue }));
-    onRequestClose(false);
-  };
-
+const DeleteReviewModal = ({ isSave, isOpen, onRequestClose, ...updateData }) => {
+  debugger;
   const onClickHandler = (type) => {
     if (type === 'delete') {
       deleteReview();
     }
   }
 
-  const deleteReview = () => {
+  const deleteReview = (data) => {
     axios({
       method: "DELETE",
       url: "http://shineware.iptime.org:8081/review/delete",
       params: {
-        reviewId: updataData.updataData
+        reviewId:  updateData.updateData.id
       },
     }).then((res) => {
       if (res.data !== undefined) {

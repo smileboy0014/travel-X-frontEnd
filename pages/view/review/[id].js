@@ -16,126 +16,60 @@ import ProgressBar from "../../../components/Progress/ProgressBar";
 import { useSelector, useDispatch } from "react-redux";
 import classNames from 'classnames/bind';
 import { height } from "dom7";
+import useReviewInfiniteVeiw from "../../../components/InfiniteScroll/useReviewInfiniteView";
 
 const cx = classNames.bind(Style);
-const getImgApiUrl = "http://shineware.iptime.org:8081/image/get";
 
 const Review = () => {
 
-  // const {id} = props;
   const router = useRouter();
   const { id } = router.query;
-  const [totalCount, setTotalCount] = useState(0);
-  const [reviewScore, setReviewScore] = useState(0);
-  const [priceScore, setPriceScore] = useState(0);
-  const [kindnessScore, setKindnessScore] = useState(0);
-  const [cleanScore, setCleanScore] = useState(0);
-  const [facilityScore, setFacilityScore] = useState(0);
-  const [comfortScore, setComfortScore] = useState(0);
   const [layerGalleryList, setLayerGalleryList] = useState([]);
   const [onlyPicture, setOnlyPicture] = useState(false);
-
-  const [registerReview, setRegisterReview] = useState(false);
+  const [useType, setUseType] = useState("NIGHT");
+  const [callHttpMethod, setCallHttpMethod] = useState(false);
   const [isOpenStyle, setIsOpenStyle] = useState(false);
   const [layerGalleryOpen, setLayerGalleryOpen] = useState(false);
-  const [clickPicture, setClickPicture] = useState(false);
   const [reviewOrderbyModalOpen, setReviewOrderbyModalOpen] = useState(false);
   const [addReviewModalOpen, setAddReviewModalOpen] = useState(false);
   const [updateReviewModalOpen, setUpdateReviewModalOpen] = useState(false);
   const [updatedata, setUpdateData] = useState(null);
   const [deleteReviewModalOpen, setDeleteReviewModalOpen] = useState(false);
   const [reviewDetailModalOpen, setReviewDetailModalOpen] = useState(false);
+  const [toPageNumber, setToPageNumber] = useState(10);
   const dispatch = useDispatch();
-  // const data = useSelector(({ reviewContent }) => reviewContent.data);
-  const [viewContent, setViewContent] = useState([]);
   const [viewWithPictureContent, setViewWithPictureContent] = useState([]);
 
-  const getReviewSummary = () => {
+  const sortOption = useSelector(({ reviewSearchType }) => reviewSearchType.value);
 
-    setRegisterReview(false);
+  const {reviews, reviewSummary, hasMore, loading, error, callHttp} = useReviewInfiniteVeiw(
+    id, useType, toPageNumber, sortOption, callHttpMethod
+  );
 
-    Axios({
-      method: "GET",
-      url: "http://shineware.iptime.org:8081/review/summary",
-      params: {
-        roomId: id,
-        useType: "NIGHT"
-      },
-    }).then((res) => {
-      if (res.data !== undefined) {
-        setReviewScore(res.data.averageReviewScore);
-        setPriceScore(res.data.averagePriceScore);
-        setKindnessScore(res.data.averageKindnessScore);
-        setCleanScore(res.data.averageCleanScore);
-        setFacilityScore(res.data.averageFacilityScore);
-        setComfortScore(res.data.averageComfortScore);
-      }
-    }).catch((error) => {
-      console.log(error);
-    });
-  }
-
-  const getReviews = () => {
-
-    Axios({
-      method: "GET",
-      url: "http://shineware.iptime.org:8081/review/get",
-      params: {
-        roomId: id,
-        useType: "NIGHT",
-        from: "0",
-        size: "100",
-      },
-    }).then((res) => {
-      if (res.data !== undefined) {
-        
-        setTotalCount(res.data.length);
-        setViewContent(res.data);
-
-        // debugger;
-        // for(let viewData of viewContent){
-
-        //   if(viewData.hasImage || viewData.imageIdList > 0){
-        //     for(let imgId of viewData.imageIdList){
-        //       if(!imgId.includes(".kr")&& !imgId.includes(".com")){
-        //         getImg(imgId);
-        //       }
-        //     }
-        //   }
-        // }
-
-        setViewWithPictureContent(res.data.filter(data => data.hasImage));
-
-       
-      }
-    }).catch((error) => {
-      console.log(error);
-    });
-
-  }
-
-  const getImg = (imgId) =>{
-    Axios({
-      method: "GET",
-      url: getImgApiUrl,
-      responseType: 'blob', // important
-      params: {
-        id: imgId
-      },
-    }).then((res) => {
-      if (res.data !== undefined) {
-
-        const url = window.URL.createObjectURL(new Blob([res.data]));
-        const link = document.createElement('a');
-        imgId = url;
-        console.log(`imgurl is ${imgId}`)
-
-      }
-    }).catch((error) => {
-      console.log(error);
-    });
-  }
+  const observer = useRef();
   
+  const lastroomElementRef = useCallback(
+    (node) => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setToPageNumber(toPageNumber + 10);
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [loading, hasMore]
+  );
+
+  const setSelectNameHandler = () =>{
+    switch(sortOption){
+      case 'DATE': return ('최신순');
+      case 'DESC': return ('평점높은순');
+      case 'ASC' : return ('평점낮은순');
+      default : return ('최신순');
+    }
+  }
 
   const onClickHandler = (type, data) => {
     if (type === 'openAll') {
@@ -146,6 +80,7 @@ const Review = () => {
       setUpdateData(data);
       setUpdateReviewModalOpen(true);
     } else if (type === 'delete') {
+      // debugger;
       setUpdateData(data);
       setDeleteReviewModalOpen(true);
     }
@@ -163,9 +98,6 @@ const Review = () => {
     }
   }
 
-  const handleSetGalleryPicutre = (data) => {
-    setLayerGalleryList(data);
-  }
 
   const handleIndividualStarScore = (item) => {
     let averageScore = Math.round((item.kindnessScore + item.cleanScore + item.comfortScore + item.facilityScore + item.priceScore) / 5);
@@ -244,8 +176,15 @@ const Review = () => {
   }
 
   const handleFormattingDate = (date) => {
-    let dateArr = date.split('T');
-    return dateArr[0];
+    let dateArr;
+    if(date != null){
+      dateArr = date.split('T');
+      return dateArr[0]
+    } else {
+      return null;
+    }
+    
+    ;
   }
 
   const onChangeCheckHandler = (checked) => {
@@ -259,50 +198,60 @@ const Review = () => {
   const handleViewDetailCarousel = (item) =>{
     if(item.hasImage || item.imageIdList.length != 0){
       return(<ReviewDetailCarousel galleryData={(data) => setLayerGalleryList(data)} data={item.imageIdList} />);
-    } else {
-      return null;
-    }
+    } 
   }
 
   const handleViewConetent = (check) => {
+    // debugger;
     let contents = null;
-    if (check) {
+    if (check && viewWithPictureContent.length > 0) {
       contents = viewWithPictureContent;
-    } else {
-      contents = viewContent;
+    } else if(reviews.length > 0) {
+      contents = reviews;
     }
     return (
       <>
-        {contents && contents.map((item, index) => (
-          <div className={Style["ReviewPostItem"]} key={index}>
-            {/* temporary area */}
-            <button type="button" style={{ position: 'relative' }} className={Style["DetailPaymentDate-button"]} onClick={() => onClickHandler('update', item)}>리뷰 수정</button>
-            <button type="button" style={{ position: 'relative' }} className={Style["DetailPaymentDate-button"]} onClick={() => onClickHandler('delete', item)}>리뷰 삭제</button>
-            {/* temporary area */}
-            <div className={Style["ReviewPostItemMeta"]}>
-              <div className="ReviewPostItemMetaHead">
-                <div className={Style["ReviewPostItemMetaHead-name"]}>{item.userId}</div>
-                <div className={Style["BasicGrade"]}>
-                  {handleIndividualStarScore(item)}
+       
 
+ {contents && contents.length > 0 && contents.map((item, index) =>{
+          if(contents.length === index+1){
+            return <div ref={lastroomElementRef} key={item}></div>;
+          }
+          else {
+            return(
+              <div className={Style["ReviewPostItem"]} key={index} >
+                {/* temporary area */}
+                <button type="button" style={{ position: 'relative' }} className={Style["DetailPaymentDate-button"]} onClick={() => onClickHandler('update', item)}>리뷰 수정</button>
+                <button type="button" style={{ position: 'relative' }} className={Style["DetailPaymentDate-button"]} onClick={() => onClickHandler('delete', item)}>리뷰 삭제</button>
+                {/* temporary area */}
+                <div className={Style["ReviewPostItemMeta"]}>
+                  <div className="ReviewPostItemMetaHead">
+                    <div className={Style["ReviewPostItemMetaHead-name"]}>{item.userId}</div>
+                    <div className={Style["BasicGrade"]}>
+                      {handleIndividualStarScore(item)}
+    
+                    </div>
+                  </div>
+                  <div className={Style["ReviewPostItemMeta-date"]}>{handleFormattingDate(item.date)}</div>
                 </div>
+                <div className={Style["ReviewPostItemText"]}>
+                  <button type="button" className={Style["ReviewPostItemTextBtn"]}>...<span className={Style["ReviewPostItemTextBtn-text"]}>더읽기</span></button>
+                  {/* <!-- 글이 5줄을 넘을시 노출 --> */}
+                  <div className={Style["ReviewPostItemText-crop"]}>
+                    {item.contents}
+                  </div>
+                </div>
+                {/* <!-- slide --> */}
+                <div>
+                  {handleViewDetailCarousel(item)}
+                </div>
+                {/* <!-- .slide --> */}
               </div>
-              <div className={Style["ReviewPostItemMeta-date"]}>{handleFormattingDate(item.date)}</div>
-            </div>
-            <div className={Style["ReviewPostItemText"]}>
-              <button type="button" className={Style["ReviewPostItemTextBtn"]}>...<span className={Style["ReviewPostItemTextBtn-text"]}>더읽기</span></button>
-              {/* <!-- 글이 5줄을 넘을시 노출 --> */}
-              <div className={Style["ReviewPostItemText-crop"]}>
-                {item.contents}
-              </div>
-            </div>
-            {/* <!-- slide --> */}
-            <div>
-              {handleViewDetailCarousel(item)}
-            </div>
-            {/* <!-- .slide --> */}
-          </div>
-        ))}
+            )
+          }
+        }
+        )}
+
       </>
     )
   }
@@ -317,10 +266,10 @@ const Review = () => {
               <dd className={Style["ReviewGraph-text"]}>
                 <div className={Style["ReviewGraphBar"]}>
                   <span className={Style["ReviewGraphBarLine"]}>
-                    <span className={Style["ReviewGraphBarLine-bar"]} style={{ width: handleBarScore(kindnessScore) }}>
+                    <span className={Style["ReviewGraphBarLine-bar"]} style={{ width: handleBarScore(reviewSummary.averageKindnessScore) }}>
                     </span>
                   </span>
-                  <span className={Style["ReviewGraphBar-text"]}>{kindnessScore}</span>
+                  <span className={Style["ReviewGraphBar-text"]}>{reviewSummary.averageKindnessScore}</span>
                 </div>
               </dd>
             </dl>
@@ -334,10 +283,10 @@ const Review = () => {
               <dd className={Style["ReviewGraph-text"]}>
                 <div className={Style["ReviewGraphBar"]}>
                   <span className={Style["ReviewGraphBarLine"]}>
-                    <span className={Style["ReviewGraphBarLine-bar"]} style={{ width: handleBarScore(cleanScore) }}>
+                    <span className={Style["ReviewGraphBarLine-bar"]} style={{ width: handleBarScore(reviewSummary.averageCleanScore) }}>
                     </span>
                   </span>
-                  <span className={Style["ReviewGraphBar-text"]}>{cleanScore}</span>
+                  <span className={Style["ReviewGraphBar-text"]}>{reviewSummary.averageCleanScore}</span>
                 </div>
               </dd>
             </dl>
@@ -351,10 +300,10 @@ const Review = () => {
               <dd className={Style["ReviewGraph-text"]}>
                 <div className={Style["ReviewGraphBar"]}>
                   <span className={Style["ReviewGraphBarLine"]}>
-                    <span className={Style["ReviewGraphBarLine-bar"]} style={{ width: handleBarScore(comfortScore) }}>
+                    <span className={Style["ReviewGraphBarLine-bar"]} style={{ width: handleBarScore(reviewSummary.averageComfortScore) }}>
                     </span>
                   </span>
-                  <span className={Style["ReviewGraphBar-text"]}>{comfortScore}</span>
+                  <span className={Style["ReviewGraphBar-text"]}>{reviewSummary.averageComfortScore}</span>
                 </div>
               </dd>
             </dl>
@@ -368,10 +317,10 @@ const Review = () => {
               <dd className={Style["ReviewGraph-text"]}>
                 <div className={Style["ReviewGraphBar"]}>
                   <span className={Style["ReviewGraphBarLine"]}>
-                    <span className={Style["ReviewGraphBarLine-bar"]} style={{ width: handleBarScore(facilityScore) }}>
+                    <span className={Style["ReviewGraphBarLine-bar"]} style={{ width: handleBarScore(reviewSummary.averageFacilityScore) }}>
                     </span>
                   </span>
-                  <span className={Style["ReviewGraphBar-text"]}>{facilityScore}</span>
+                  <span className={Style["ReviewGraphBar-text"]}>{reviewSummary.averageFacilityScore}</span>
                 </div>
               </dd>
             </dl>
@@ -385,10 +334,10 @@ const Review = () => {
               <dd className={Style["ReviewGraph-text"]}>
                 <div className={Style["ReviewGraphBar"]}>
                   <span className={Style["ReviewGraphBarLine"]}>
-                    <span className={Style["ReviewGraphBarLine-bar"]} style={{ width: handleBarScore(priceScore) }}>
+                    <span className={Style["ReviewGraphBarLine-bar"]} style={{ width: handleBarScore(reviewSummary.averagePriceScore) }}>
                     </span>
                   </span>
-                  <span className={Style["ReviewGraphBar-text"]}>{priceScore}</span>
+                  <span className={Style["ReviewGraphBar-text"]}>{reviewSummary.averagePriceScore}</span>
                 </div>
               </dd>
             </dl>
@@ -398,9 +347,9 @@ const Review = () => {
   };
 
 
-  const reviewCard = viewContent.map((review, index) =>
-    index < 3 ? <ReviewCard key={index} {...review} /> : null
-  );
+  // const reviewCard = viewContent.map((review, index) =>
+  //   index < 3 ? <ReviewCard key={index} {...review} /> : null
+  // );
 
   useEffect(() => {
     setIsOpenStyle(true);
@@ -409,13 +358,20 @@ const Review = () => {
     setLayerGalleryList([]);
   }, []);
 
-  useEffect(() => {
-    if (id !== undefined) {
+  // useEffect(() => {
+  //   if (id !== undefined) {
 
-      getReviewSummary();
-      getReviews();
+  //     getReviewSummary();
+  //     getReviews();
+  //   }
+  // }, [id, registerReview, sortOption]);
+  
+  useEffect(()=>{
+    if(reviews !== undefined){
+      setViewWithPictureContent(reviews.filter(data => data.hasImage));
     }
-  }, [id, registerReview]);
+
+  },[reviews]);
 
 
   useEffect(() => {
@@ -432,20 +388,14 @@ const Review = () => {
   }, [layerGalleryOpen]);
 
   useEffect(()=>{
+    // debugger;
+    setToPageNumber(10);
 
-    // if(viewContent.length > 0){
-    //   for(let viewData of viewContent){
-    //     if(viewData.imageIdList > 0){
-    //       for(let imgId of viewData.imageIdList){
-    //         if(!imgId.includes(".kr")&& !imgId.includes(".com")){
-    //           getImg(imgId);
-    //         }
-    //       }
-    //     }
-    //   }
-    // }
+  },[sortOption]);
 
-  }, [viewContent])
+  useEffect(()=>{
+    setCallHttpMethod(callHttp);
+  }, [callHttp]);
 
   return (
     <div className="site">
@@ -453,7 +403,7 @@ const Review = () => {
       <div className={Style["site-header"]}>
         <div className="site-container">
           <div className={Style["Header-inner"]}>
-            <DetailTopNavbar HeaderTitle={`이용후기(${totalCount}개)`} />
+            <DetailTopNavbar HeaderTitle={`이용후기(${reviewSummary && reviewSummary.reviewCount}개)`} />
           </div>
         </div>
       </div>
@@ -481,7 +431,7 @@ const Review = () => {
                   <div className={Style["ReviewHeaderTitle-text"]}>전체 평점</div>
                   <button type="button" className={Style["ReviewHeaderTitleGrade"]} onClick={() => onClickHandler('openAll')}>
                     <span className={Style["ReviewHeaderTitleGrade-text"]}>
-                      {reviewScore}
+                      {reviewSummary&& reviewSummary.averageReviewScore}
                     </span>
                     /5
                   </button>
@@ -489,11 +439,11 @@ const Review = () => {
                 <dd className={Style["ReviewHeaderCont"]}>
                   <div className={Style["ReviewGraph"]}>
                     <ul className="ReviewGraph-list">
-                      {handleProgressBar('친절함')}
-                      {handleProgressBar('청결도')}
-                      {handleProgressBar('편안함')}
-                      {handleProgressBar('시설')}
-                      {handleProgressBar('가격')}
+                      {reviewSummary && handleProgressBar('친절함')}
+                      {reviewSummary &&handleProgressBar('청결도')}
+                      {reviewSummary &&handleProgressBar('편안함')}
+                      {reviewSummary && handleProgressBar('시설')}
+                      {reviewSummary &&handleProgressBar('가격')}
                     </ul>
                   </div>
                 </dd>
@@ -510,7 +460,7 @@ const Review = () => {
                     className={Style["ReviewFilterCheck-input"]} />
                   <span className={Style["ReviewFilterCheck-text"]}>사진 리뷰만</span>
                 </label>
-                <button type="button" className={Style["ReviewFilterValueItem"]} onClick={() => onClickHandler('openModal')}>최신순</button>
+                <button type="button" className={Style["ReviewFilterValueItem"]} onClick={() => onClickHandler('openModal')}>{setSelectNameHandler()}</button>
               </div>
             </div>
           </div>
@@ -537,9 +487,9 @@ const Review = () => {
         {/* <!-- .LayerGallery --> */}
       </div>
       {/* <!-- .Body --> */}
-      <AddReviewModal isSave={() => setRegisterReview(true)} isOpen={addReviewModalOpen} onRequestClose={() => setAddReviewModalOpen(false)} />
-      <UpdateReviewModal isSave={() => setRegisterReview(true)} isOpen={updateReviewModalOpen} onRequestClose={() => setUpdateReviewModalOpen(false)} updateData={updatedata} />
-      <DeleteReviewModal isSave={() => setRegisterReview(true)} isOpen={deleteReviewModalOpen} onRequestClose={() => setDeleteReviewModalOpen(false)} reviewId={updatedata} />
+      <AddReviewModal isSave={() => setCallHttpMethod(true)} isOpen={addReviewModalOpen} onRequestClose={() => setAddReviewModalOpen(false)} />
+      <UpdateReviewModal isSave={() => setCallHttpMethod(true)} isOpen={updateReviewModalOpen} onRequestClose={() => setUpdateReviewModalOpen(false)} updateData={updatedata} />
+      <DeleteReviewModal isSave={() => setCallHttpMethod(true)} isOpen={deleteReviewModalOpen} onRequestClose={() => setDeleteReviewModalOpen(false)} updateData={updatedata} />
     </div>
     // </div>
   );

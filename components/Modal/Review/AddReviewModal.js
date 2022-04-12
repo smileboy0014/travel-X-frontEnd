@@ -18,7 +18,7 @@ const AddReviewModal = ({ isOpen, isSave, onRequestClose }) => {
   const { id } = router.query;
   const dispatch = useDispatch();
   const [reviewContent, setReviewContent] = useState({
-    title: "",
+    // title: "",
     content: "",
   });
   const [notice, setNotice] = useState([
@@ -77,7 +77,7 @@ const AddReviewModal = ({ isOpen, isSave, onRequestClose }) => {
     formData.append('review.facilityScore',facilityScore);
     formData.append('review.kindnessScore',kindnessScore);
     formData.append('review.priceScore',priceScore);
-    formData.append('review.title',reviewContent.title);
+    // formData.append('review.title',reviewContent.title);
     formData.append('review.contents',reviewContent.content);
     formData.append('review.roomId',id);
     formData.append('review.useType',"NIGHT");
@@ -105,7 +105,9 @@ const AddReviewModal = ({ isOpen, isSave, onRequestClose }) => {
         console.log(error);
       })
       .finally(() => {
-        setReviewContent({ title: "", content: "" });
+        setReviewContent({ 
+          // title: "", 
+          content: "" });
         onRequestClose(false);
       })
   };
@@ -123,7 +125,7 @@ const AddReviewModal = ({ isOpen, isSave, onRequestClose }) => {
         reader.onloadend = () => {
           // 2. 읽기가 완료되면 아래코드가 실행됩니다.
           const base64 = reader.result;
-          console.log(base64)
+          // console.log(base64)
           if (base64) {
             //  images.push(base64.toString())
             var base64Sub = base64.toString()
@@ -247,10 +249,10 @@ const AddReviewModal = ({ isOpen, isSave, onRequestClose }) => {
               <br />
               <h2>후기를 작성해주세요.</h2>
               <div>
-                <input name="title"
+                {/* <input name="title"
                   onChange={getTitleValue}
                   placeholder="제목을 입력해 주세요."
-                />
+                /> */}
               </div>
               <input type="file" id="file" onChange={handleChangeFile} multiple="multiple" />
               <textarea

@@ -48,7 +48,7 @@ const UpdateReviewModal = ({ isOpen, isSave, onRequestClose, ...updateData}) => 
 
   useEffect(() => {
     if(isOpen){
-      // debugger;
+      debugger;
       setKindnessScore(updateData.updateData.kindnessScore);
       setCleanScore(updateData.updateData.cleanScore);
       setFacilityScore(updateData.updateData.facilityScore);
@@ -56,7 +56,7 @@ const UpdateReviewModal = ({ isOpen, isSave, onRequestClose, ...updateData}) => 
       setPriceScore(updateData.updateData.priceScore);
       setReviewContent({
         ...reviewContent,
-        title: updateData.updateData.title,
+        // title: updateData.updateData.title,
         content: updateData.updateData.contents
       });
     }
@@ -93,7 +93,7 @@ const UpdateReviewModal = ({ isOpen, isSave, onRequestClose, ...updateData}) => 
     formData.append('review.facilityScore',facilityScore);
     formData.append('review.kindnessScore',kindnessScore);
     formData.append('review.priceScore',priceScore);
-    formData.append('review.title',reviewContent.title);
+    // formData.append('review.title',reviewContent.title);
     formData.append('review.contents',reviewContent.content);
     formData.append('review.roomId',id);
     formData.append('review.useType',"NIGHT");
@@ -265,11 +265,11 @@ const UpdateReviewModal = ({ isOpen, isSave, onRequestClose, ...updateData}) => 
               <br />
               <h2>후기를 작성해주세요.</h2>
               <div>
-                <input name="title"
+                {/* <input name="title"
                   onChange={getTitleValue}
                   value={reviewContent.title}
                   placeholder="제목을 입력해 주세요."
-                />
+                /> */}
               </div>
               <input type="file" id="file" onChange={handleChangeFile} multiple="multiple" />
               <textarea

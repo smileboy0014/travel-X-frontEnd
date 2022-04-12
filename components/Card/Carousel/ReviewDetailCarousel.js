@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, Fragment } from "react";
 import Style from "../../../styles/Component.module.css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper";
@@ -27,160 +27,113 @@ const ReviewDetailCarousel = ({ data, galleryData }) => {
     galleryData(data);
   }
 
-  const getReviewImage = (imageId) => {
-    // let url = null;
+  useEffect(() => {
+    let imgList = [];
+    for (let imgId of data) {
+      if (!imgId.includes(".kr") && !imgId.includes(".com")) {
 
-    if (!imageId.includes('.kr') && !imageId.includes('.com')) {
+        Axios({
+          method: "GET",
+          url: getImgApiUrl,
+          responseType: 'blob', // important
+          params: {
+            id: imgId
+          },
+        }).then((res) => {
+          if (res.data !== undefined) {
 
-      Axios({
-        method: "GET",
-        url: getImgApiUrl,
-        responseType: 'blob', // important
-        params: {
-          id: imageId
-        },
-      }).then((res) => {
-        if (res.data !== undefined) {
+            const url = window.URL.createObjectURL(new Blob([res.data]));
+            const link = document.createElement('a');
 
-          const url = window.URL.createObjectURL(new Blob([res.data]));
-          const link = document.createElement('a');
-          getUrlHandler(url);
+            // setImgSrcs([...imgSrcs, url]);
+            imgList.push(url);
 
-          isLoading(true);
-          
-          // setImgSrcs([...imgSrcs, url]);
-          // if(imgSrcs.length === data.length){
-          //   setGetAllImg(true);
-          // }
-          // debugger;
-          // console.log(imgSrcs);
+            // debugger;
+            // console.log(`Api result is ${imgSrcs}`);
 
-        }
-      }).catch((error) => {
-        console.log(error);
-      });
-
-      // return (
-      //   <img
-      //     src={url && url.includes("http") ? url : "http://" + url}
-      //     alt="room-img"
-      //   />
-      // )
-
-    } 
-    else {
-      return (
-        <img
-          src={imageId.includes("http") ? imageId : "http://" + imageId}
-          alt="room-img"
-        />
-      )
+          }
+        }).catch((error) => {
+          console.log(error);
+        });
+      }
     }
-  }
+    // console.log(imgList);
+    setImgSrcs(imgList);
 
-  const getUrlHandler = (url) =>{
-    return(
-      <img
-          src={url && url}
-          alt="room-img"
-        />
-    )
-  }
 
-  // useEffect(() => {
-  //   for (let imgId of data) {
-  //     if (!imgId.includes(".kr") && !imgId.includes(".com")) {
+  }, [])
 
-  //       Axios({
-  //         method: "GET",
-  //         url: getImgApiUrl,
-  //         responseType: 'blob', // important
-  //         params: {
-  //           id: imgId
-  //         },
-  //       }).then((res) => {
-  //         if (res.data !== undefined) {
+  useEffect(() => {
+    // console.log('imgSrc!!!>>>', imgSrcs)
+    setIsLoading(true);
+  }, [imgSrcs])
 
-  //           const url = window.URL.createObjectURL(new Blob([res.data]));
-  //           const link = document.createElement('a');
+  const showImageHandler = () => {
 
-  //           setImgSrcs([...imgSrcs, url]);
+    let urlImageIs = false;
 
-  //           debugger;
-  //           console.log(`Api result is ${imgSrcs}`);
+    for (let imgId of data) {
+      if (imgId.includes(".kr") || imgId.includes(".com")) {
+        urlImageIs = true;
+      }
+    }
 
-  //         }
-  //       }).catch((error) => {
-  //         console.log(error);
-  //       });
-  //     }
-  //   }
-
-  // }, [])
-
-  const getImageHandler = (imageId) => {
-
-    // return (
-    //   <img
-    //     src={imageId.includes("http")? imageId : "http://" + imageId}
-    //     alt="room-img"
-    //   />
-    // )
-
-    if (!imageId.includes('.kr') && !imageId.includes('.com')) {
-
-      // getReviewImage(imageId);
-      console.log(imgSrcs);
-
+    if (urlImageIs) {
       return (
         <>
-          {/* <img
-          src={imageId}
-          alt="room-img"
-        /> */}
-          {imgSrcs && imgSrcs.map((item, idx) => (
-            <img
-              key={idx}
-              src={item}
-              alt="room-img"
-            />
+          {data && data.map((item, index) => (
+            <SwiperSlide key={index}>
+              <div className={Style["ReviewList"]}>
+                <div className={Style["Review-link"]}>
+                  <div className={Style["ReviewThumb"]}>
+                    <a href="#" className="ReviewSlide-link" onClick={() => onClickHandler(data)}>
+                      <img
+                        src={"http://" + item}
+                        alt="room-img"
+                      />
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </SwiperSlide>
           ))}
         </>
       )
-    }
-    else {
+
+    } else {
       return (
-        <img
-          src={"http://" + imageId}
-          alt="room-img"
-        />
+        <>
+          {imgSrcs &&
+            imgSrcs.map((item, index) => (
+              <SwiperSlide key={index}>
+                <div className={Style["ReviewList"]}>
+                  <div className={Style["Review-link"]}>
+                    <div className={Style["ReviewThumb"]}>
+                      <a href="#" className="ReviewSlide-link" onClick={() => onClickHandler(imgSrcs)}>
+                        <img
+                          src={item}
+                          alt="room-img"
+                        />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </SwiperSlide>
+            ))}
+        </>
       )
     }
   }
 
   return (
-    isLoading && 
-    <Swiper
+    isLoading && <Swiper
       style={swiperStyle}
       modules={[Pagination]}
       pagination={true}
       spaceBetween={10}
       slidesPerView={3}
     >
-      {data &&
-        data.map((item, index) => (
-          <SwiperSlide key={index}>
-            <div className={Style["ReviewList"]}>
-              <div className={Style["Review-link"]}>
-                <div className={Style["ReviewThumb"]}>
-                  <a href="#;" className="ReviewSlide-link" onClick={() => onClickHandler(data)}>
-                    {isLoading && getReviewImage(item)}
-                  </a>
-                </div>
-              </div>
-            </div>
-          </SwiperSlide>
-        ))}
+      {showImageHandler()}
     </Swiper>
   );
 };

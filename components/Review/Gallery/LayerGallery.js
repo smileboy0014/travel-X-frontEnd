@@ -37,6 +37,7 @@ const modalStyle = {
 }
 
 const LayerGallery = (props) => {
+  // debugger;
   const { data, isOpen, onRequestClose } = props;
   const [openLayerGalleryStyle, setOpenLayerGalleryStyle] = useState(false);
 
@@ -93,13 +94,11 @@ const LayerGallery = (props) => {
                     <div className={Style["GalleryThumb"]}>
                       <a href="#;" className="ReviewSlide-link">
                         <img
-                          src={"http://" + item}
+                          src={(!item.includes(".kr") && !item.includes(".com")) ? item : "http://" + item}
                           alt="room-img"
                         />
                       </a>
                     </div>
-
-
                   </div>
                 </div>
               </SwiperSlide>

@@ -2,18 +2,19 @@ import React, { useState, useEffect } from "react";
 import { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Style from "../../../styles/Component.module.css";
-import * as searchType from "../../../redux/store/modules/searchType";
+import * as reviewSearchType from "../../../redux/store/modules/reviewSearchType";
+import { min } from "moment";
 
 const ReviewOrderby = ({ onRequestClose }) => {
-  const [searchTypeValue, setSearchTypeValue] = useState("SCORE_DESC");
+  const [searchTypeValue, setSearchTypeValue] = useState("DATE");
   const dispatch = useDispatch();
 
-  const getSearchTypeValue = useSelector(({ searchType }) => searchType.value);
+  const getSearchTypeValue = useSelector(({ reviewSearchType }) => reviewSearchType.value);
 
   const handleSaveClick = (e) => {
     console.log(" e.target.value: " + e.target.value);
 
-    dispatch(searchType.setSearchType({ searchTypeValue }));
+    dispatch(reviewSearchType.setReviewSearchType(searchTypeValue));
     onRequestClose(false);
   };
 
@@ -22,43 +23,49 @@ const ReviewOrderby = ({ onRequestClose }) => {
   };
 
   useEffect(() => {
+    // debugger;
+    if (getSearchTypeValue === null || getSearchTypeValue === '') {
+      setSearchTypeValue("DATE");
+    } else {
+      setSearchTypeValue(getSearchTypeValue);
+    }
+
+  }, [])
+
+  useEffect(() => {
     setSearchTypeValue(
-      getSearchTypeValue.searchTypeValue === null
-        ? "LATEST"
-        : getSearchTypeValue.searchTypeValue
+      (getSearchTypeValue === null || getSearchTypeValue === '')
+        ? "DATE"
+        : getSearchTypeValue
     );
   }, [getSearchTypeValue]);
-
-  useEffect(() =>{
-    setSearchTypeValue("LATEST");
-  }, [])
 
   return (
     <>
       <div className={Style["FilterPopBody"]}>
         <ul className={Style["FilterPopList"]}>
-        <li className={Style["FilterPopList-item"]}>
-            <label className={Style["FilterRadio"]}>
-              <input
-                className={Style["FilterRadio-input"]}
-                type="radio"
-                name="filter"
-                value="LATEST"
-                checked={searchTypeValue === "LATEST"}
-                onChange={onChangeValue}
-              />
-              <span className={Style["FilterRadio-text"]}>최신순</span>
-            </label>
-          </li>
-         
           <li className={Style["FilterPopList-item"]}>
             <label className={Style["FilterRadio"]}>
               <input
                 className={Style["FilterRadio-input"]}
                 type="radio"
                 name="filter"
-                value="SCORE_DESC"
-                checked={searchTypeValue === "SCORE_DESC"}
+                value="DATE"
+                checked={searchTypeValue === "DATE"}
+                onChange={onChangeValue}
+              />
+              <span className={Style["FilterRadio-text"]}>최신순</span>
+            </label>
+          </li>
+
+          <li className={Style["FilterPopList-item"]}>
+            <label className={Style["FilterRadio"]}>
+              <input
+                className={Style["FilterRadio-input"]}
+                type="radio"
+                name="filter"
+                value="DESC"
+                checked={searchTypeValue === "DESC"}
                 onChange={onChangeValue}
               />
               <span className={Style["FilterRadio-text"]}>평점높은순</span>
@@ -70,8 +77,8 @@ const ReviewOrderby = ({ onRequestClose }) => {
                 className={Style["FilterRadio-input"]}
                 type="radio"
                 name="filter"
-                value="SCORE_ASC"
-                checked={searchTypeValue === "SCORE_ASC"}
+                value="ASC"
+                checked={searchTypeValue === "ASC"}
                 onChange={onChangeValue}
               />
               <span className={Style["FilterRadio-text"]}>평점낮은순</span>
