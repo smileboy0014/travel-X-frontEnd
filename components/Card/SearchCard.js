@@ -35,7 +35,7 @@ function SearchResult(props) {
                 </div>
                 <div className={style["ProductItemTitle"]}>{props.roomName}</div>
                 <div className={style["ProductItemGrade"]}>
-                  <span className={style["ProductItemGrade-current"]}>{props.averageScore.toFixed(1)}</span>
+                  <span className={style["ProductItemGrade-current"]}>{props.averageScore}</span>
                   <span className={style["ProductItemGrade-total"]}>{"(" + props.reviewCount + ")"}</span>
                 </div>
                 <div className={style["ProductItemFilter"]}>

@@ -157,7 +157,7 @@ const DetailView = () => {
                   {/* 필터 페이지로 이동하는 부분  */}
 
                   <div className={Style["DetailHeaderGrade"]}>
-                    <span className={Style["DetailHeaderGrade-current"]}>{rooms.reviewSummary.averageScore}</span>
+                    <span className={Style["DetailHeaderGrade-current"]}>{rooms.reviewSummary.averageReviewScore}</span>
                     <Link
                       href={{
                         pathname: "/view/review/[id]",
@@ -363,8 +363,8 @@ const DetailView = () => {
               >
                 <a href="#;" className={Style["DetailReview-link"]}>
                   <div className="site-container">
-                    <div className={Style["DetailReview-score"]}>8.6</div>
-                    <div className={Style["DetailReview-title"]}>100개 상세 후기 보기</div>
+                    <div className={Style["DetailReview-score"]}>{rooms.reviewSummary.averageReviewScore}</div>
+                    <div className={Style["DetailReview-title"]}>{rooms.reviewSummary.reviewCount}개 상세 후기 보기</div>
                   </div>
                 </a>
               </Link>
