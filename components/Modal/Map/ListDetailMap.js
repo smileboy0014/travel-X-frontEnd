@@ -133,6 +133,7 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
       let clusters = clusteringByLocation(Array.from(searchDataValue[0]));
 
       clusters.map((cluster) => {
+        // debugger;
         let price =
           cluster.count == 1 ? `${cluster.minPrice}` : `${cluster.minPrice} ~`;
 
@@ -168,7 +169,7 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
             name: room.roomName,
             id: room.roomId,
             propertyName: room.propertyName,
-            averageScore: room.reviewSummary ? room.reviewSummary.averageScore : 0,
+            averageScore: room.reviewSummary ? room.reviewSummary.averageReviewScore : 0,
             reviewCount: room.reviewSummary ? room.reviewSummary.reviewCount : 0,
             price: room.basePrice,
           });
