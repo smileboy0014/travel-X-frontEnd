@@ -10,6 +10,7 @@ import Link from "next/link";
 
 
 const MapResultCarousel = (props) => {
+  // debugger;
   const { data } = props;
   // console.log(`map data is ${data}`)
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -58,10 +59,12 @@ const MapResultCarousel = (props) => {
                     <div className={Style["MapListCont-title"]}>{item.name}</div>
                     <div className={Style["MapListContGrade"]}>
                       <span className={Style["MapListContGrade-current"]}>
-                        {/* {item.averageScore.toFixed(1)} */}
+                        {/* {item.averageReviewScore.toFixed(1)} */}
+                        {item.averageScore != undefined ? item.averageScore : 0}
                       </span>
                       <span className={Style["MapListContGrade-total"]}>
                         {/* {"(" + item.reviewCount + ")"} */}
+                        {"("+(item.reviewCount !== undefined ? item.reviewCount  : 0) + ")"} 
                       </span>
                     </div>
                     <div className={Style["MapListCont-price"]}>
