@@ -18,12 +18,12 @@ const SearchResultList = (props, ref) => {
 
   return (
     <>
-      {rooms.item &&
-        rooms.item.map((room, index) => {
+      {rooms &&
+        rooms.map((room, index) => {
           // 필요없는 로직
-          // if (rooms.item.length === index + 1) {
-          //   return <div ref={ref} key={room}></div>;
-          // } else { 
+          if (rooms.length === index + 1) {
+            return <div ref={ref} key={room}></div>;
+          } else { 
           return (
             <Fragment key={index}>
               {/* <Link
@@ -76,7 +76,7 @@ const SearchResultList = (props, ref) => {
             </Fragment>
           );
         }
-          //  }
+           }
         )}
     </>
   );
