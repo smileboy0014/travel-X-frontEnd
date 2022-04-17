@@ -6,7 +6,7 @@ import axios from "axios";
 import Style from "../../../styles/Component.module.css";
 
 const DeleteReviewModal = ({ isSave, isOpen, onRequestClose, ...updateData }) => {
-  debugger;
+  // debugger;
   const onClickHandler = (type) => {
     if (type === 'delete') {
       deleteReview();
