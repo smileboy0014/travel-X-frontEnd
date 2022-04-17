@@ -25,16 +25,11 @@ const Review = () => {
   const router = useRouter();
   const { id } = router.query;
   const [layerGalleryList, setLayerGalleryList] = useState([]);
-  const [onlyPicture, setOnlyPicture] = useState(false);
   const [useType, setUseType] = useState("NIGHT");
   // HTTP Method call 요청 했을 때 다시 리뷰 리스트 불러오는 신호 줄 수 있도록 하는 값
   const [callHttpMethod, setCallHttpMethod] = useState(false);
   // 방 상세 별점 볼 수 있도록 하는 값
   const [isOpenStyle, setIsOpenStyle] = useState(false);
-  // 리뷰 내용이 5줄이 넘어갈 경우 더 내용을 볼 수 있도록 하는 값
-  const [moreContentStyle, setMoreContentStyle] = useState(true);
-  // 이미지 상세 화면 띄우기 값
-  const [moreReadingButtonStyle, setMoreReadingButtonStyle] = useState({display: "block"});
   const [layerGalleryOpen, setLayerGalleryOpen] = useState(false);
   const [reviewOrderbyModalOpen, setReviewOrderbyModalOpen] = useState(false);
   const [addReviewModalOpen, setAddReviewModalOpen] = useState(false);
@@ -81,7 +76,7 @@ const Review = () => {
     }
   }
 
-  const onClickHandler = (type, data,dataList,index) => {
+  const onClickHandler = (type, data, index) => {
     if (type === 'openAll') {
       setIsOpenStyle(!isOpenStyle);
     } else if (type === 'addReview') {
@@ -93,12 +88,30 @@ const Review = () => {
       // debugger;
       setUpdateData(data);
       setDeleteReviewModalOpen(true);
-    } else if(type === 'disappear'){
-      debugger;
-      data.moreContents = false;
-      forceUpdate();
+    } else if (type === 'disappear') {
+      // debugger;
+      // console.log(reviews[index]);
+
+      if (index > 0) {
+        setReviews((arr) => {
+          return [
+            ...arr.slice(0, index),
+            { ...data, moreContents: false },
+            ...arr.slice(index + 1)
+          ];
+        });
+      } else {
+        setReviews((arr) => {
+          return [
+            { ...data, moreContents: false },
+            ...arr.slice(index + 1)
+          ];
+        });
+      }
+
+      // forceUpdate();
       // dataList[index] = data;
-      
+
     }
     else {
       setReviewOrderbyModalOpen(true);
@@ -112,7 +125,6 @@ const Review = () => {
       return String(score * 20) + "%";
     }
   }
-
 
   const handleIndividualStarScore = (item) => {
     let averageScore = Math.round((item.kindnessScore + item.cleanScore + item.comfortScore + item.facilityScore + item.priceScore) / 5);
@@ -202,9 +214,9 @@ const Review = () => {
 
   const onChangeCheckHandler = (checked) => {
     if (checked) {
-      setOnlyPicture(true);
+      setReviews(viewWithPictureContent);
     } else {
-      setOnlyPicture(false);
+      setReviews(viewContent);
     }
   }
 
@@ -212,66 +224,6 @@ const Review = () => {
     if (item.hasImage || item.imageIdList.length != 0) {
       return (<ReviewDetailCarousel galleryData={(data) => setLayerGalleryList(data)} data={item.imageIdList} />);
     }
-  }
-
-  const handleViewConetent = (check) => {
-    // debugger;
-    let contents = null;
-    if (check && viewWithPictureContent.length > 0) {
-      contents = viewWithPictureContent;
-    } else  {
-      contents = viewContent;
-    }
-
-    // if (check && viewWithPictureContent.length > 0) {
-    //   console.log("good!!!")
-    //   setReviews(viewWithPictureContent);
-    // } else {
-    //   setReviews(viewContent);
-    // }
-    return (
-      <>
-        {contents && contents.length > 0 && contents.map((item, index) => {
-          if (contents.length === index + 1) {
-            return <div ref={lastroomElementRef} key={item}></div>;
-          }
-          else {
-            return (
-              <div className={Style["ReviewPostItem"]} key={index} >
-                {/* temporary area */}
-                <button type="button" style={{ position: 'relative' }} className={Style["DetailPaymentDate-button"]} onClick={() => onClickHandler('update', item)}>리뷰 수정</button>
-                <button type="button" style={{ position: 'relative' }} className={Style["DetailPaymentDate-button"]} onClick={() => onClickHandler('delete', item)}>리뷰 삭제</button>
-                {/* temporary area */}
-                <div className={Style["ReviewPostItemMeta"]}>
-                  <div className="ReviewPostItemMetaHead">
-                    <div className={Style["ReviewPostItemMetaHead-name"]}>{item.userId}</div>
-                    <div className={Style["BasicGrade"]}>
-                      {handleIndividualStarScore(item)}
-
-                    </div>
-                  </div>
-                  <div className={Style["ReviewPostItemMeta-date"]}>{handleFormattingDate(item.date)}</div>
-                </div>
-                <div className={item.moreContents !== undefined && item.moreContents == true ? Style["ReviewPostItemText"]  : cx("ReviewPostItemText", "is-View")}>
-                  <button type="button" style={item.moreContents !== undefined && item.moreContents == true ? {display : 'block'} :  {display : 'none'} } className={Style["ReviewPostItemTextBtn"]} onClick={()=>onClickHandler('disappear', item,contents, index)}>...<span className={Style["ReviewPostItemTextBtn-text"]}>더읽기</span></button>
-                  {/* <!-- 글이 5줄을 넘을시 노출 --> */}
-                  <div className={Style["ReviewPostItemText-crop"]}>
-                    {item.contents}
-                  </div>
-                </div>
-                {/* <!-- slide --> */}
-                <div>
-                  {handleViewDetailCarousel(item)}
-                </div>
-                {/* <!-- .slide --> */}
-              </div>
-            )
-          }
-        }
-        )}
-
-      </>
-    )
   }
 
   const handleProgressBar = (type) => {
@@ -364,11 +316,6 @@ const Review = () => {
     }
   };
 
-
-  // const reviewCard = viewContent.map((review, index) =>
-  //   index < 3 ? <ReviewCard key={index} {...review} /> : null
-  // );
-
   useEffect(() => {
     setIsOpenStyle(true);
     setOnlyPicture(false);
@@ -376,32 +323,34 @@ const Review = () => {
     setLayerGalleryList([]);
   }, []);
 
-  // useEffect(() => {
-  //   if (id !== undefined) {
-
-  //     getReviewSummary();
-  //     getReviews();
-  //   }
-  // }, [id, registerReview, sortOption]);
-
   useEffect(() => {
     // debugger;
     if (reviewData !== undefined && reviewData.length > 0) {
- 
-          let filterReviews = reviewData.map((review)=>{
-            if(review.contents.length > 275){
-              review.moreContents = true;
-              return review;
-            } else {
-              review.moreContents = false;
-              return review;
-            }
-        })
+
+      let filterReviews = reviewData.map((review) => {
+        if (review.contents.length > 275) {
+          review.moreContents = true;
+          return review;
+        } else {
+          review.moreContents = false;
+          return review;
+        }
+      })
+      filterReviews.push({});
       setViewContent(filterReviews);
       setViewWithPictureContent(filterReviews.filter(data => data.hasImage));
     }
 
   }, [reviewData]);
+
+  useEffect(() => {
+    if (viewContent.length > 0) {
+      // setDataSetting(true);
+      setReviews(viewContent);
+      console.log(`viewContents length is ${viewContent.length}`);
+      console.log(`viewWithPictureContent length is ${viewWithPictureContent.length}`);
+    }
+  }, [viewContent]);
 
 
   useEffect(() => {
@@ -498,7 +447,45 @@ const Review = () => {
           {/* <!-- ReviewPost --> */}
           <div className="ReviewPost">
             <div className="site-container">
-              {handleViewConetent(onlyPicture)}
+              {/* {handleViewConetent(onlyPicture)} */}
+              {reviews && reviews.length > 0 && reviews.map((item, index) => {
+                if (reviews.length === index + 1) {
+                  return <div ref={lastroomElementRef} key={item}></div>;
+                }
+                else {
+                  return (
+                    <div className={Style["ReviewPostItem"]} key={index} >
+                      {/* temporary area */}
+                      <button type="button" style={{ position: 'relative' }} className={Style["DetailPaymentDate-button"]} onClick={() => onClickHandler('update', item)}>리뷰 수정</button>
+                      <button type="button" style={{ position: 'relative' }} className={Style["DetailPaymentDate-button"]} onClick={() => onClickHandler('delete', item)}>리뷰 삭제</button>
+                      {/* temporary area */}
+                      <div className={Style["ReviewPostItemMeta"]}>
+                        <div className="ReviewPostItemMetaHead">
+                          <div className={Style["ReviewPostItemMetaHead-name"]}>{item.userId}</div>
+                          <div className={Style["BasicGrade"]}>
+                            {handleIndividualStarScore(item)}
+
+                          </div>
+                        </div>
+                        <div className={Style["ReviewPostItemMeta-date"]}>{handleFormattingDate(item.date)}</div>
+                      </div>
+                      <div className={item.moreContents !== undefined && item.moreContents == true ? Style["ReviewPostItemText"] : cx("ReviewPostItemText", "is-View")}>
+                        <button type="button" style={item.moreContents !== undefined && item.moreContents == true ? { display: 'block' } : { display: 'none' }} className={Style["ReviewPostItemTextBtn"]} onClick={() => onClickHandler('disappear', item, index)}>...<span className={Style["ReviewPostItemTextBtn-text"]}>더읽기</span></button>
+                        {/* <!-- 글이 5줄을 넘을시 노출 --> */}
+                        <div className={Style["ReviewPostItemText-crop"]}>
+                          {item.contents}
+                        </div>
+                      </div>
+                      {/* <!-- slide --> */}
+                      <div>
+                        {handleViewDetailCarousel(item)}
+                      </div>
+                      {/* <!-- .slide --> */}
+                    </div>
+                  )
+                }
+              }
+              )}
             </div>
           </div>
           {/* <!-- .ReviewPost --> */}
