@@ -28,7 +28,7 @@ const Post = ({ item }) => {
   const { id } = router.query;
   const dispatch = useDispatch();
   const scrollYValue = useSelector(({ scrollY }) => scrollY.value);
-
+  const [viewList, setViewList] = useState([]);
   const [toPageNumber, setToPageNumber] = useState(10);
   const [fromPageNumber, setFromPageNumber] = useState(0);
 
@@ -109,7 +109,18 @@ const Post = ({ item }) => {
   }, [scrollYValue])
 
   useEffect(() => {
-    rooms.item && console.log(rooms.item.length);
+    rooms.item && console.log(`rooms length is ${rooms.item.length}`);
+    
+    if(rooms.item !== undefined && rooms.item.length > 0){
+      let list = rooms.item.map((value)=>{
+        return value;
+      });
+      list.push({});
+      // debugger;
+      setViewList(list);
+    }
+    
+    
   }, [rooms]);
 
   useEffect(() => {
@@ -190,11 +201,11 @@ const Post = ({ item }) => {
                 <div className={Style["ProductList"]}>
                   <div className="site-container">
                     <>
-                      {rooms.item && rooms.item.length && !viewMap > 0 ? (
+                      {viewList && viewList.length > 0 && !viewMap > 0 ? (
                         <ul>
                           <SearchResultList
                             ref={lastroomElementRef}
-                            rooms={rooms}
+                            rooms={viewList}
                           />
                         </ul>
                       ) : (
