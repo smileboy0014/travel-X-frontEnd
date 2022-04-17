@@ -318,7 +318,6 @@ const Review = () => {
 
   useEffect(() => {
     setIsOpenStyle(true);
-    setOnlyPicture(false);
     setReviewOrderbyModalOpen(false);
     setLayerGalleryList([]);
   }, []);
