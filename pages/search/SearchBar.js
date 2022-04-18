@@ -19,7 +19,13 @@ const SearchBar = ({
   const [checkBackStep, setCheckBackStep] = useState(true);
   const { searchDate } = useSelector((state) => state.date);
   const router = useRouter();
-
+  const adultCounterValue = useSelector(
+    ({ adultCounter }) => adultCounter.value
+  );
+  const childCounterValue = useSelector(
+    ({ childCounter }) => childCounter.value
+  );
+  
   const onChangeSearch = useCallback((e) => {
     setSearchValue(e.target.value);
   }, []);
@@ -134,7 +140,8 @@ const SearchBar = ({
               new Date(searchDate.end).getMonth() + 1
             }.${new Date(searchDate.end).getDate()}(${
               week[new Date(searchDate.end).getDay()]
-            })`}
+            }), 
+            ${adultCounterValue+childCounterValue}인`}
           </span>
         )}
 
