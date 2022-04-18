@@ -10,13 +10,13 @@ function TravelX({ Component, pageProps }) {
   const [scrollYValue, setScrollYVlue] = useState(0);
   const dispatch = useDispatch();
   const listener = () => {
-    setScrollYVlue(window.pageYOffset);
+    setScrollYVlue(document.body.scrollTop);
   };
 
   useEffect(() => {
-    window.addEventListener("scroll", listener);
+    document.body.addEventListener("scroll", listener);
     return () => {
-      window.removeEventListener("scroll", listener);
+      document.body.removeEventListener("scroll", listener);
     };
   });
 
