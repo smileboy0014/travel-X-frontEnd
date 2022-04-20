@@ -109,7 +109,13 @@ const DetailView = () => {
         }));
       });
     }
-  }, [id]);
+  }, [id,
+    detailDate.start,
+    detailDate.end,
+    adultCounterValue,
+    childCounterValue,
+
+  ]);
 
   return (
     <>
