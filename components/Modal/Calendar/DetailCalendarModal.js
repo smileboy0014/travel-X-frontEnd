@@ -39,9 +39,11 @@ const DetailCalendarModal = ({ isOpen, onRequestClose, availableDates }) => {
       });
     }
 
-    return filterMonth.map((date) => {
+    filterMonth.map((date) => {
       return new Date(date.getFullYear(), date.getMonth(), 1);
     });
+
+    return (filterMonth.length > 4) ? filterMonth.splice(0, 4) : filterMonth;
   };
 
   useEffect(() => {

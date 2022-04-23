@@ -1,17 +1,17 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import Style from '../../../../styles/Component.module.css'
 
 import { getTileClasses } from './shared/utils';
 import { tileGroupProps } from './shared/propTypes';
-import classNames from 'classnames/bind';
 import { v4 as uuid_v4 } from "uuid";
+import { useEffect } from 'react';
 
-const cx = classNames.bind(Style);
-const now = new Date();
+const tiles = [];
+const init = false;
 
-export default function TileGroup({
+function TileGroup({
   className,
   count = 3,
   dateTransform,
@@ -26,8 +26,15 @@ export default function TileGroup({
   valueType,
   ...tileProps
 }) {
-  
-  const tiles = [];
+
+  for (let i=0; i < offset; i++) {
+    tiles.push(
+      <div className={Style["CheckCalenderBody-col"]} key={uuid_v4()}>
+        <div className={Style["CheckCalenderBody-item"]}></div>
+      </div>
+    );
+  }
+
   for (let point = start; point <= end; point += step) {
     const date = dateTransform(point);
     const classes = getTileClasses({
@@ -42,78 +49,62 @@ export default function TileGroup({
         point={point}
         value={value}
         {...tileProps}
-      />,
+      />
     );
   }
 
-  const convertList = (list) => {
-    let bodyList = [];
-    let row = [];
-    let col = [];
+  tiles.push(
+    <div className={Style["CheckCalenderBody-col"]} key={uuid_v4()}>
+      <div className={Style["CheckCalenderBody-item"]}></div>
+    </div>
+  );
 
-    for (let i=0; i<offset; i++) {
-      row.push(null);
+  const tilesLen = tiles.length;
+
+  const getElement = (cols) => {
+    return (
+      <div className={Style["CheckCalenderBody-row"]} key={uuid_v4()}>
+        {cols.map(tile => (
+          <Fragment key={uuid_v4()}>
+            {tile}
+          </Fragment>
+        ))}
+      </div>
+    )
+  };
+
+  const getTilesElements = () => {
+    let elements = [];
+    let cols = [];
+    cols = [tiles.splice(0, offset)]
+
+    for (let i=0; i < count-offset; i++) {
+      cols.push(tiles.shift());
     }
-    for (let i=0; i<count-offset; i++) {
-      row.push(list[i]);
-    }
-    bodyList.push(row);
     
-    for (let i=count-offset, cnt = 0; i<list.length; i++, cnt++) {
-      col.push(list[i]);
+    elements.push(getElement(cols));
+    cols = [];
+    
+    for (let i=count-offset, cnt=0; i < tilesLen; i++, cnt++) {
+      cols.push(tiles.shift());
+
       if (cnt == count-1) {
         cnt = -1;
-        bodyList.push(col);
-        col = [];
+        elements.push(getElement(cols));
+        cols = [];
       }
 
-      if (i==list.length-1) {
-        col.push(null);
-        bodyList.push(col);
+      if (i == tilesLen-1) {
+        elements.push(getElement(cols));
       }
     }
     
-    return bodyList;
-  };
-
-  const isToday = (date) => {
-    return now.getFullYear() == date.getFullYear() && 
-            now.getMonth() == date.getMonth() && 
-            now.getDate() == date.getDate();
-  };
-
-  const getClassNames = (child) => {
-    let classes = ["CheckCalenderBody-col"];
-    if (child == null) return Style[classes[0]];
-    if (child.props.classes.length != 0) classes.push(child.props.classes[0]);
-    if (isToday(child.props.date)) classes.push("is-Today");
-
-    return cx(classes);
+    return elements;
   };
 
   return (
     <>
-      {convertList(tiles).map((child) => (
-        <div className={Style["CheckCalenderBody-row"]} key={uuid_v4()}>
-          {React.Children.map(child, child2 => (  
-            <div className={getClassNames(child2)}>
-              {
-                console.log(child2)
-              }
-              {child2 && (
-                <div 
-                  className={Style["CheckCalenderBody-item"]}
-                  key={child2.key}
-                >
-                  {child2 && React.cloneElement(
-                    child2, {...child2.props}
-                  )}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      ))}
+      {getTilesElements()}
     </>
   );
 }
@@ -128,3 +119,5 @@ TileGroup.propTypes = {
   step: PropTypes.number,
   tile: PropTypes.func.isRequired,
 };
+
+export default React.memo(TileGroup);
