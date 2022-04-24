@@ -8,7 +8,7 @@ import Style from "../../../styles/Component.module.css";
 
 const RoomFilter = ({ onRequestClear, onSetClear, onRequestClose }) => {
   const router = useRouter();
-  const [checkedRentInputs, setCheckedRentInputs] = useState([]);
+  const [checkedRentInputs, setCheckedRentInputs] = useState(['hDay', 'fDay']);
   const [checkedHotelInputs, setCheckedHotelInputs] = useState([]);
   const dispatch = useDispatch();
   const filterValue = useSelector(({roomFilter}) => roomFilter);
@@ -52,11 +52,13 @@ const RoomFilter = ({ onRequestClear, onSetClear, onRequestClose }) => {
 
   const onClearClick = () => {
     // setCheckedInputs([]);
-    setCheckedRentInputs([]);
+    setCheckedRentInputs(['hDay', 'fDay']);
     setCheckedHotelInputs([]);
     if (onSetClear !== undefined) {
       onSetClear(false);
     }
+    // const filter = {rent:checkedRentInputs, hotel:checkedHotelInputs};
+    // dispatch(roomFilterActions.sendConfirm(filter));
   };
 
 

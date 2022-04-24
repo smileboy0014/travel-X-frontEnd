@@ -17,6 +17,8 @@ export default function useInfiniteSearch(
   const [error, setError] = useState(false);
   const [rooms, setRooms] = useState([]);
   const [hasMore, setHasMore] = useState(false);
+  const [filterDay, setFilterDay] = useState(true);
+  const [filterNight, setFilterNight] = useState(true);
   const dispatch = useDispatch();
   const { searchDate } = useSelector((state) => state.date);
 
@@ -61,8 +63,8 @@ export default function useInfiniteSearch(
     const parmas = {};
     if (filterValue.hotel && filterValue.hotel.length > 0) {
       return (parmas = {
-        day:
-          filterValue.rent && filterValue.rent.includes("hDay") ? true : false,
+        day: filterValue.rent && filterValue.rent.includes("hDay") ? true : false,
+        night: filterValue.rent && filterValue.rent.includes("fDay") ? true : false,
         checkinDate: FormattingDate(new Date(searchDate.start)),
         checkoutDate: FormattingDate(new Date(searchDate.end)),
         adult: adultCounterValue,
@@ -78,8 +80,8 @@ export default function useInfiniteSearch(
       });
     } else {
       return (parmas = {
-        day:
-          filterValue.rent && filterValue.rent.includes("hDay") ? true : false,
+        day: filterValue.rent && filterValue.rent.includes("hDay") ? true : false,
+        night: filterValue.rent && filterValue.rent.includes("fDay") ? true : false,
         checkinDate: FormattingDate(new Date(searchDate.start)),
         checkoutDate: FormattingDate(new Date(searchDate.end)),
         adult: adultCounterValue,
@@ -161,6 +163,7 @@ export default function useInfiniteSearch(
     if (mapBoundValue > 0) {
       var param = {
         day: filterValue.rent && filterValue.rent.includes("hDay") ? true : false,
+        night: filterValue.rent && filterValue.rent.includes("fDay") ? true : false,
         checkinDate: FormattingDate(new Date(searchDate.start)),
         checkoutDate: FormattingDate(new Date(searchDate.end)),
         adult: adultCounterValue,
