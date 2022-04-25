@@ -25,6 +25,11 @@ const CalendarModal = ({ isOpen, onRequestClose }) => {
     new Date(searchDate.end),
   ]);
 
+  useEffect(() => {
+    onChange([new Date(searchDate.start),
+      new Date(searchDate.end)]);
+  }, [isOpen]);
+
   return (
     <div>
       <Modal

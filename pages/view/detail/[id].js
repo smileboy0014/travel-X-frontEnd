@@ -37,7 +37,7 @@ const DetailView = () => {
   );
 
   const priceComma = (price) => {
-    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return price ? price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : 0;
   };
 
   function addZero(value) {
@@ -193,8 +193,8 @@ const DetailView = () => {
                         최대 {` ${rooms.roomInfo.maxUser}`}인
                       </span>
                       <span className={Style["DetailHeaderInfoFilter-item"]}>
-                        체크인: {rooms.roomInfo.nightInfo.checkinInfo.MONDAY}{" "}
-                        체크아웃:{rooms.roomInfo.nightInfo.checkoutInfo.MONDAY}
+                        체크인: {rooms.roomInfo.nightInfo && rooms.roomInfo.nightInfo.checkinInfo.MONDAY}{" "}
+                        체크아웃:{rooms.roomInfo.nightInfo && rooms.roomInfo.nightInfo.checkoutInfo.MONDAY}
                         인
                       </span>
                     </div>
