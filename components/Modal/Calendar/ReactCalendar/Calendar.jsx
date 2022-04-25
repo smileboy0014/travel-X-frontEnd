@@ -471,7 +471,6 @@ export default class Calendar extends Component {
     } = this.props;
     const { hover } = this;
     const activeStartDate = date;
-    console.log(value);
 
     const onClick = this.drillDownAvailable ? this.drillDown : this.onChange;
 

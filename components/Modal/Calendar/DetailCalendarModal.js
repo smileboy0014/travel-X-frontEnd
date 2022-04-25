@@ -50,6 +50,11 @@ const DetailCalendarModal = ({ isOpen, onRequestClose, availableDates }) => {
     // setRangeEnd(true);
   }, [value]);
 
+  useEffect(() => {
+    onChange([new Date(detailDate.start),
+      new Date(detailDate.end)]);
+  }, [isOpen])
+
   return (
     <div>
       <Modal
