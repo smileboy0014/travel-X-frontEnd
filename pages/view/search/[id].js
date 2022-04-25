@@ -101,7 +101,7 @@ const Post = ({ item }) => {
     if (yValue > lastScrollTop && yValue > navbarHeight){
       setListFilterIsUp(true);
 		} else {
-			if(yValue + window.outerHeight < document.documentElement.scrollHeight || yValue == 0) {
+			if(yValue + window.outerHeight < document.body.scrollHeight || yValue == 0) {
         setListFilterIsUp(false);
 			}
 		}
