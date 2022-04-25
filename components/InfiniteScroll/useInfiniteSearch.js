@@ -17,8 +17,6 @@ export default function useInfiniteSearch(
   const [error, setError] = useState(false);
   const [rooms, setRooms] = useState([]);
   const [hasMore, setHasMore] = useState(false);
-  const [filterDay, setFilterDay] = useState(true);
-  const [filterNight, setFilterNight] = useState(true);
   const dispatch = useDispatch();
   const { searchDate } = useSelector((state) => state.date);
 
@@ -102,8 +100,10 @@ export default function useInfiniteSearch(
   }, [rooms]);
 
   useEffect(() => {
-    setRooms([]);
-  }, [query]);
+    if (query != undefined) {
+      setRooms([]);
+    }
+  }, [query, filterValue]);
 
   useEffect(() => {
     console.log("9999999: " + mapBoundValue);

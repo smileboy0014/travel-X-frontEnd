@@ -8,7 +8,7 @@ import Style from "../../../styles/Component.module.css";
 
 const RoomFilter = ({ onRequestClear, onSetClear, onRequestClose }) => {
   const router = useRouter();
-  const [checkedRentInputs, setCheckedRentInputs] = useState(['hDay', 'fDay']);
+  const [checkedRentInputs, setCheckedRentInputs] = useState([]);
   const [checkedHotelInputs, setCheckedHotelInputs] = useState([]);
   const dispatch = useDispatch();
   const filterValue = useSelector(({roomFilter}) => roomFilter);

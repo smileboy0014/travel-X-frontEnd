@@ -117,9 +117,8 @@ const Post = ({ item }) => {
       });
       list.push({});
       // debugger;
-      setViewList(list);
-    }
-    
+    } 
+    setViewList(list);
     
   }, [rooms]);
 
