@@ -61,8 +61,8 @@ export default function useInfiniteSearch(
     const parmas = {};
     if (filterValue.hotel && filterValue.hotel.length > 0) {
       return (parmas = {
-        day:
-          filterValue.rent && filterValue.rent.includes("hDay") ? true : false,
+        day: filterValue.rent && filterValue.rent.includes("hDay") ? true : false,
+        night: filterValue.rent && filterValue.rent.includes("fDay") ? true : false,
         checkinDate: FormattingDate(new Date(searchDate.start)),
         checkoutDate: FormattingDate(new Date(searchDate.end)),
         adult: adultCounterValue,
@@ -78,8 +78,8 @@ export default function useInfiniteSearch(
       });
     } else {
       return (parmas = {
-        day:
-          filterValue.rent && filterValue.rent.includes("hDay") ? true : false,
+        day: filterValue.rent && filterValue.rent.includes("hDay") ? true : false,
+        night: filterValue.rent && filterValue.rent.includes("fDay") ? true : false,
         checkinDate: FormattingDate(new Date(searchDate.start)),
         checkoutDate: FormattingDate(new Date(searchDate.end)),
         adult: adultCounterValue,
@@ -100,8 +100,10 @@ export default function useInfiniteSearch(
   }, [rooms]);
 
   useEffect(() => {
-    setRooms([]);
-  }, [query]);
+    if (query != undefined) {
+      setRooms([]);
+    }
+  }, [query, filterValue]);
 
   useEffect(() => {
     console.log("9999999: " + mapBoundValue);
@@ -161,6 +163,7 @@ export default function useInfiniteSearch(
     if (mapBoundValue > 0) {
       var param = {
         day: filterValue.rent && filterValue.rent.includes("hDay") ? true : false,
+        night: filterValue.rent && filterValue.rent.includes("fDay") ? true : false,
         checkinDate: FormattingDate(new Date(searchDate.start)),
         checkoutDate: FormattingDate(new Date(searchDate.end)),
         adult: adultCounterValue,

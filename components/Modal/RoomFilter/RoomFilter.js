@@ -52,11 +52,13 @@ const RoomFilter = ({ onRequestClear, onSetClear, onRequestClose }) => {
 
   const onClearClick = () => {
     // setCheckedInputs([]);
-    setCheckedRentInputs([]);
+    setCheckedRentInputs(['hDay', 'fDay']);
     setCheckedHotelInputs([]);
     if (onSetClear !== undefined) {
       onSetClear(false);
     }
+    // const filter = {rent:checkedRentInputs, hotel:checkedHotelInputs};
+    // dispatch(roomFilterActions.sendConfirm(filter));
   };
 
 
