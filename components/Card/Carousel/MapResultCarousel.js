@@ -43,7 +43,7 @@ const MapResultCarousel = (props) => {
             <Link
               href={{
                 pathname: "/view/detail/[id]",
-                query: { id: item.id },
+                query: { id: item.id, useType: item.useType },
               }}
             >
               <div className={Style["MapList"]} style={{width: '100%'}}>

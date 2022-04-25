@@ -168,6 +168,7 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
             type: room.propertyType,
             name: room.roomName,
             id: room.roomId,
+            useType: room.useType,
             propertyName: room.propertyName,
             averageScore: room.reviewSummary ? room.reviewSummary.averageReviewScore : 0,
             reviewCount: room.reviewSummary ? room.reviewSummary.reviewCount : 0,
