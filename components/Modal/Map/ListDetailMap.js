@@ -9,7 +9,6 @@ import classNames from 'classnames/bind';
 
 const cx = classNames.bind(Style);
 
-var markers = [];
 var mobileWindows = [];
 var roomMap;
 var recognizer;
@@ -47,12 +46,8 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
   const dispatch = useDispatch();
 
   const initVars = () => {
-    markers.map(marker => {
-      marker.setMap(null);
-    });
     recognizer.setMap(null);
 
-    markers = [];
     mobileWindows = [];
     recognizer = null;
     selectedId = "";
@@ -132,7 +127,7 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
     if (searchDataValue[0] !== undefined) {
       let clusters = clusteringByLocation(Array.from(searchDataValue[0]));
 
-      clusters.map((cluster) => {
+      clusters.map((cluster, index) => {
         // debugger;
         let price =
           cluster.count == 1 ? `${cluster.minPrice}` : `${cluster.minPrice} ~`;
@@ -160,8 +155,9 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
             cluster.items[0].location.lon
           ),
         });
-
+        
         let mobileWindow = [];
+        
         cluster.items.map((room) => {
           mobileWindow.push({
             img: room.images[0],
@@ -172,12 +168,12 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
             propertyName: room.propertyName,
             averageScore: room.reviewSummary ? room.reviewSummary.averageReviewScore : 0,
             reviewCount: room.reviewSummary ? room.reviewSummary.reviewCount : 0,
-            price: room.basePrice,
+            price: room.basePrice
           });
         });
 
         mobileWindows.push(mobileWindow);
-        markers.push(roomMapMarker);
+        // markers.push(roomMapMarker);
 
         roomMapMarker.addListener("click", function (e) {
           if (
@@ -192,6 +188,7 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
           highlightMarker(e.overlay);
           selectedId = e.domEvent.target.parentElement.id;
           selectedMarker = e.overlay;
+          setRoomData(mobileWindows[index]);
         });
 
         recognizer.add(roomMapMarker);
@@ -214,14 +211,6 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
       });
     });
 
-
-
-    if (clusters != undefined) {
-      for (var i = 0, ii = clusters.length; i < ii; i++) {
-        naver.maps.Event.addListener(markers[i], "click", getClickHandler(i));
-      }
-    }
-
     function highlightMarker(roomMapMarker) {
       if (document.getElementById(roomMapMarker.icon.elementId) != null) {
         document.getElementById(roomMapMarker.icon.elementId).className =
@@ -232,11 +221,6 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
       setMapObserver(mapObserver++);
     }
 
-    function getClickHandler(seq) {
-      return (e) => {
-        setRoomData(mobileWindows[seq]);
-      };
-    }
   };
 
   useEffect(() => {
