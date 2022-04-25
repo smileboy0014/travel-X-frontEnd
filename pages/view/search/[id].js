@@ -98,8 +98,6 @@ const Post = ({ item }) => {
     let yValue = scrollYValue.scrollYValue;
     let navbarHeight = document.getElementById("ListFilter").offsetHeight;
 
-    console.log(yValue,window.outerHeight);
-    console.log('document.body.scrollHeight', document.body.scrollHeight);
     if (yValue > lastScrollTop && yValue > navbarHeight){
       setListFilterIsUp(true);
 		} else {
