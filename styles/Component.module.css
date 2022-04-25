@@ -2489,8 +2489,8 @@ body .ListFixButton:before{
 	font-size:0.75rem;
 	border-color:#6957e8;
 	color:#6957e8;
-	top:-0.75rem;
-	right:-0.5rem;
+	top:-1.4rem;
+	right:-0.1rem;
 }
 
 .MapPin.is-Active .MapPin-price{
@@ -2499,7 +2499,9 @@ body .ListFixButton:before{
 	border-color:#6957e8;
 	color:#fff;
 	background-color:#6957e8;
-	border-radius:1rem 1rem;
+	right:0.55rem;
+	top:-0.5rem;
+	/* border-radius:1rem 1rem; */
 }
 
 .MapPin.is-Active .MapPin-price:before{
