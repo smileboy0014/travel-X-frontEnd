@@ -22,7 +22,7 @@ export default function Days(props) {
     showNeighboringMonth,
     ...otherProps
   } = props;
-
+  
   const year = getYear(activeStartDate);
   const monthIndex = getMonth(activeStartDate);
 
