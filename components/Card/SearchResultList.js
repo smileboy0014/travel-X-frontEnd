@@ -7,21 +7,18 @@ const sampleImage =
 const SearchResultList = (props, ref) => {
   // debugger;
   const { rooms } = props;
+  // console.log(`SRP 룸 갯수는 ${rooms.length} 이다!!!!!`);
 
   const priceComma = (price) => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
-
-  useEffect(() => {
-    console.log("rooms: " + props);
-  }, []);
 
   return (
     <>
       {rooms &&
         rooms.map((room, index) => {
           // 필요없는 로직
-          if (rooms.length === index + 1) {
+          if (room.roomId != undefined && room.roomId === '') {
             return <div ref={ref} key={room}></div>;
           } else { 
           return (
