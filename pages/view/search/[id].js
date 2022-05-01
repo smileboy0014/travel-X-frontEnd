@@ -107,8 +107,9 @@ const Post = ({ item }) => {
 
     if (yValue > lastScrollTop && yValue > navbarHeight) {
       setListFilterIsUp(true);
-    } else {
-      if (yValue + window.outerHeight < document.documentElement.scrollHeight || yValue == 0) {
+
+		} else {
+			if(yValue + window.outerHeight < document.body.scrollHeight || yValue == 0) {
         setListFilterIsUp(false);
       }
     }
@@ -137,6 +138,7 @@ const Post = ({ item }) => {
         return value;
       });
       // debugger;
+
         if(rooms.item.length < 21){
           list.splice(rooms.item.length/2,0,{roomId:''});
           setViewList(list);
@@ -157,10 +159,7 @@ const Post = ({ item }) => {
     
     } else {
       console.log(`totalhitcount는 남았지만 실제로 아닌 경우`);
-    
-    }
-
-
+    } 
   }, [rooms]);
 
   useEffect(() => {

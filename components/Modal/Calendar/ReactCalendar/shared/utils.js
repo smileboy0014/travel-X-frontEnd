@@ -44,7 +44,7 @@ function getRangeClassNames(valueRange, dateRange, baseClassName, disabledDates)
 
   if (isRange) {
     // classes.push(baseClassName);
-
+    // console.log('range')
     const isRangeStart = isValueWithinRange(valueRange[0], dateRange);
     const isRangeEnd = isValueWithinRange(valueRange[1], dateRange);
 

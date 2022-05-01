@@ -1,17 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initState = {
-  rent: [],
+  rent: ['hDay', 'fDay'],
   hotel: []
 };
 
 const roomFilterSlice = createSlice({
   name: "roomFilter",
   initialState: {
-    filter: {
-      rent: [],
-      hotel: []
-    },
+    rent: ['hDay', 'fDay'],
+    hotel: []
   },
   reducers: {
     sendConfirm: (state, action) => {

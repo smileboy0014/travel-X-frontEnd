@@ -6,6 +6,7 @@ import Style from '../../../../styles/Component.module.css';
 import classNames from 'classnames/bind';
 
 const cx = classNames.bind(Style);
+const now = new Date();
 
 function getValue(nextProps, prop) {
   const { activeStartDate, date, view } = nextProps;
@@ -60,19 +61,37 @@ export default class Tile extends Component {
                     || (maxDate && maxDateTransform(maxDate) < date)
                     || (tileDisabled && !tileDisabled({ activeStartDate, date, view }));
 
+    const isToday = (date) => {
+    return now.getFullYear() == date.getFullYear() && 
+            now.getMonth() == date.getMonth() && 
+            now.getDate() == date.getDate();
+    };
+
+    const getClassNames = () => {
+      let colClass = ["CheckCalenderBody-col"];
+      if (classes.length != 0) colClass.push(classes[0]);
+      if (isToday(date)) colClass.push("is-Today");
+  
+      return cx(colClass);
+    };
+
     return (
-      <button
-        className={!isDisabled ? Style["CheckCalenderBody-text"] : cx('is-Pass', 'CheckCalenderBody-text')}
-        disabled={isDisabled}
-        onClick={onClick && ((event) => onClick(date, event))}
-        onFocus={onMouseOver && (() => onMouseOver(date))}
-        onMouseOver={onMouseOver && (() => onMouseOver(date))}
-        style={style}
-        type="button"
-      >
-        {children}
-        {tileContent}
-      </button>
+      <div className={getClassNames()}>
+        <div className={Style["CheckCalenderBody-item"]}>
+          <button
+            className={!isDisabled ? Style["CheckCalenderBody-text"] : cx('is-Pass', 'CheckCalenderBody-text')}
+            disabled={isDisabled}
+            onClick={onClick && ((event) => onClick(date, event))}
+            onFocus={onMouseOver && (() => onMouseOver(date))}
+            onMouseOver={onMouseOver && (() => onMouseOver(date))}
+            style={style}
+            type="button"
+          >
+            {children}
+            {tileContent}
+          </button>
+        </div>
+      </div>
     );
   }
 }

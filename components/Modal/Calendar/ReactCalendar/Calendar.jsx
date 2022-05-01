@@ -452,7 +452,7 @@ export default class Calendar extends Component {
   renderContent(date) {
     const {
       activeStartDate: currentActiveStartDate,
-      onMouseOver,
+      // onMouseOver,
       valueType,
       value,
       view,
@@ -467,7 +467,7 @@ export default class Calendar extends Component {
       tileContent,
       tileDisabled,
       disabledDates,
-      handleRangeEnd
+      // handleRangeEnd
     } = this.props;
     const { hover } = this;
     const activeStartDate = date;
@@ -476,19 +476,19 @@ export default class Calendar extends Component {
 
     const commonProps = {
       activeStartDate,
-      hover,
+      // hover,
       locale,
       maxDate,
       minDate,
       onClick,
-      onMouseOver: selectRange ? onMouseOver : null,
+      // onMouseOver: selectRange ? onMouseOver : null,
       tileClassName,
       tileContent,
       tileDisabled,
       value,
       valueType,
       disabledDates,
-      handleRangeEnd
+      // handleRangeEnd
     };
 
     switch (view) {
@@ -512,7 +512,7 @@ export default class Calendar extends Component {
             formatLongDate={formatLongDate}
             formatShortWeekday={formatShortWeekday}
             onClickWeekNumber={onClickWeekNumber}
-            onMouseLeave={selectRange ? onMouseLeave : null}
+            // onMouseLeave={selectRange ? onMouseLeave : null}
             showFixedNumberOfWeeks={showFixedNumberOfWeeks || showDoubleView}
             showNeighboringMonth={showNeighboringMonth}
             showWeekNumbers={showWeekNumbers}
@@ -610,8 +610,8 @@ export default class Calendar extends Component {
               {this.renderNavigation(date)}
               <div
                 className={`${baseClassName}__viewContainer`}
-                onBlur={selectRange ? onMouseLeave : null}
-                onMouseLeave={selectRange ? onMouseLeave : null}
+                // onBlur={selectRange ? onMouseLeave : null}
+                // onMouseLeave={selectRange ? onMouseLeave : null}
               >
                 {this.renderContent(date)}
               </div>
