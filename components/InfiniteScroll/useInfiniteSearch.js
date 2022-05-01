@@ -8,15 +8,17 @@ export default function useInfiniteSearch(
   query,
   fromPageNumber,
   toPageNumber,
-  filterValue
+  filterValue,
+  callHttpMethod
+
 ) {
-  const [fromPage, setFromPage] = useState(0);
+  // const [fromPage, setFromPage] = useState(0);
   const [totalHitCount, setTotalHitCount] = useState(1);
-  const [roomCnt, setroomCnt] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [rooms, setRooms] = useState([]);
-  const [hasMore, setHasMore] = useState(false);
+  const [returnCallHttpMethod, setReturnCallHttpMethod] = useState(true);
+  const [hasMore, setHasMore] = useState(true);
   const dispatch = useDispatch();
   const { searchDate } = useSelector((state) => state.date);
 
@@ -70,6 +72,7 @@ export default function useInfiniteSearch(
         query: query,
         searchType:
           searchTypeValue == null ? "RANKING" : searchTypeValue.searchTypeValue,
+        from: fromPageNumber,
         size: toPageNumber,
         types:
           paramsSerializer(filterValue.hotel).length > 0
@@ -87,6 +90,7 @@ export default function useInfiniteSearch(
         query: query,
         searchType:
           searchTypeValue == null ? "RANKING" : searchTypeValue.searchTypeValue,
+        from: fromPageNumber,
         size: toPageNumber,
       });
     }
@@ -94,16 +98,24 @@ export default function useInfiniteSearch(
 
   useEffect(() => {
     if (rooms.item !== undefined) {
-      setroomCnt(rooms.item.length);
+    
+    // debugger;
+    setHasMore(rooms.item.length < totalHitCount);
     }
-    setHasMore(roomCnt < totalHitCount);
   }, [rooms]);
 
   useEffect(() => {
+
     if (query != undefined) {
       setRooms([]);
     }
   }, [query, filterValue]);
+
+  useEffect(()=>{
+    if(callHttpMethod){
+      setReturnCallHttpMethod(callHttpMethod);
+    }
+  }, [callHttpMethod])
 
   useEffect(() => {
     console.log("9999999: " + mapBoundValue);
@@ -113,6 +125,7 @@ export default function useInfiniteSearch(
     console.log("99999999: " + mapBoundSouthWestValue["lng"]);
   }, [mapBoundValue]);
 
+  // SRP에서 검색 시(필터 검색 포함) 일반적으로 가져오는 API
   useEffect(() => {
     if (query != undefined) {
       setLoading(true);
@@ -132,15 +145,17 @@ export default function useInfiniteSearch(
         params: param,
       })
         .then((res) => {
-          console.log(res);
+          // debugger;
+          console.log(res.data.roomDocumentList);
           dispatch(searchResultActions.saveData(res.data.roomDocumentList));
-  
+
           setTotalHitCount(res.data.totalHitCount);
-          setRooms((prevState) => ({
+          setRooms((prevState) => (
+            {
             ...prevState,
             item: res.data.roomDocumentList,
           }));
-  
+
           setLoading(false);
         })
         .catch((error) => {
@@ -148,10 +163,9 @@ export default function useInfiniteSearch(
           setError(true);
         });
     }
-    
+
   }, [
     query,
-    toPageNumber,
     searchDate,
     adultCounterValue,
     childCounterValue,
@@ -159,6 +173,7 @@ export default function useInfiniteSearch(
     filterValue
   ]);
 
+  // 지도에서 보기 들어가서 현 지도에서 검색 클릭 시 찾아오는 API
   useEffect(() => {
     if (mapBoundValue > 0) {
       var param = {
@@ -205,5 +220,51 @@ export default function useInfiniteSearch(
 
   }, [mapBoundValue]);
 
-  return { loading, error, rooms, hasMore };
+   // SRP에서 무한 스크롤 hook에 의해서 정보 가져오는 API
+   useEffect(() => {
+    if (query != undefined && callHttpMethod) {
+      setLoading(true);
+      setError(false);
+      // console.log('query', query);
+      // console.log('toPageNumber', toPageNumber);
+      // console.log('fromPageNumber', fromPageNumber);
+      // console.log('searchDate', searchDate);
+      // console.log('adultCounterValue', adultCounterValue);
+      // console.log('childCounterValue', childCounterValue);
+      // console.log('searchTypeValue', searchTypeValue);
+      // console.log('filterValue', filterValue);
+      let param = setParam();
+      // debugger;
+      axios({
+        method: "GET",
+        url: "http://shineware.iptime.org:5050/search",
+        params: param,
+      })
+        .then((res) => {
+          if (res.data.totalHitCount < 1) {
+            alert('검색 결과가 없습니다.');
+            return;
+          }
+          // debugger;
+          // console.log(`무한 스크롤 API!!!!!! ${res.data}`);
+          // console.log(`무한 스크롤 API 결과 방 갯수는 ${res.data.roomDocumentList.length}`);
+          // dispatch(searchResultActions.saveData(res.data.roomDocumentList));
+
+          setTotalHitCount(res.data.totalHitCount);
+          console.log(`totalHitCount is ${totalHitCount}`);
+          let newArr = {item:rooms.item.concat(res.data.roomDocumentList)};
+          setRooms(newArr);
+          // console.log(`그전 방 크기는 !!!!!! ${rooms.item.length}`);
+          setLoading(false);
+          setReturnCallHttpMethod(false);
+        })
+        .catch((error) => {
+          console.log(error);
+          setError(true);
+        });
+    }
+
+  }, [callHttpMethod]);
+
+  return { rooms, totalHitCount, hasMore, loading, error, returnCallHttpMethod };
 }
