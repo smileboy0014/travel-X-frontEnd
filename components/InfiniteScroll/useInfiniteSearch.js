@@ -119,10 +119,10 @@ export default function useInfiniteSearch(
 
   useEffect(() => {
     console.log("9999999: " + mapBoundValue);
-    console.log("88888888: " + mapBoundNorthEastValue["lat"]);
-    console.log("88888888: " + mapBoundNorthEastValue["lng"]);
-    console.log("99999999: " + mapBoundSouthWestValue["lat"]);
-    console.log("99999999: " + mapBoundSouthWestValue["lng"]);
+    // console.log("88888888: " + mapBoundNorthEastValue["lat"]);
+    // console.log("88888888: " + mapBoundNorthEastValue["lng"]);
+    // console.log("99999999: " + mapBoundSouthWestValue["lat"]);
+    // console.log("99999999: " + mapBoundSouthWestValue["lng"]);
   }, [mapBoundValue]);
 
   // SRP에서 검색 시(필터 검색 포함) 일반적으로 가져오는 API
@@ -148,7 +148,7 @@ export default function useInfiniteSearch(
           // debugger;
           console.log(res.data.roomDocumentList);
           dispatch(searchResultActions.saveData(res.data.roomDocumentList));
-
+          // console.log(`totalHitCount is ${res.data.totalHitCount}`);
           setTotalHitCount(res.data.totalHitCount);
           setRooms((prevState) => (
             {
