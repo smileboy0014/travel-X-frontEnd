@@ -4,6 +4,7 @@ import counter from "./counter";
 import roomFilter from "./roomFilter";
 import adultCounter from "./adultCounter";
 import childCounter from "./chlidCounter";
+import babyCounter from "./babyCounter";
 import map from "./map";
 import reviewContent from "./reviewContent";
 import scrollY from "./scrollY";
@@ -22,6 +23,7 @@ const reducer = (state, action) => {
     roomFilter,
     adultCounter,
     childCounter,
+    babyCounter,
     map,
     reviewContent,
     scrollY,

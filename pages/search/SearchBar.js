@@ -25,7 +25,10 @@ const SearchBar = ({
   const childCounterValue = useSelector(
     ({ childCounter }) => childCounter.value
   );
-  
+  const babyCounterValue = useSelector(
+    ({ babyCounter }) => babyCounter.value
+  );
+
   const onChangeSearch = useCallback((e) => {
     setSearchValue(e.target.value);
   }, []);
@@ -112,10 +115,10 @@ const SearchBar = ({
           className={Style["ListFilterBack"]}
           onClick={onClickBackStep}
         />
-        <input 
-          type="submit" 
-          value="Search" 
-          className={Style["ListFilterSearch-submit"]} 
+        <input
+          type="submit"
+          value="Search"
+          className={Style["ListFilterSearch-submit"]}
         />
         <input
           type="text"
@@ -136,12 +139,10 @@ const SearchBar = ({
           <span className={Style["ListFilterSearch-date"]}>
             {`${new Date(searchDate.start).getMonth() + 1}.${new Date(
               searchDate.start
-            ).getDate()}(${week[new Date(searchDate.start).getDay()]}) - ${
-              new Date(searchDate.end).getMonth() + 1
-            }.${new Date(searchDate.end).getDate()}(${
-              week[new Date(searchDate.end).getDay()]
-            }), 
-            ${adultCounterValue+childCounterValue}인`}
+            ).getDate()}(${week[new Date(searchDate.start).getDay()]}) - ${new Date(searchDate.end).getMonth() + 1
+              }.${new Date(searchDate.end).getDate()}(${week[new Date(searchDate.end).getDay()]
+              }), 
+            ${adultCounterValue + childCounterValue + babyCounterValue}인`}
           </span>
         )}
 
@@ -152,7 +153,7 @@ const SearchBar = ({
             }}
             className={Style["ListFilterSearch-close"]}
             type="button"
-            style={{display: 'block'}}
+            style={{ display: 'block' }}
           ><span className="ab-text">close</span></button>
         )}
       </div>

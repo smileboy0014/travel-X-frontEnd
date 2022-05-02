@@ -35,6 +35,9 @@ const DetailView = () => {
   const childCounterValue = useSelector(
     ({ childCounter }) => childCounter.value
   );
+  const babyCounterValue = useSelector(
+    ({ babyCounter }) => babyCounter.value
+  );
 
   const priceComma = (price) => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -86,9 +89,10 @@ const DetailView = () => {
           useType: useType,
           checkinDate: FormattingDate(new Date(detailDate.start)),
           checkoutDate: FormattingDate(new Date(detailDate.end)),
-          children: childCounterValue,
-          baby: "0",
           adult: adultCounterValue,
+          children: childCounterValue,
+          baby: babyCounterValue,
+
         },
       }).then((res) => {
         console.log(res.data);
@@ -114,6 +118,7 @@ const DetailView = () => {
     detailDate.end,
     adultCounterValue,
     childCounterValue,
+    babyCounterValue,
 
   ]);
 
@@ -236,6 +241,8 @@ const DetailView = () => {
                       {adultCounterValue > 0 ? `성인 ${adultCounterValue}명` : ""}
                       {childCounterValue > 0 ? `, ` : ""}
                       {childCounterValue > 0 ? `어린이 ${childCounterValue}명` : ""}
+                      {babyCounterValue > 0 ? `, ` : ""}
+                      {babyCounterValue > 0 ? `유아 ${babyCounterValue}명` : ""}
                     </span>
                     <button
                       type="button"

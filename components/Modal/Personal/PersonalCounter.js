@@ -2,6 +2,7 @@ import { useCallback, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import * as adultCounterActions from "../../../redux/store/modules/adultCounter";
 import * as childCounterActions from "../../../redux/store/modules/chlidCounter";
+import * as babyCounterActions from "../../../redux/store/modules/babyCounter";
 import Style from "../../../styles/Component.module.css";
 import classNames from 'classnames/bind';
 
@@ -11,9 +12,10 @@ const PersonalCounter = ({ onRequestClear, onSetClear, onRequestClose }) => {
   const dispatch = useDispatch();
   const adultValue = useSelector(({ adultCounter }) => adultCounter.value);
   const childValue = useSelector(({ childCounter }) => childCounter.value);
+  const babyValue = useSelector(({ babyCounter }) => babyCounter.value);
   const [adultNumber, setAdultNumber] = useState(adultValue);
   const [childNumber, setChildNumber] = useState(childValue);
-  const [babyNumber, setBabyNumber] = useState(0);
+  const [babyNumber, setBabyNumber] = useState(babyValue);
 
   const adultIncreaseNumber = () => {
     setAdultNumber(adultNumber + 1);
@@ -48,6 +50,7 @@ const PersonalCounter = ({ onRequestClear, onSetClear, onRequestClose }) => {
   const handleSaveClick = (e) => {
     dispatch(adultCounterActions.setCount(adultNumber));
     dispatch(childCounterActions.setCount(childNumber));
+    dispatch(babyCounterActions.setCount(babyNumber));
 
     e.preventDefault();
     onRequestClose(false);
@@ -146,7 +149,7 @@ const PersonalCounter = ({ onRequestClear, onSetClear, onRequestClose }) => {
                   <button
                     disabled={babyNumber == 0}
                     onClick={babyDecreaseNumber}
-                    className={childNumber == 0 ? cx("is-disabled", "BasicCount-button", "minus") : cx("BasicCount-button", "minus")}
+                    className={babyNumber == 0 ? cx("is-disabled", "BasicCount-button", "minus") : cx("BasicCount-button", "minus")}
                   ></button>
                   <span className={Style["BasicCount-text"]}>{babyNumber}</span>
                   <button
