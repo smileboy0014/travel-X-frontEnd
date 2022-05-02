@@ -17,11 +17,9 @@ const swiperStyle = {
   marginLeft: "0px"
 }
 
-const ReviewDetailCarousel = ({ data, galleryData }) => {
+const ReviewDetailCarousel = ({ data, galleryData, reviewLoading }) => {
   // console.log(`props data is ${data}`);
-  const [currentSlide, setCurrentSlide] = useState(0);
   const [imgSrcs, setImgSrcs] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
 
   const onClickHandler = (data) => {
     galleryData(data);
@@ -57,17 +55,24 @@ const ReviewDetailCarousel = ({ data, galleryData }) => {
         });
       }
     }
-    // console.log(imgList);
+    
+    // debugger;
+    // console.log(`imgLIst is ${imgList}`);
     setImgSrcs(imgList);
-
-
+    reviewLoading(false);
+    
   }, [])
 
   useEffect(() => {
-    // console.log('imgSrc!!!>>>', imgSrcs)
-    setIsLoading(true);
+    // console.log('imgSrc!!!>>>', imgSrcs);
+    // reviewLoading(false);
+    // setIsLoading(true);
+    // reviewLoading(false);
+    if(imgSrcs && imgSrcs.length > 0){
+        console.log(`!!!!!!!!!!!!!!!!!!!!!!!!!!!!!`);
+    }
   }, [imgSrcs])
-
+  
   const showImageHandler = () => {
 
     let urlImageIs = false;
@@ -77,7 +82,8 @@ const ReviewDetailCarousel = ({ data, galleryData }) => {
         urlImageIs = true;
       }
     }
-
+    // debugger;
+    // reviewLoading(false);
     if (urlImageIs) {
       return (
         <>
@@ -103,7 +109,7 @@ const ReviewDetailCarousel = ({ data, galleryData }) => {
     } else {
       return (
         <>
-          {imgSrcs &&
+          {imgSrcs && 
             imgSrcs.map((item, index) => (
               <SwiperSlide key={index}>
                 <div className={Style["ReviewList"]}>
@@ -126,7 +132,7 @@ const ReviewDetailCarousel = ({ data, galleryData }) => {
   }
 
   return (
-    isLoading && <Swiper
+     <Swiper
       style={swiperStyle}
       modules={[Pagination]}
       pagination={true}
