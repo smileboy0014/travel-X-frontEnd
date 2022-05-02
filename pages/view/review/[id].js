@@ -30,6 +30,9 @@ const Review = () => {
   const [callHttpMethod, setCallHttpMethod] = useState(false);
   // 방 상세 별점 볼 수 있도록 하는 값
   const [isOpenStyle, setIsOpenStyle] = useState(false);
+  // 이미지 포함 리뷰 로딩이 완료 되있는 것 판별
+  const [isReviewLoading, setIsReviewLoading] = useState(true);
+
   const [layerGalleryOpen, setLayerGalleryOpen] = useState(false);
   const [reviewOrderbyModalOpen, setReviewOrderbyModalOpen] = useState(false);
   const [addReviewModalOpen, setAddReviewModalOpen] = useState(false);
@@ -222,7 +225,7 @@ const Review = () => {
 
   const handleViewDetailCarousel = (item) => {
     if (item.hasImage || item.imageIdList.length != 0) {
-      return (<ReviewDetailCarousel galleryData={(data) => setLayerGalleryList(data)} data={item.imageIdList} />);
+      return (<ReviewDetailCarousel reviewLoading={()=>setIsReviewLoading(false)} galleryData={(data) => setLayerGalleryList(data)} data={item.imageIdList} />);
     }
   }
 
@@ -321,6 +324,19 @@ const Review = () => {
     setReviewOrderbyModalOpen(false);
     setLayerGalleryList([]);
   }, []);
+
+  useEffect(()=>{
+    debugger;
+    // console.log(`is review loading is ${isReviewLoading}`);
+    if(!isReviewLoading){
+      // 강제로 리뷰 이미지 불러왔을 때 리랜더링 하기!!!
+      setTimeout(()=>{
+        forceUpdate();
+      }, 500)
+      
+      // console.log(`force update!!!!!`);
+    }
+  },[isReviewLoading])
 
   useEffect(() => {
     // debugger;
