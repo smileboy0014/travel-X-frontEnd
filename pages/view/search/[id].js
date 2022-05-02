@@ -15,6 +15,7 @@ import CalendarModal from "../../../components/Modal/Calendar/CalendarModal";
 import ListDetailMap from "../../../components/Modal/Map/ListDetailMap";
 import * as scrollY from "../../../redux/store/modules/scrollY";
 import classNames from 'classnames/bind';
+import Link from 'next/link'
 
 const cx = classNames.bind(Style);
 
@@ -33,6 +34,7 @@ const Post = ({ item }) => {
   const [fromPageNumber, setFromPageNumber] = useState(0);
 
   const filterValue = useSelector(({roomFilter}) => roomFilter);
+  const { accessToken } = useSelector((state) => state.userInfo);
   const DELTA = 5;
 
   useEffect(()=>{
@@ -77,7 +79,7 @@ const Post = ({ item }) => {
   const handleOpenListMap = () => {
     setViewMap(true);
     setListFilterIsNone(true);
-  }
+  };
 
   useEffect(() => {
     dispatch(scrollY.scrollY(0));
@@ -121,10 +123,6 @@ const Post = ({ item }) => {
     setViewList(list);
     
   }, [rooms]);
-
-  useEffect(() => {
-    console.log(listFilterIsUp);
-  }, [listFilterIsUp]);
 
   return (
     <div className="site">
@@ -274,6 +272,7 @@ const Post = ({ item }) => {
           isOpen={calendarModalOpen}
           onRequestClose={() => setCalendarModalOpen(false)}
         />
+
       </div>
     </div>
   );

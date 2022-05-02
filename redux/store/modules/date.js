@@ -27,8 +27,6 @@ const date = createSlice({
   },
 });
 
-export const { setSearchDate, setDetailDate } = date.actions; // 액션 생성함수
-export const searchDate = (state) => state.searchDate.value;
-export const detailDate = (state) => state.detailDate.value;
+export const { setSearchDate, setDetailDate } = date.actions;
 
 export default date.reducer; // 리듀서

@@ -12,6 +12,8 @@ import date from "./date";
 import searchType from "./searchType";
 import reviewSearchType from "./reviewSearchType";
 import mapBound from "./mapBound";
+import redirectUri from "./redirectUri";
+import userInfo from "./userInfo";
 
 const reducer = (state, action) => {
   if (action.type === HYDRATE) {
@@ -29,7 +31,9 @@ const reducer = (state, action) => {
     date,
     searchType,
     reviewSearchType,
-    mapBound
+    mapBound,
+    redirectUri,
+    userInfo
   })(state, action);
 };
 

@@ -3597,3 +3597,19 @@ body .LayerGallery-close{
   background-color: rgba(0,0,0,0.5);
   z-index: 2000;
 }
+
+.LoginButton{
+	position:fixed;
+	top:1.5rem;
+	right:0%;
+	transform:translateX(-50%);
+	border-radius: 2.25rem;
+	border: solid 0.0625rem #e0e0e0;
+	font-size:0.75rem;
+	line-height:1.2em;
+	color:#000;
+	font-weight:500;
+	padding: 0.625rem 0.5rem 0.625rem 0.5rem;
+	background-color:#fff;
+	z-index:2000;
+}
