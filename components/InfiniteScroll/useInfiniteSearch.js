@@ -31,6 +31,9 @@ export default function useInfiniteSearch(
   const childCounterValue = useSelector(
     ({ childCounter }) => childCounter.value
   );
+  const babyCounterValue = useSelector(
+    ({ babyCounter }) => babyCounter.value
+  );
 
   const mapBoundValue = useSelector(({ mapBound }) => mapBound.value);
   const mapBoundSouthWestValue = useSelector(
@@ -69,6 +72,7 @@ export default function useInfiniteSearch(
         checkoutDate: FormattingDate(new Date(searchDate.end)),
         adult: adultCounterValue,
         child: childCounterValue,
+        baby: babyCounterValue,
         query: query,
         searchType:
           searchTypeValue == null ? "RANKING" : searchTypeValue.searchTypeValue,
@@ -87,6 +91,7 @@ export default function useInfiniteSearch(
         checkoutDate: FormattingDate(new Date(searchDate.end)),
         adult: adultCounterValue,
         child: childCounterValue,
+        baby: babyCounterValue,
         query: query,
         searchType:
           searchTypeValue == null ? "RANKING" : searchTypeValue.searchTypeValue,

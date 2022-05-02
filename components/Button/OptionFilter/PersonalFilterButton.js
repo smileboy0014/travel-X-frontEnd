@@ -16,13 +16,18 @@ const PersonalFilterButton = () => {
     ({ childCounter }) => childCounter.value
   );
 
+  const babyCounterValue = useSelector(
+    ({ babyCounter }) => babyCounter.value
+  );
+
+
   return (
     <li className={Style["ListFilterValue-item"]}>
       <button
         className={cx("ListFilterValueItem", "icoPersonnel")}
         onClick={() => setPersonalModalOpen(true)}
       >
-        {"성인: " + adultCounterValue + " 아동: " + childCounterValue}
+        {"성인: " + adultCounterValue + " 아동: " + childCounterValue + " 유아: " + babyCounterValue}
       </button>
       <PesonalModal
         isOpen={personalModalOpen}
