@@ -117,7 +117,7 @@ const Post = ({ item }) => {
   }, [scrollYValue])
 
   useEffect(() => {
-    debugger;
+    // debugger;
     // rooms.item && console.log(`rooms length is ${rooms.item.length}`);
     
     if (rooms.item !== undefined && rooms.item.length > 0 ) {
