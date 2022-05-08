@@ -3,15 +3,9 @@ import Modal from "react-modal";
 import PersonalCounter from "./PersonalCounter";
 import Style from "../../../styles/Component.module.css";
 import { useSelector, useDispatch } from "react-redux";
-import * as adultCounterActions from "../../../redux/store/modules/adultCounter";
-import * as childCounterActions from "../../../redux/store/modules/chlidCounter";
 
 const PersonalModal = ({ isOpen, onRequestClose }) => {
-
   const [clear, setClear] = useState(false);
-  const dispatch = useDispatch();
-
-
 
   return (
     <div>

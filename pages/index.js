@@ -32,12 +32,16 @@ export default function Home() {
   const childCounterValue = useSelector(
     ({ childCounter }) => childCounter.value
   );
+  const babyCounterValue = useSelector(
+    ({ babyCounter }) => babyCounter.value
+  );
+
   const handleScriptLoaded = (value) => {
     dispatch(mapActions.setScriptLoaded(value));
   };
 
   useEffect(() => {
-    dispatch(dateActions.setSearchDate({start: date[0].toJSON(), end: date[1].toJSON()}));
+    dispatch(dateActions.setSearchDate({ start: date[0].toJSON(), end: date[1].toJSON() }));
   }, [date]);
 
   return (
@@ -68,9 +72,9 @@ export default function Home() {
               />
             </div>
             <div className={Style.button2}>
-              <button onClick={() => setCalendarModalOpen(true)}>{`${new Date(searchDate.start).getMonth()+1}.${new Date(searchDate.start).getDate()}(${week[new Date(searchDate.start).getDay()]}) - ${new Date(searchDate.end).getMonth()+1}.${new Date(searchDate.end).getDate()}(${week[new Date(searchDate.end).getDay()]})`}</button>
+              <button onClick={() => setCalendarModalOpen(true)}>{`${new Date(searchDate.start).getMonth() + 1}.${new Date(searchDate.start).getDate()}(${week[new Date(searchDate.start).getDay()]}) - ${new Date(searchDate.end).getMonth() + 1}.${new Date(searchDate.end).getDate()}(${week[new Date(searchDate.end).getDay()]})`}</button>
               <button onClick={() => setPersonalModalOpen(true)}>
-                {"성인: " + adultCounterValue + " 아동: " + childCounterValue}
+                {"성인: " + adultCounterValue + " 아동: " + childCounterValue + " 유아: " + babyCounterValue}
               </button>
             </div>
           </div>
@@ -89,7 +93,7 @@ export default function Home() {
             onClose={() => setShowSearchMapModal(false)}
             show={showSearchMapModal}
           />
-          
+
           <CalendarModal
             isOpen={calendarModalOpen}
             onRequestClose={() => setCalendarModalOpen(false)}

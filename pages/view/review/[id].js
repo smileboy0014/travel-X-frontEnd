@@ -29,15 +29,21 @@ const Review = () => {
   // HTTP Method call 요청 했을 때 다시 리뷰 리스트 불러오는 신호 줄 수 있도록 하는 값
   const [callHttpMethod, setCallHttpMethod] = useState(false);
   // 방 상세 별점 볼 수 있도록 하는 값
-  const [isOpenStyle, setIsOpenStyle] = useState(false);
+  const [isOpenStyle, setIsOpenStyle] = useState(true);
+  // 이미지 포함 리뷰 로딩이 완료 되있는 것 판별
+  const [isReviewLoading, setIsReviewLoading] = useState(true);
+
   const [layerGalleryOpen, setLayerGalleryOpen] = useState(false);
   const [reviewOrderbyModalOpen, setReviewOrderbyModalOpen] = useState(false);
   const [addReviewModalOpen, setAddReviewModalOpen] = useState(false);
   const [updateReviewModalOpen, setUpdateReviewModalOpen] = useState(false);
   const [updatedata, setUpdateData] = useState(null);
   const [deleteReviewModalOpen, setDeleteReviewModalOpen] = useState(false);
+  const [reviewLength, setReviewLength] = useState(0);
   const [reviewDetailModalOpen, setReviewDetailModalOpen] = useState(false);
-  const [toPageNumber, setToPageNumber] = useState(10);
+  const [toPageNumber, setToPageNumber] = useState(20);
+  const [fromPageNumber, setFromPageNumber] = useState(0);
+  const [onlyImage, setOnlyImage] = useState(false);
   const [, updateState] = useState();
   const forceUpdate = useCallback(() => updateState({}), []);
   const dispatch = useDispatch();
@@ -47,8 +53,15 @@ const Review = () => {
 
   const sortOption = useSelector(({ reviewSearchType }) => reviewSearchType.value);
 
-  const { reviewData, reviewSummary, hasMore, loading, error, callHttp } = useReviewInfiniteVeiw(
-    id, useType, toPageNumber, sortOption, callHttpMethod
+  useEffect(() => {
+    // debugger;
+    setFromPageNumber(0);
+    setToPageNumber(20);
+
+  }, [sortOption, onlyImage]);
+  
+  const { reviewData, reviewSummary, hasMore, loading, error, returnCallHttpMethod } = useReviewInfiniteVeiw(
+    id, useType, fromPageNumber, toPageNumber, sortOption, onlyImage ,callHttpMethod
   );
 
   const observer = useRef();
@@ -59,7 +72,10 @@ const Review = () => {
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
-          setToPageNumber(toPageNumber + 10);
+          debugger;
+          setFromPageNumber(fromPageNumber + 20);
+          setCallHttpMethod(true);
+          // console.log(`무한 스크롤 호출 API 훅 걸렸어!!!!!!!`);
         }
       });
       if (node) observer.current.observe(node);
@@ -214,15 +230,18 @@ const Review = () => {
 
   const onChangeCheckHandler = (checked) => {
     if (checked) {
-      setReviews(viewWithPictureContent);
-    } else {
-      setReviews(viewContent);
+      // setReviews(viewWithPictureContent);
+      setOnlyImage(true);
+    } 
+    else {
+      // setReviews(viewContent);
+      setOnlyImage(false);
     }
   }
 
   const handleViewDetailCarousel = (item) => {
-    if (item.hasImage || item.imageIdList.length != 0) {
-      return (<ReviewDetailCarousel galleryData={(data) => setLayerGalleryList(data)} data={item.imageIdList} />);
+    if (item.hasImage) {
+      return (<ReviewDetailCarousel reviewLoading={()=>setIsReviewLoading(false)} galleryData={(data) => setLayerGalleryList(data)} data={item.imageIdList} />);
     }
   }
 
@@ -317,14 +336,29 @@ const Review = () => {
   };
 
   useEffect(() => {
-    setIsOpenStyle(true);
-    setReviewOrderbyModalOpen(false);
-    setLayerGalleryList([]);
+    // setIsOpenStyle(true);
+    // setReviewOrderbyModalOpen(false);
+    // setLayerGalleryList([]);
   }, []);
 
-  useEffect(() => {
+  useEffect(()=>{
     // debugger;
+    // console.log(`is review loading is ${isReviewLoading}`);
+    if(!isReviewLoading){
+      // 강제로 리뷰 이미지 불러왔을 때 리랜더링 하기!!!
+      setTimeout(()=>{
+        forceUpdate();
+      }, 500)
+      
+      // console.log(`force update!!!!!`);
+    }
+  },[isReviewLoading])
+
+  useEffect(() => {
+    debugger;
     if (reviewData !== undefined && reviewData.length > 0) {
+      debugger;
+      setReviewLength(reviewData.length);
 
       let filterReviews = reviewData.map((review) => {
         if (review.contents.length > 275) {
@@ -335,21 +369,45 @@ const Review = () => {
           return review;
         }
       })
-      filterReviews.push({});
-      setViewContent(filterReviews);
-      setViewWithPictureContent(filterReviews.filter(data => data.hasImage));
+
+      // 리뷰 갯수가 20개 이상일 때
+      if((reviewData.length < reviewSummary.reviewCount) && reviewLength < reviewData.length){
+        // console.log('총 리뷰 갯수가 20 이상이야!!!!!');
+
+        if(reviewData.length < 21){
+          filterReviews.splice(reviewData.length/2,0,{id:''});
+          // setViewContent(filterReviews);
+          setReviews(filterReviews);
+        } else {
+          filterReviews.splice(reviewData.length-20,0,{id:''});
+          // setViewContent(filterReviews);
+          setReviews(filterReviews);
+        }
+      }
+      // 리뷰 갯수가 20개 보다 적을 때
+      else {
+        // console.log('리뷰 갯수가 20 미만이거나 더이상 없어!!!!!!!');
+        // setViewContent(filterReviews);
+        setReviews(filterReviews);
+      }
+      // setViewWithPictureContent(filterReviews.filter(data => data.hasImage));
     }
+
+    setTimeout(()=>{
+      forceUpdate();
+    }, 500)
 
   }, [reviewData]);
 
-  useEffect(() => {
-    if (viewContent.length > 0) {
-      // setDataSetting(true);
-      setReviews(viewContent);
-      console.log(`viewContents length is ${viewContent.length}`);
-      console.log(`viewWithPictureContent length is ${viewWithPictureContent.length}`);
-    }
-  }, [viewContent]);
+
+  // useEffect(() => {
+  //   if (viewContent.length > 0) {
+  //     // setDataSetting(true);
+  //     setReviews(viewContent);
+  //     console.log(`viewContents length is ${viewContent.length}`);
+  //     console.log(`viewWithPictureContent length is ${viewWithPictureContent.length}`);
+  //   }
+  // }, [viewContent]);
 
 
   useEffect(() => {
@@ -365,15 +423,19 @@ const Review = () => {
 
   }, [layerGalleryOpen]);
 
-  useEffect(() => {
-    // debugger;
-    setToPageNumber(10);
+  // useEffect(() => {
+  //   // debugger;
+  //   setToPageNumber(10);
 
-  }, [sortOption]);
+  // }, [sortOption]);
 
   useEffect(() => {
-    setCallHttpMethod(callHttp);
-  }, [callHttp]);
+    // console.log(`returnCallHttpMethod is ${returnCallHttpMethod}`);
+    // console.log(`callHttpMethod is ${callHttpMethod}`);
+    if(!returnCallHttpMethod){
+      setCallHttpMethod(false);
+    }
+  }, [returnCallHttpMethod]);
 
   return (
     <div className="site">
@@ -448,9 +510,12 @@ const Review = () => {
             <div className="site-container">
               {/* {handleViewConetent(onlyPicture)} */}
               {reviews && reviews.length > 0 && reviews.map((item, index) => {
-                if (reviews.length === index + 1) {
+                // if (reviews.length === index + 1) {
+                //   return <div ref={lastroomElementRef} key={item}></div>;
+                // }
+                if (item.id != undefined && item.id === '') {
                   return <div ref={lastroomElementRef} key={item}></div>;
-                }
+                } 
                 else {
                   return (
                     <div className={Style["ReviewPostItem"]} key={index} >

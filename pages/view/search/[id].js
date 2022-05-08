@@ -25,29 +25,33 @@ const Post = ({ item }) => {
   const [listFilterIsUp, setListFilterIsUp] = useState(false);
   const [listFilterIsNone, setListFilterIsNone] = useState(false);
   const [lastScrollTop, setLastScrollTop] = useState(0);
+  // HTTP Method call 요청 했을 때 다시 리뷰 리스트 불러오는 신호 줄 수 있도록 하는 값
+  const [callHttpMethod, setCallHttpMethod] = useState(false);
   const router = useRouter();
   const { id } = router.query;
   const dispatch = useDispatch();
   const scrollYValue = useSelector(({ scrollY }) => scrollY.value);
   const [viewList, setViewList] = useState([]);
-  const [toPageNumber, setToPageNumber] = useState(10);
+  const [toPageNumber, setToPageNumber] = useState(20);
   const [fromPageNumber, setFromPageNumber] = useState(0);
+  const [roomLength, setRoomLength] = useState(0);
 
-  const filterValue = useSelector(({roomFilter}) => roomFilter);
-  const { accessToken } = useSelector((state) => state.userInfo);
+  const filterValue = useSelector(({ roomFilter }) => roomFilter);
   const DELTA = 5;
 
-  useEffect(()=>{
+  useEffect(() => {
     // debugger;
-    setToPageNumber(10);
+    setFromPageNumber(0);
+    setToPageNumber(20);
 
-  },[filterValue]);
+  }, [filterValue]);
 
-  const { rooms, hasMore, loading, error } = useInfiniteSearch(
+  const { rooms, totalHitCount, hasMore, loading, error, returnCallHttpMethod } = useInfiniteSearch(
     id,
     fromPageNumber,
     toPageNumber,
-    filterValue
+    filterValue,
+    callHttpMethod
   );
   const observer = useRef();
   const [searchValue, setSearchValue] = useState();
@@ -67,8 +71,10 @@ const Post = ({ item }) => {
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
-          setToPageNumber(toPageNumber + 10);
-          setFromPageNumber(fromPageNumber + 10);
+          setFromPageNumber(fromPageNumber + 20);
+          setCallHttpMethod(true);
+          console.log(`무한 스크롤 호출 API 훅 걸렸어!!!!!!!`);
+
         }
       });
       if (node) observer.current.observe(node);
@@ -100,29 +106,68 @@ const Post = ({ item }) => {
     let yValue = scrollYValue.scrollYValue;
     let navbarHeight = document.getElementById("ListFilter").offsetHeight;
 
-    if (yValue > lastScrollTop && yValue > navbarHeight){
+    if (yValue > lastScrollTop && yValue > navbarHeight) {
       setListFilterIsUp(true);
+
 		} else {
 			if(yValue + window.outerHeight < document.body.scrollHeight || yValue == 0) {
         setListFilterIsUp(false);
-			}
-		}
-		setLastScrollTop(scrollYValue.scrollYValue);
+      }
+    }
+    setLastScrollTop(scrollYValue.scrollYValue);
   }, [scrollYValue])
 
   useEffect(() => {
-    rooms.item && console.log(`rooms length is ${rooms.item.length}`);
+    // debugger;
+    // rooms.item && console.log(`rooms length is ${rooms.item.length}`);
     
-    if(rooms.item !== undefined && rooms.item.length > 0){
-      let list = rooms.item.map((value)=>{
+    if (rooms.item !== undefined && rooms.item.length > 0 ) {
+      setRoomLength(rooms.item.length);
+      
+      // 방 갯수가 20개 이상일 때
+      if((rooms.item.length < totalHitCount) && roomLength < rooms.item.length){
+        console.log('총 방 갯수가 20 이상이야!!!!!');
+        // 바로 rooms 배열을 수정하려고 하면 에러가 나서 한번 새로운 배열을 만들어 주고 수정
+        let list = rooms.item.map((value) => {
         return value;
       });
-      list.push({});
       // debugger;
-    } 
-    setViewList(list);
+
+        if(rooms.item.length < 21){
+          list.splice(rooms.item.length/2,0,{roomId:''});
+          setViewList(list);
+        } else {
+          list.splice(rooms.item.length-20,0,{roomId:''});
+          setViewList(list);
+        }
+
+        // list.splice(rooms.item.length-10,0,{roomId:''});
+        //   setViewList(list);
+        
+      } 
+      // 방 갯수가 20개 보다 적을 때
+      else {
+        console.log('총 방 갯수가 20 미만이거나 더이상 없어!!!!!!!');
+        setViewList(rooms.item);
+      }
     
+    } else {
+      console.log(`totalhitcount는 남았지만 실제로 아닌 경우`);
+    } 
   }, [rooms]);
+
+  useEffect(() => {
+    console.log(listFilterIsUp);
+  }, [listFilterIsUp]);
+
+  useEffect(()=>{
+    // debugger;
+    console.log(`returnCallHttpMethod is ${returnCallHttpMethod}`);
+    console.log(`callHttpMethod is ${callHttpMethod}`);
+      if(!returnCallHttpMethod){
+        setCallHttpMethod(false);
+      }
+  },[returnCallHttpMethod])
 
   return (
     <div className="site">
@@ -243,7 +288,7 @@ const Post = ({ item }) => {
             </>
           )}
         </>
-        
+
         {viewMap ? (
           <ListDetailMap
             lat={37.4959854}
