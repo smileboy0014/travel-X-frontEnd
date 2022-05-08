@@ -12,7 +12,7 @@ const mapOption = {
   // 사람 모양 컨트롤러
   streetViewControl: false,
   // 풀스크린 컨트롤러
-  fullscreenControl: false
+  fullscreenControl: false,
 };
 
 const containerStyle = { width: "100%", height: "20rem" };
@@ -77,6 +77,8 @@ const DetailMap = ({ lat, lng }) => {
       center: new naver.maps.LatLng(lat, lng),
       minZoom: 10,
       maxZoom: 21,
+      // 드레그 여부
+      draggable: false,
       // zoomControl: true,
       // zoomControlOptions: {
       //   //줌 컨트롤의 옵션
