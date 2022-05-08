@@ -3,81 +3,55 @@ import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import * as userInfoActions from "../redux/store/modules/userInfo";
 import Style from '../styles/Login.module.css';
-import axios from 'axios';
+import { LoginByTravelXUserToTravelXServer } from '../components/Button/Login/Utils/LoginUtil';
 import KakaoLoginButton from '../components/Button/Login/KakaoLoginButton';
+import { PUBLISHER_TRAVELX } from '../components/Button/Login/LoginConstant';
 
 const Login = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { redirectUri } = router.query;
 
-  const setAccessTokenToLocalStroage = (accessToken, userId) => {
-    let userInfo = localStorage.getItem('userInfo');
-    console.log(userInfo);
-    if (userInfo == null) {
-      userInfo = { accessToken: accessToken, userId: userId }
-    } else {
-      userInfo = JSON.parse(userInfo);
-      userInfo.accessToken = accessToken;
-      userInfo.userId = userId;
-    }
-    localStorage.setItem("userInfo", JSON.stringify(userInfo));
-  }
+  const [values, setValues] = useState({ email: "", password: "" });
 
-  const travelXLogin = (publisher, userId, accessToken) => {
-    axios({
-      method: "GET",
-      url: "http://shineware.iptime.org:8081/auth/user/get",
-      params: {
-        authPublisher: publisher,
-        userId: userId
-      },
-    }).then((res) => {
-      console.log(res);
-      dispatch(
-        userInfoActions.setUserInfo({ 
-          accessToken: accessToken, 
-          id: userId
-        })
-      );
-      setAccessTokenToLocalStroage(accessToken);
-      router.push(redirectUri);
-    }).catch((e) => {
-      console.log(e);
-      // 유저 정보 없음 경우. 회원가입 요청
-      try {
-        if (e.response.status == '404') {
-          travelXRegister(publisher, userId);
-        }
-      } catch(registerError) {
-        console.error(registerError);
-      }
-    });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setValues({ ...values, [name]: value });
   };
 
-  const travelXRegister = (publisher, userId) => {
-    axios({
-      method: "GET",
-      url: "http://shineware.iptime.org:8081/auth/user/register",
-      params: {
-        authPublisher: publisher,
-        userId: userId
-      },
-    }).then((res) => {
-      console.log(res);
-      travelXLogin(publisher, userId);
-    }).catch((e) => {
-      if (e.response.status == '409') {
-        alert('이미 등록된 사용자입니다.');
-      } else {
-        console.error(e);
-      }
-    });
-  };
-
-  const handleSubmit = (e) => {
+  const handleTravelXLogin = async (e) => {
     e.preventDefault();
+
+    if (values.email && values.password) {
+      const result = await LoginByTravelXUserToTravelXServer(values.email, values.password);
+
+      dispatch(userInfoActions.setUserInfo({ pub: PUBLISHER_TRAVELX, id: result.userId, auth: true }));
+
+      const params = new URLSearchParams(location.search);
+      const curRedirectUri = params.get('redirectUri');
+
+      router.push(curRedirectUri ? curRedirectUri : '/');
+    } else {
+      alert('로그인 정보를 입력해주십시오.');
+    }
   };
+
+  const handleSignUp = (e) => {
+    e.preventDefault();
+
+    router.push('/signup');
+  };
+
+  useEffect(() => {
+    const authPublisher = localStorage.getItem("pub");
+
+    // routeStart 이벤트 함수로 로그인 체크하므로 여기선 pub 값만 확인
+    if (authPublisher) {
+      const params = new URLSearchParams(location.search);
+      const curRedirectUri = params.get('redirectUri');
+
+      router.push(curRedirectUri ? curRedirectUri : '/');
+    }
+  }, []);
 
   return (
     <div className="site">
@@ -85,24 +59,38 @@ const Login = () => {
         <div className={Style['login-form']}>
           <div className={Style['login-title']}>로그인</div>
           <div className="login-form">
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleTravelXLogin}>
               <div className={Style['login-input-container']}>
-                <label>E-mail</label>
-                <input type="text" required className={Style['login-text']} />
+                <label>이메일</label>
+                <input 
+                  type="email" 
+                  name="email" 
+                  required 
+                  className={Style['login-text']} 
+                  value={values.email}
+                  onChange={handleChange}  
+                />
                 {/* {renderErrorMessage("uname")} */}
               </div>
               <div className={Style['login-input-container']}>
                 <label>비밀번호</label>
-                <input type="password" required className={Style['login-text']} />
-                {/* {renderErrorMessage("pass")} */}
+                <input 
+                  type="password" 
+                  name="password" 
+                  required 
+                  className={Style['login-text']} 
+                  value={values.password}
+                  onChange={handleChange}  
+                />
               </div>
               <div className={Style['login-button-container']}>
-                <input type="submit" className={Style['login-submit']} />
+                <button type="submit" className={Style['login-submit']}>로그인</button>
+                <button className={Style['signup']} onClick={handleSignUp}>회원가입</button>
               </div>
             </form>
           </div>
           
-          <KakaoLoginButton loginCallback={travelXLogin} />
+          <KakaoLoginButton />
         </div>
       </div>
     </div>

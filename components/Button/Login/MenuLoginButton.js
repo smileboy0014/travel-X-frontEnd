@@ -3,8 +3,9 @@ import Link from 'next/link';
 import * as userInfoActions from "../../../redux/store/modules/userInfo";
 import { useSelector, useDispatch } from "react-redux";
 import Style from '../../../styles/Component.module.css';
-
-const JAVASCRIPT_KEY = "742ec8d495dc81bf47a406b1b9b807ee";
+import { DeleteCookie } from './Utils/CookieUtil';
+import { PUBLISHER_KAKAO, PUBLISHER_NAVER, PUBLISHER_TRAVELX } from "./LoginConstant";
+import { CleanLoginInfoInLocalStorage } from "./Utils/LoginUtil";
 
 const Login = () => {
   const redirectUri = useSelector(({ redirectUri }) => redirectUri.value);
@@ -16,11 +17,11 @@ const Login = () => {
         query: { redirectUri: redirectUri },
       }}
     >
-      <a className={Style.LoginButton}>
+      <a className={Style.LoginButton}  style={{ top: '6.0rem', right: '-1.6rem' }}>
         {"로그인"}
       </a>
     </Link>
-  ) 
+  )
 };
 
 const Logout = () => {
@@ -28,14 +29,30 @@ const Logout = () => {
 
   // 로그아웃
   const handleLogout = () => {
-    // 카카오로 로그인된 유저 로그아웃
-    if (window.Kakao.Auth.getAccessToken()) {
-      window.Kakao.Auth.logout(function() {
-        dispatch(userInfoActions.setUserInfo({ accessToken: null, id: null }));
-        localStorage.setItem("userInfo", JSON.stringify({ accessToken: null, id: null }));
-      });
+    const publisher = localStorage.getItem("pub");
+  
+    switch (publisher) {
+      case PUBLISHER_KAKAO: {
+        // 카카오로 로그인된 유저 로그아웃
+        if (window.Kakao.Auth.getAccessToken()) {
+          window.Kakao.Auth.logout(() => {});
+        }
+        break;
+      }
+      case PUBLISHER_NAVER: {
+        break;
+      }
+      case PUBLISHER_TRAVELX: {
+        break;
+      }
+      default:
+        
     }
-    
+      
+    DeleteCookie("RT");
+    CleanLoginInfoInLocalStorage(publisher);
+    dispatch(userInfoActions.setUserInfo({ accessToken: null, id: null, auth: false }));
+      
   };
 
   // 연결 끊기 (회원 탈퇴)
@@ -45,8 +62,8 @@ const Logout = () => {
         url: '/v1/user/unlink',
         success: (response) => {
           console.log(response);
-          dispatch(userInfoActions.setUserInfo({ accessToken: null, id: null }));
-          localStorage.setItem("userInfo", JSON.stringify({ accessToken: null, id: null }));
+          dispatch(userInfoActions.setUserInfo({ accessToken: null, id: null, auth: false }));
+          DeleteCookie("RT");
         },
         fail: (error) => {
           console.log(error);
@@ -61,32 +78,22 @@ const Logout = () => {
 
   return (
     <>
-      <button className={Style.LoginButton} onClick={handleLogout}>
+      <button className={Style.LoginButton} onClick={handleLogout} style={{ top: '6.0rem', right: '-1.8rem' }}>
         {"로그아웃"}
       </button>
-      <button className={Style.LoginButton} onClick={handleUserOut} style={{ top: '4.0rem' }}>
+      {/* <button className={Style.LoginButton} onClick={handleUserOut} style={{ top: '4.0rem' }}>
         {"회원탈퇴"}
-      </button>
+      </button> */}
     </>
   )
 };
 
 const MenuLoginButton = () => {
-  const dispatch = useDispatch();
-  const { accessToken } = useSelector((state) => state.userInfo.info);
-
-  useEffect(() => {
-    if (!window.Kakao.isInitialized()) {
-      window.Kakao.init(JAVASCRIPT_KEY);
-    }
-    dispatch(userInfoActions.setUserInfo({
-      accessToken: window.Kakao.Auth.getAccessToken()
-    }));
-  }, []);
-
+  const { auth } = useSelector((state) => state.userInfo.info);
+  
   return (
     <>
-      {!accessToken ? <Login /> : <Logout />}
+      {!auth ? <Login /> : <Logout />}
     </>
   );
 };

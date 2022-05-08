@@ -9,41 +9,59 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import Script from 'next/script';
 import MenuLoginButton from './../components/Button/Login/MenuLoginButton';
+import { JAVASCRIPT_KEY } from '../components/Button/Login/LoginConstant';
+import { CheckLogin, GetNewAccessTokenByRefreshToken } from './../components/Button/Login/Utils/LoginUtil';
+import { GetCookie } from "../components/Button/Login/Utils/CookieUtil";
 
 function TravelX({ Component, pageProps }) {
   const [scrollYValue, setScrollYVlue] = useState(0);
   const dispatch = useDispatch();
   const router = useRouter();
+  const [urlFilter, setUrlFilter] = useState(['/signup'])
 
   const listener = () => {
     setScrollYVlue(document.body.scrollTop);
   };
 
-  const handleRouteChange = (url) => {
+  const handleRouteChange = async (url) => {
     dispatch(redirectUriActions.setRedirectUri(url));
+    
+    if (!urlFilter.includes(url)) {
+      const authPublisher = localStorage.getItem("pub");
+    
+      if (authPublisher) {
+        let checkLogin = await CheckLogin(authPublisher);
+        
+        if (checkLogin.auth) {
+          dispatch(userInfoActions.setUserInfo({ pub: authPublisher, id: checkLogin.id, auth: true }));
+        } else {
+          localStorage.removeItem("pub");
+          dispatch(userInfoActions.setUserInfo({ pub: null, id: null, auth: false }));
+        }
+      }
+    }
+    
   };
 
   useEffect(() => {
     document.body.addEventListener("scroll", listener);
     router.events.on('routeChangeStart', handleRouteChange);
-
+    
+    // Kakao SDK Init
+    if (!window.Kakao.isInitialized()) {
+      window.Kakao.init(JAVASCRIPT_KEY);
+    }
+    
+    handleRouteChange();
     return () => {
       document.body.removeEventListener("scroll", listener);
       router.events.off('routeChangeStart', handleRouteChange);
+      window.Kakao.cleanup();
     };
   }, []);
 
   useEffect(() => {
     dispatch(scrollYActions.scrollY({ scrollYValue }));
-
-    let userInfo = localStorage.getItem('userInfo');
-    if (userInfo == null) {
-      userInfo = { accessToken: null, userId: null }
-    } else {
-      userInfo = JSON.parse(userInfo);
-      dispatch(userInfoActions.setUserInfo(userInfo));
-    }
-    
   }, [scrollYValue]);
 
   return (

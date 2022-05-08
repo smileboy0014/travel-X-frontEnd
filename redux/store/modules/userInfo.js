@@ -2,11 +2,12 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   info: {
+    auth: false,
     id: null,
     accessToken: null,
     name: '',
     email: '',
-    publisher: ''
+    pub: ''
   }
 };
 const userInfo = createSlice({
@@ -14,7 +15,9 @@ const userInfo = createSlice({
   initialState,
   reducers: {
     setUserInfo: (state, action) => {
-      state.info = action.payload;
+      Object.keys(action.payload).map(key => {
+        state.info[key] = action.payload[key];
+      });
     }
   },
 });
