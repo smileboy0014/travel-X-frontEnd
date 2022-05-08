@@ -123,13 +123,6 @@ const Post = ({ item }) => {
     if (rooms.item !== undefined && rooms.item.length > 0 ) {
       setRoomLength(rooms.item.length);
       
-      // let list = rooms.item.map((value) => {
-      //   return value;
-      // });
-      // list.push({ roomId: '' });
-      // debugger;
-      // setViewList(list);
-
       // 방 갯수가 20개 이상일 때
       if((rooms.item.length < totalHitCount) && roomLength < rooms.item.length){
         console.log('총 방 갯수가 20 이상이야!!!!!');
