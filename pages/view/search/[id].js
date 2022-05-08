@@ -15,6 +15,7 @@ import CalendarModal from "../../../components/Modal/Calendar/CalendarModal";
 import ListDetailMap from "../../../components/Modal/Map/ListDetailMap";
 import * as scrollY from "../../../redux/store/modules/scrollY";
 import classNames from 'classnames/bind';
+import Link from 'next/link'
 
 const cx = classNames.bind(Style);
 
@@ -84,7 +85,7 @@ const Post = ({ item }) => {
   const handleOpenListMap = () => {
     setViewMap(true);
     setListFilterIsNone(true);
-  }
+  };
 
   useEffect(() => {
     dispatch(scrollY.scrollY(0));
@@ -316,6 +317,7 @@ const Post = ({ item }) => {
           isOpen={calendarModalOpen}
           onRequestClose={() => setCalendarModalOpen(false)}
         />
+
       </div>
     </div>
   );
