@@ -23,9 +23,9 @@ const RoomOrderby = ({ onRequestClose }) => {
 
   useEffect(() => {
     setSearchTypeValue(
-      getSearchTypeValue.searchTypeValue === null
+      getSearchTypeValue === null
         ? "RANKING"
-        : getSearchTypeValue.searchTypeValue
+        : getSearchTypeValue
     );
   }, [getSearchTypeValue]);
 
@@ -40,8 +40,9 @@ const RoomOrderby = ({ onRequestClose }) => {
                 type="radio"
                 name="filter"
                 value="RANKING"
-                checked={searchTypeValue === "RANKING"}
+                checked={searchTypeValue == "RANKING"}
                 onChange={onChangeValue}
+                
               />
               <span className={Style["FilterRadio-text"]}>인기순</span>
             </label>
