@@ -78,7 +78,7 @@ const DetailMap = ({ lat, lng }) => {
       minZoom: 10,
       maxZoom: 21,
       // 드레그 여부
-      draggable: false,
+      // draggable: false,
       // zoomControl: true,
       // zoomControlOptions: {
       //   //줌 컨트롤의 옵션
