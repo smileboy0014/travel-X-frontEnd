@@ -16,6 +16,7 @@ const SearchBar = ({
   const [searchValue, setSearchValue] = useState("");
   const [placeholderValue, setplaceholderValue] = useState("");
   const [personalModalOpen, setPersonalModalOpen] = useState(false);
+  const [showCloseBtn, setShowCloseBtn] = useState(false);
   const [checkBackStep, setCheckBackStep] = useState(true);
   const { searchDate } = useSelector((state) => state.date);
   const router = useRouter();
@@ -53,6 +54,7 @@ const SearchBar = ({
 
         getSearchAutoComptValue(res.data["address"]);
         getSearchAutoComptPropertyNameValue(res.data["propertyName"]);
+      
       })
       .catch((Error) => {
         console.log(Error);
@@ -60,7 +62,9 @@ const SearchBar = ({
   };
 
   const onKeyPress = (e) => {
+   
     if (e.key == "Enter") {
+      setShowCloseBtn(false);
       onSubmit(e);
     }
   };
@@ -88,6 +92,7 @@ const SearchBar = ({
 
   const onClickInput = () => {
     if (getRecentListView != undefined) {
+      setShowCloseBtn(true);
       getRecentListView(true);
       setCheckBackStep(false);
     }
@@ -103,6 +108,13 @@ const SearchBar = ({
       getSearchValue("");
     }
   };
+
+  const onClickClose = () =>{
+      setShowCloseBtn(false);
+      setSearchValue("");
+      getSearchValue("");
+      getRecentListView(false);
+  }
 
   // useEffect(() => {
   //   getSearchValue("");
@@ -135,7 +147,7 @@ const SearchBar = ({
           onRequestClose={() => setPersonalModalOpen(false)}
         />
 
-        {!searchValue && searchDate !== undefined && (
+        {!searchValue && searchDate !== undefined && !showCloseBtn && (
           <span className={Style["ListFilterSearch-date"]}>
             {`${new Date(searchDate.start).getMonth() + 1}.${new Date(
               searchDate.start
@@ -146,11 +158,9 @@ const SearchBar = ({
           </span>
         )}
 
-        {searchValue && (
+        {showCloseBtn && (
           <button
-            onClick={() => {
-              setSearchValue("");
-            }}
+            onClick={onClickClose}
             className={Style["ListFilterSearch-close"]}
             type="button"
             style={{ display: 'block' }}
