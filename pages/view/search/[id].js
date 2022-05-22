@@ -82,6 +82,11 @@ const Post = ({ item }) => {
     [loading, hasMore]
   );
 
+  const filterCallbackHandler = () => {
+    document.body.scrollTop = 0;
+    dispatch(scrollY.scrollY(0));
+  }
+
   const handleOpenListMap = () => {
     setViewMap(true);
     setListFilterIsNone(true);
@@ -208,8 +213,8 @@ const Post = ({ item }) => {
                   {searchAutoComptValue.length < 1 ? (
                     <div className={Style["ListFilterButton"]}>
                       <div className={Style["ListFilterButton-list"]}>
-                        <OptionFilterButton />
-                        <OrderByFilterButton />
+                        <OptionFilterButton callback={filterCallbackHandler} />
+                        <OrderByFilterButton callback={filterCallbackHandler} />
                       </div>
                     </div>
                   ) : (

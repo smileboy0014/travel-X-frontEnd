@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Style from "../../../styles/Component.module.css";
 import RoomFilterModal from "../../Modal/RoomFilter/RoomFilterModal";
 
-const OptionFilterButton = () => {
+const OptionFilterButton = (props) => {
   const [roomFilterModalOpen, setRoomFilterModalOpen] = useState(false);
 
   return (
@@ -18,6 +18,7 @@ const OptionFilterButton = () => {
       <RoomFilterModal
         isOpen={roomFilterModalOpen}
         onRequestClose={() => setRoomFilterModalOpen(false)}
+        callback={props.callback}
       ></RoomFilterModal>
     </li>
   );

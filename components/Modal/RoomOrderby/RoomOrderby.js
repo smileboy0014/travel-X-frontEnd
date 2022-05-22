@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Style from "../../../styles/Component.module.css";
 import * as searchType from "../../../redux/store/modules/searchType";
 
-const RoomOrderby = ({ onRequestClose }) => {
+const RoomOrderby = ({ onRequestClose, callback }) => {
   const [searchTypeValue, setSearchTypeValue] = useState("RANKING");
   const dispatch = useDispatch();
 
@@ -12,7 +12,7 @@ const RoomOrderby = ({ onRequestClose }) => {
 
   const handleSaveClick = (e) => {
     console.log(" e.target.value: " + e.target.value);
-
+    callback();
     dispatch(searchType.setSearchType({ searchTypeValue }));
     onRequestClose(false);
   };
