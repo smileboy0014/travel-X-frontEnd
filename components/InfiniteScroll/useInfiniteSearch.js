@@ -253,7 +253,7 @@ export default function useInfiniteSearch(
           // debugger;
           // console.log(`무한 스크롤 API!!!!!! ${res.data}`);
           // console.log(`무한 스크롤 API 결과 방 갯수는 ${res.data.roomDocumentList.length}`);
-          dispatch(searchResultActions.saveData(res.data.roomDocumentList));
+          // dispatch(searchResultActions.saveData(res.data.roomDocumentList));
 
           setTotalHitCount(res.data.totalHitCount);
           console.log(`totalHitCount is ${totalHitCount}`);
