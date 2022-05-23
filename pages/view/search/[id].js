@@ -92,6 +92,7 @@ const Post = ({ item }) => {
   }, []);
 
   useEffect(() => {
+    debugger;
     setSearchAutoComptValue([]);
   }, [searchValue]);
 

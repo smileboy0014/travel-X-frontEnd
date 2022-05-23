@@ -19,40 +19,33 @@ const RecentSearch = ({
     setAutoCompltData(sendSearchAutoComptValue);
     setAutoCompltPropertyNameData(sendSearchAutoComptPropertyNameValue);
 
-    // console.log("sendSearchAutoComptValue:" + sendSearchAutoComptValue);
-
-    // console.log(
-    //   "sendSearchAutoComptPropertyNameValue:" +
-    //     sendSearchAutoComptPropertyNameValue
-    // );
   }, [sendSearchAutoComptValue, sendSearchAutoComptPropertyNameValue]);
 
   useEffect(() => {
-    // addKeyword(sendSearchValue);
-    if (sendSearchValue !== undefined) {
+    if (sendSearchValue !== undefined && sendSearchValue !== '') {
+      // debugger;
       const newKeyword = {
         id: Date.now(),
         text: sendSearchValue,
       };
-      const nextKeyword = keywords.filter((keyword) => {
+      debugger;
+      let nowKewords = (localStorage.getItem("keywords") != null && localStorage.getItem("keywords") !== '') ? JSON.parse(localStorage.getItem("keywords")) : []; 
+      const nextKeyword = nowKewords.filter((keyword) => {
         return keyword.text != newKeyword.text;
       });
+      debugger;
+      localStorage.setItem("keywords", JSON.stringify([newKeyword, ...nextKeyword]));
       setKeywords([newKeyword, ...nextKeyword]);
     }
   }, [sendSearchValue]);
 
   useEffect(() => {
+    // debugger;
     if (typeof window !== "undefined") {
       const result = localStorage.getItem("keywords") || "[]";
       setKeywords(JSON.parse(result));
     }
   }, []);
-
-  useEffect(() => {
-    console.log("저장하는 데이터: " + JSON.stringify(keywords));
-
-    localStorage.setItem("keywords", JSON.stringify(keywords));
-  }, [keywords]);
 
   const addKeyword = (value, type) => {
     console.log("value: " + value);
@@ -70,8 +63,6 @@ const RecentSearch = ({
         console.log("newKeyword: " + JSON.stringify(newKeyword));
       }
 
-
-
       if (getSearchValue !== undefined) {
         getSearchValue(value);
       }
@@ -80,6 +71,7 @@ const RecentSearch = ({
 
   // 전체 검색어 삭제
   const handleClearKeywords = () => {
+    localStorage.setItem("keywords", []);
     setKeywords([]);
   };
 
@@ -88,6 +80,7 @@ const RecentSearch = ({
     const nextKeyword = keywords.filter((keyword) => {
       return keyword.id != id;
     });
+    localStorage.setItem("keywords", JSON.stringify(nextKeyword));
     setKeywords(nextKeyword);
   };
 

@@ -49,7 +49,7 @@ const useReviewInfiniteVeiw = (roomId, roomType, fromPageNumber, toPageNumber, s
     }).then((res) => {
 
       if (res.data !== undefined) {
-        debugger;
+        // debugger;
         setReviewData((prevState) => (
           [...prevState,
           ...res.data]
@@ -90,7 +90,7 @@ const useReviewInfiniteVeiw = (roomId, roomType, fromPageNumber, toPageNumber, s
       })
         .then((res) => {
 
-          debugger;
+          // debugger;
           // console.log(`무한 스크롤 API!!!!!! ${res.data}`);
           // console.log(`무한 스크롤 API 결과 방 갯수는 ${res.data.roomDocumentList.length}`);
           if (res.data !== undefined) {
