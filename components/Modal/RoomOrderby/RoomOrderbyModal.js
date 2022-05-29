@@ -3,7 +3,7 @@ import Modal from "react-modal";
 import Style from "../../../styles/Component.module.css";
 import RoomOrderby from "./RoomOrderby";
 
-const RoomOrderbyModal = ({ isOpen, onRequestClose }) => {
+const RoomOrderbyModal = ({ isOpen, onRequestClose, callback }) => {
   const [clear, setClear] = useState(false);
 
   return (
@@ -26,6 +26,7 @@ const RoomOrderbyModal = ({ isOpen, onRequestClose }) => {
           </div>
           <RoomOrderby
             onRequestClose={(value) => onRequestClose(value)}
+            callback={callback}
           ></RoomOrderby>
         </div>
       </Modal>

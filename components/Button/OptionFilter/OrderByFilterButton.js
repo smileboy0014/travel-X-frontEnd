@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Style from "../../../styles/Component.module.css";
 import RoomOrderbyModal from "../../Modal/RoomOrderby/RoomOrderbyModal";
 
-const OrderByFilterButton = () => {
+const OrderByFilterButton = (props) => {
   const [roomOrderbyModalOpen, setRoomOrderbyModalOpen] = useState(false);
   return (
     <li className={Style["ListFilterButton-item"]}>
@@ -17,6 +17,7 @@ const OrderByFilterButton = () => {
       <RoomOrderbyModal
         isOpen={roomOrderbyModalOpen}
         onRequestClose={() => setRoomOrderbyModalOpen(false)}
+        callback={props.callback}
       ></RoomOrderbyModal>
     </li>
   );

@@ -6,7 +6,7 @@ import Style from "../../../styles/Component.module.css";
 
 
 
-const RoomFilter = ({ onRequestClear, onSetClear, onRequestClose }) => {
+const RoomFilter = ({ onRequestClear, onSetClear, onRequestClose, callback }) => {
   const router = useRouter();
   const [checkedRentInputs, setCheckedRentInputs] = useState([]);
   const [checkedHotelInputs, setCheckedHotelInputs] = useState([]);
@@ -66,7 +66,7 @@ const RoomFilter = ({ onRequestClear, onSetClear, onRequestClose }) => {
     const filter = {rent:checkedRentInputs, hotel:checkedHotelInputs};
     dispatch(roomFilterActions.sendConfirm(filter));
     onRequestClose(false);
-
+    callback();
     console.log(checkedRentInputs);
     console.log(checkedHotelInputs);
   };

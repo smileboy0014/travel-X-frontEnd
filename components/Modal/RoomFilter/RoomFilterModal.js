@@ -3,7 +3,7 @@ import RoomFilter from "./RoomFilter";
 import Modal from "react-modal";
 import Style from "../../../styles/Component.module.css";
 
-const RoomFilterModal = ({ isOpen, onRequestClose }) => {
+const RoomFilterModal = ({ isOpen, onRequestClose, callback }) => {
   const [clear, setClear] = useState(false);
 
   return (
@@ -36,6 +36,7 @@ const RoomFilterModal = ({ isOpen, onRequestClose }) => {
               setClear(value);
             }}
             onRequestClose={() => onRequestClose(false)}
+            callback={callback}
           ></RoomFilter>
         </div>
       </Modal>
