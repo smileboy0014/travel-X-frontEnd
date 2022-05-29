@@ -388,7 +388,7 @@ const DetailView = () => {
             <Link
               href={{
                 pathname: "/view/reserve/[id]",
-                query: { id: id },
+                query: { id: id, useType: useType },
               }}
             >
               <div className={Style["BttonFixButton"]}>
