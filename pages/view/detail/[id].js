@@ -304,18 +304,22 @@ const DetailView = () => {
                     추가 가능 옵션
                   </div>
                   <ul className={Style["DetailInfoItemService"]}>
-                    <li className={Style["DetailInfoItemService-item"]}>
-                      <dl className={Style["DetailInfoItemService-inner"]}>
-                        <dt className={Style["DetailInfoItemService-title"]}>와이파이</dt>
-                        <dd className={Style["DetailInfoItemService-text"]}>100,000</dd>
-                      </dl>
-                    </li>
-                    <li className={Style["DetailInfoItemService-item"]}>
-                      <dl className={Style["DetailInfoItemService-inner"]}>
-                        <dt className={Style["DetailInfoItemService-title"]}>조식</dt>
-                        <dd className={Style["DetailInfoItemService-text"]}>80,000</dd>
-                      </dl>
-                    </li>
+                    {
+                      (rooms.roomInfo != undefined
+                      && (rooms.roomInfo.extraOptionList.length > 0)) ? 
+                        rooms.roomInfo.extraOptionList.map((item, index) => (
+                          <li className={Style["DetailInfoItemService-item"]}>
+                            <dl className={Style["DetailInfoItemService-inner"]}>
+                              <dt className={Style["DetailInfoItemService-title"]}>{item.title}</dt>
+                              <dd className={Style["DetailInfoItemService-text"]}>{priceComma(item.price)}원</dd>
+                            </dl>
+                          </li>
+                        )) : 
+                        <p className={Style["DetailInfoItem-text"]}>
+                        {"추가 가능 옵션이 없습니다."}
+                      </p>
+                       
+                    }
                   </ul>
                 </div>
                 {/* <!-- .item -->
