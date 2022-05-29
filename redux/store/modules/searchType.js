@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = { value: "" };
+const initialState = { value: "RANKING" };
 
 const searchType = createSlice({
   name: "searchType",
