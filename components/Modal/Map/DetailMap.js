@@ -53,7 +53,7 @@ const DetailMap = ({ lat, lng }) => {
   //           // streetViewControl={mapOption.streetViewControl}
   //           // overviewMapControl={mapOption.overviewMapControl}
   //           // {...mapOption}
-            
+
   //         >
   //           <Marker
   //             position={marker}
@@ -68,7 +68,7 @@ const DetailMap = ({ lat, lng }) => {
   // };
 
 
-// 네이버 맵으로 보일 시
+  // 네이버 맵으로 보일 시
   var markers = [];
   var roomMap;
 
@@ -77,6 +77,13 @@ const DetailMap = ({ lat, lng }) => {
       center: new naver.maps.LatLng(lat, lng),
       minZoom: 10,
       maxZoom: 21,
+
+      draggable: false,
+      pinchZoom: false,
+      scrollWheel: false,
+      keyboardShortcuts: false,
+
+
       // 드레그 여부
       // draggable: false,
       // zoomControl: true,
