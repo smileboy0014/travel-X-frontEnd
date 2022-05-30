@@ -163,7 +163,11 @@ export const SignUp = () => {
       handleChange({ target: { name: 'checkNickName', value: true }});
       alert(res.data.message);
     }).catch((e) => {
-      console.error(e);
+      if (e.response.status == '409') {
+        alert('중복된 닉네임입니다.');
+      } else {
+        console.error(e);
+      }
     });
   };
 
