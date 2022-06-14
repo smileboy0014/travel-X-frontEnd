@@ -256,6 +256,52 @@ body .ListFilterButtonItem-select{
 	text-align:center;
 }
 
+body .RadiusBtn{
+	border: solid 1px #e0e0e0;
+	border-radius: 1.063rem 1.063rem;
+	padding: 0.375rem 0.75rem;
+	font-size: 0.75rem;
+	line-height: 1.2em;
+	color: #000;
+display:block;
+}
+
+body .RadiusSelect{
+border: solid 1px #e0e0e0;
+	border-radius: 1.063rem 1.063rem;
+	padding: 0.375rem 1.75rem 0.375rem 0.75rem;
+	font-size: 0.75rem;
+	line-height: 1.2em;
+	color: #000;
+}
+
+body .RadiusSelect:after{
+content:"";
+width:0.875rem;
+height:0.875rem;
+background-image:url(../public/icon/ico_reviewselect_arrow.svg);
+background-size:0.875rem 0.875rem;
+position:absolute;
+top:50%;
+right:0.75rem;
+transform:translateY(-50%);
+}
+
+body .RadiusBtn.is-Current{
+background-color:#6957e8;
+color:#fff;
+border-color:#6957e8;
+}
+
+body .RadiusSelect.is-Current{
+border-color:#6957e8;
+color:#6957e8;
+}
+
+body .RadiusSelect.is-Current:after{
+background-image:url(../public/icon/ico_reviewselect_arrow_current.svg);
+}
+
 /*=========================================================
   MapFixButton
 =========================================================*/
@@ -418,10 +464,34 @@ body .MapFixButton:before{
 	font-weight:bold;
 }
 
+.ProductItemGradeAddress{
+	margin-top:0.375rem;
+	font-size:0;
+	line-height:0;
+}
+
 .ProductItemGrade{
 	margin-top:0.375rem;
 	font-size:0;
 	line-height:0;
+}
+
+.ProductItemGradeAddress .ProductItemGrade{
+	padding-right: 0.8rem;
+    margin-right: 0.5rem;
+	position:relative;
+}
+
+.ProductItemGradeAddress .ProductItemGrade:after{
+	content:"";
+	width:0.25rem;
+	height:0.25rem;
+	background-color:#6f6f6f;
+	border-radius:100% 100%;
+	position:absolute;
+	top:50%;
+	right:0;
+	transform:translateY(-50%);
 }
 
 .ProductItemGrade-current{
@@ -445,12 +515,23 @@ body .MapFixButton:before{
 	transform:translateY(-50%);
 }
 
+.ProductItemGrade-current.no-Review:before{
+	background-image:url(../public/icon/ico_star_gray.svg);
+}
 
 .ProductItemGrade-total{
 	margin-left:2px;
 	font-size:14px;
 	line-height:1.2em;
 	color:#000;
+}
+
+.ProductItemGradeAddress-text{
+	display:inline-block;
+	vertical-align:middle;
+	font-size:0.75rem;
+	line-height:1.2em;
+	color:#6f6f6f;
 }
 
 .ProductItemFilter{
@@ -496,6 +577,11 @@ body .MapFixButton:before{
 
 .ProductItemFilter-item:last-child:after{
 	display:none;
+}
+
+.ProductItemFilter-title{
+	color:#000000;
+	margin-right:0.113rem;
 }
 
 .ProductItemPrice{
@@ -841,6 +927,10 @@ body .MapFixButton:before{
 	display:none;
 }
 
+.DetailHeaderInfoFilter-tit{
+	color:#000;
+}
+
 .DetailHeaderGrade{
 	margin-top:0.375rem;
 	font-size:0;
@@ -854,6 +944,10 @@ body .MapFixButton:before{
 	line-height:1.2em;
 	color:#000;
 	font-weight:bold;
+}
+
+.DetailHeaderGrade-current.no-Review:before{
+	background-image:url(../public/icon/ico_star_gray.svg);
 }
 
 .DetailHeaderGrade-current:before{
@@ -933,6 +1027,11 @@ body .DetailPaymentDate-button{
 	color:#6957e8;
 }
 
+.DetailPaymentDate-schedule.no-Select{
+	color:#6f6f6f;
+	font-weight:400;
+}
+
 .DetailPaymentDate-schedule:before{
 	content:"";
 	position:absolute;
@@ -957,11 +1056,33 @@ body .DetailPaymentDate-button{
 	transform:translateY(-50%);
 }
 
+/* 예전 */
+/* .DetailPaymentDate-day{
+	font-size:0.875rem;
+	line-height:1.3em;
+	font-weight:bold;
+	color:#6f6f6f;
+} */
+
 .DetailPaymentDate-day{
 	font-size:0.875rem;
 	line-height:1.3em;
 	font-weight:bold;
 	color:#6f6f6f;
+	position:relative;
+	padding-left:0.75rem;
+	margin-left:0.75rem;
+}
+
+.DetailPaymentDate-day:before{
+	content:"";
+	width:1px;
+	height:0.875rem;
+	background-color:#6f6f6f;
+	position:absolute;
+	top:50%;
+	left:0;
+	transform:translateY(-50%);
 }
 
 .DetailPaymentFree{
@@ -1046,6 +1167,19 @@ body .DetailPaymentDate-button{
 /*=========================================================
   BttonFixButton
 =========================================================*/
+
+/* 예전 */
+/* .BttonFixButton{
+	position:fixed;
+	bottom:0;
+	left:0;
+	right:0;
+	background-color:#fff;
+	padding:1.25rem 0;
+	z-index:1000;
+} */
+
+
 .BttonFixButton{
 	position:fixed;
 	bottom:0;
@@ -1054,6 +1188,7 @@ body .DetailPaymentDate-button{
 	background-color:#fff;
 	padding:1.25rem 0;
 	z-index:1000;
+	box-shadow: 0 -3px 8px 0 rgba(0, 0, 0, 0.14);
 }
 
 body .BttonFixButton-button{
@@ -1067,6 +1202,48 @@ body .BttonFixButton-button{
 	font-weight:500;
 	text-align:center;
 	width:100%;
+}
+
+.with-Like.BttonFixButton {
+	font-size:0;
+	line-height:0;
+}
+
+.BttonFixButton.no-Shadow{
+	box-shadow:none;
+}
+
+body .BttonFixButton-like{
+	width:3.188rem;
+	height:3.188rem;
+	border:solid 1px #c4c4c4;
+	border-radius:0.25rem;
+	display:inline-block;
+	vertical-align:top;
+	position:relative;
+}
+
+body .BttonFixButton-like:after{
+	content:"";
+	width:1.5rem;
+	height:1.5rem;
+	background-image:url(../public/icon/ico_heart_small_off.svg);
+	background-size:1.5rem 1.5rem;
+	position:absolute;
+	top:50%;
+	left:50%;
+	transform:translate(-50%, -50%);
+}
+
+body .BttonFixButton-like.is-Active:after{
+	background-image:url(../public/icon/ico_heart_small_on.svg);
+}
+
+.with-Like .BttonFixButton-button{
+	width:calc(100% - 3.625rem);
+	display:inline-block;
+	vertical-align:top;
+	float:right;
 }
 
 /*=========================================================
@@ -1121,6 +1298,12 @@ body .BttonFixButton-button{
 	margin-right:-1rem;
 }
 
+/* .DetailInfoItem-map:after{
+	content:"";
+	display:block;
+	padding-bottom:54%;
+} */
+
 .DetailInfoItem-map iframe{
 	position:absolute;
 	top:0;
@@ -1161,6 +1344,11 @@ body .DetailPaymentPersonnel-button{
 	line-height:1.3em;
 	font-weight:bold;
 	color:#6957e8;
+}
+
+.DetailPaymentPersonnel-schedule.no-Select{
+	color:#6f6f6f;
+	font-weight:400;
 }
 
 .DetailPaymentPersonnel-schedule:before{
@@ -1260,11 +1448,19 @@ body .DetailPaymentPersonnel-button{
 	transform:translateY(-50%);
 }
 
+.no-Review .DetailReview-score:before{
+	background-image:url(../public/icon/ico_star_gray.svg);
+}
+
 .DetailReview-title{
 	overflow:hidden;
 	font-size:0.875rem;
 	line-height:1.2em;
 	color:#000;
+}
+
+.no-Review.DetailReview-link:before{
+	display:none;
 }
 
 /*=========================================================
@@ -1974,6 +2170,25 @@ body .FilterPopHeader-close{
 	margin-right:-1rem;
 }
 
+.flex-Row:after{
+	content:"";
+	display:table;
+	clear:both;
+}
+
+.flex-Row .FilterPopFooter-button{
+	width:calc(50% - 0.313rem);
+	float:left;
+}
+
+.flex-Row .FilterPopFooter-button:last-child{
+	float:right;
+}
+
+.FilterPopFooter-button.color-Gray{
+	background-color:#e9e9e9;
+	color:#6f6f6f;
+}
 
 /*=========================================================
   FilterPop:Radio
@@ -2084,6 +2299,11 @@ body .FilterPopHeader-close{
 	top:50%;
 	right:0;
 	transform:translateY(-50%);
+}
+
+.FilterCheck-input:checked + .FilterCheck-text{
+	color:#6957e8;
+	font-weight:bold;
 }
 
 .FilterCheck-input:checked + .FilterCheck-text:after{
@@ -2391,12 +2611,68 @@ body .ListFixButton:before{
 	transform:translateY(-50%);
 }
 
-.MapListCont-title{
+.MapListContMeta{
+	margin-bottom:0.375rem;
+	font-size:0;
+	line-height:0;
+}
+
+.MapListContMeta:after{
+	content:"";
+	display:table;
+	clear:both;
+}
+
+.MapListContMeta-item{
+	font-size:0.75rem;
+	line-height:1.4em;
+	color:#6f6f6f;
+	display:inline-block;
+	padding-right:0.8rem;
+	margin-right:0.5rem;
+	position:relative;
+}
+
+.MapListContMeta-item:after{
+	content:"";
+	width:0.25rem;
+	height:0.25rem;
+	background-color:#6f6f6f;
+	border-radius:100% 100%;
+	position:absolute;
+	top:50%;
+	right:0;
+	transform:translateY(-50%);
+}
+
+.MapListContMeta-item:last-child{
+	padding-right:0;
+	margin-right:0;
+}
+
+.MapListContMeta-item:last-child:after{
+	display:none;
+}
+
+/* 예전 */
+/* .MapListCont-title{
 	margin-bottom:0.125rem;
 	font-size:1rem;
 	line-height:1.4em;
 	color:#000;
 	font-weight:bold;
+} */
+
+
+.MapListCont-title{
+	margin-bottom:0.5rem;
+	font-size:0.875rem;
+	line-height:1.4em;
+	color:#000;
+	font-weight:bold;
+	overflow:hidden;
+	text-overflow:ellipsis;
+	white-space:nowrap;
 }
 
 .MapListContGrade{
@@ -2424,6 +2700,10 @@ body .ListFixButton:before{
 	top:50%;
 	left:0;
 	transform:translateY(-50%);
+}
+
+.MapListContGrade-current.no-Review:before{
+	background-image:url(../public/icon/ico_star_gray.svg);
 }
 
 .MapListCont-price{
@@ -2665,6 +2945,17 @@ body .ReservationInput-input{
 	border-bottom:solid 1px #c4c4c4;
 }
 
+body .ReservationInput-input::placeholder {
+  color: #cacacb;
+}
+
+body .ReservationInput-input.ico-Arrow{
+	background-image:url(../public/icon/ico_input_arrow.svg);
+	background-size:1.25rem 1.25rem;
+	background-position:right 44%;
+	background-repeat:no-repeat;
+}
+
 .Box-UserInfo{
 	padding-bottom:2.5rem;
 }
@@ -2892,7 +3183,8 @@ body .ReservationInput-input{
 	clear:both;
 }
 
-.PayMethodListItem{
+/* 예전 */
+/* .PayMethodListItem{
 	display:block;
 	border:solid 1px #e0e0e0;
 	padding: 10px 24px;
@@ -2900,6 +3192,25 @@ body .ReservationInput-input{
 	text-align:center;
 	font-size:0;
 	line-height:0;
+} */
+
+
+.PayMethodListItem-radio{
+	display:none;
+}
+
+.PayMethodListItem-inner{
+	display:block;
+	border:solid 1px #e0e0e0;
+	padding: 10px 24px;
+	border-radius: 8px;
+	text-align:center;
+	font-size:0;
+	line-height:0;
+}
+
+.PayMethodListItem-radio:checked + .PayMethodListItem-inner{
+	border-color:#6957e8;
 }
 
 .PayMethodListItem-text{
@@ -3451,6 +3762,53 @@ body .ReviewSlide-slide:last-child{
 }
 
 /*=========================================================
+  RewviewAnswer
+=========================================================*/
+.RewviewAnswer{
+	margin-top:1.25rem;
+	background-color:#f8f8f8;
+	padding:1rem 1rem;
+}
+
+.RewviewAnswerHeader{
+	margin-bottom:0.938rem;
+	position:relative;
+}
+
+.RewviewAnswerHeader:after{
+	content:"";
+	display:table;
+	clear:both;
+}
+
+.RewviewAnswerHeader-name{
+	padding-right: 2.813rem;
+    font-size: 0.75rem;
+    line-height: 1.2em;
+    color: #000;
+    font-weight: bold;
+    margin-bottom: 0.375rem;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.RewviewAnswerHeader-date{
+	font-size:0.625rem;
+	line-height:1.2em;
+	color:#6f6f6f;
+	position:absolute;
+	top:0.063rem;
+	right:0;
+}
+
+.RewviewAnswerText{
+	font-size: 0.875rem;
+    line-height: 1.5em;
+    color: #6f6f6f;
+}
+
+/*=========================================================
   LayerGallery
 =========================================================*/
 .LayerGallery{
@@ -3572,6 +3930,1706 @@ body .LayerGallery-close{
 	width: 150px; */
 	height:450px;
 	width: 450px;
+}
+
+/*=========================================================
+  MyPageMain
+=========================================================*/
+.MyPage{
+	padding-top: 3.75rem;
+    padding-bottom: 0;
+    overflow: hidden;
+    min-height: 100vh;
+    background-color: #fff;
+}
+
+/*	MyPageHeader
+=========================================================*/
+.MyPageHeader{
+	padding:1.875rem 0;
+	margin-bottom:0.625rem;
+}
+
+.MyPageHeader-inner{
+	position:relative;
+}
+
+.MyPageHeader-name{
+	font-size:1.25rem;
+	line-height:1.4em;
+	color:#000;
+	font-weight:bold;
+}
+
+.MyPageHeader-link{
+	position:absolute;
+	top:50%;
+	transform:translateY(-50%);
+	right:0;
+	font-size:0.75rem;
+	line-height:1.2em;
+	color:#6f6f6f;
+	padding-right:1rem;
+}
+
+.MyPageHeader-link:after{
+	content:"";
+	width:0.75rem;
+	height:0.75rem;
+	background-image:url(../public/icon/ico_my_header_arrow.svg);
+	background-size:0.75rem 0.75rem;
+	position:absolute;
+	top:50%;
+	right:0;
+	transform:translateY(-50%);
+}
+
+/*	MyPageMenuSec
+=========================================================*/
+.MyPageMenuSec{
+	margin-bottom:2.5rem;
+}
+
+.MyPageMenu{
+	border:solid 1px #e9e9e9;
+	border-radius:0.25rem;
+	padding:1rem 0.125rem;
+}
+
+.MyPageMenu-inner:after{
+	content:"";
+	display:table;
+	clear:both;
+}
+
+.MyPageMenu-item{
+	width:33.3333%;
+	float:left;
+	text-align:center;
+	position:relative;
+}
+
+.MyPageMenu-item:after{
+	content:"";
+	width:1px;
+	height:2.5rem;
+	background-color:#e9e9e9;
+	position:absolute;
+	top:50%;
+	right:0;
+	transform:translateY(-50%);
+}
+
+.MyPageMenu-item:last-child:after{
+	display:none;
+}
+
+.MyPageMenu-link{
+	display:block;
+	position:relative;
+}
+
+.MyPageMenu-text{
+	display:block;
+	position:relative;
+	font-size:0.875rem;
+	line-height:1.2em;
+	color:#000;
+	padding-top:1.75rem;
+}
+
+.MyPageMenu-text:after{
+	content:"";
+	position:absolute;
+	top:0;
+	left:50%;
+	transform:translateX(-50%);
+	width:1.25rem;
+	height:1.25rem;
+	background-size:1.25rem 1.25rem;
+}
+
+/*ico*/
+.ico-List.MyPageMenu-text:after{
+	background-image:url(../public/icon/ico_my_list.svg);
+}
+
+.ico-Review.MyPageMenu-text:after{
+	background-image:url(../public/icon/ico_my_review.svg);
+}
+
+.ico-Like.MyPageMenu-text:after{
+	background-image:url(../public/icon/ico_my_like.svg);
+}
+
+/*	MyPageNavSec
+=========================================================*/
+.MyPageNav-item{
+	margin-top:2.125rem;
+}
+
+.MyPageNav-item:first-child{
+	margin-top:0;
+}
+
+.MyPageNav-link{
+	font-size:0.875rem;
+	line-height:1.4em;
+	color:#000;
+	display:block;
+	padding-left:2rem;
+	position:relative;
+}
+
+.MyPageNav-link:after{
+	content:"";
+	position:absolute;
+	top:50%;
+	left:0;
+	transform:translateY(-50%);
+	width:1.25rem;
+	height:1.25rem;
+	background-size:1.25rem 1.25rem;
+}
+
+/*ico*/
+.ico-Qna .MyPageNav-link:after{
+	background-image:url(../public/icon/ico_my_qna.svg);
+}
+
+.ico-Contact .MyPageNav-link:after{
+	background-image:url(../public/icon/ico_my_contact.svg);
+}
+
+.ico-Notice .MyPageNav-link:after{
+	background-image:url(../public/icon/ico_my_notice.svg);
+}
+
+.ico-Setting .MyPageNav-link:after{
+	background-image:url(../public/icon/ico_my_setting.svg);
+}
+
+/*=========================================================
+  MyINfoApply
+=========================================================*/
+.MyApplyPage{
+	padding-top: 3.15rem;
+    padding-bottom: 0;
+    overflow: hidden;
+}
+
+.ApplySection{
+	background-color: #fff;
+    margin-bottom: 0.5rem;
+}
+
+.Last.ApplySection{
+	margin-bottom: 6.25rem;
+}
+
+/* ApplyHeader
+=========================================================*/
+.ApplyHeader{
+	font-size:0;
+	line-height:0;
+	padding:1.875rem 0;
+}
+
+.ApplyHeader-name{
+	display:inline-block;
+	max-width:100%;
+	position:relative;
+	font-size:1.25rem;
+	line-height:1.2em;
+	color:#000;
+	font-weight:bold;
+	padding-right:1.75rem;
+	overflow:hidden;
+	text-overflow:ellipsis;
+	white-space:nowrap;
+}
+
+.ApplyHeader-btn{
+	position:absolute;
+	top:50%;
+	transform:translateY(-50%);
+	right:0;
+	width:1.25rem;
+	height:1.25rem;
+	background-image:url(../public/icon/ico_apply_name.svg);
+	background-size:1.25rem 1.25rem;
+}
+
+.ApplyHeader-logintype{
+	margin-top:0.875rem;
+	font-size:0.875rem;
+	line-height:1.4em;
+	color:#000;
+}
+
+/* ApplySection
+=========================================================*/
+.ApplySection-inner{
+	padding:1.875rem 0 2.5rem;
+}
+
+.ApplySection-title{
+	font-size:1rem;
+	color:#000;
+	line-height:1.4em;
+	font-weight:bold;
+	margin-bottom:1.875rem;
+}
+
+
+/* ReservationBirthday
+=========================================================*/
+.ReservationBirthday{
+	border-bottom: solid 1px #c4c4c4;
+}
+
+.ReservationBirthday-inner{
+	margin:0 -3.125rem 0 -0.313rem;
+}
+
+.ReservationBirthday-inner:after{
+	content:"";
+	display:table;
+	clear:both;
+}
+
+.ReservationBirthday-item{
+	float:left;
+	padding:0 3.125rem 0 0.313rem;
+	position:relative;
+}
+
+body .ReservationBirthday-input{
+	display: block;
+    width: 100%;
+    font-size: 0.875rem;
+    line-height: normal;
+    padding-bottom: 0.5rem;
+}
+
+.ReservationBirthday-item:nth-child(1){
+	width:6.688rem;
+}
+
+.ReservationBirthday-item:nth-child(2){
+	width:5.75rem;
+}
+
+.ReservationBirthday-item:nth-child(3){
+	width:5.75rem;
+}
+
+.ReservationBirthday-item:first-child:after{
+	content:"년";
+	position:absolute;
+	top:0;
+	right:3.125rem;
+	font-size: 0.875rem;
+    line-height: normal;
+}
+
+.ReservationBirthday-item:nth-child(2):after{
+	content:"월";
+	position:absolute;
+	top:0;
+	right:3.125rem;
+	font-size: 0.875rem;
+    line-height: normal;
+}
+
+.ReservationBirthday-item:last-child:after{
+	content:"일";
+	position:absolute;
+	top:0;
+	right:3.125rem;
+	font-size: 0.875rem;
+    line-height: normal;
+}
+
+/* ApplySectionList
+=========================================================*/
+.ApplySectionList:after{
+	content:"";
+	display:table;
+	clear:both;
+}
+
+.ApplySectionList-item{
+	width:50%;
+	float:left;
+}
+
+/* ApplySecession
+=========================================================*/
+.ApplySecession{
+	padding:1rem 0;
+	display:block;
+	position:relative;
+}
+
+.ApplySecession:after{
+	content:"";
+	width:1.25em;
+	height:1.25em;
+	background-image:url(../public/icon/ico_input_arrow.svg);
+	background-size:1.25rem 1.25rem;
+	position:absolute;
+	top:50%;
+	right:0;
+	transform:translateY(-50%);
+}
+
+.ApplySecession-title{
+	font-size:0.875rem;
+	line-height:1.4em;
+	color:#000;
+}
+
+/* NameApplySection
+=========================================================*/
+.NameApplySection{
+	padding-top:1.875rem;
+}
+
+.NameApplySection-title{
+	font-size:1.25rem;
+	line-height:1.4em;
+	color:#000;
+	font-weight:bold;
+	margin-bottom:3.125rem;
+}
+
+/*=========================================================
+  MyReview
+=========================================================*/
+.MyReviewPage{
+	padding: 3.2rem 0 3.125rem;
+    overflow: hidden;
+    min-height: 100vh;
+    background-color: #fff;
+}
+
+.MyReviewHeader{
+	background-color:#f8f8f8;
+	padding:1.25rem 0;
+}
+
+.MyReviewHeader-text{
+	font-sizE:0.75rem;
+	line-height:1.6em;
+	color:#6f6f6f;
+}
+
+.MyReviewPostItem{
+	padding:1.875rem 1rem;
+	background-color:#fff;
+	border-bottom:solid 0.5rem #f8f8f8;
+}
+
+.MyReviewPostItem:last-child{
+	border-bottom:none;
+}
+
+.ReviewPostItemSecHead{
+	margin-bottom:1.875rem;
+	position:relative;
+}
+
+.ReviewPostItemSecHeadMeta{
+	padding-right:1.875rem;
+	margin-bottom:0.375rem;
+	font-size:0;
+	line-height:0;
+}
+
+.ReviewPostItemSecHeadMeta:after{
+	content:"";
+	display:table;
+	clear:both;
+}
+
+.ReviewPostItemSecHeadMeta-item{
+	font-size:0.75rem;
+	line-height:1.4em;
+	color:#6f6f6f;
+	font-weight:500;
+	display:inline-block;
+	padding-right:0.8rem;
+	margin-right:0.5rem;
+	position:relative;
+}
+
+.ReviewPostItemSecHeadMeta-item:after{
+	content: "";
+    width: 0.25rem;
+    height: 0.25rem;
+    background-color: #6f6f6f;
+    border-radius: 100% 100%;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+}
+
+.ReviewPostItemSecHeadMeta-item:last-child{
+	padding-right:0;
+	margin-right:0;
+}
+
+.ReviewPostItemSecHeadMeta-item:last-child:after{
+	display:none;
+}
+
+.ReviewPostItemSecHeadTitle{
+	margin-bottom:0.125rem;
+	font-size:0.875rem;
+	line-height:1.4em;
+	color:#000;
+	font-weight:bold;
+}
+
+body .ReviewPostMore{
+	width:1.25rem;
+	height:1.25rem;
+	background-image:url(../public/icon/ico_review_more.svg);
+	background-size:1.25rem 1.25rem;
+	position:absolute;
+	top:0;
+	right:0;
+}
+
+body .ReviewPostClose{
+	width:1.25rem;
+	height:1.25rem;
+	background-image:url(../public/icon/ico_review_close.svg);
+	background-size:1.25rem 1.25rem;
+	position:absolute;
+	top:0;
+	right:0;
+}
+
+/*=========================================================
+  CenterPop
+=========================================================*/
+.CenterPop{
+	position:fixed;
+	bottom:0;
+	left:0;
+	right:0;
+	top:0;
+	z-index:1100;
+	transition-property:opacity, visibility; 
+	transition-duration: 0.3s;
+	opacity:0;
+	visibility:hidden;
+}
+
+.CenterPop.is-View{
+	opacity:1;
+	visibility:visible;
+}
+
+.CenterPopDim{
+	position:absolute;
+	top:0;
+	left:0;
+	right:0;
+	bottom:0;
+	background-color:rgba(0,0,0,0.5);
+}
+
+.CenterPopBox{
+	position:absolute;
+	top:50%;
+	left:1rem;
+	right:1rem;
+	transform:translateY(-50%);
+	background-color:#fff;
+	border-radius:0.25rem 0.25rem;
+	padding:1rem 1rem;
+	z-index:10;
+}
+
+.CenterPopBoxHeader{
+	position:relative;
+	margin-bottom:1.875rem;
+}
+
+.CenterPopBoxHeader-title{
+	text-align:center;
+	font-size:0.875rem;
+	line-height:1.2em;
+	color:#000;
+}
+
+body .CenterPopBoxHeader-close{
+	width:1.25rem;
+	height:1.25rem;
+	position:absolute;
+	top:50%;
+	right:0;
+	transform:translateY(-50%);
+	z-index:5;
+	background-image:url(../public/icon/ico_search_close.svg);
+	background-size:1.25rem 1.25rem;
+	font-size:0px;
+	line-height:0;
+	cursor:pointer;
+}
+
+.CenterPopBoxBody{
+	margin-bottom:1.875rem;
+}
+
+.CenterPopBoxBody-text{
+	font-size:0.875rem;
+	color:#6f6f6f;
+	line-height:1.5em;
+	text-align:center;
+}
+
+.CenterPopBoxBtn-inner{
+	margin:0 -0.313rem;
+	overflow:hidden;
+}
+
+.CenterPopBoxBtn-item{
+	padding:0 0.313rem;
+	width:50%;
+	float:left;
+}
+
+/*=========================================================
+  MyPageLike
+=========================================================*/
+.MyPageLike{
+	padding:0.5rem 0 2.813rem;
+}
+
+.bg-Gray{
+	background-color:#f8f8f8 !important;
+}
+
+/*=========================================================
+  Qna
+=========================================================*/
+.QnaPage{
+	padding: 3.2rem 0 3.125rem;
+    overflow: hidden;
+    min-height: 100vh;
+    background-color: #fff;
+}
+
+.QnaPageHeader{
+	border-bottom:solid 8px #f8f8f8;
+	padding:1.875rem 0;
+}
+
+.QnaPageHeader-title{
+	font-size:1rem;
+	color:#000;
+	font-weight:bold;
+	line-height:1.2em;
+}
+
+.QnaList-item{
+	border-bottom:solid 1px #e9e9e9;
+}
+
+.QnaListItemTitle-link{
+	display:block;
+	font-size:0.875rem;
+	color:#000;
+	line-height:1.5em;
+	padding:1.25rem 3.438rem 1.25rem 1rem;
+	position:relative;
+}
+
+.QnaListItemTitle-link:after{
+	content:"";
+	width:1.25rem;
+	height:1.25rem;
+	background-image:url(../public/icon/ico_qna_arrow.svg);
+	background-size:1.25rem 1.25rem;
+	position:absolute;
+	top:1.25rem;
+	right:1rem;
+}
+
+.QnaListItemCont{
+	background-color:#f8f8f8;
+	padding:1.25rem 1rem;
+	font-size:0.875rem;
+	color:#000;
+	line-height:1.5em;
+	display:none;
+}
+
+.is-Active .QnaListItemCont{
+	display:block;
+}
+
+.is-Active .QnaListItemTitle-link:after{
+	transform:rotate(180deg);
+}
+
+/*=========================================================
+  MyContact
+=========================================================*/
+.ContactPage{
+	padding: 3.75rem 0 7.5rem;
+    overflow: hidden;
+    min-height: 100vh;
+    background-color: #fff;
+}
+
+.ContactListItemTitle{
+	border-bottom:solid 1px #e9e9e9;
+}
+
+.ContactListItemTitle-link{
+	display:block;
+	padding:1.25rem 1rem;
+	position:relative;
+	font-size:0;
+	line-height:0;
+}
+
+.ContactListItemTitle-state{
+	display:inline-block;
+	font-size:0.75rem;
+	line-height:1.2em;
+	padding:0.313rem 0.75rem;
+	border-radius:100px 100px;
+	margin-bottom:1.25rem;
+}
+
+.ContactListItemTitle-title{
+	padding-right:2.438rem;
+	font-size:0.875rem;
+	color:#000;
+	line-height:1.4em;
+	color:#000;
+	position:relative;
+	margin-bottom:0.625rem;
+}
+
+.ContactListItemTitle-title:after{
+	content:"";
+	width:1.25rem;
+	height:1.25rem;
+	background-image:url(../public/icon/ico_qna_arrow.svg);
+	background-size:1.25rem 1.25rem;
+	position:absolute;
+	top:0;
+	right:1rem;
+}
+
+.ContactListItemTitle-date{
+	font-size:0.75rem;
+	line-height:1.4em;
+	color:#6f6f6f;
+}
+
+.ContactListItemTitle-state.is-End{
+	color:#6957e8;
+	background-color:#e7e3ff;
+}
+
+.ContactListItemTitle-state.is-Waiting{
+	color:#a5a5a5;
+	background-color:#e9e9e9;
+}
+
+.ContactListItemCont{
+	background-color:#f8f8f8;
+	padding:1.25rem 1rem;
+	font-size:0.875rem;
+	color:#000;
+	line-height:1.5em;
+	display:none;
+}
+
+.is-Active .ContactListItemCont{
+	display:block;
+}
+
+.is-Active .ContactListItemTitle-title:after{
+	transform:rotate(180deg);
+}
+
+.ContactListItemAnswer{
+	margin-top:1.875rem;
+}
+
+.ContactListItemAnswer-title{
+	font-size:0.875rem;
+	color:#000;
+	line-height:1.2em;
+	font-weight:bold;
+	margin-bottom:0.625rem;
+}
+
+/*=========================================================
+  1:1 문의 글쓰기
+=========================================================*/
+body .BttonFixButton-button.is-disable{
+	background-color:#e9e9e9;
+	color:#a5a5a5;
+}
+
+.ContactHeader{
+	padding:1.875rem 0 0;
+}
+
+.ContactHeader-title{
+	font-size:1rem;
+	line-height:1.2em;
+	color:#000;
+	font-weight:bold;
+	margin-bottom:1.25rem;
+}
+
+.ContactHeader-text{
+	font-size:0.875rem;
+	line-height:1.4em;
+	color:#000;
+}
+
+.ContactSection{
+	padding:1.875rem 0 2.5rem;
+	border-bottom:solid 0.5rem #f8f8f8;
+}
+
+.ContactSection.Last{
+	border-bottom:0;
+	padding-bottom:0;
+}
+
+.ContactSection-title{
+	font-size:0.875rem;
+	line-height:1.2em;
+	color:#000;
+	font-weight:bold;
+	margin-bottom:1.25rem;
+}
+
+body .ReservationInput-area{
+	display:block;
+	width:100%;
+	resize:none;
+	border:solid 1px #e9e9e9;
+	padding:0.875rem 0.75rem;
+	height:4.5rem;
+	font-size:0.875rem;
+	line-height:1.5em;
+}
+
+body .ReservationInput-area::placeholder {
+  color: #cacacb;
+}
+
+.ContactSectionCount{
+	margin-top:0.375rem;
+	font-size:0;
+	line-height:0;
+	text-align:right;
+}
+
+.ContactSectionCount-text{
+	font-size:0.625rem;
+	line-height:1.2em;
+	color:#6f6f6f;
+	display:inline-block;
+}
+
+.ReviewEditSection{
+	padding:1.875rem 0;
+}
+
+.ReviewEditSection-title{
+	font-size:0.875rem;
+	line-height:1.2em;
+	color:#000;
+	font-weight:bold;
+	margin-bottom:1.25rem;
+}
+
+/*=========================================================
+  ReservationPage
+=========================================================*/
+.ReservationPage{
+	padding: 3.2rem 0 7.5rem;
+    overflow: hidden;
+    min-height: 100vh;
+    background-color: #fff;
+}
+
+/*	ReservationPageHeader
+=========================================================*/
+.ReservSingleHeader{
+	padding:1.875rem 0;
+	border-bottom:solid 0.5rem #f8f8f8;
+}
+
+.ReservSingleHeader-date{
+	font-size:0.875rem;
+	color:#000;
+	line-height:1.2em;
+	font-weight:bold;
+	margin-bottom:1.25rem;
+}
+
+.ReservSingleHeaderMeta{
+	margin-bottom:1rem;
+	font-size:0;
+	line-height:0;
+}
+
+.ReservSingleHeaderMeta:after{
+	content:"";
+	display:table;
+	clear:both;
+}
+
+.ReservSingleHeaderMeta-item{
+	font-size:0.75rem;
+	line-height:1.4em;
+	color:#6f6f6f;
+	font-weight:500;
+	display:inline-block;
+	padding-right:0.8rem;
+	margin-right:0.5rem;
+	position:relative;
+}
+
+.ReservSingleHeaderMeta-item:after{
+	content:"";
+	width:0.25rem;
+	height:0.25rem;
+	background-color:#6f6f6f;
+	border-radius:100% 100%;
+	position:absolute;
+	top:50%;
+	right:0;
+	transform:translateY(-50%);
+}
+
+.ReservSingleHeaderMeta-item:last-child{
+	padding-right:0;
+	margin-right:0;
+}
+
+.ReservSingleHeaderMeta-item:last-child:after{
+	display:none;
+}
+
+.ReservSingleHeaderBox:after{
+	content:"";
+	display:table;
+	clear:both;
+}
+
+.ReservSingleHeaderBoxThumb{
+	width:4.688rem;
+	margin-right:0.75rem;
+	float:left;
+	line-height:0;
+}
+
+.ReservSingleHeaderBoxThumb-img{
+	width:100%;
+	display:block;
+	border-radius:0.125rem 0.125rem;
+}
+
+.ReservSingleHeaderBoxText{
+	overflow:hidden;
+}
+
+.ReservSingleHeaderBoxText-title{
+	font-size:0.875rem;
+	line-height:1.4em;
+	color:#000;
+	font-weight:bold;
+	overflow:hidden;
+	white-space:nowrap;
+	text-overflow:ellipsis;
+	margin-bottom:0.75rem;
+}
+
+.ReservSingleHeaderBoxMeta-item{
+	font-size:0.75rem;
+	line-height:1.4em;
+	color:#000;
+	position:relative;
+	padding-left:1.75rem;
+	margin-top:0.375rem;
+}
+
+.ReservSingleHeaderBoxMeta-item:before{
+	content:"";
+	width:1.25rem;
+	height:1.25rem;
+	background-size:1.25rem 1.25rem;
+	position:absolute;
+	top:50%;
+	left:0;
+	transform:translateY(-50%);
+}
+
+.ReservSingleHeaderBoxMeta-item:first-child{
+	margin-top:0;
+}
+
+/*ico*/
+.ReservSingleHeaderBoxMeta-item.ico-Cal:before{
+	background-image:url(../public/icon/ico_black_calendar.svg);
+}
+
+.ReservSingleHeaderBoxMeta-item.ico-User:before{
+	background-image:url(../public/icon/ico_black_users.svg);
+}
+
+body .ReservSingleHeaderBtn-btn{
+	border:solid 1px #6957e8;
+	padding:0.75rem 0.938rem;
+	text-align:center;
+	border-radius:0.25rem 0.25rem;
+	font-size:0.875rem;
+	color:#6957e8;
+	line-height:1.4em;
+	display:block;
+	width:100%;
+	margin-top:1.875rem;
+}
+
+body .ReservSingleHeaderBtn-btn.is-disable{
+	border-color:#c4c4c4;
+	color:#a5a5a5;
+}
+
+
+/*	ReservationPageBody
+=========================================================*/
+.ReservSingleBody{
+	padding:1.875rem 0;
+}
+
+.ReservSingleBodyItem{
+	padding-bottom:1.063rem;
+	margin-bottom:1.25rem;
+	border-bottom:solid 1px #e9e9e9;
+}
+
+.ReservSingleBodyItem:last-child{
+	padding-bottom:0;
+	margin-bottom:0;
+	border-bottom:none;
+}
+
+.ReservSingleBodyItem-title{
+	font-size:0.875rem;
+	line-height:1.2em;
+	color:#000;
+	font-weight:bold;
+	margin-bottom:1.063rem;
+}
+
+.ReservSingleBodyItem-total{
+	border-top:dashed 1px #e9e9e9;
+	margin-top:1.063rem;
+	padding-top:1.063rem;
+}
+
+.FloatListText{
+	margin-top:1rem;
+}
+
+.FloatListText:first-child{
+	margin-top:0;
+}
+
+.FloatListText-inner{
+	display:table;
+	width:100%;
+}
+
+.FloatListText-title{
+	display:table-cell;
+	vertical-align:middle;
+	width:1%;
+	white-space:nowrap;
+	font-size:0.75rem;
+	line-height:1.2em;
+	color:#6f6f6f;
+}
+
+.FloatListText-text{
+	display:table-cell;
+	vertical-align:middle;
+	text-align:right;
+	font-size:0.875rem;
+	line-height:1.2em;
+	color:#000;
+}
+
+.FloatListText-text.total-Text{
+	font-size:1rem;
+	font-weight:bold;
+}
+
+/*=========================================================
+  TopTab
+=========================================================*/
+.TopTab{
+	background-color:#fff;
+}
+
+.TopTab-list{
+	display:table;
+	table-layout:fixed;
+	width:100%;
+}
+
+.TopTab-item{
+	display:table-cell;
+	vertical-align:middle;
+}
+
+.TopTab-link{
+	display:block;
+	font-size:0.75rem;
+	line-height:1.4em;
+	color:#000;
+	padding:1.25rem 0 0.625rem;
+	position:relative;
+	text-align:center;
+}
+
+.TopTab-link:after{
+	content:"";
+	position:absolute;
+	bottom:0;
+	left:0;
+	width:100%;
+	height:2px;
+	background-color:#6957e8;
+	opacity:0;
+}
+
+.is-Current .TopTab-link{
+	font-weight:bold;
+}
+
+.is-Current .TopTab-link:after{
+	opacity:1;
+}
+
+/*=========================================================
+  ReservationList
+=========================================================*/
+.TabPage{
+	padding:7.275rem 0 2.5rem;
+	overflow: hidden;
+    min-height: 100vh;
+}
+
+.ReservationList-item{
+	margin-top:1rem;
+}
+
+.ReservationList-item:first-child{
+	margin-top:0;
+}
+
+.ReservationListItem{
+	border-radius: 0.5rem;
+	box-shadow: 0 0.125rem 0.5rem 0 rgba(0, 0, 0, 0.1);
+	background-color: #fff;
+}
+
+.ReservationListItemHeader{
+	padding:1rem 1rem;
+	border-bottom:solid 1px #e9e9e9;
+	position:relative;
+}
+
+.ReservationListItemHeader-date{
+	font-size:0.875rem;
+	color:#333;
+	font-weight:bold;
+	line-height:1.2em;
+}
+
+.ReservationListItemHeader-link{
+	position:absolute;
+	top:50%;
+	right:1rem;
+	transform:translateY(-50%);
+	font-size:0.75rem;
+	line-height:1.2em;
+	color:#6957e8;
+	padding-right:1rem;
+}
+
+.ReservationListItemHeader-link:after{
+	content:"";
+	position:absolute;
+	top:50%;
+	right:0;
+	transform:translateY(-50%);
+	width:0.75rem;
+	height:0.75rem;
+	background-image:url(../public/icon/ico_reserv_morearrow.svg);
+	background-size:0.75rem 0.75rem;
+}
+
+.ReservationListItemBody{
+	padding:1rem 1rem;
+}
+
+.ReservationFooter-text{
+	margin-top:1rem;
+	font-size:0.75rem;
+	line-height:1.4em;
+	color:#828282;
+}
+
+.ReservationListItemMeta{
+	margin-bottom:1rem;
+	font-size:0;
+	line-height:0;
+}
+
+.ReservationListItemMeta:after{
+	content:"";
+	display:table;
+	clear:both;
+}
+
+.ReservationListItemMeta-item{
+	font-size:0.75rem;
+	line-height:1.4em;
+	color:#6f6f6f;
+	font-weight:500;
+	display:inline-block;
+	padding-right:0.8rem;
+	margin-right:0.5rem;
+	position:relative;
+}
+
+.ReservationListItemMeta-item:after{
+	content:"";
+	width:0.25rem;
+	height:0.25rem;
+	background-color:#6f6f6f;
+	border-radius:100% 100%;
+	position:absolute;
+	top:50%;
+	right:0;
+	transform:translateY(-50%);
+}
+
+.ReservationListItemMeta-item:last-child{
+	padding-right:0;
+	margin-right:0;
+}
+
+.ReservationListItemMeta-item:last-child:after{
+	display:none;
+}
+
+.ReservationListItemBox:after{
+	content:"";
+	display:table;
+	clear:both;
+}
+
+.ReservationListItemBoxThumb{
+	width:4.688rem;
+	margin-right:0.75rem;
+	float:left;
+	line-height:0;
+}
+
+.ReservationListItemBoxThumb-img{
+	width:100%;
+	display:block;
+	border-radius:0.125rem 0.125rem;
+}
+
+.ReservationListItemBoxText{
+	overflow:hidden;
+}
+
+.ReservationListItemBoxText-title{
+	font-size:0.875rem;
+	line-height:1.4em;
+	color:#000;
+	font-weight:bold;
+	overflow:hidden;
+	white-space:nowrap;
+	text-overflow:ellipsis;
+	margin-bottom:0.75rem;
+}
+
+.ReservationListItemBoxMeta-item{
+	font-size:0.75rem;
+	line-height:1.4em;
+	color:#000;
+	position:relative;
+	padding-left:1.75rem;
+	margin-top:0.375rem;
+}
+
+.ReservationListItemBoxMeta-item:before{
+	content:"";
+	width:1.25rem;
+	height:1.25rem;
+	background-size:1.25rem 1.25rem;
+	position:absolute;
+	top:50%;
+	left:0;
+	transform:translateY(-50%);
+}
+
+.ReservationListItemBoxMeta-item:first-child{
+	margin-top:0;
+}
+
+/*ico*/
+.ReservationListItemBoxMeta-item.ico-Cal:before{
+	background-image:url(../public/icon/ico_black_calendar.svg);
+}
+
+.ReservationListItemBoxMeta-item.ico-User:before{
+	background-image:url(../public/icon/ico_black_users.svg);
+}
+
+.is-End .ReservationListItemBody{
+	opacity:0.3;
+}
+
+/*=========================================================
+  BasicSwitch
+=========================================================*/
+body .BasicSwitch{
+	display:block;
+	width:3.375rem;
+	position:relative;
+	overflow:hidden;
+}
+
+body .BasicSwitch-input{
+	position:absolute;
+	top:0;
+	left:0;
+	width:100% !important;
+	height:100% !important;
+	opacity:0;
+	margin:0;
+}
+
+body .BasicSwitchItem{
+	width:100%;
+	height:1.875rem;
+	background-color:#e9e9e9;
+	border-radius:100px 100px;
+	display:block;
+	position:relative;
+	transition-property: background-color;
+    transition-duration: 0.1s;
+}
+
+body .BasicSwitchItem-ico{
+	display:block;
+	width:1.375rem;
+	height:1.375rem;
+	position:absolute;
+	top:50%;
+	left:0.25rem;
+	transform:translateY(-50%);
+	background-color:#fff;
+	border-radius:100% 100%;
+	transition-property: left;
+    transition-duration: 0.1s;
+}
+
+body .BasicSwitch-input:checked + .BasicSwitchItem{
+	background-color:#6957e8;
+}
+
+body .BasicSwitch-input:checked + .BasicSwitchItem .BasicSwitchItem-ico{
+	left:calc(100% - 0.25rem - 1.375rem);
+}
+
+
+/*=========================================================
+  SettingPage
+=========================================================*/
+.SettingPage{
+	padding: 3.2rem 0 3.125rem;
+    overflow: hidden;
+    min-height: 100vh;
+    background-color: #fff;
+}
+
+.SettingHeader{
+	padding:2.188rem 0 1.25rem;
+	position:relative;
+	border-bottom:solid 1px #e9e9e9;
+}
+
+.SettingHeader .BasicSwitch{
+	position:absolute;
+	top:0;
+	right:1rem;
+}
+
+.Setting-title{
+	font-size:0.875rem;
+	color:#000;
+	line-height:1.2em;
+	font-weight:bold;
+	margin-bottom:0.75rem;
+}
+
+.Setting-text{
+	font-size:0.75rem;
+	line-height:1.4em;
+	color:#6f6f6f;
+}
+
+.SettingSection{
+	padding:1.563rem 0 2.188rem;
+}
+
+.SettingCheck{
+	margin-top:1.875rem;
+}
+
+.SettingCheck-inner{
+	display:table;
+	table-layout:fixed;
+	width:100%;
+}
+
+.SettingCheck-title{
+	display:table-cell;
+	vertical-align:middle;
+	font-size:0.875rem;
+	color:#000;
+	lne-height:1.2em;
+}
+
+.SettingCheck-cont{
+	display:table-cell;
+	vertical-align:middle;
+	width:3.75rem;
+}
+
+.SettingCheck-cont .BasicSwitch{
+	float:right;
+}
+
+.SettingCheck-item{
+	margin-top:1.25rem;
+}
+
+.SettingCheck-item:first-child{
+	margin-top:0;
+}
+
+.SettingLinkSection{
+	border-top:solid 0.5rem #f8f8f8;
+	border-bottom:solid 0.5rem #f8f8f8;
+}
+
+.SettingLinkSection-link{
+	display:block;
+	padding:1rem 0;
+	position:relative;
+}
+
+.SettingLinkSection-link:before{
+	content:"";
+	width:0.625rem;
+	height:0.625rem;
+	border-top:solid 0.0625rem #000;
+	border-right:solid 0.0625rem #000;
+	position:absolute;
+	top:50%;
+	right:0;
+	transform:translateY(-50%) rotate(45deg);
+}
+
+.SettingLinkSection-title{
+	font-size:0.875rem;
+	color:#000;
+	lne-height:1.2em;
+	position:relative;
+}
+
+.SettingVerSection{
+	padding:1rem 0;
+}
+
+.SettingCheck-text{
+	display:block;
+	text-align:right;
+	font-size:0.875rem;
+	color:#6f6f6f;
+	line-height:1.2em;
+}
+
+/*=========================================================
+  ReviewEditPage
+=========================================================*/
+.ReviewEditPage{
+	padding: 3.2rem 0 7.125rem;
+    overflow: hidden;
+    min-height: 100vh;
+    background-color: #fff;
+}
+
+.ReviewEditHeader{
+	padding:1.875rem 0;
+	border-bottom:solid 0.5rem #f8f8f8;
+}
+
+.ReviewEditHeaderMeta{
+	margin-bottom:0.375rem;
+	font-size:0;
+	line-height:0;
+}
+
+.ReviewEditHeaderMeta:after{
+	content:"";
+	display:table;
+	clear:both;
+}
+
+.ReviewEditHeaderMeta-item{
+	font-size:0.75rem;
+	line-height:1.4em;
+	color:#6f6f6f;
+	font-weight:500;
+	display:inline-block;
+	padding-right:0.8rem;
+	margin-right:0.5rem;
+	position:relative;
+}
+
+.ReviewEditHeaderMeta-item:after{
+	content: "";
+    width: 0.25rem;
+    height: 0.25rem;
+    background-color: #6f6f6f;
+    border-radius: 100% 100%;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+}
+
+.ReviewEditHeaderMeta-item:last-child{
+	padding-right:0;
+	margin-right:0;
+}
+
+.ReviewEditHeaderMeta-item:last-child:after{
+	display:none;
+}
+
+.ReviewEditHeaderTitle{
+	margin-bottom:0.125rem;
+	font-size:0.875rem;
+	line-height:1.4em;
+	color:#000;
+	font-weight:bold;
+}
+
+.ReviewEditGradeSection{
+	padding:1.875rem 0;
+	border-bottom:solid 0.5rem #f8f8f8;
+}
+
+.ReviewEditGradeSection-title{
+	margin-bottom:0.875rem;
+	font-size:0.875rem;
+	line-height:1.4em;
+	color:#000;
+	font-weight:bold;
+}
+
+.ReviewEditGrade-item{
+	margin-top:1.25rem;
+}
+
+.ReviewEditGrade-item:first-child{
+	margin-top:0;
+}
+
+.ReviewEditGrade-inner{
+	display:table;
+	width:100%;
+}
+
+.ReviewEditGrade-title{
+	display:table-cell;
+	vertical-align:middle;
+	width:1%;
+	white-space:nowrap;
+	font-size:0.875rem;
+	line-height:1.2em;
+	color:#333333;
+}
+
+.ReviewEditGrade-cont{
+	display:table-cell;
+	vertical-align:middle;
+}
+
+/*=========================================================
+  EditStar
+=========================================================*/
+.EditStar{
+	font-size:0;
+	line-height:0;
+}
+
+.EditStar-input{
+	display:none;
+}
+
+.EditStar-label{
+	display:inline-block;
+	margin-left:0.25rem;
+	width:1.25rem;
+	height:1.25rem;
+	background-image:url(../public/icon/ico_star_gray.svg);
+	background-size:1.25rem 1.25rem;
+	float:right;
+}
+
+.EditStar-label:last-child{
+	margin-left:0;
+}
+
+.EditStar-input:checked ~ .EditStar-label{
+	background-image:url(../public/icon/ico_star.svg);
+}
+
+/*=========================================================
+  EditImageSec
+=========================================================*/
+.EditImageSec{
+	margin-top:1.875rem;
+	clear:both;
+	padding-left:7.5rem;
+	position:relative;
+	min-height:6.875rem;
+}
+
+.EditImageSecLink{
+	position:absolute;
+	top:0;
+	left:0;
+	width:6.875rem;
+	height:6.875rem;
+	background-color:#f8f8f8;
+	overflow:hidden;
+}
+
+body .EditImageSecLink-input{
+	position:absolute;
+	top:0;
+	left:0;
+	width:100% !important;
+	height:100% !important;
+	font-size:70px !important;
+	opacity:0;
+	z-index:1;
+}
+
+.EditImageSecLinkText{
+	position:absolute;
+	top:50%;
+	left:0;
+	right:0;
+	transform:translateY(-50%);
+	font-size:0.75rem;
+	line-height:1.4em;
+	color:#6f6f6f;
+	text-align:center;
+	padding-top:3rem;
+}
+
+.EditImageSecLinkText:after{
+	content:"";
+	width:2.5rem;
+	height:2.5rem;
+	position:absolute;
+	top:0;
+	left:50%;
+	transform:translateX(-50%);
+	background-image:url(../public/icon/ico_thum_box.svg);
+	background-size:2.5rem 2.5rem;
+}
+
+.EditImageSec{
+	margin-right:-1rem;
+}
+
+
+/*=========================================================
+  EditImageSlide
+=========================================================*/
+.EditImageSlide-item{
+	width:6.875rem;
+	margin-left:0.625rem;
+}
+
+.EditImageSlide-item:first-child{
+	margin-left:0;
+}
+
+.EditImageSlideItem{
+	width:100%;
+	position:relative;
+	overflow:hidden;
+}
+
+.EditImageSlideItem:after{
+	content:"";
+	display:block;
+	padding-bottom:100%;
+}
+
+.EditImageSlideItem-img{
+	position:absolute;
+	top:50%;
+	left:50%;
+	transform:translate(-50%, -50%);
+	max-width:100%;
+	max-height:100%;
+}
+
+body .EditImageSlideItem-close{
+	position:absolute;
+	top:0;
+	right:0;
+	width:1.25rem;
+	height:1.25rem;
+	background-image:url(../public/icon/ico_thumslide_close.svg);
+	background-size:1.25rem 1.25rem;
+	z-index:5;
 }
 
 

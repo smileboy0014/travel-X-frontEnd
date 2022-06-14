@@ -1,0 +1,77 @@
+@charset "UTF-8";
+
+/*=========================================================
+  캘린더
+=========================================================*/
+.CalenderPopFooter{
+	bottom:1.25rem;
+	width:50rem;
+	border-radius:0.625rem 0.625rem;
+	left:50%;
+	transform:translateX(-50%);
+	right:auto;
+}
+
+/*=========================================================
+  하단 팝업
+=========================================================*/
+.FilterPopSection {
+	bottom:1.25rem;
+	width:50rem;
+	border-radius:0.625rem 0.625rem;
+	left:50%;
+	transform:translateX(-50%) translateY(110%);
+	right:auto;
+}
+
+.FilterPop.is-View .FilterPopSection{
+	transform:translateX(-50%) translateY(0);
+}
+
+.FilterPopBody::-webkit-scrollbar {
+	width: 0.4rem; 
+} 
+.FilterPopBody::-webkit-scrollbar-track {
+	background-color: #f8f8f8; 
+} 
+.FilterPopBody::-webkit-scrollbar-thumb {
+	background-color: #6957e8; 
+	border-radius:0.2rem;
+}
+
+/*=========================================================
+  맵 팝업
+=========================================================*/
+.MapSection-map{
+	width:48.75rem;
+	margin:0 auto;
+}
+
+.MapList{
+	width:36rem;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+/*=========================================================
+  싱글
+=========================================================*/
+.DetailSlide{
+	width:48.75rem;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+.BttonFixButton{
+	bottom:1.25rem;
+	width:50rem;
+	border-radius:0.625rem 0.625rem;
+	left:50%;
+	transform:translateX(-50%);
+	right:auto;
+	box-shadow:0 -0.125rem 0.5rem 0 rgb(0 0 0 / 10%);
+}
+
+.DetailReview{
+	margin-bottom: 8.25rem;
+}
