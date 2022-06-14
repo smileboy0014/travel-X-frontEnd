@@ -36,6 +36,12 @@ input[type="text"],input[type="email"],input[type="number"],button,input[type="s
 	appearance:none; 
 }
 
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
 body {
 	position:relative; 
 	background:#f8f8f8; 

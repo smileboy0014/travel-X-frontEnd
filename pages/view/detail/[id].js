@@ -308,7 +308,7 @@ const DetailView = () => {
                       (rooms.roomInfo != undefined
                       && (rooms.roomInfo.extraOptionList.length > 0)) ? 
                         rooms.roomInfo.extraOptionList.map((item, index) => (
-                          <li className={Style["DetailInfoItemService-item"]}>
+                          <li className={Style["DetailInfoItemService-item"]} key={index}>
                             <dl className={Style["DetailInfoItemService-inner"]}>
                               <dt className={Style["DetailInfoItemService-title"]}>{item.title}</dt>
                               <dd className={Style["DetailInfoItemService-text"]}>{priceComma(item.price)}원</dd>
