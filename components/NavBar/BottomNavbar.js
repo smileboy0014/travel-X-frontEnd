@@ -23,7 +23,7 @@ const BottomNavbar = () => {
           </Link>
         </div>
         <div className={Style.bnTab}>
-          <Link href="/" as={`/`}>
+          <Link href="/myInfo" as={`/myInfo`}>
             <a>
               <AiFillHeart size="40" color="#000" />
             </a>
