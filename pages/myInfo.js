@@ -76,12 +76,16 @@ const MyInfo = () => {
 											</a>
 										</li>
 									</Link> 
-									
-									<li className={Style["MyPageMenu-item"]}>
-										<a href="#;" className={Style["MyPageMenu-link"]}>
-											<span className={cx("MyPageMenu-text", "ico-Like")}>찜한 목록</span>
-										</a>
-									</li>
+									<Link href={{
+										pathname: auth? "/myInfo/myWish" : "/login",
+										query: auth ? "" : { redirectUri: redirectUri },
+									}}>
+										<li className={Style["MyPageMenu-item"]}>
+											<a href="#;" className={Style["MyPageMenu-link"]}>
+												<span className={cx("MyPageMenu-text", "ico-Like")}>찜한 목록</span>
+											</a>
+										</li>
+									</Link>
 								</ul>
 							</div>
 						</div>
@@ -92,18 +96,35 @@ const MyInfo = () => {
 						<div className="site-container">
 							<div className="MyPageNav">
 								<ul className="MyPageNav-inner">
-									<li className={cx("MyPageNav-item", "ico-Qna")}>
-										<a href="#;" className={Style["MyPageNav-link"]}>자주 묻는 질문</a>
-									</li>
-									<li className={cx("MyPageNav-item", "ico-Contact")}>
-										<a href="#;" className={Style["MyPageNav-link"]}>1:1 문의하기</a>
-									</li>
-									<li className={cx("MyPageNav-item", "ico-Notice")}>
-										<a href="#;" className={Style["MyPageNav-link"]}>공지사항</a>
-									</li>
-									<li className={cx("MyPageNav-item", "ico-Setting")}>
-										<a href="#;" className={Style["MyPageNav-link"]}>설정</a>
-									</li>
+									<Link href={{
+										pathname: "/support/faq"
+									}}>
+										<li className={cx("MyPageNav-item", "ico-Qna")}>
+											<a href="#;" className={Style["MyPageNav-link"]}>자주 묻는 질문</a>
+										</li>
+									</Link>
+									<Link href={{
+										pathname: auth? "/support/qna" : "/login",
+										query: auth ? "" : { redirectUri: redirectUri },
+									}}>
+										<li className={cx("MyPageNav-item", "ico-Contact")}>
+											<a href="#;" className={Style["MyPageNav-link"]}>1:1 문의하기</a>
+										</li>
+									</Link>
+									<Link href={{
+										pathname: "/support/noti"
+									}}>
+										<li className={cx("MyPageNav-item", "ico-Notice")}>
+											<a href="#;" className={Style["MyPageNav-link"]}>공지사항</a>
+										</li>
+									</Link>
+									<Link href={{
+										pathname: "/support/setting"
+									}}>
+										<li className={cx("MyPageNav-item", "ico-Setting")}>
+											<a href="#;" className={Style["MyPageNav-link"]}>설정</a>
+										</li>
+									</Link>
 								</ul>
 							</div>
 						</div>

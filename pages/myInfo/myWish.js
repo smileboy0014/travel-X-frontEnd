@@ -1,8 +1,8 @@
 import { React, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import Style from "../styles/Component.module.css";
+import Style from "../../styles/Component.module.css";
 import classNames from 'classnames/bind';
-import MyWishCard from './../components/Card/MyWishCard';
+import MyWishCard from '../../components/Card/MyWishCard';
 
 const cx = classNames.bind(Style);
 
@@ -14,6 +14,10 @@ const MyWish = () => {
   const handleClick = (item, index) => {
     
   }
+
+  const handleBackClick = () => {
+    router.back();
+  };
 
   useEffect(() => {
     let list = [
@@ -96,7 +100,7 @@ const MyWish = () => {
       <div className={Style["site-header"]}>
         <div className={"site-container"}>
           <div className={Style["Header-inner"]}>
-            <a href="#;" className={Style["HeaderBack"]}><span className={"ab-text"}>Back</span></a>
+            <a href="#;" className={Style["HeaderBack"]} onClick={handleBackClick}><span className={"ab-text"}>Back</span></a>
             <div className={Style["HeaderTitle"]}>찜한 목록</div>
           </div>
         </div>

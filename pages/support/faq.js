@@ -1,6 +1,6 @@
 import { React, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import Style from "../styles/Component.module.css";
+import Style from "../../styles/Component.module.css";
 import classNames from 'classnames/bind';
 
 const cx = classNames.bind(Style);
@@ -10,7 +10,9 @@ const Faq = () => {
 
   const [values, setValues] = useState([]);
 
-  const handleClick = (item, index) => {
+  const handleClick = (e, item, index) => {
+    e.preventDefault();
+    
     setValues((arr) => {
       if (index > 0) {
         return [
@@ -33,6 +35,10 @@ const Faq = () => {
     })
   }
 
+  const handleBackClick = () => {
+    router.back();
+  };
+
   useEffect(() => {
     let list = [
       { title: "예약취소는 어떻게 해야 하나요?", content: "예약취소는 어떻게 해야 하나요?", isActive: false },
@@ -50,7 +56,7 @@ const Faq = () => {
       <div className={Style["site-header"]}>
         <div className={"site-container"}>
           <div className={Style["Header-inner"]}>
-            <a href="#;" className={Style["HeaderBack"]}><span className={"ab-text"}>Back</span></a>
+            <a href="#;" className={Style["HeaderBack"]} onClick={handleBackClick}><span className={"ab-text"}>Back</span></a>
             <div className={Style["HeaderTitle"]}>자주 묻는 질문</div>
           </div>
         </div>
@@ -70,7 +76,7 @@ const Faq = () => {
                     <div className={Style["QnaListItem"]}>
                       <dl className={Style["QnaListItem-inner"]}>
                         <dt className={Style["QnaListItemTitle"]}>
-                          <a href="#;" className={Style["QnaListItemTitle-link"]} onClick={() => handleClick(item, index)}>{item.title}</a>
+                          <a href="#;" className={Style["QnaListItemTitle-link"]} onClick={(e) => handleClick(e, item, index)}>{item.title}</a>
                         </dt>
                         <dd className={Style["QnaListItemCont"]}>
                           {item.content}

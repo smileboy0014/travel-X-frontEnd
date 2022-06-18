@@ -23,7 +23,7 @@ const QnaList = ({ data, handleClick, setPage }) => {
                 <div className={Style["ContactListItem"]}>
                   <dl className={Style["ContactListItem-inner"]}>
                     <dt className={Style["ContactListItemTitle"]}>
-                      <a href="#" className={Style["ContactListItemTitle-link"]} onClick={() => handleClick(item, index)}>
+                      <a href="#" className={Style["ContactListItemTitle-link"]} onClick={(e) => handleClick(e, item, index)}>
                         <div className={item.isEnd ? cx("ContactListItemTitle-state", "is-End") : cx("ContactListItemTitle-state", "is-Waiting")}>
                           {item.isEnd ? "답변완료" : "답변대기"}
                         </div>
