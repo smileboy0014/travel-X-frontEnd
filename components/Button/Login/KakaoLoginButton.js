@@ -4,7 +4,7 @@ import * as userInfoActions from "../../../redux/store/modules/userInfo";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { LoginToTravelXServer, SetLoginInfoToLocalStorage } from "./Utils/LoginUtil";
-import { PUBLISHER_KAKAO, REST_API_KEY } from "./LoginConstant";
+import { PUBLISHER_KAKAO, RESPONSE_STATUS_NOT_FOUND, REST_API_KEY } from "./LoginConstant";
 import { SetCookie } from './Utils/CookieUtil';
 
 const REDIRECT_URI = 'http://localhost:3000/login/callback'
@@ -36,14 +36,14 @@ const KakaoLoginButton = () => {
             const result = await LoginToTravelXServer(PUBLISHER_KAKAO, userResponse.id);
             // const result = await LoginToTravelXServer(PUBLISHER_KAKAO, 'kakao_test_user_id_3');
             console.log(result);
-            if (result.success) {
-              console.debug(`Kakao_User_ID: ${userResponse.id}`);
+            if (result.auth) {
+              console.debug(`KakaoUserId: ${userResponse.id}`);
               dispatch(userInfoActions.setUserInfo({ pub: PUBLISHER_KAKAO, id: userResponse.id, auth: true }));
               const params = new URLSearchParams(location.search);
               const curRedirectUri = params.get('redirectUri');
         
               router.push(curRedirectUri ? curRedirectUri : '/');
-            } else if (result.code == '404') {
+            } else if (result.code == RESPONSE_STATUS_NOT_FOUND) {
               dispatch(userInfoActions.setUserInfo({ pub: PUBLISHER_KAKAO, id: userResponse.id }));
               // dispatch(userInfoActions.setUserInfo({ pub: PUBLISHER_KAKAO, id: 'kakao_test_user_id_3' }));
               router.push('/signup');

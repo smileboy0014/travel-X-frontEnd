@@ -1,10 +1,10 @@
-export const Validate = ({ email, password, passwordConfirm }) => {
+export const Validate = ({ nickName, password, passwordConfirm }) => {
   const errors = {};
 
-  if (!email) {
-    errors.email = "이메일이 입력되지 않앗습니다.";
-  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
-    errors.email = "입력된 이메일이 유효하지 않습니다.";
+  if (!nickName) {
+    errors.nickName = "닉네임이 입력되지 않앗습니다.";
+  } else if (!/^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]+$/.test(nickName)) {
+    errors.nickName = "입력된 닉네임이 유효하지 않습니다.";
   }
 
   if (!password) {
