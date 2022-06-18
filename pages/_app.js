@@ -71,6 +71,8 @@ function TravelX({ Component, pageProps }) {
         strategy="beforeInteractive"
       />
       <Script src="https://developers.kakao.com/sdk/js/kakao.js" strategy="beforeInteractive" />
+      <Script src="validator.js" strategy="beforeInteractive" />
+      <Script src="multifield.js" strategy="beforeInteractive" />
       <ScrollTopArrow></ScrollTopArrow>      
       <MenuLoginButton />
       <Component {...pageProps} />

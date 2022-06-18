@@ -11,7 +11,7 @@ const Login = () => {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const [values, setValues] = useState({ email: "", password: "" });
+  const [values, setValues] = useState({ userId: "", pwd: "" });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,15 +21,25 @@ const Login = () => {
   const handleTravelXLogin = async (e) => {
     e.preventDefault();
 
-    if (values.email && values.password) {
-      const result = await LoginByTravelXUserToTravelXServer(values.email, values.password);
+    if (values.userId && values.pwd) {
+      const result = await LoginByTravelXUserToTravelXServer(values.userId, values.pwd);
 
-      dispatch(userInfoActions.setUserInfo({ pub: PUBLISHER_TRAVELX, id: result.userId, auth: true }));
+      if (result.auth) {
+        dispatch(userInfoActions.setUserInfo({ pub: PUBLISHER_TRAVELX, id: result.userId, auth: true }));
+        
+        const params = new URLSearchParams(location.search);
+        const curRedirectUri = params.get('redirectUri');
 
-      const params = new URLSearchParams(location.search);
-      const curRedirectUri = params.get('redirectUri');
-
-      router.push(curRedirectUri ? curRedirectUri : '/');
+        router.push(curRedirectUri ? curRedirectUri : '/');
+      } else {
+        if (result.message) {
+          alert(result.message);
+        } else {
+          alert('로그인에 실패하였습니다.');
+        }
+        
+      }
+      
     } else {
       alert('로그인 정보를 입력해주십시오.');
     }
@@ -61,13 +71,13 @@ const Login = () => {
           <div className="login-form">
             <form onSubmit={handleTravelXLogin}>
               <div className={Style['login-input-container']}>
-                <label>이메일</label>
+                <label>아이디</label>
                 <input 
-                  type="email" 
-                  name="email" 
+                  type="userId" 
+                  name="userId" 
                   required 
                   className={Style['login-text']} 
-                  value={values.email}
+                  value={values.userId}
                   onChange={handleChange}  
                 />
                 {/* {renderErrorMessage("uname")} */}
@@ -76,10 +86,10 @@ const Login = () => {
                 <label>비밀번호</label>
                 <input 
                   type="password" 
-                  name="password" 
+                  name="pwd" 
                   required 
                   className={Style['login-text']} 
-                  value={values.password}
+                  value={values.pwd}
                   onChange={handleChange}  
                 />
               </div>

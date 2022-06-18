@@ -1,93 +1,56 @@
 import axios from 'axios';
-import { CLIENT_SECRET, PUBLISHER_KAKAO, PUBLISHER_TRAVELX, PUBLISHER_NAVER, REST_API_KEY } from '../LoginConstant';
+import { CLIENT_SECRET, PUBLISHER_KAKAO, PUBLISHER_TRAVELX, PUBLISHER_NAVER, REST_API_KEY, RESPONSE_STATUS_NOT_FOUND, RESPONSE_STATUS_BAD_REQUEST } from '../LoginConstant';
 import { GetCookie, SetCookie } from './CookieUtil';
 
-export const LoginToTravelXServer = async (publisher, userId, password = null) => {
-  const result = { success: false, userId: "", code: "" }
+export const LoginToTravelXServer = async (publisher, userId, pwd = null) => {
+  const result = { auth: false, userId: "", status: "" }
   try {
     const formData = new FormData();
     formData.append('authPublisher', publisher);
     formData.append('userId', userId);
-    formData.append('password', password);
+    formData.append('password', pwd);
 
     const res = await axios.post('http://shineware.iptime.org:8081/auth/user/get', formData);
     console.log('TravelX Login /auth/user/get Response', res);
     
-    result.success = true;
+    result.auth = true;
     result.userId = userId;
 
     return result;
   } catch (e) {
-    console.error(e);
-    // 유저 정보 없음 경우.
-    if (e.response.status == '404') {
-      switch (publisher) {
-        case PUBLISHER_KAKAO: {
-          result.code = e.response.status;
-          
-          break;
-        }
-        case PUBLISHER_NAVER: {
-          
-          break;
-          // TODO: 로그인 실패 팝업
-        }
-        case PUBLISHER_TRAVELX: {
-          // TODO: 로그인 실패 팝업
-          break;
-        }
-        default:
-          // TODO: 로그인 실패 팝업
-      }
-    } else {
-      switch (publisher) {
-        case PUBLISHER_KAKAO: {
-          window.Kakao.Auth.logout(() => {
-            CleanLoginInfoInLocalStorage();
-          });
-          alert('로그인에 실패하였습니다.');
-          break;
-        }
-        case PUBLISHER_NAVER: {
-          alert('로그인에 실패하였습니다.');
-          break;
-        }
-        case PUBLISHER_TRAVELX: {
-          alert('로그인에 실패하였습니다.');
-          break;
-        }
-        default:
-          alert('로그인에 실패하였습니다.');
-      }
-    }
+    // console.error(e);
+
+    result.status = e.response.status;
+    result.message = e.response.data.message;
 
     return result;
   }
 };
 
-export const LoginByTravelXUserToTravelXServer = async (email, password = null) => {
+export const LoginByTravelXUserToTravelXServer = async (userId, password = null) => {
   try {
     const formData = new FormData();
-    formData.append('email', email);
+    formData.append('userId', userId);
     formData.append('password', password);
 
     const generateTokenResponse = await axios.post('http://shineware.iptime.org:8081/auth/user/generateToken', formData);
-    console.log('TravelX User Generate Token Response', generateTokenResponse.data);
+    // console.log('TravelX User Generate Token Response', generateTokenResponse.data);
 
     const tokenFormData = new FormData();
     tokenFormData.append('token', generateTokenResponse.data);
 
     const userInfoResponse = await axios.post('http://shineware.iptime.org:8081/auth/user/getUserInfo', tokenFormData);
-    console.log('TravelX User Info Response', userInfoResponse.data);
+    // console.log('TravelX User Info Response', userInfoResponse.data);
     const result = await LoginToTravelXServer(PUBLISHER_TRAVELX, userInfoResponse.data.userId, password);
+    result.auth = true;
 
     SetLoginInfoToLocalStorage(PUBLISHER_TRAVELX, generateTokenResponse.data);
+
     return result;
   } catch (e) {
-    if (e.response.status == '404') {
-      alert('가입된 정보가 없습니다.');
-    }
-    console.error(e);
+    // console.error(e);
+
+    return { auth: false, message: e.response.data.message, status: e.response.status }
   }
 };
 
