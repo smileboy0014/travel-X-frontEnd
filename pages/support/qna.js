@@ -1,68 +1,8 @@
 import { React, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import Style from "../styles/Component.module.css";
-import classNames from 'classnames/bind';
-import QnaList from './../components/Qna/QnaList';
-import QnaApply from './../components/Qna/QnaApply';
-
-const cx = classNames.bind(Style);
-
-const useForm = ({ initialValues, onSubmit, validate }) => {
-  const [values, setValues] = useState(initialValues);
-  const [errors, setErrors] = useState({});
-  const [submitting, setSubmitting] = useState(false);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setValues({ ...values, [name]: value });
-  };
-
-  const handleSubmit = async (e) => {
-    setSubmitting(true);
-    e.preventDefault();
-
-    const formData = new FormData();
-    // formData.append('authPublisher', publisher ? publisher : "TRAVELX");
-    // formData.append('userId', publisher ? id : values.email);
-    // formData.append('password', publisher ? null : values.password);
-
-    axios({
-      method: "POST",
-      url: "http://shineware.iptime.org:8081/qna/apply",
-      data: formData,
-    }).then((res) => {
-      onSubmit();
-    }).catch((e) => {
-      if (e.response.status == '409') {
-        alert('이미 등록된 사용자입니다.');
-      } else {
-        console.error(e);
-      }
-    });
-
-  };
-
-  useEffect(() => {
-    if (submitting) {
-      if (Object.keys(errors).length === 0) {
-        onSubmit(values);
-      }
-      setSubmitting(false);
-    }
-  }, [errors]);
-
-  useEffect(() => {
-    setErrors(validate(values));
-  }, [values]);
-
-  return {
-    values,
-    errors,
-    submitting,
-    handleChange,
-    handleSubmit
-  };
-}
+import Style from "../../styles/Component.module.css";
+import QnaList from '../../components/Qna/QnaList';
+import QnaApply from '../../components/Qna/QnaApply';
 
 const Qna = () => {
   const router = useRouter();
@@ -70,7 +10,9 @@ const Qna = () => {
   const [page, setPage] = useState('list');
   const [data, setData] = useState([]);
 
-  const handleClick = (item, index) => {
+  const handleClick = (e, item, index) => {
+    e.preventDefault();
+    
     setData((arr) => {
       if (index > 0) {
         return [
@@ -93,13 +35,14 @@ const Qna = () => {
     })
   };
 
-  const handleBackClick = () => {
+  const handleBackClick = (e) => {
+    e.preventDefault();
+    
     if (page == 'list') {
       router.back();
     } else {
       setPage('list');
     }
-    
   };
 
   useEffect(() => {
@@ -132,7 +75,7 @@ const Qna = () => {
             <QnaList 
               data={data}
               setPage={setPage}
-              handleClick={(item, index) => handleClick(item, index)}
+              handleClick={(e, item, index) => handleClick(e, item, index)}
             />
           ) : 
           // 1대1 문의하기 Body
