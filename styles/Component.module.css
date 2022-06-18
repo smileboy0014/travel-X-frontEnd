@@ -184,7 +184,7 @@ body .ListFilterValueItem.icoPersonnel:before{
 }
 
 .ListFilterButton-list{
-	margin:0 -0.125rem;
+	margin:-0.25rem -0.125rem 0;
 	font-size:0;
 	line-height:0;
 }
@@ -197,21 +197,9 @@ body .ListFilterValueItem.icoPersonnel:before{
 
 .ListFilterButton-item{
 	display:block;
-	padding:0 0.125rem;
-	width:50%;
+	padding:0.25rem 0.125rem 0;
 	float:left;
 	position:relative;
-}
-
-.ListFilterButton-item:first-child:after{
-	content:"";
-	width:0.0625rem;
-	height:1.5rem;
-	background-color:rgba(0,0,0,0.1);
-	position:absolute;
-	top:50%;
-	right:0;
-	transform:translateY(-50%);
 }
 
 body .ListFilterButton-filter{
@@ -257,50 +245,51 @@ body .ListFilterButtonItem-select{
 }
 
 body .RadiusBtn{
-	border: solid 1px #e0e0e0;
-	border-radius: 1.063rem 1.063rem;
-	padding: 0.375rem 0.75rem;
-	font-size: 0.75rem;
-	line-height: 1.2em;
-	color: #000;
-display:block;
+    border: solid 1px #e0e0e0;
+    border-radius: 1.063rem 1.063rem;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+    line-height: 1.2em;
+    color: #000;
+	display:block;
 }
 
 body .RadiusSelect{
-border: solid 1px #e0e0e0;
-	border-radius: 1.063rem 1.063rem;
-	padding: 0.375rem 1.75rem 0.375rem 0.75rem;
-	font-size: 0.75rem;
-	line-height: 1.2em;
-	color: #000;
+	border: solid 1px #e0e0e0;
+    border-radius: 1.063rem 1.063rem;
+    padding: 0.375rem 1.75rem 0.375rem 0.75rem;
+    font-size: 0.75rem;
+    line-height: 1.2em;
+    color: #000;
 }
 
 body .RadiusSelect:after{
-content:"";
-width:0.875rem;
-height:0.875rem;
-background-image:url(../public/icon/ico_reviewselect_arrow.svg);
-background-size:0.875rem 0.875rem;
-position:absolute;
-top:50%;
-right:0.75rem;
-transform:translateY(-50%);
+	content:"";
+	width:0.875rem;
+	height:0.875rem;
+	background-image:url(../public/icon/ico_reviewselect_arrow.svg);
+	background-size:0.875rem 0.875rem;
+	position:absolute;
+	top:50%;
+	right:0.75rem;
+	transform:translateY(-50%);
 }
 
 body .RadiusBtn.is-Current{
-background-color:#6957e8;
-color:#fff;
-border-color:#6957e8;
+	background-color:#6957e8;
+	color:#fff;
+	border-color:#6957e8;
 }
 
 body .RadiusSelect.is-Current{
-border-color:#6957e8;
-color:#6957e8;
+	border-color:#6957e8;
+	color:#6957e8;
 }
 
 body .RadiusSelect.is-Current:after{
-background-image:url(../public/icon/ico_reviewselect_arrow_current.svg);
+	background-image:url(../public/icon/ico_reviewselect_arrow_current.svg);
 }
+
 
 /*=========================================================
   MapFixButton
@@ -388,11 +377,11 @@ body .MapFixButton:before{
 }
 
 .ProductItemCont{
-	padding:0.75rem 1rem;
+	padding:0.75rem 1rem 1rem;
 }
 
 .ProductItemMeta{
-	margin-bottom:0.8125rem;
+	margin-bottom:0.375rem;
 	font-size:0;
 	line-height:0;
 }
@@ -409,21 +398,20 @@ body .MapFixButton:before{
 	color:#6f6f6f;
 	font-weight:500;
 	display:inline-block;
-	padding-right:0.5rem;
+	padding-right:0.8rem;
 	margin-right:0.5rem;
 	position:relative;
 }
 
 .ProductItemMeta-item:after{
 	content:"";
-	width:0.0625rem;
-	height:0.625rem;
+	width:0.25rem;
+	height:0.25rem;
 	background-color:#6f6f6f;
-	opacity:0.5;
+	border-radius:100% 100%;
 	position:absolute;
 	top:50%;
 	right:0;
-	margin-top:0.0625rem;
 	transform:translateY(-50%);
 }
 
@@ -436,29 +424,13 @@ body .MapFixButton:before{
 	display:none;
 }
 
-.ProductItemMeta-item.icoHotel{
-	padding-left:1.125rem;
-}
-
-.ProductItemMeta-item.icoHotel:before{
-	content:"";
-	width:1rem;
-	height:1rem;
-	background-image:url(../public/icon/ico_hotel.svg);
-	background-size:1rem 1rem;
-	position:absolute;
-	top:50%;
-	left:0;
-	transform:translateY(-50%);
-}
-
 .ProductItemCont-link{
 	display:block;
 }
 
 .ProductItemTitle{
 	margin-bottom:0.125rem;
-	font-size:1rem;
+	font-size:0.875rem;
 	line-height:1.4em;
 	color:#000;
 	font-weight:bold;
@@ -471,9 +443,10 @@ body .MapFixButton:before{
 }
 
 .ProductItemGrade{
-	margin-top:0.375rem;
 	font-size:0;
 	line-height:0;
+	display:inline-block;
+	vertical-align:middle;
 }
 
 .ProductItemGradeAddress .ProductItemGrade{
@@ -495,9 +468,9 @@ body .MapFixButton:before{
 }
 
 .ProductItemGrade-current{
-	padding-left:1.5rem;
+	padding-left:1.125rem;
 	position:relative;
-	font-size:0.875rem;
+	font-size:0.75rem;
 	line-height:1.2em;
 	color:#000;
 	font-weight:bold;
@@ -505,10 +478,10 @@ body .MapFixButton:before{
 
 .ProductItemGrade-current:before{
 	content:"";
-	width:1.25rem;
-	height:1.25rem;
+	width:0.75rem;
+	height:0.75rem;
 	background-image:url(../public/icon/ico_star.svg);
-	background-size:1.25rem 1.25rem;
+	background-size:0.75rem 0.75rem;
 	position:absolute;
 	top:50%;
 	left:0;
@@ -519,9 +492,10 @@ body .MapFixButton:before{
 	background-image:url(../public/icon/ico_star_gray.svg);
 }
 
+
 .ProductItemGrade-total{
 	margin-left:2px;
-	font-size:14px;
+	font-size:0.75rem;
 	line-height:1.2em;
 	color:#000;
 }
@@ -537,7 +511,7 @@ body .MapFixButton:before{
 .ProductItemFilter{
 	font-size:0;
 	line-height:0;
-	margin-top:0.625rem;
+	margin-top:0.938rem;
 }
 
 .ProductItemFilter:after{
@@ -585,7 +559,7 @@ body .MapFixButton:before{
 }
 
 .ProductItemPrice{
-	margin-top:1.125rem;
+	margin-top:0.25rem;
 	display:table;
 	width:100%;
 }
@@ -595,9 +569,9 @@ body .MapFixButton:before{
 	vertical-align:middle;
 	width:0.0625rem;
 	white-space:nowrap;
-	font-size:1.25rem;
+	font-size:1rem;
 	line-height:1.2em;
-	color:#6957e8;
+	color:#000000;
 	font-weight:bold;
 	font-family:'Roboto',"Noto Sans KR";
 	padding-right:0.5rem;
@@ -606,7 +580,7 @@ body .MapFixButton:before{
 .ProductItemPrice-condition{
 	display:table-cell;
 	vertical-align:middle;
-	font-size:0.75rem;
+	font-size:0.625rem;
 	line-height:1.4em;
 	color:#6f6f6f;
 	font-weight:normal;
@@ -775,7 +749,7 @@ body .MapFixButton:before{
 }
 
 .DetailHeaderMeta{
-	margin-bottom:0.7125rem;
+	margin-bottom:0.375rem;
 	font-size:0;
 	line-height:0;
 }
@@ -792,22 +766,21 @@ body .MapFixButton:before{
 	color:#6f6f6f;
 	font-weight:500;
 	display:inline-block;
-	padding-right:0.5rem;
+	padding-right:0.8rem;
 	margin-right:0.5rem;
 	position:relative;
 }
 
 .DetailHeaderMeta-item:after{
-	content:"";
-	width:0.0625rem;
-	height:0.625rem;
-	background-color:#6f6f6f;
-	opacity:0.5;
-	position:absolute;
-	top:50%;
-	right:0;
-	margin-top:0.0625rem;
-	transform:translateY(-50%);
+	content: "";
+    width: 0.25rem;
+    height: 0.25rem;
+    background-color: #6f6f6f;
+    border-radius: 100% 100%;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
 }
 
 .DetailHeaderMeta-item:last-child{
@@ -819,25 +792,9 @@ body .MapFixButton:before{
 	display:none;
 }
 
-.DetailHeaderMeta-item.icoHotel{
-	padding-left:1.125rem;
-}
-
-.DetailHeaderMeta-item.icoHotel:before{
-	content:"";
-	width:1rem;
-	height:1rem;
-	background-image:url(../public/icon/ico_hotel.svg);
-	background-size:1rem 1rem;
-	position:absolute;
-	top:50%;
-	left:0;
-	transform:translateY(-50%);
-}
-
 .DetailHeaderTitle{
 	margin-bottom:0.125rem;
-	font-size:1.125rem;
+	font-size:0.875rem;
 	line-height:1.4em;
 	color:#000;
 	font-weight:bold;
@@ -938,9 +895,9 @@ body .MapFixButton:before{
 }
 
 .DetailHeaderGrade-current{
-	padding-left:1.5rem;
+	padding-left:1.125rem;
 	position:relative;
-	font-size:0.875rem;
+	font-size:0.75rem;
 	line-height:1.2em;
 	color:#000;
 	font-weight:bold;
@@ -952,10 +909,10 @@ body .MapFixButton:before{
 
 .DetailHeaderGrade-current:before{
 	content:"";
-	width:1.25rem;
-	height:1.25rem;
+	width:0.75rem;
+	height:0.75rem;
 	background-image:url(../public/icon/ico_star.svg);
-	background-size:1.25rem 1.25rem;
+	background-size:0.75rem 0.75rem;
 	position:absolute;
 	top:50%;
 	left:0;
@@ -1017,8 +974,6 @@ body .DetailPaymentDate-button{
 
 .DetailPaymentDate-schedule{
 	display:inline-block;
-	padding-right:0.875rem;
-	margin-right:0.8125rem;
 	position:relative;
 	padding-left:2.5rem;
 	font-size:0.875rem;
@@ -1043,26 +998,6 @@ body .DetailPaymentDate-button{
 	background-image:url(../public/icon/ico_color_cal.svg);
 	background-size:1.875rem 1.875rem;
 }
-
-.DetailPaymentDate-schedule:after{
-	content:"";
-	width:0.0625rem;
-	height:0.75rem;
-	background-color:#6f6f6f;
-	opacity:0.6;
-	position:absolute;
-	top:50%;
-	right:0;
-	transform:translateY(-50%);
-}
-
-/* 예전 */
-/* .DetailPaymentDate-day{
-	font-size:0.875rem;
-	line-height:1.3em;
-	font-weight:bold;
-	color:#6f6f6f;
-} */
 
 .DetailPaymentDate-day{
 	font-size:0.875rem;
@@ -1118,7 +1053,7 @@ body .DetailPaymentDate-button{
 .DetailPaymentFreeTotal-price{
 	font-size:1.25rem;
 	line-height:1.2em;
-	color:#6957e8;
+	color:#000000;
 	font-weight:bold;
 	font-family:'Roboto',"Noto Sans KR";
 }
@@ -1167,19 +1102,6 @@ body .DetailPaymentDate-button{
 /*=========================================================
   BttonFixButton
 =========================================================*/
-
-/* 예전 */
-/* .BttonFixButton{
-	position:fixed;
-	bottom:0;
-	left:0;
-	right:0;
-	background-color:#fff;
-	padding:1.25rem 0;
-	z-index:1000;
-} */
-
-
 .BttonFixButton{
 	position:fixed;
 	bottom:0;
@@ -1246,6 +1168,7 @@ body .BttonFixButton-like.is-Active:after{
 	float:right;
 }
 
+
 /*=========================================================
   DetailInfo
 =========================================================*/
@@ -1298,11 +1221,11 @@ body .BttonFixButton-like.is-Active:after{
 	margin-right:-1rem;
 }
 
-/* .DetailInfoItem-map:after{
+.DetailInfoItem-map:after{
 	content:"";
 	display:block;
 	padding-bottom:54%;
-} */
+}
 
 .DetailInfoItem-map iframe{
 	position:absolute;
@@ -1390,7 +1313,7 @@ body .DetailPaymentPersonnel-button{
 	max-width:50%;
 	font-size:0.875rem;
 	line-height:1.4em;
-	color:#6957e8;
+	color:#000000;
 }
 
 /*=========================================================
@@ -1428,20 +1351,21 @@ body .DetailPaymentPersonnel-button{
 .DetailReview-score{
 	float:left;
 	margin-right:1.25rem;
-	font-size:0.875rem;
+	font-size:0.75rem;
 	line-height:1.2em;
 	color:#000;
 	font-weight:bold;
-	padding-left:1.375rem;
+	padding-left:1.125rem;
 	position:relative;
+	padding-top:0.008rem;
 }
 
 .DetailReview-score:before{
 	content:"";
-	width:1.0625rem;
-	height:1.0625rem;
+	width:0.75rem;
+	height:0.75rem;
 	background-image:url(../public/icon/ico_star.svg);
-	background-size:1.0625rem 1.0625rem;
+	background-size:0.75rem 0.75rem;
 	position:absolute;
 	top:50%;
 	left:0;
@@ -1761,7 +1685,7 @@ body .DetailPaymentPersonnel-button{
 
 .CheckCalenderBody-row{
 	display: flex;
-    /* justify-content: center; */
+  /* justify-content: center; */
 }
 
 .CheckCalenderBody-col{
@@ -2580,6 +2504,7 @@ body .ListFixButton:before{
 	flex:1;
 	padding:0.8125rem 0.75rem;
 	position:relative;
+	width:calc(100% - 6.875rem);
 }
 
 .MapListContGrade-total{
@@ -2654,16 +2579,6 @@ body .ListFixButton:before{
 	display:none;
 }
 
-/* 예전 */
-/* .MapListCont-title{
-	margin-bottom:0.125rem;
-	font-size:1rem;
-	line-height:1.4em;
-	color:#000;
-	font-weight:bold;
-} */
-
-
 .MapListCont-title{
 	margin-bottom:0.5rem;
 	font-size:0.875rem;
@@ -2682,7 +2597,7 @@ body .ListFixButton:before{
 }
 
 .MapListContGrade-current{
-	padding-left:1.5rem;
+	padding-left:1.125rem;
 	position:relative;
 	font-size:0.75rem;
 	line-height:1.2em;
@@ -2692,10 +2607,10 @@ body .ListFixButton:before{
 
 .MapListContGrade-current:before{
 	content:"";
-	width:1.25rem;
-	height:1.25rem;
+	width:0.75rem;
+	height:0.75rem;
 	background-image:url(../public/icon/ico_star.svg);
-	background-size:1.25rem 1.25rem;
+	background-size:0.75rem 0.75rem;
 	position:absolute;
 	top:50%;
 	left:0;
@@ -2712,7 +2627,7 @@ body .ListFixButton:before{
 	right:0.75rem;
 	font-size:1.25rem;
 	line-height:1.2em;
-	color:#6957e8;
+	color:#000000;
 	font-weight:bold;
 	font-family: 'Roboto',"Noto Sans KR";
 }
@@ -2769,8 +2684,8 @@ body .ListFixButton:before{
 	font-size:0.75rem;
 	border-color:#6957e8;
 	color:#6957e8;
-	top:-1.4rem;
-	right:-0.1rem;
+	top:-0.75rem;
+	right:-0.5rem;
 }
 
 .MapPin.is-Active .MapPin-price{
@@ -2779,9 +2694,7 @@ body .ListFixButton:before{
 	border-color:#6957e8;
 	color:#fff;
 	background-color:#6957e8;
-	right:0.55rem;
-	top:-0.5rem;
-	/* border-radius:1rem 1rem; */
+	border-radius:1rem 1rem;
 }
 
 .MapPin.is-Active .MapPin-price:before{
@@ -3183,17 +3096,9 @@ body .ReservationInput-input.ico-Arrow{
 	clear:both;
 }
 
-/* 예전 */
-/* .PayMethodListItem{
+.PayMethodListItem{
 	display:block;
-	border:solid 1px #e0e0e0;
-	padding: 10px 24px;
-	border-radius: 8px;
-	text-align:center;
-	font-size:0;
-	line-height:0;
-} */
-
+}
 
 .PayMethodListItem-radio{
 	display:none;
@@ -3350,43 +3255,11 @@ body .ReservationInput-input.ico-Arrow{
 =========================================================*/
 .ReviewPage{
 	padding-top: 3.75rem;
-	padding-bottom: 0;
-	overflow: hidden;
+    padding-bottom: 0;
+    overflow: hidden;
 	min-height:100vh;
 	background-color:#fff;
 }
-
-.ReviewList{
-	margin-top:1.25rem;
-	border-radius:0.5rem 0.5rem;
-	overflow:hidden;
-	position:relative;
-	width:auto;
-	box-shadow: 0 0.125rem 0.625rem 0 rgba(0, 0, 0, 0.3);
-	text-align:left;
-}
-
-.Review-link{
-	display:flex;
-	height:100%;
-}
-
-.ReviewThumb{
-	width:100%;
-	overflow:hidden;
-	position:relative;
-}
-
-.ReviewThumb img{
-	position:relative;
-	top:50%;
-	left:50%;
-	transform:translate(-50%, -50%);
-	height:100%;
-	width: 100%;
-}
-
-
 
 /*	ReviewHeader
 =========================================================*/
@@ -3733,20 +3606,6 @@ body .ReviewPostItemTextBtn{
 	overflow:visible;
 }
 
-.ReviewSlide-thumb{
-	width:6.875rem;
-	overflow:hidden;
-	position:relative;
-}
-
-.ReviewSlide-thumb img{
-	position:relative;
-	top:50%;
-	left:50%;
-	transform:translate(-50%, -50%);
-	height:100%;
-}
-
 body .ReviewSlide-slide{
 	width:8.438rem;
 	margin-right:0.875rem;
@@ -3830,31 +3689,6 @@ body .ReviewSlide-slide:last-child{
 	visibility:visible;
 }
 
-.LayerGalleryModal{
-	position: fixed;
-  min-width: 100%;
-	min-height: 100%;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgb(36, 36, 36);
-  border-radius: 0.625rem 0.625rem 0 0;
-  z-index: 5;
-  transition-property: transform;
-  transition-duration: 0.2s;
-}
-
-.LayerGalleryOverlay{
-	position: fixed;
-  min-width: 100%;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0,0,0,0.5);
-  z-index: 2000;
-}
-
 .LayerGallerySlide{
 	position:absolute;
 	top:50%;
@@ -3896,40 +3730,6 @@ body .LayerGallery-close{
 
 .LayerGallerySlide-pagination .swiper-pagination-bullet.swiper-pagination-bullet-active{
 	background-color:#6957e8;
-}
-
-.GalleryList{
-	/* margin-top:1.25rem; */
-	margin-top:9.25rem;
-	border-radius:0.5rem 0.5rem;
-	overflow:hidden;
-	position:relative;
-	/* width:auto;
-	height: 100%; */
-	box-shadow: 0 0.125rem 0.625rem 0 rgba(0, 0, 0, 0.3);
-	text-align:left;
-}
-
-.Gallery-link{
-	display:flex;
-	/* height:100%; */
-}
-
-.GalleryThumb{
-	/* width:100%; */
-	overflow:hidden;
-	position:relative;
-}
-
-.GalleryThumb img{
-	position:relative;
-	top:50%;
-	left:50%;
-	transform:translate(-50%, -50%);
-	/* height:150px;
-	width: 150px; */
-	height:450px;
-	width: 450px;
 }
 
 /*=========================================================
@@ -5631,7 +5431,6 @@ body .EditImageSlideItem-close{
 	background-size:1.25rem 1.25rem;
 	z-index:5;
 }
-
 
 /*=========================================================
   TravelX Frontend Custom CSS
