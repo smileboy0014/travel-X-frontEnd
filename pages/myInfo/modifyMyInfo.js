@@ -22,7 +22,7 @@ const modifyMyInfo = () => {
 			<div className={Style["site-header"]}>
 				<div className="site-container">
 					<div className={Style["Header-inner"]}>
-					<DetailTopNavbar HeaderTitle={'내 정보 관리'} />
+						<DetailTopNavbar HeaderTitle={'내 정보 관리'} />
 					</div>
 				</div>
 			</div>
@@ -36,10 +36,15 @@ const modifyMyInfo = () => {
 						<div className={"site-container"}>
 							<div className={Style["ApplyHeader"]}>
 								<h2 className={Style["ApplyHeader-name"]}>휜둥이님
-								<button className={Style["ApplyHeader-btn"]} type="button">
-									<span className={Style["ab-text"]}>닉네임 변경</span>
-									</button>
-									</h2>
+									<Link href={{
+										pathname: "/myInfo/modifyMyName"
+										
+									}}>
+										<button className={Style["ApplyHeader-btn"]} type="button">
+											<span className={Style["ab-text"]}>닉네임 변경</span>
+										</button>
+									</Link>
+								</h2>
 								{/* <div className={Style["ApplyHeader-logintype"]}>카카오톡으로 로그인</div> */}
 							</div>
 						</div>
