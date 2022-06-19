@@ -90,7 +90,8 @@ export const CheckLogin = async (authPublisher) => {
           },
           fail: (e) => {
             // TODO : e값 형태 확인하기
-            if (e.response.status == '401') {
+            // debugger;
+            if (e.code == -401 || e.response.status == '401') {
               GetNewAccessTokenByRefreshToken(PUBLISHER_KAKAO);
             } else {
               result = { auth: false, id: null };
