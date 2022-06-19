@@ -8,7 +8,7 @@ import Link from 'next/link';
 
 const cx = classNames.bind(Style);
 
-const modifyMyName = () => {
+const ModifyMyName = () => {
 
 	return (
 		<div className="site">
@@ -58,4 +58,4 @@ const modifyMyName = () => {
 		</div>
 	);
 }
-export default modifyMyName;
+export default ModifyMyName;

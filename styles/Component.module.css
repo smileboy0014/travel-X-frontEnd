@@ -4326,10 +4326,13 @@ body .ReviewPostClose{
 	right:0;
 	top:0;
 	z-index:1100;
+	z-index:5;
 	transition-property:opacity, visibility; 
 	transition-duration: 0.3s;
-	opacity:0;
-	visibility:hidden;
+	/* opacity:0; */
+	/* visibility:hidden; */
+	opacity:1;
+	visibility:visible;
 }
 
 .CenterPop.is-View{

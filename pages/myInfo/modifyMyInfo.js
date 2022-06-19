@@ -8,7 +8,7 @@ import Link from 'next/link';
 
 const cx = classNames.bind(Style);
 
-const modifyMyInfo = () => {
+const ModifyMyInfo = () => {
 	// debugger;
 	// const redirectUri = useSelector(({ redirectUri }) => redirectUri.value);
 	// console.log(`redirectUri is ${redirectUri}`);
@@ -177,4 +177,4 @@ const modifyMyInfo = () => {
 		</div>
 	);
 }
-export default modifyMyInfo;
+export default ModifyMyInfo;
