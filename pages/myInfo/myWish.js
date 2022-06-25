@@ -1,13 +1,17 @@
 import { React, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { useSelector } from "react-redux";
+import axios from 'axios';
 import Style from "../../styles/Component.module.css";
 import classNames from 'classnames/bind';
 import MyWishCard from '../../components/Card/MyWishCard';
+
 
 const cx = classNames.bind(Style);
 
 const MyWish = () => {
   const router = useRouter();
+	const { id } = useSelector((state) => state.userInfo.info);
 
   const [values, setValues] = useState([]);
 
@@ -19,80 +23,97 @@ const MyWish = () => {
     router.back();
   };
 
-  useEffect(() => {
-    let list = [
-      { address: "서울특별시 강남구 역삼동 626-29  24게스트하우스 강남센터",
-        basePrice: 33000,
-        baseUser: 3,
-        checkinInfo: null,
-        checkoutInfo: null,
-        extraOptionList: [],
-        extraPrice: 0,
-        extraUser: 0,
-        images: ['image.goodchoice.kr/resize_490x348/adimg_new/11195/75184/fb5f364cc3772974bd274cfaf6ea8b9d.JPG', 'image.goodchoice.kr/resize_490x348/adimg_new/11195/75184/40ca8c01b967516803a1563c84049c67.JPG', 'image.goodchoice.kr/resize_490x348/adimg_new/11195/75184/713e45b9a811d14f9279b79340cfccae.jpg', 'image.goodchoice.kr/resize_490x348/adimg_new/11195/75184/06546b1cd63c4eed2891750dfda3eee8.jpg'],
-        lastTimeInfo: null,
-        location: {lat: 37.503902435302734, lon: 127.03339385986328},
-        maxUseTimeInfo: null,
-        maxUser: 5,
-        propertyName: "24게스트하우스 강남센터",
-        propertyType: "GUESTHOUSE",
-        reviewSummary: {reviewCount: 6, averageCleanScore: 3.83, averageReviewScore: 3.1, averagePriceScore: 3.33, averageComfortScore: 3},
-        roomId: "62acebe541002eaaa6685e76",
-        roomName: "도미토리 4인실(여)",
-        score: 11.102909,
-        stock: 1,
-        totalPrice: 33000,
-        useType: "NIGHT" 
-      },
-      { address: "서울특별시 강남구 역삼동 626-29  24게스트하우스 강남센터",
-        basePrice: 33000,
-        baseUser: 3,
-        checkinInfo: null,
-        checkoutInfo: null,
-        extraOptionList: [],
-        extraPrice: 0,
-        extraUser: 0,
-        images: ['image.goodchoice.kr/resize_490x348/adimg_new/11195/75184/fb5f364cc3772974bd274cfaf6ea8b9d.JPG', 'image.goodchoice.kr/resize_490x348/adimg_new/11195/75184/40ca8c01b967516803a1563c84049c67.JPG', 'image.goodchoice.kr/resize_490x348/adimg_new/11195/75184/713e45b9a811d14f9279b79340cfccae.jpg', 'image.goodchoice.kr/resize_490x348/adimg_new/11195/75184/06546b1cd63c4eed2891750dfda3eee8.jpg'],
-        lastTimeInfo: null,
-        location: {lat: 37.503902435302734, lon: 127.03339385986328},
-        maxUseTimeInfo: null,
-        maxUser: 5,
-        propertyName: "24게스트하우스 강남센터",
-        propertyType: "GUESTHOUSE",
-        reviewSummary: {reviewCount: 6, averageCleanScore: 3.83, averageReviewScore: 3.1, averagePriceScore: 3.33, averageComfortScore: 3},
-        roomId: "62acebe541002eaaa6685e77",
-        roomName: "도미토리 4인실(여)",
-        score: 11.102909,
-        stock: 1,
-        totalPrice: 33000,
-        useType: "NIGHT" 
-      },
-      { address: "서울특별시 강남구 역삼동 626-29  24게스트하우스 강남센터",
-        basePrice: 33000,
-        baseUser: 3,
-        checkinInfo: null,
-        checkoutInfo: null,
-        extraOptionList: [],
-        extraPrice: 0,
-        extraUser: 0,
-        images: ['image.goodchoice.kr/resize_490x348/adimg_new/11195/75184/fb5f364cc3772974bd274cfaf6ea8b9d.JPG', 'image.goodchoice.kr/resize_490x348/adimg_new/11195/75184/40ca8c01b967516803a1563c84049c67.JPG', 'image.goodchoice.kr/resize_490x348/adimg_new/11195/75184/713e45b9a811d14f9279b79340cfccae.jpg', 'image.goodchoice.kr/resize_490x348/adimg_new/11195/75184/06546b1cd63c4eed2891750dfda3eee8.jpg'],
-        lastTimeInfo: null,
-        location: {lat: 37.503902435302734, lon: 127.03339385986328},
-        maxUseTimeInfo: null,
-        maxUser: 5,
-        propertyName: "24게스트하우스 강남센터",
-        propertyType: "GUESTHOUSE",
-        reviewSummary: {reviewCount: 6, averageCleanScore: 3.83, averageReviewScore: 3.1, averagePriceScore: 3.33, averageComfortScore: 3},
-        roomId: "62acebe541002eaaa6685e78",
-        roomName: "도미토리 4인실(여)",
-        score: 11.102909,
-        stock: 1,
-        totalPrice: 33000,
-        useType: "NIGHT" 
-      }
-    ];
+  const getData = () => {
+    let wishList = [];
 
-    setValues([...list]);
+    axios({
+      method: "GET",
+      url: "http://shineware.iptime.org:8081/wish/get",
+      data: id,
+    }).then((res) => {
+      console.log(res.data);
+      wishList = res.data;
+    }).catch((e) => {
+      console.error(e);
+    });
+
+    return wishList;
+  };
+
+  useEffect(() => {
+    // let list = [
+    //   { address: "서울특별시 강남구 역삼동 626-29  24게스트하우스 강남센터",
+    //     basePrice: 33000,
+    //     baseUser: 3,
+    //     checkinInfo: null,
+    //     checkoutInfo: null,
+    //     extraOptionList: [],
+    //     extraPrice: 0,
+    //     extraUser: 0,
+    //     images: ['image.goodchoice.kr/resize_490x348/adimg_new/11195/75184/fb5f364cc3772974bd274cfaf6ea8b9d.JPG', 'image.goodchoice.kr/resize_490x348/adimg_new/11195/75184/40ca8c01b967516803a1563c84049c67.JPG', 'image.goodchoice.kr/resize_490x348/adimg_new/11195/75184/713e45b9a811d14f9279b79340cfccae.jpg', 'image.goodchoice.kr/resize_490x348/adimg_new/11195/75184/06546b1cd63c4eed2891750dfda3eee8.jpg'],
+    //     lastTimeInfo: null,
+    //     location: {lat: 37.503902435302734, lon: 127.03339385986328},
+    //     maxUseTimeInfo: null,
+    //     maxUser: 5,
+    //     propertyName: "24게스트하우스 강남센터",
+    //     propertyType: "GUESTHOUSE",
+    //     reviewSummary: {reviewCount: 6, averageCleanScore: 3.83, averageReviewScore: 3.1, averagePriceScore: 3.33, averageComfortScore: 3},
+    //     roomId: "62acebe541002eaaa6685e76",
+    //     roomName: "도미토리 4인실(여)",
+    //     score: 11.102909,
+    //     stock: 1,
+    //     totalPrice: 33000,
+    //     useType: "NIGHT" 
+    //   },
+    //   { address: "서울특별시 강남구 역삼동 626-29  24게스트하우스 강남센터",
+    //     basePrice: 33000,
+    //     baseUser: 3,
+    //     checkinInfo: null,
+    //     checkoutInfo: null,
+    //     extraOptionList: [],
+    //     extraPrice: 0,
+    //     extraUser: 0,
+    //     images: ['image.goodchoice.kr/resize_490x348/adimg_new/11195/75184/fb5f364cc3772974bd274cfaf6ea8b9d.JPG', 'image.goodchoice.kr/resize_490x348/adimg_new/11195/75184/40ca8c01b967516803a1563c84049c67.JPG', 'image.goodchoice.kr/resize_490x348/adimg_new/11195/75184/713e45b9a811d14f9279b79340cfccae.jpg', 'image.goodchoice.kr/resize_490x348/adimg_new/11195/75184/06546b1cd63c4eed2891750dfda3eee8.jpg'],
+    //     lastTimeInfo: null,
+    //     location: {lat: 37.503902435302734, lon: 127.03339385986328},
+    //     maxUseTimeInfo: null,
+    //     maxUser: 5,
+    //     propertyName: "24게스트하우스 강남센터",
+    //     propertyType: "GUESTHOUSE",
+    //     reviewSummary: {reviewCount: 6, averageCleanScore: 3.83, averageReviewScore: 3.1, averagePriceScore: 3.33, averageComfortScore: 3},
+    //     roomId: "62acebe541002eaaa6685e77",
+    //     roomName: "도미토리 4인실(여)",
+    //     score: 11.102909,
+    //     stock: 1,
+    //     totalPrice: 33000,
+    //     useType: "NIGHT" 
+    //   },
+    //   { address: "서울특별시 강남구 역삼동 626-29  24게스트하우스 강남센터",
+    //     basePrice: 33000,
+    //     baseUser: 3,
+    //     checkinInfo: null,
+    //     checkoutInfo: null,
+    //     extraOptionList: [],
+    //     extraPrice: 0,
+    //     extraUser: 0,
+    //     images: ['image.goodchoice.kr/resize_490x348/adimg_new/11195/75184/fb5f364cc3772974bd274cfaf6ea8b9d.JPG', 'image.goodchoice.kr/resize_490x348/adimg_new/11195/75184/40ca8c01b967516803a1563c84049c67.JPG', 'image.goodchoice.kr/resize_490x348/adimg_new/11195/75184/713e45b9a811d14f9279b79340cfccae.jpg', 'image.goodchoice.kr/resize_490x348/adimg_new/11195/75184/06546b1cd63c4eed2891750dfda3eee8.jpg'],
+    //     lastTimeInfo: null,
+    //     location: {lat: 37.503902435302734, lon: 127.03339385986328},
+    //     maxUseTimeInfo: null,
+    //     maxUser: 5,
+    //     propertyName: "24게스트하우스 강남센터",
+    //     propertyType: "GUESTHOUSE",
+    //     reviewSummary: {reviewCount: 6, averageCleanScore: 3.83, averageReviewScore: 3.1, averagePriceScore: 3.33, averageComfortScore: 3},
+    //     roomId: "62acebe541002eaaa6685e78",
+    //     roomName: "도미토리 4인실(여)",
+    //     score: 11.102909,
+    //     stock: 1,
+    //     totalPrice: 33000,
+    //     useType: "NIGHT" 
+    //   }
+    // ];
+
+    setValues([...getData()]);
   }, []);
 
   return (
