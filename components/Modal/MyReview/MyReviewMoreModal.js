@@ -7,10 +7,10 @@ const cx = classNames.bind(Style);
 
 const MyReviewMoreModal = ({ isOpen, onRequestClose, returnType}) => {
   // const [returnType, setReturnType] = useState('');
-  debugger;
+  // debugger;
   const onClickHandler = (type) =>{
     if(type === 'delete'){
-      debugger;
+      // debugger;
       returnType('delete');
     } else {
       returnType('modify');
