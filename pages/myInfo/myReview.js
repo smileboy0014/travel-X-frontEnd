@@ -1,8 +1,11 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
 import Style from "../../styles/Component.module.css";
+import LayerGallery from "../../components/Review/Gallery/LayerGallery";
 import DetailTopNavbar from "../../components/NavBar/DetailTopNavbar";
+import ReviewDetailCarousel from "../../components/Card/Carousel/ReviewDetailCarousel";
 import MyReviewMoreModal from "../../components/Modal/MyReview/MyReviewMoreModal";
 import MyReviewDeleteModal from "../../components/Modal/MyReview/MyReviewDeleteModal";
 import classNames from 'classnames/bind';
@@ -12,16 +15,88 @@ const cx = classNames.bind(Style);
 
 const MyReview = () => {
 	const router = useRouter();
+	const userInfo = useSelector((state) => state.userInfo.info);
+	const [from, setFrom] = useState(0);
+	const [size, setSize] = useState(10);
+	const [loading, setLoading] = useState(true);
+	// 이미지 포함 리뷰 로딩이 완료 되있는 것 판별
+	const [isReviewLoading, setIsReviewLoading] = useState(true);
+	const [, updateState] = useState();
+	const forceUpdate = useCallback(() => updateState({}), []);
+	const [myReviewData, setMyReviewData] = useState([]);
+	const [layerGalleryList, setLayerGalleryList] = useState([]);
+	const [layerGalleryOpen, setLayerGalleryOpen] = useState(false);
 	const [myReviewMoreModalOpen, setMyReviewMoreModalOpen] = useState(false);
 	const [myReviewDeleteModalOpen, setMyReviewDeleteModalOpen] = useState(false);
 
-	const onClickHadler = (type) => {
-		if (type === 'moreView') {
-			setMyReviewMoreModalOpen(true);
+	const getMyReviews = () => {
+		// debugger;
+		axios({
+			method: "GET",
+			url: "http://shineware.iptime.org:8081/review/getByUserId",
+			params: {
+				userId: userInfo.id,
+				from: from,
+				size: size
+			},
+		}).then((res) => {
+
+			if (res.data !== undefined && res.data.length > 0) {
+				// debugger;
+				let filterReviews = res.data.map((review) => {
+					if (review.contents.length > 275) {
+						review.moreContents = true;
+						return review;
+					} else {
+						review.moreContents = false;
+						return review;
+					}
+				})
+				setMyReviewData((prevState) => (
+
+					[...prevState,
+					...filterReviews]
+				));
+				setLoading(false);
+				// console.log(`getReviews result is ${reviewSummary.averageReviewScore}`);
+			}
+		}).catch((error) => {
+			console.log(error);
+			setError(true);
+		})
+
+	}
+
+	const handleViewDetailCarousel = (item) => {
+		if (item.hasImage) {
+			return (<ReviewDetailCarousel reviewLoading={() => setIsReviewLoading(false)} galleryData={(data) => setLayerGalleryList(data)} data={item.imageIdList} />);
 		}
 	}
 
+	const onClickHandler = (type, data, index) => {
+		if (type === 'moreView') {
+			setMyReviewMoreModalOpen(true);
+		}
+		else if (type === 'disappear') {
+			if (index > 0) {
+				setMyReviewData((arr) => {
+					return [
+						...arr.slice(0, index),
+						{ ...data, moreContents: false },
+						...arr.slice(index + 1)
+					];
+				});
+			} else {
+				setMyReviewData((arr) => {
+					return [
+						{ ...data, moreContents: false },
+						...arr.slice(index + 1)
+					];
+				});
+			}
 
+		}
+	}
 
 	const execReturnType = (type) => {
 
@@ -33,6 +108,50 @@ const MyReview = () => {
 		}
 
 	}
+
+	const formattingDate = (date) =>{
+		let dateArr;
+    if (date != null) {
+      dateArr = date.split('T');
+      return dateArr[0]
+    } else {
+      return null;
+    }
+
+	}
+
+	useEffect(() => {
+		// debugger;
+		// console.log(`is review loading is ${isReviewLoading}`);
+		if (!isReviewLoading) {
+			// 강제로 리뷰 이미지 불러왔을 때 리랜더링 하기!!!
+			setTimeout(() => {
+				forceUpdate();
+			}, 500)
+
+			// console.log(`force update!!!!!`);
+		}
+	}, [isReviewLoading])
+
+	useEffect(() => {
+		if (layerGalleryList != null && layerGalleryList.length > 0) {
+			setLayerGalleryOpen(true);
+		}
+	}, [layerGalleryList]);
+
+	useEffect(() => {
+		if (!layerGalleryOpen) {
+			setLayerGalleryList([]);
+		}
+
+	}, [layerGalleryOpen]);
+
+
+	useEffect(() => {
+		// debugger;
+		getMyReviews();
+	}, [])
+
 
 	return (
 		<div className="site">
@@ -67,77 +186,71 @@ const MyReview = () => {
 					</Link>
 					{/* .temporary */}
 
-					{/* ReviewPost */}
-					<div className="ReviewPost">
-						{/* item */}
-						<div className={Style["MyReviewPostItem"]}>
-							<div className={Style["ReviewPostItemSecHead"]}>
-								<button type="button" className={Style["ReviewPostMore"]} onClick={() => onClickHadler('moreView')}>
-									<span className="ab-text">
-										더보기
-									</span>
-								</button>
-								<div className={Style["ReviewPostItemSecHeadMeta"]}>
-									<span className={cx("ReviewPostItemSecHeadMeta-item", "icoHotel")}>호텔</span>
-									<span className={Style["ReviewPostItemSecHeadMeta-item"]}>슈페리어 트윈 호텔</span>
-								</div>
-								<div className={Style["ReviewPostItemSecHeadTitle"]}>슈페리어 트윈 (넷플릭스 - 숙소 문의)</div>
-							</div>
-							<div className={Style["ReviewPostItemMeta"]}>
-								<div className="ReviewPostItemMetaHead">
-									<div className={Style["ReviewPostItemMetaHead-name"]}>김00</div>
-									<div className={Style["BasicGrade"]}>
-										<div className={Style["BasicGradeStar"]}>
-											<span className={cx("BasicGradeStar-item", "check")}></span>
-											<span className={cx("BasicGradeStar-item", "check")}></span>
-											<span className={cx("BasicGradeStar-item", "check")}></span>
-											<span className={cx("BasicGradeStar-item", "check")}></span>
-											<span className={cx("BasicGradeStar-item")}></span>
-										</div>
-										<div className={Style["BasicGradeCount"]}>4.0 /5</div>
+					{!loading && myReviewData.length > 0 && myReviewData.map((item, index) =>
+
+						<div className="ReviewPost" key={index}>
+							{/* item */}
+							<div className={Style["MyReviewPostItem"]}>
+								<div className={Style["ReviewPostItemSecHead"]}>
+									<button type="button" className={Style["ReviewPostMore"]} onClick={() => onClickHandler('moreView')}>
+										<span className="ab-text">
+											더보기
+										</span>
+									</button>
+									<div className={Style["ReviewPostItemSecHeadMeta"]}>
+										<span className={cx("ReviewPostItemSecHeadMeta-item", "icoHotel")}>호텔</span>
+										<span className={Style["ReviewPostItemSecHeadMeta-item"]}>슈페리어 트윈 호텔</span>
 									</div>
+									<div className={Style["ReviewPostItemSecHeadTitle"]}>슈페리어 트윈 (넷플릭스 - 숙소 문의)</div>
 								</div>
-								<div className={Style["ReviewPostItemMeta-date"]}>12월 7일</div>
-							</div>
-							<div className={Style["ReviewPostItemText"]}>
-								<button type="button" className={Style["ReviewPostItemTextBtn"]}>...<span className={Style["ReviewPostItemTextBtn-text"]}>더읽기</span></button>{/* 글이 5줄을 넘을시 노출 */}
-								<div className={Style["ReviewPostItemText-crop"]}>제 첫 호텔이었는데 진짜 좋았습니다! 침대랑 티비 사이 공간이 넓어서 이동하기 편했고 화장실도 깨끗하고 다른 시설들도 깨끗해서 너무 좋았습니다. 침대도 푹신하고 뷰맛집이라고하시네요ㅎㅎ
-									다음에 서울가게되면 또 가고싶은곳이라고하십니다ㅎㅎ잘쉬다갑니다? 제 첫 호텔이었는데 진짜 좋았습니다! 침대랑 티비 사이 공간이 넓어서 이동하기 편했고 화장실도 깨끗하고 다른 시설들도 깨끗해서 너무 좋았습니다. 침대도 푹신하고 뷰맛집이라고하시네요ㅎㅎ
-									다음에 서울가게되면 또 가고싶은곳이라고하십니다ㅎㅎ잘쉬다갑니다?</div>
-							</div>
-							{/* slide */}
-							<div className="ReviewSlide">
-								<div className="swiper-container ReviewSlide-container">
-									<div className="swiper-wrapper ReviewSlide-wrapper">
-										<div className="ReviewSlide-slide swiper-slide">
-											<div className="ReviewSlide-thumb">
-												<a href="#;" className="ReviewSlide-link">
-													<img src="../assets/images/dummy/Mask Group@2x.png" alt="" />
-												</a>
+								<div className={Style["ReviewPostItemMeta"]}>
+									<div className="ReviewPostItemMetaHead">
+										<div className={Style["ReviewPostItemMetaHead-name"]}>{item.userId}</div>
+										<div className={Style["BasicGrade"]}>
+											<div className={Style["BasicGradeStar"]}>
+												<span className={cx("BasicGradeStar-item", "check")}></span>
+												<span className={cx("BasicGradeStar-item", "check")}></span>
+												<span className={cx("BasicGradeStar-item", "check")}></span>
+												<span className={cx("BasicGradeStar-item", "check")}></span>
+												<span className={cx("BasicGradeStar-item")}></span>
 											</div>
+											<div className={Style["BasicGradeCount"]}>{item.averageScore} /5</div>
 										</div>
 									</div>
+									<div className={Style["ReviewPostItemMeta-date"]}>{formattingDate(item.date)}</div>
 								</div>
+								<div className={Style["ReviewPostItemText"]}>
+									<button type="button" style={item.moreContents !== undefined && item.moreContents == true ? { display: 'block' } : { display: 'none' }} className={Style["ReviewPostItemTextBtn"]} onClick={() => onClickHandler('disappear', item, index)}>...<span className={Style["ReviewPostItemTextBtn-text"]}>더읽기</span></button>
+
+									<div className={Style["ReviewPostItemText-crop"]}>{item.contents}</div>
+								</div>
+								{/* slide */}
+								{/* <!-- slide --> */}
+								<div>
+									{handleViewDetailCarousel(item)}
+								</div>
+								{/* RewviewAnswer */}
+								{item.reviewReply.data != null ? <div className={Style["RewviewAnswer"]}>
+									<div className={Style["RewviewAnswerHeader"]}>
+										<div className={Style["RewviewAnswerHeader-name"]}>호텔주인</div>
+										<div className={Style["RewviewAnswerHeader-date"]}>{item.reviewReply.data}</div>
+									</div>
+									<div className={Style["RewviewAnswerText"]}>{item.reviewReply.data}
+									</div>
+								</div> : <div></div>}
+
+								{/* .RewviewAnswer */}
 							</div>
-							{/* .slide */}
-							{/* RewviewAnswer */}
-							<div className={Style["RewviewAnswer"]}>
-								<div className={Style["RewviewAnswerHeader"]}>
-									<div className={Style["RewviewAnswerHeader-name"]}>호텔주인</div>
-									<div className={Style["RewviewAnswerHeader-date"]}>2주 전</div>
-								</div>
-								<div className={Style["RewviewAnswerText"]}>감사합니다. 다음에도 또 방문해주세요 :)
-								</div>
-							</div>
-							{/* .RewviewAnswer */}
+							{/* .item */}
 						</div>
-						{/* .item */}
-					</div>
-					{/* .ReviewPost */}
+					)}
 				</div>
 				{/* .컨텐츠 끝 */}
 			</div>
 			{/* .Body */}
+			{/* <!-- LayerGallery --> */}
+			<LayerGallery data={layerGalleryList} isOpen={layerGalleryOpen} onRequestClose={() => setLayerGalleryOpen(false)} />
+			{/* <!-- .LayerGallery --> */}
 			<MyReviewMoreModal isOpen={myReviewMoreModalOpen} onRequestClose={() => setMyReviewMoreModalOpen(false)} returnType={(type) => execReturnType(type)} />
 			<MyReviewDeleteModal isOpen={myReviewDeleteModalOpen} onRequestClose={() => setMyReviewDeleteModalOpen(false)} />
 		</div>
