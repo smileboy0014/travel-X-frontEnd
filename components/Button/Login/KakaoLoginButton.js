@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
+import Style from '../../../styles/Component.module.css';
 import * as userInfoActions from "../../../redux/store/modules/userInfo";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { LoginToTravelXServer, SetLoginInfoToLocalStorage } from "./Utils/LoginUtil";
 import { PUBLISHER_KAKAO, RESPONSE_STATUS_NOT_FOUND, REST_API_KEY } from "./LoginConstant";
 import { SetCookie } from './Utils/CookieUtil';
+import classNames from 'classnames/bind';
+
+const cx = classNames.bind(Style);
 
 const REDIRECT_URI = 'http://localhost:3000/login/callback'
 const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
@@ -65,13 +69,7 @@ const KakaoLoginButton = () => {
   }, []);
 
   return (
-    <button onClick={handleKakaoLogin}>
-      <img
-        src="//k.kakaocdn.net/14/dn/btroDszwNrM/I6efHub1SN5KCJqLm1Ovx1/o.jpg"
-        width="222"
-        alt="카카오 로그인 버튼"
-      />
-    </button>
+    <a href="#;" className={cx("LoginMainList-link", "ico-Kakao")} onClick={handleKakaoLogin}><span className={"ab-text"}>kakaotalk</span></a>
   );
 };
 

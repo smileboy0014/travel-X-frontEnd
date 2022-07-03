@@ -5,6 +5,10 @@ import Style from "../styles/Component.module.css";
 import DetailTopNavbar from "../components/NavBar/DetailTopNavbar";
 import classNames from 'classnames/bind';
 import Link from 'next/link';
+import * as userInfoActions from "../redux/store/modules/userInfo";
+import { PUBLISHER_KAKAO, PUBLISHER_NAVER, PUBLISHER_TRAVELX } from "./../components/Button/Login/LoginConstant";
+import { CleanLoginInfoInLocalStorage } from "./../components/Button/Login/Utils/LoginUtil";
+import { DeleteCookie } from './../components/Button/Login/Utils/CookieUtil';
 
 const cx = classNames.bind(Style);
 
@@ -15,6 +19,34 @@ const MyInfo = () => {
 	const userInfo = useSelector((state) => state.userInfo.info);
 	const auth = userInfo.auth;
 	console.log(`auth is ${auth}`);
+
+  const dispatch = useDispatch();
+
+	const handleLogout = () => {
+    const publisher = localStorage.getItem("pub");
+  
+    switch (publisher) {
+      case PUBLISHER_KAKAO: {
+        // 카카오로 로그인된 유저 로그아웃
+        if (window.Kakao.Auth.getAccessToken()) {
+          window.Kakao.Auth.logout(() => {});
+        }
+        break;
+      }
+      case PUBLISHER_NAVER: {
+        break;
+      }
+      case PUBLISHER_TRAVELX: {
+        break;
+      }
+      default:
+        
+    }
+      
+    DeleteCookie("RT");
+    CleanLoginInfoInLocalStorage(publisher);
+    dispatch(userInfoActions.setUserInfo({ accessToken: null, id: null, auth: false }));
+  };
 
 	return (
 		<div className="site">
@@ -126,6 +158,22 @@ const MyInfo = () => {
 											<a href="#;" className={Style["MyPageNav-link"]}>설정</a>
 										</li>
 									</Link>
+									{/* 임시 버튼 */}
+									{!auth ? (
+										<Link href={{
+											pathname: "/login"
+										}}>
+											<li className={cx("MyPageNav-item", "ico-Setting")}>
+												<a href="#;" className={Style["MyPageNav-link"]}>로그인</a>
+											</li>
+										</Link>
+									) : (
+										<li className={cx("MyPageNav-item", "ico-Setting")}>
+											<a href="#;" className={Style["MyPageNav-link"]} onClick={handleLogout}>로그아웃</a>
+										</li>
+									)}
+									
+									{/* 임시 버튼 */}
 								</ul>
 							</div>
 						</div>

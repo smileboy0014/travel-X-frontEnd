@@ -24,7 +24,7 @@ const Login = () => {
   )
 };
 
-const Logout = () => {
+export const Logout = () => {
   const dispatch = useDispatch();
 
   // 로그아웃
