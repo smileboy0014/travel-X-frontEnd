@@ -12,8 +12,9 @@ const MyInfo = () => {
 	// debugger;
 	const redirectUri = useSelector(({ redirectUri }) => redirectUri.value);
 	// console.log(`redirectUri is ${redirectUri}`);
-	const { auth } = useSelector((state) => state.userInfo.info);
-	// console.log(`auth is ${auth}`);
+	const userInfo = useSelector((state) => state.userInfo.info);
+	const auth = userInfo.auth;
+	console.log(`auth is ${auth}`);
 
 	return (
 		<div className="site">

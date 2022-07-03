@@ -21,6 +21,8 @@ const MyReview = () => {
 		}
 	}
 
+
+
 	const execReturnType = (type) => {
 
 		if (type === 'delete') {
@@ -54,6 +56,17 @@ const MyReview = () => {
 						</div>
 					</div>
 					{/* .ReviewHeader */}
+
+					{/* temporary */}
+					<Link href={{
+						pathname: "/myInfo/addMyReview"
+					}}>
+						<button type="button" className={Style["FilterPopFooter-button"]}>
+							등록
+						</button>
+					</Link>
+					{/* .temporary */}
+
 					{/* ReviewPost */}
 					<div className="ReviewPost">
 						{/* item */}
@@ -62,8 +75,8 @@ const MyReview = () => {
 								<button type="button" className={Style["ReviewPostMore"]} onClick={() => onClickHadler('moreView')}>
 									<span className="ab-text">
 										더보기
-									</span
-									></button>
+									</span>
+								</button>
 								<div className={Style["ReviewPostItemSecHeadMeta"]}>
 									<span className={cx("ReviewPostItemSecHeadMeta-item", "icoHotel")}>호텔</span>
 									<span className={Style["ReviewPostItemSecHeadMeta-item"]}>슈페리어 트윈 호텔</span>
