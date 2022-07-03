@@ -11,9 +11,10 @@ const cx = classNames.bind(Style);
 
 const MyWish = () => {
   const router = useRouter();
-	const { id } = useSelector((state) => state.userInfo.info);
+	const userId = useSelector((state) => state.userInfo.info.id);
 
   const [values, setValues] = useState([]);
+  const [roomValues, setRoomValues] = useState([]);
 
   const handleClick = (item, index) => {
     
@@ -23,98 +24,67 @@ const MyWish = () => {
     router.back();
   };
 
-  const getData = () => {
-    let wishList = [];
+  function addZero(value) {
+    if (value >= 10) {
+      return value;
+    }
 
+    return `0${value}`;
+  }
+
+  function FormattingDate(date) {
+    const year = date.getFullYear();
+    const month = addZero(date.getMonth() + 1);
+    const day = addZero(date.getDate());
+
+    return `${year}-${month}-${day}`;
+  }
+
+  const getData = () => {
+    let params = {
+      userId: userId
+    };
     axios({
       method: "GET",
       url: "http://shineware.iptime.org:8081/wish/get",
-      data: id,
+      params: params
     }).then((res) => {
       console.log(res.data);
-      wishList = res.data;
+      setValues([...res.data]);
+      getRoomData(res.data);
     }).catch((e) => {
       console.error(e);
     });
+  };
 
-    return wishList;
+  const getRoomData = (wishs) => {
+    let rooms = [];
+    for (let wish of wishs) {
+      axios({
+        method: "GET",
+        url: "http://shineware.iptime.org:8081/pdp/info",
+        params: {
+          roomId: wish.roomId,
+          useType: wish.useType,
+          checkinDate: FormattingDate(new Date()),
+          checkoutDate: FormattingDate(new Date()),
+          adult: 1,
+          children: 0,
+          baby: 0,
+          userId: userId,
+        },
+      }).then((res) => {
+        console.log(res.data);
+        rooms.push(res.data);
+      });
+    }
+
+    setRoomValues(rooms);
   };
 
   useEffect(() => {
-    // let list = [
-    //   { address: "서울특별시 강남구 역삼동 626-29  24게스트하우스 강남센터",
-    //     basePrice: 33000,
-    //     baseUser: 3,
-    //     checkinInfo: null,
-    //     checkoutInfo: null,
-    //     extraOptionList: [],
-    //     extraPrice: 0,
-    //     extraUser: 0,
-    //     images: ['image.goodchoice.kr/resize_490x348/adimg_new/11195/75184/fb5f364cc3772974bd274cfaf6ea8b9d.JPG', 'image.goodchoice.kr/resize_490x348/adimg_new/11195/75184/40ca8c01b967516803a1563c84049c67.JPG', 'image.goodchoice.kr/resize_490x348/adimg_new/11195/75184/713e45b9a811d14f9279b79340cfccae.jpg', 'image.goodchoice.kr/resize_490x348/adimg_new/11195/75184/06546b1cd63c4eed2891750dfda3eee8.jpg'],
-    //     lastTimeInfo: null,
-    //     location: {lat: 37.503902435302734, lon: 127.03339385986328},
-    //     maxUseTimeInfo: null,
-    //     maxUser: 5,
-    //     propertyName: "24게스트하우스 강남센터",
-    //     propertyType: "GUESTHOUSE",
-    //     reviewSummary: {reviewCount: 6, averageCleanScore: 3.83, averageReviewScore: 3.1, averagePriceScore: 3.33, averageComfortScore: 3},
-    //     roomId: "62acebe541002eaaa6685e76",
-    //     roomName: "도미토리 4인실(여)",
-    //     score: 11.102909,
-    //     stock: 1,
-    //     totalPrice: 33000,
-    //     useType: "NIGHT" 
-    //   },
-    //   { address: "서울특별시 강남구 역삼동 626-29  24게스트하우스 강남센터",
-    //     basePrice: 33000,
-    //     baseUser: 3,
-    //     checkinInfo: null,
-    //     checkoutInfo: null,
-    //     extraOptionList: [],
-    //     extraPrice: 0,
-    //     extraUser: 0,
-    //     images: ['image.goodchoice.kr/resize_490x348/adimg_new/11195/75184/fb5f364cc3772974bd274cfaf6ea8b9d.JPG', 'image.goodchoice.kr/resize_490x348/adimg_new/11195/75184/40ca8c01b967516803a1563c84049c67.JPG', 'image.goodchoice.kr/resize_490x348/adimg_new/11195/75184/713e45b9a811d14f9279b79340cfccae.jpg', 'image.goodchoice.kr/resize_490x348/adimg_new/11195/75184/06546b1cd63c4eed2891750dfda3eee8.jpg'],
-    //     lastTimeInfo: null,
-    //     location: {lat: 37.503902435302734, lon: 127.03339385986328},
-    //     maxUseTimeInfo: null,
-    //     maxUser: 5,
-    //     propertyName: "24게스트하우스 강남센터",
-    //     propertyType: "GUESTHOUSE",
-    //     reviewSummary: {reviewCount: 6, averageCleanScore: 3.83, averageReviewScore: 3.1, averagePriceScore: 3.33, averageComfortScore: 3},
-    //     roomId: "62acebe541002eaaa6685e77",
-    //     roomName: "도미토리 4인실(여)",
-    //     score: 11.102909,
-    //     stock: 1,
-    //     totalPrice: 33000,
-    //     useType: "NIGHT" 
-    //   },
-    //   { address: "서울특별시 강남구 역삼동 626-29  24게스트하우스 강남센터",
-    //     basePrice: 33000,
-    //     baseUser: 3,
-    //     checkinInfo: null,
-    //     checkoutInfo: null,
-    //     extraOptionList: [],
-    //     extraPrice: 0,
-    //     extraUser: 0,
-    //     images: ['image.goodchoice.kr/resize_490x348/adimg_new/11195/75184/fb5f364cc3772974bd274cfaf6ea8b9d.JPG', 'image.goodchoice.kr/resize_490x348/adimg_new/11195/75184/40ca8c01b967516803a1563c84049c67.JPG', 'image.goodchoice.kr/resize_490x348/adimg_new/11195/75184/713e45b9a811d14f9279b79340cfccae.jpg', 'image.goodchoice.kr/resize_490x348/adimg_new/11195/75184/06546b1cd63c4eed2891750dfda3eee8.jpg'],
-    //     lastTimeInfo: null,
-    //     location: {lat: 37.503902435302734, lon: 127.03339385986328},
-    //     maxUseTimeInfo: null,
-    //     maxUser: 5,
-    //     propertyName: "24게스트하우스 강남센터",
-    //     propertyType: "GUESTHOUSE",
-    //     reviewSummary: {reviewCount: 6, averageCleanScore: 3.83, averageReviewScore: 3.1, averagePriceScore: 3.33, averageComfortScore: 3},
-    //     roomId: "62acebe541002eaaa6685e78",
-    //     roomName: "도미토리 4인실(여)",
-    //     score: 11.102909,
-    //     stock: 1,
-    //     totalPrice: 33000,
-    //     useType: "NIGHT" 
-    //   }
-    // ];
-
-    setValues([...getData()]);
-  }, []);
+    getData();
+  }, [userId]);
 
   return (
     <div className="site">
@@ -134,49 +104,53 @@ const MyWish = () => {
           {/* <!-- List --> */}
           <div className={Style["MyPageLike"]}>
             <div className={"site-container"}>
-              <ul className={Style["ProductList-list"]}>
-                {values && values.map((room) => {
-                  return (
-                    <MyWishCard
-                      key={room.roomId + room.useType}
-                      id={room.roomId}
-                      address={room.address}
-                      baseUser={room.baseUser}
-                      checkinInfo={room.checkinInfo}
-                      checkoutInfo={room.checkoutInfo}
-                      images={
-                        room.images.length > 0 ? room.images : [sampleImage]
-                      }
-                      lastTimeInfo={room.lastTimeInfo}
-                      maxUseTimeInfo={room.maxUseTimeInfo}
-                      maxUser={room.maxUser}
-                      propertyName={room.propertyName}
-                      propertyType={
-                        room.propertyType !== undefined
-                          ? room.propertyType
-                          : "N/A"
-                      }
-                      roomName={room.roomName}
-                      stock={room.stock}
-                      useType={room.useType}
-                      averageScore={
-                        room.reviewSummary != null ?
-                          room.reviewSummary.averageReviewScore !== undefined
-                            ? room.reviewSummary.averageReviewScore
+              {roomValues.length > 0 ? (
+                <ul className={Style["ProductList-list"]}>
+                  {roomValues.map((room) => {
+                    return (
+                      <MyWishCard
+                        key={room.roomId + room.useType}
+                        id={room.roomId}
+                        address={room.address}
+                        baseUser={room.baseUser}
+                        checkinInfo={room.checkinInfo}
+                        checkoutInfo={room.checkoutInfo}
+                        images={
+                          room.images && room.images.length > 0 ? room.images : []
+                        }
+                        lastTimeInfo={room.lastTimeInfo}
+                        maxUseTimeInfo={room.maxUseTimeInfo}
+                        maxUser={room.maxUser}
+                        propertyName={room.propertyName}
+                        propertyType={
+                          room.propertyType !== undefined
+                            ? room.propertyType
+                            : "N/A"
+                        }
+                        roomName={room.roomName}
+                        stock={room.stock}
+                        useType={room.useType}
+                        averageScore={
+                          room.reviewSummary != null ?
+                            room.reviewSummary.averageReviewScore !== undefined
+                              ? room.reviewSummary.averageReviewScore
+                              : 0
                             : 0
-                          : 0
-                      }
-                      reviewCount={
-                        room.reviewSummary != null ?
-                          room.reviewSummary.reviewCount !== undefined
-                            ? room.reviewSummary.reviewCount
+                        }
+                        reviewCount={
+                          room.reviewSummary != null ?
+                            room.reviewSummary.reviewCount !== undefined
+                              ? room.reviewSummary.reviewCount
+                              : 0
                             : 0
-                          : 0
-                      }
-                    />
-                  )
-                })}
-              </ul>
+                        }
+                      />
+                    )
+                  })}
+                </ul>
+              ) : (
+                <div className={Style["TotalSearch-noTag"]}>찜한 내역이 없습니다.<br />마음에 드는 숙소를 찜해보세요!</div>
+              )}
             </div>
           </div>
           {/* <!-- .List --> */}

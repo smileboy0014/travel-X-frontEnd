@@ -11,13 +11,13 @@ import { useRouter } from "next/router";
 import * as scrollY from "../../../redux/store/modules/scrollY";
 import DetailCalendarModal from "../../../components/Modal/Calendar/DetailCalendarModal";
 import PesonalModal from "../../../components/Modal/Personal/PersonalModal";
-
 import classNames from 'classnames/bind';
 
 const cx = classNames.bind(Style);
 
 const DetailView = () => {
   const [rooms, setRooms] = useState([]);
+  const [userWish, setUserWish] = useState(false);
   const [slide, setSlide] = useState(false);
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
   const [calendarModalOpen, setCalendarModalOpen] = useState(false);
@@ -28,6 +28,7 @@ const DetailView = () => {
   const dispatch = useDispatch();
   const { id, useType, person } = router.query;
   const { detailDate } = useSelector((state) => state.date);
+  const userInfo = useSelector((state) => state.userInfo.info);
   const week = new Array("일", "월", "화", "수", "목", "금", "토");
   const adultCounterValue = useSelector(
     ({ adultCounter }) => adultCounter.value
@@ -57,6 +58,45 @@ const DetailView = () => {
     const day = addZero(date.getDate());
 
     return `${year}-${month}-${day}`;
+  }
+
+  const handleMyWish = (e) => {
+    e.preventDefault();
+
+    let wish;
+    const formData = new FormData();
+
+    if (rooms && rooms.userWish) {
+      wish = {
+        method: "DELETE",
+        url: "/wish/delete",
+        userWish: false
+      };
+
+      formData.append('wishId', userInfo.id);
+    } else {
+      wish = {
+        method: "POST",
+        url: "/wish/register",
+        userWish: true
+      };
+
+      formData.append('userId', userInfo.id);
+      formData.append('roomId', id);
+      formData.append('useType', useType);
+    }
+
+    Axios({
+      method: wish.method,
+      url: `http://shineware.iptime.org:8081${wish.url}`,
+      data: formData,
+    }).then((res) => {
+      setUserWish(wish.userWish);
+      console.log(res.data);
+    }).catch((e) => {
+      console.error(e);
+    });
+
   }
 
   useEffect(() => {
@@ -92,7 +132,7 @@ const DetailView = () => {
           adult: adultCounterValue,
           children: childCounterValue,
           baby: babyCounterValue,
-
+          userId: userInfo.id
         },
       }).then((res) => {
         console.log(res.data);
@@ -111,6 +151,7 @@ const DetailView = () => {
           propertyInfo: res.data.propertyInfo ? res.data.propertyInfo : [],
           reviewSummary: res.data.reviewSummary ? res.data.reviewSummary : [],
         }));
+        setUserWish(res.data.userWish);
       });
     }
   }, [id,
@@ -388,21 +429,21 @@ const DetailView = () => {
             </div>
 
             {/* <ReserveButton></ReserveButton> */}
-
-            <Link
-              href={{
-                pathname: "/view/reserve/[id]",
-                query: { id: id, useType: useType },
-              }}
-            >
-              <div className={Style["BttonFixButton"]}>
+              <div className={cx("BttonFixButton", "with-Like")}>
                 <div className="site-container">
-                  <button type="button" className={Style["BttonFixButton-button"]}>
-                    예약하기
-                  </button>
+                  <button type="button" className={userWish ? cx("BttonFixButton-like", "is-Active") : Style["BttonFixButton-like"]} onClick={handleMyWish}><span className="ab-text">좋아요</span></button>
+                  <Link
+                    href={{
+                      pathname: "/view/reserve/[id]",
+                      query: { id: id, useType: useType },
+                    }}
+                  >
+                    <button type="button" className={Style["BttonFixButton-button"]}>
+                      예약하기
+                    </button>
+                  </Link>
                 </div>
               </div>
-            </Link>
 
 
             <DetailCalendarModal
