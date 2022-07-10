@@ -44,7 +44,7 @@ const MyReview = () => {
 		}).then((res) => {
 
 			if (res.data !== undefined && res.data.length > 0) {
-				debugger;
+				// debugger;
 				let filterReviews = res.data.map((review) => {
 					if (review.contents.length > 275) {
 						review.moreContents = true;
@@ -59,11 +59,8 @@ const MyReview = () => {
 				// 	[...prevState,
 				// 	...filterReviews]
 				// ));
-
-				setMyReviewData(() => (
-
-					filterReviews
-				));
+				// debugger;
+				setMyReviewData(filterReviews);
 				setLoading(false);
 				// console.log(`getReviews result is ${reviewSummary.averageReviewScore}`);
 			}
@@ -146,8 +143,9 @@ const MyReview = () => {
 	useEffect(() =>{
 		debugger;
 		if(returnCallHttpMethod){
-			debugger;
+			// debugger;
 			getMyReviews();
+			
 			setReturnCallHttpMethod(false);
 
 		}

@@ -93,12 +93,16 @@ const MyInfo = () => {
 						<div className="site-container">
 							<div className={Style["MyPageMenu"]}>
 								<ul className={Style["MyPageMenu-inner"]}>
+								<Link href={{
+										pathname: auth? "/myInfo/myReservation" : "/login",
+										query: auth ? "" : { redirectUri: redirectUri },
+									}}>
 									<li className={Style["MyPageMenu-item"]}>
 										<a href="#;" className={Style["MyPageMenu-link"]}>
 											<span className={cx("MyPageMenu-text", "ico-List")}>예약 내역</span>
 										</a>
 									</li>
-
+									</Link> 
 									<Link href={{
 										pathname: auth? "/myInfo/myReview" : "/login",
 										query: auth ? "" : { redirectUri: redirectUri },
