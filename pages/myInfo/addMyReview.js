@@ -281,7 +281,6 @@ const AddyMyReview = () => {
       }
     }).then((res) => {
       console.log(`save is successed!!`);
-      isSave(true);
       console.log(res);
     })
       .catch((error) => {

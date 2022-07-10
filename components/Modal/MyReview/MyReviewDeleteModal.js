@@ -1,12 +1,41 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
+import axios from "axios";
 import Style from "../../../styles/Component.module.css";
 import classNames from 'classnames/bind';
 
 const cx = classNames.bind(Style);
 
-const MyReviewDeleteModal = ({ isOpen, onRequestClose }) => {
+const MyReviewDeleteModal = ({ selectReview, isOpen, onRequestClose, methodCallBack }) => {
   const [clear, setClear] = useState(false);
+  // debugger;
+  // console.log(selectReview);
+  const onClickHandler = (type) =>{
+      if(type == 'delete') {
+        deleteReview();
+      }
+  }
+
+  const deleteReview = () =>{
+
+    axios({
+      method: "DELETE",
+      url: "http://shineware.iptime.org:8081/review/delete",
+      params: {
+        reviewId: selectReview.id,
+      },
+    
+    }).then((res) => {
+      console.log(`delete review successed!!`);
+    })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => {
+        onRequestClose(false);
+        methodCallBack(true);
+      })
+  }
 
   return (
     <div>
@@ -28,18 +57,18 @@ const MyReviewDeleteModal = ({ isOpen, onRequestClose }) => {
             ></button>
           </div>
 
-          <div class={Style["CenterPopBoxBody"]}>
-            <p class={Style["CenterPopBoxBody-text"]}>삭제된 후기는 복구할 수 없습니다.<br />삭제하시겠습니까?</p>
+          <div className={Style["CenterPopBoxBody"]}>
+            <p className={Style["CenterPopBoxBody-text"]}>삭제된 후기는 복구할 수 없습니다.<br />삭제하시겠습니까?</p>
           </div>
 
-          <div class="CenterPopBoxBtn">
-            <ul class={Style["CenterPopBoxBtn-inner"]}>
-              <li class={Style["CenterPopBoxBtn-item"]}>
+          <div className="CenterPopBoxBtn">
+            <ul className={Style["CenterPopBoxBtn-inner"]}>
+              <li className={Style["CenterPopBoxBtn-item"]}>
                 <button type="button" className={cx("FilterPopFooter-button", "color-Gray")}
                  onClick={() => onRequestClose(false)}>아니오</button>
               </li>
-              <li class={Style["CenterPopBoxBtn-item"]}>
-                <button type="button" className={Style["FilterPopFooter-button"]}>예</button>
+              <li className={Style["CenterPopBoxBtn-item"]}>
+                <button type="button" className={Style["FilterPopFooter-button"]} onClick={() => onClickHandler('delete')}>예</button>
               </li>
             </ul>
           </div>
