@@ -32,7 +32,7 @@ const AddyMyReview = () => {
 
 	const handleChangeFile = (event) => {
 
-		debugger;
+		// debugger;
 		console.log(`이미지 파일은 ${event.target.files}`);
 		setImgFile(event.target.files);
 		//fd.append("file", event.target.files)
@@ -61,7 +61,7 @@ const AddyMyReview = () => {
 	}
 
 	const handleRemoveFile = (index) =>{
-		debugger;
+		// debugger;
 		const fileListArr = Array.from(imgFile);
 		fileListArr.splice(index, 1);
 		setImgFile(fileListArr);
@@ -69,7 +69,7 @@ const AddyMyReview = () => {
 	}
 
 	const setScore = (e) => {
-		debugger;
+		// debugger;
 		let strArr = e.currentTarget.id.split('-');
 
 		switch (strArr[0]) {
@@ -239,7 +239,7 @@ const AddyMyReview = () => {
 	}
 
 	const handleAddReview = () => {
-		debugger;
+		// debugger;
 		const roomId = '62c0bc1ee1d8a1f6b6df4220';
 		
 		const formData = new FormData();
