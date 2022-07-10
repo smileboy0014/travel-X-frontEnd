@@ -23,11 +23,13 @@ const MyReview = () => {
 	const [isReviewLoading, setIsReviewLoading] = useState(true);
 	const [, updateState] = useState();
 	const forceUpdate = useCallback(() => updateState({}), []);
+	const [returnCallHttpMethod, setReturnCallHttpMethod] = useState(false);
 	const [myReviewData, setMyReviewData] = useState([]);
 	const [layerGalleryList, setLayerGalleryList] = useState([]);
 	const [layerGalleryOpen, setLayerGalleryOpen] = useState(false);
 	const [myReviewMoreModalOpen, setMyReviewMoreModalOpen] = useState(false);
 	const [myReviewDeleteModalOpen, setMyReviewDeleteModalOpen] = useState(false);
+	const [selectReview, setSelectReview] = useState({});
 
 	const getMyReviews = () => {
 		// debugger;
@@ -42,7 +44,7 @@ const MyReview = () => {
 		}).then((res) => {
 
 			if (res.data !== undefined && res.data.length > 0) {
-				// debugger;
+				debugger;
 				let filterReviews = res.data.map((review) => {
 					if (review.contents.length > 275) {
 						review.moreContents = true;
@@ -52,10 +54,15 @@ const MyReview = () => {
 						return review;
 					}
 				})
-				setMyReviewData((prevState) => (
+				// setMyReviewData((prevState) => (
 
-					[...prevState,
-					...filterReviews]
+				// 	[...prevState,
+				// 	...filterReviews]
+				// ));
+
+				setMyReviewData(() => (
+
+					filterReviews
 				));
 				setLoading(false);
 				// console.log(`getReviews result is ${reviewSummary.averageReviewScore}`);
@@ -75,6 +82,8 @@ const MyReview = () => {
 
 	const onClickHandler = (type, data, index) => {
 		if (type === 'moreView') {
+			// debugger;
+			setSelectReview(myReviewData[index]);
 			setMyReviewMoreModalOpen(true);
 		}
 		else if (type === 'disappear') {
@@ -101,6 +110,7 @@ const MyReview = () => {
 	const execReturnType = (type) => {
 
 		if (type === 'delete') {
+
 			setMyReviewMoreModalOpen(false);
 			setMyReviewDeleteModalOpen(true);
 		} else {
@@ -132,6 +142,16 @@ const MyReview = () => {
 			// console.log(`force update!!!!!`);
 		}
 	}, [isReviewLoading])
+
+	useEffect(() =>{
+		debugger;
+		if(returnCallHttpMethod){
+			debugger;
+			getMyReviews();
+			setReturnCallHttpMethod(false);
+
+		}
+	},[returnCallHttpMethod])
 
 	useEffect(() => {
 		if (layerGalleryList != null && layerGalleryList.length > 0) {
@@ -192,7 +212,7 @@ const MyReview = () => {
 							{/* item */}
 							<div className={Style["MyReviewPostItem"]}>
 								<div className={Style["ReviewPostItemSecHead"]}>
-									<button type="button" className={Style["ReviewPostMore"]} onClick={() => onClickHandler('moreView')}>
+									<button type="button" className={Style["ReviewPostMore"]} onClick={() => onClickHandler('moreView','',index)}>
 										<span className="ab-text">
 											더보기
 										</span>
@@ -252,7 +272,10 @@ const MyReview = () => {
 			<LayerGallery data={layerGalleryList} isOpen={layerGalleryOpen} onRequestClose={() => setLayerGalleryOpen(false)} />
 			{/* <!-- .LayerGallery --> */}
 			<MyReviewMoreModal isOpen={myReviewMoreModalOpen} onRequestClose={() => setMyReviewMoreModalOpen(false)} returnType={(type) => execReturnType(type)} />
-			<MyReviewDeleteModal isOpen={myReviewDeleteModalOpen} onRequestClose={() => setMyReviewDeleteModalOpen(false)} />
+			<MyReviewDeleteModal selectReview={selectReview} isOpen={myReviewDeleteModalOpen} 
+			onRequestClose={() => setMyReviewDeleteModalOpen(false)}
+			methodCallBack={(type) => setReturnCallHttpMethod(type)}
+			 />
 		</div>
 	);
 }
