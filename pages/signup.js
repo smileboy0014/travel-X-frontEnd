@@ -18,7 +18,7 @@ const cx = classNames.bind(Style);
 export const SignUp = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const [step, setStep] = useState(5);
+  const [step, setStep] = useState(1);
   const [agreeValues, setAgreeValues] = useState({
     agreeAge: false,
     agreeService: false,

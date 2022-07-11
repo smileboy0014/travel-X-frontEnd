@@ -50,7 +50,8 @@ const SignUpStep4 = ({ setStep, setPasswdValues }) => {
           {/* <!-- MemberForm --> */}
           <div className={Style["MemberForm"]}>
             {/* <!-- Item --> */}
-            <div className={values.passwd.length > 0 ? cx("MemberFormItem", "is-Active") : Style["MemberFormItem"]}>
+            <div className={Style["MemberFormItem"]}>
+            {/* <div className={values.passwd.length > 0 ? cx("MemberFormItem", "is-Active") : Style["MemberFormItem"]}> */}
               <dl className={Style["MemberFormItem-inner"]}>
                 <dt className={Style["MemberFormItemTitle"]}>비밀번호 입력</dt>
                 <dd className={Style["MemberFormItemCont"]}>
