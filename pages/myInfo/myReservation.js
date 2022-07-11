@@ -52,7 +52,6 @@ const MyReservation = () => {
 				// ));
 
 				setMyReviewData(() => (
-
 					filterReviews
 				));
 				setLoading(false);
@@ -64,12 +63,6 @@ const MyReservation = () => {
 		})
 
 	}
-
-
-	const onClickHandler = (type, data, index) => {
-	
-	}
-
 
 
 	useEffect(() => {
@@ -104,7 +97,12 @@ const MyReservation = () => {
 									<div className={Style["ReservationListItem"]}>
 										<div className={Style["ReservationListItemHeader"]}>
 											<div className={Style["ReservationListItemHeader-date"]}>2021. 12. 26 (수)</div>
-											<a href="#;" className={Style["ReservationListItemHeader-link"]}>상세보기</a>
+											<Link href={{
+												pathname: "/myInfo/myReservation/[roomId]",
+												query: { roomId: "123" }
+											}}>
+												<a href="#;" className={Style["ReservationListItemHeader-link"]}>상세보기</a>
+											</Link>
 										</div>
 										<div className={Style["ReservationListItemBody"]}>
 											<div className={Style["ReservationListItemMeta"]}>
@@ -119,8 +117,8 @@ const MyReservation = () => {
 													<div className={Style["ReservationListItemBoxText-title"]}>슈페리어 트윈 (넷플릭스 - 숙소 문...</div>
 													<div className="ReservationListItemBoxMeta">
 														<ul className="ReservationListItemBoxMeta-inner">
-															<li className={cx("ReservationListItemBoxMeta-item" ,"ico-Cal")}>12월 26일 ~ 27일</li>
-															<li className={cx("ReservationListItemBoxMeta-item" ,"ico-User")}>성인 1명, 유아 1명</li>
+															<li className={cx("ReservationListItemBoxMeta-item", "ico-Cal")}>12월 26일 ~ 27일</li>
+															<li className={cx("ReservationListItemBoxMeta-item", "ico-User")}>성인 1명, 유아 1명</li>
 														</ul>
 													</div>
 												</div>
