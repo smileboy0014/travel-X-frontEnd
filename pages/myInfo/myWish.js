@@ -13,8 +13,7 @@ const MyWish = () => {
   const router = useRouter();
 	const userId = useSelector((state) => state.userInfo.info.id);
 
-  const [values, setValues] = useState([]);
-  const [roomValues, setRoomValues] = useState([]);
+  const [rooms, setRooms] = useState([]);
 
   const handleClick = (item, index) => {
     
@@ -50,36 +49,10 @@ const MyWish = () => {
       params: params
     }).then((res) => {
       console.log(res.data);
-      setValues([...res.data]);
-      getRoomData(res.data);
+      setRooms([...res.data]);
     }).catch((e) => {
       console.error(e);
     });
-  };
-
-  const getRoomData = (wishs) => {
-    let rooms = [];
-    for (let wish of wishs) {
-      axios({
-        method: "GET",
-        url: "http://shineware.iptime.org:8081/pdp/info",
-        params: {
-          roomId: wish.roomId,
-          useType: wish.useType,
-          checkinDate: FormattingDate(new Date()),
-          checkoutDate: FormattingDate(new Date()),
-          adult: 1,
-          children: 0,
-          baby: 0,
-          userId: userId,
-        },
-      }).then((res) => {
-        console.log(res.data);
-        rooms.push(res.data);
-      });
-    }
-
-    setRoomValues(rooms);
   };
 
   useEffect(() => {
@@ -104,47 +77,44 @@ const MyWish = () => {
           {/* <!-- List --> */}
           <div className={Style["MyPageLike"]}>
             <div className={"site-container"}>
-              {roomValues.length > 0 ? (
+              {rooms.length > 0 ? (
                 <ul className={Style["ProductList-list"]}>
-                  {roomValues.map((room) => {
+                  {rooms.map((room) => {
                     return (
-                      <MyWishCard
-                        key={room.roomId + room.useType}
-                        id={room.roomId}
-                        address={room.address}
-                        baseUser={room.baseUser}
-                        checkinInfo={room.checkinInfo}
-                        checkoutInfo={room.checkoutInfo}
-                        images={
-                          room.images && room.images.length > 0 ? room.images : []
-                        }
-                        lastTimeInfo={room.lastTimeInfo}
-                        maxUseTimeInfo={room.maxUseTimeInfo}
-                        maxUser={room.maxUser}
-                        propertyName={room.propertyName}
-                        propertyType={
-                          room.propertyType !== undefined
-                            ? room.propertyType
-                            : "N/A"
-                        }
-                        roomName={room.roomName}
-                        stock={room.stock}
-                        useType={room.useType}
-                        averageScore={
-                          room.reviewSummary != null ?
-                            room.reviewSummary.averageReviewScore !== undefined
-                              ? room.reviewSummary.averageReviewScore
+                      room.roomDocument ? (
+                        <MyWishCard
+                          key={room.roomDocument.roomId + room.roomDocument.useType}
+                          id={room.roomDocument.roomId}
+                          address={room.roomDocument.address}
+                          baseUser={room.roomDocument.baseUser}
+                          images={
+                            room.roomDocument.images && room.roomDocument.images.length > 0 ? room.roomDocument.images : []
+                          }
+                          maxUser={room.roomDocument.maxUser}
+                          propertyName={room.roomDocument.propertyName}
+                          propertyType={
+                            room.roomDocument.propertyType !== undefined
+                              ? room.roomDocument.propertyType
+                              : "N/A"
+                          }
+                          roomName={room.roomDocument.roomName}
+                          useType={room.roomDocument.useType}
+                          averageScore={
+                            room.roomDocument.reviewSummary != null ?
+                              room.roomDocument.reviewSummary.averageReviewScore !== undefined
+                                ? room.roomDocument.reviewSummary.averageReviewScore
+                                : 0
                               : 0
-                            : 0
-                        }
-                        reviewCount={
-                          room.reviewSummary != null ?
-                            room.reviewSummary.reviewCount !== undefined
-                              ? room.reviewSummary.reviewCount
+                          }
+                          reviewCount={
+                            room.roomDocument.reviewSummary != null ?
+                              room.roomDocument.reviewSummary.reviewCount !== undefined
+                                ? room.roomDocument.reviewSummary.reviewCount
+                                : 0
                               : 0
-                            : 0
-                        }
-                      />
+                          }
+                        />
+                      ) : null
                     )
                   })}
                 </ul>
