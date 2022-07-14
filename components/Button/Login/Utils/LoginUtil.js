@@ -91,7 +91,7 @@ export const CheckLogin = async (authPublisher) => {
           fail: (e) => {
             // TODO : e값 형태 확인하기
             // debugger;
-            if (e.code == -401 || e.response.status == '401') {
+            if (e.code == 401 || e.response.status == '401') {
               GetNewAccessTokenByRefreshToken(PUBLISHER_KAKAO);
             } else {
               result = { auth: false, id: null };
@@ -191,12 +191,14 @@ export const SetLoginInfoToLocalStorage = (authPublisher, token = null) => {
 export const CleanLoginInfoInLocalStorage = (authPublisher) => {
   switch (authPublisher) {
     case PUBLISHER_KAKAO: {
+      localStorage.removeItem("pub");
       break;
     }
     case PUBLISHER_NAVER: {
       break;
     }
     case PUBLISHER_TRAVELX: {
+      localStorage.removeItem("pub");
       localStorage.removeItem("tx");
       break;
     }
