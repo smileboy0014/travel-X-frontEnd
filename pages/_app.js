@@ -36,6 +36,7 @@ function TravelX({ Component, pageProps }) {
           dispatch(userInfoActions.setUserInfo({ pub: authPublisher, id: checkLogin.id, auth: true }));
         } else {
           localStorage.removeItem("pub");
+          localStorage.removeItem("tx");
           dispatch(userInfoActions.setUserInfo({ pub: null, id: null, auth: false }));
         }
       }

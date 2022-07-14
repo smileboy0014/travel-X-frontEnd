@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import * as userInfoActions from "../redux/store/modules/userInfo";
 import Style from '../styles/Component.module.css';
-import { LoginByTravelXUserToTravelXServer } from '../components/Button/Login/Utils/LoginUtil';
+import { CheckLogin, LoginByTravelXUserToTravelXServer } from '../components/Button/Login/Utils/LoginUtil';
 import KakaoLoginButton from '../components/Button/Login/KakaoLoginButton';
 import { PUBLISHER_TRAVELX } from '../components/Button/Login/LoginConstant';
 import classNames from 'classnames/bind';
@@ -81,16 +81,34 @@ const Login = () => {
     }
   };
 
-  useEffect(() => {
+  const handleCheckLogin = async () => {
     const authPublisher = localStorage.getItem("pub");
-
-    // routeStart 이벤트 함수로 로그인 체크하므로 여기선 pub 값만 확인
+    
     if (authPublisher) {
-      const params = new URLSearchParams(location.search);
-      const curRedirectUri = params.get('redirectUri');
-
-      router.push(curRedirectUri ? curRedirectUri : '/');
+      let checkLogin = await CheckLogin(authPublisher);
+      
+      if (checkLogin.auth) {
+        dispatch(userInfoActions.setUserInfo({ pub: authPublisher, id: checkLogin.id, auth: true }));
+        history.go(1);
+      } else {
+        localStorage.removeItem("pub");
+        localStorage.removeItem("tx");
+        dispatch(userInfoActions.setUserInfo({ pub: null, id: null, auth: false }));
+      }
     }
+  }
+
+  useEffect(() => {
+    handleCheckLogin();
+    // const authPublisher = localStorage.getItem("pub");
+
+    // // routeStart 이벤트 함수로 로그인 체크하므로 여기선 pub 값만 확인
+    // if (authPublisher) {
+    //   const params = new URLSearchParams(location.search);
+    //   const curRedirectUri = params.get('redirectUri');
+
+    //   router.push(curRedirectUri ? curRedirectUri : '/');
+    // }
   }, []);
 
   return (
