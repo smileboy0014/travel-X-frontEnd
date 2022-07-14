@@ -42,9 +42,6 @@ function MyWishCard(props) {
                   <span className={style["ProductItemFilter-item"]}>
                     기준: {props.baseUser}인 최대: {props.maxUser}인
                   </span>
-                  <span className={style["ProductItemFilter-item"]}>
-                    체크인: {props.checkinInfo} 체크아웃:{props.checkoutInfo}인
-                  </span>
                 </div>
               </a>
             </Link>
