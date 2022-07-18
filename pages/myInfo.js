@@ -17,8 +17,9 @@ const MyInfo = () => {
 	const redirectUri = useSelector(({ redirectUri }) => redirectUri.value);
 	// console.log(`redirectUri is ${redirectUri}`);
 	const userInfo = useSelector((state) => state.userInfo.info);
+	const nickName = userInfo.nickName;
 	const auth = userInfo.auth;
-	console.log(`auth is ${auth}`);
+	// console.log(`auth is ${auth}`);
 
   const dispatch = useDispatch();
 
@@ -67,7 +68,7 @@ const MyInfo = () => {
 					<div className={Style["MyPageHeader"]}>
 						<div className="site-container">
 							<div className={Style["MyPageHeader-inner"]}>
-								{auth ? <h2 className={Style["MyPageHeader-name"]}>휜둥이님</h2> :
+								{auth ? <h2 className={Style["MyPageHeader-name"]}>{nickName? nickName:userInfo.id}</h2> :
 									<Link href={{
 										pathname: "/login",
 										query: { redirectUri: redirectUri }
