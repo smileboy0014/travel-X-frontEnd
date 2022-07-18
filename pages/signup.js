@@ -12,34 +12,107 @@ import SignUpStep4 from '../components/Signup/SignUpStep4';
 import SignUpStepExtraInfo from '../components/Signup/SignUpStepExtraInfo';
 import SignUpStepEnd from '../components/Signup/SignUpStepEnd';
 import classNames from 'classnames/bind';
+import SignUpStep5 from './../components/Signup/SignUpStep5';
 
 const cx = classNames.bind(Style);
 
 export const SignUp = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const [step, setStep] = useState(5);
+  const [step, setStep] = useState(1);
   const [agreeValues, setAgreeValues] = useState({
     agreeAge: false,
     agreeService: false,
     agreePrivacy: false,
-    agreeMarketing: false
+    agreeMarketing: false,
+    agreeAll: false
   });
   const [phoneAuthValues, setPhoneAuthValues] = useState({
     phone: '',
-    authNo: '',
-    phoneVerified: false
+    verifiedPhoneNumber: '',
+    isPhoneVerified: false
   });
+  const [emailValues, setEmailValues] = useState({
+    email: ''
+  });
+  const [passwdValues, setPasswdValues] = useState({
+    passwd: '',
+    confirmPasswd: ''
+  });
+  const [passwdValidateValues, setPasswdValidateValues] = useState({
+    eng: false,
+    num: false,
+    spcl: false,
+    length: false,
+    equal: false,
+    validateAll: false
+  });
+  const [nicknameValues, setNicknameValues] = useState({
+    nickName: ''
+  });
+  const [extraValues, setExtraValues] = useState({
+    // nickName: '',
+		birthday: {
+			year: '',
+			month: '',
+			day: ''
+		},
+		sex: '',
+		address: ''
+  });
+
   const [extRegister, setExtRegister] = useState(false);
 
 
   const handleBackClick = () => {
-    if (step == 1 || step == 6) {
+    if (step == 1 || step == 6 || step == 7) {
       router.back();
       return;
     }
 
     setStep(--step);
+  };
+
+  const requestSignUp = async () => {
+    let result = {
+      success: false
+    }
+    if (!extRegister) {
+      const formData = new FormData();
+      formData.append('authPublisher', PUBLISHER_TRAVELX);
+      formData.append('nickName', nicknameValues.nickName);
+      formData.append('password', passwdValues.passwd);
+  
+      axios({
+        method: "POST",
+        url: "http://shineware.iptime.org:8081/auth/user/register",
+        data: formData,
+      }).then((res) => {
+        result.success = true;
+      }).catch((e) => {
+        alert('회원가입 중 에러가 발생하였습니다.');
+        console.error(e);
+      }).finally(() => {        
+        return result;
+      })
+    };
+  };
+
+  const requestExtraInfoAdd = async () => {
+    const extraFormData = new FormData();
+    extraFormData.append('nickName', values.nickName);
+
+    axios({
+      method: "POST",
+      url: "http://shineware.iptime.org:8081/auth/user/addExtraInfo",
+      data: extraFormData,
+    }).then((res) => {
+			
+    }).catch((e) => {
+			alert('추가정보 저장 중 에러가 발생하였습니다.');
+			console.error(e);
+    });
+    
   };
 
   useEffect(() => {
@@ -48,7 +121,7 @@ export const SignUp = () => {
     switch (authPublisher) {
       case PUBLISHER_KAKAO: {
         if (window.Kakao.Auth.getAccessToken()) {
-          setStep(2);
+          setStep(5);
           setExtRegister(true);
         }
 
@@ -68,6 +141,15 @@ export const SignUp = () => {
 
   }, []);
 
+  useEffect(() => {
+    console.log(agreeValues);
+    console.log(phoneAuthValues);
+    console.log(emailValues);
+    console.log(passwdValues);
+    console.log(passwdValidateValues);
+    console.log(extraValues);
+  }, [step]);
+
   return (
     <div className="site">
       <div className={cx("site-header", "Step-Header")}>
@@ -83,25 +165,29 @@ export const SignUp = () => {
             <span className={step > 3 ? cx("StepBar-item", "is-Active") : Style["StepBar-item"]}></span>
             <span className={step > 4 ? cx("StepBar-item", "is-Active") : Style["StepBar-item"]}></span>
             <span className={step > 5 ? cx("StepBar-item", "is-Active") : Style["StepBar-item"]}></span>
+            <span className={step > 6 ? cx("StepBar-item", "is-Active") : Style["StepBar-item"]}></span>
           </div>
         </div>
       </div>
       {step == 1 ? (
-        <SignUpStep1 setStep={setStep} setAgreeValues={setAgreeValues} />
+        <SignUpStep1 setStep={setStep} setAgreeValues={setAgreeValues} initValues={agreeValues} />
       ) : null}
       {step == 2 ? (
-        <SignUpStep2 setStep={setStep} setPhoneAuthValues={setPhoneAuthValues} />
+        <SignUpStep2 setStep={setStep} setPhoneAuthValues={setPhoneAuthValues} initValues={phoneAuthValues} />
       ) : null}
       {step == 3 ? (
-        <SignUpStep3 setStep={setStep}  />
+        <SignUpStep3 setStep={setStep} setEmailValues={setEmailValues} initValues={emailValues} />
       ) : null}
       {step == 4 ? (
-        <SignUpStep4 setStep={setStep}  />
+        <SignUpStep4 setStep={setStep} setPasswdValues={setPasswdValues} setPasswdValidateValues={setPasswdValidateValues} initValues={passwdValues} initValidateValues={passwdValidateValues} />
       ) : null}
       {step == 5 ? (
-        <SignUpStepExtraInfo setStep={setStep}  />
+        <SignUpStep5 setStep={setStep} setNicknameValues={setNicknameValues} initValues={nicknameValues} callback={requestSignUp} />
       ) : null}
       {step == 6 ? (
+        <SignUpStepExtraInfo setStep={setStep} setExtraValues={setExtraValues} initValues={extraValues} callback={requestExtraInfoAdd} />
+      ) : null}
+      {step == 7 ? (
         <SignUpStepEnd />
       ) : null}
     </div>

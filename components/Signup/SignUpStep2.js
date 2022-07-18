@@ -4,26 +4,31 @@ import classNames from 'classnames/bind';
 import axios from 'axios';
 
 const cx = classNames.bind(Style);
-const AUTH_NO_EXPIRE_TIME = 3;
+const AUTH_NO_EXPIRE_TIME = 3; // 인증번호 만료 시간 (분)
 
-const SignUpStep2 = ({ setStep, setPhoneAuthValues }) => {
+const SignUpStep2 = ({ setStep, setPhoneAuthValues, initValues }) => {
 
   const [values, setValues] = useState({
     phone: '',
-    authNo: ''
+    authNo: '',
+    verifiedPhoneNumber: '',
+    isPhoneVerified: false
   });
 
   const [sendAuthNo, setSendAuthNo] = useState(false);
   const [sendAuthNoAlert, setSendAuthNoAlert] = useState(false);
+
   const [authNoTime, setAuthNoTime] = useState(null);
   const [authNoTimer, setAuthNoTimer] = useState(null);
   const [showAuthNoTimer, setShowAuthNoTimer] = useState(false);
   const [authNoAlertTimer, setAuthNoAlertTimer] = useState(null);
+
   const [phoneVerified, setPhoneVerified] = useState(false);
   const [expireTime, setExpireTime] = useState(null);
+  const [disableSendAuthNo, setDisableSendAuthNo] = useState(false);
 
   const formattedTime = () => {
-    const m = Math.floor(authNoTime / 60).toString();
+    let m = Math.floor(authNoTime / 60).toString();
     let s = (authNoTime % 60).toString();
     if (s.length === 1) s = `0${s}`
     
@@ -33,7 +38,7 @@ const SignUpStep2 = ({ setStep, setPhoneAuthValues }) => {
   const handleNextStep = (e) => {
     e.preventDefault();
 
-    setPhoneAuthValues(values);
+    setPhoneAuthValues({...values});
     setStep(3);
   };
 
@@ -64,9 +69,14 @@ const SignUpStep2 = ({ setStep, setPhoneAuthValues }) => {
       const time = new Date();
       time.setMinutes(time.getMinutes() + AUTH_NO_EXPIRE_TIME);
       setExpireTime(time);
-
+      setDisableSendAuthNo(true); // 인증번호 받기 버튼 비활성화
+      
+      setPhoneVerified(false); // 인증 취소
+      
+      handleChange({ target: { name: "verifiedPhoneNumber", value: values.phone } });
     }).catch((e) => {
       console.error(e);
+      handleChange({ target: { name: "verifiedPhoneNumber", value: '' } });
     });
   };
 
@@ -85,12 +95,16 @@ const SignUpStep2 = ({ setStep, setPhoneAuthValues }) => {
   };
 
   useEffect(() => {
+    // 만료시간 갱신 후 타이머 시작
     if (expireTime) {
       clearInterval(authNoTimer);
       setShowAuthNoTimer(true);
       const counter = setInterval(() => {
         const gap = Math.floor(new Date(expireTime.getTime() - new Date().getTime()) / 1000);
         setAuthNoTime(gap > 0 ? gap : 0);
+        if (gap < 120) {
+          setDisableSendAuthNo(false);
+        }
       }, 1000);
   
       setAuthNoTimer(counter);
@@ -99,12 +113,14 @@ const SignUpStep2 = ({ setStep, setPhoneAuthValues }) => {
 
   useEffect(() => {
     if (authNoTime < 0) {
-      console.log("timer 리소스 해제 완료")
+      // console.log("timer 리소스 해제 완료")
       clearInterval(authNoTimer);
     }
   }, [authNoTime])
 
   useEffect(() => {
+    setValues({...values, ...initValues});
+
     return () => {
       setShowAuthNoTimer(false);
       if (authNoTimer) clearInterval(authNoTimer);
@@ -124,51 +140,54 @@ const SignUpStep2 = ({ setStep, setPhoneAuthValues }) => {
           {/* <!-- .StepPageHeader --> */}
           {/* <!-- MemberForm --> */}
           <div className={Style["MemberForm"]}>
-            {!sendAuthNo ? (
-              // <!-- 인증번호 전송.Item -->
-              <div className={values.phone.length > 0 ? cx("MemberFormItem", "is-Active") : Style["MemberFormItem"]}>
+              {/* <!-- 인증번호 전송.Item --> */}
+              <div className={values.phone.length > 0 && !disableSendAuthNo ? cx("MemberFormItem", "is-Active") : Style["MemberFormItem"]}>
                 <dl className={Style["MemberFormItem-inner"]}>
                   <dt className={Style["MemberFormItemTitle"]}>휴대전화 번호</dt>
-                  <dd className={Style["MemberFormItemCont"]}>
-                    <div className={Style["MemberFormReg"]}>
-                      <input 
-                        type="number" 
-                        className={Style["MemberFormReg-input"]} 
-                        placeholder="‘-’ 빼고 입력"
-                        name="phone"
-                        value={values.phone}
-                        onChange={handleChange}
-                      />
-                    </div>
-                  </dd>
-                </dl>
-              </div>
-              // <!-- 인증번호 전송.Item -->
-            ) : (
-              // <!-- 인증번호 입력 Item -->
-              <div className={values.authNo.length > 0 && !phoneVerified ? cx("MemberFormItem", "is-Active") : Style["MemberFormItem"]}>
-                <dl className={Style["MemberFormItem-inner"]}>
-                  <dt className={Style["MemberFormItemTitle"]}>인증번호 4자리</dt>
                   <dd className={Style["MemberFormItemCont"]}>
                     <div className={Style["MemberFormItemBtn"]}>
                       <div className={Style["MemberFormReg"]}>
                         <input 
                           type="number" 
                           className={Style["MemberFormReg-input"]} 
-                          placeholder="1234"
-                          name="authNo"
-                          value={values.authNo}
-                          onChange={handleChange} 
+                          placeholder="‘-’ 빼고 입력"
+                          name="phone"
+                          value={values.phone}
+                          onChange={handleChange}
+                          disabled={phoneVerified}
                         />
                       </div>
-                      <button type="button" className={Style["MemberFormReg-btn"]} onClick={handleVerifyAuthNo}>확인</button>
+                      <button type="button" className={Style["MemberFormReg-btn"]} onClick={handleSendAuthNo}>인증번호 받기</button>
                     </div>
                   </dd>
-                  {!phoneVerified && showAuthNoTimer ? <div className={Style["Message-time"]}>남은 시간 {formattedTime()}</div> : null}
                 </dl>
               </div>
+              {/* <!-- 인증번호 전송.Item --> */}
+              {sendAuthNo ? (
+              // <!-- 인증번호 입력 Item -->
+                <div className={values.authNo.length > 0 && !phoneVerified ? cx("MemberFormItem", "is-Active") : Style["MemberFormItem"]}>
+                  <dl className={Style["MemberFormItem-inner"]}>
+                    <dt className={Style["MemberFormItemTitle"]}>인증번호 4자리</dt>
+                    <dd className={Style["MemberFormItemCont"]}>
+                      <div className={Style["MemberFormItemBtn"]}>
+                        <div className={Style["MemberFormReg"]}>
+                          <input 
+                            type="number" 
+                            className={Style["MemberFormReg-input"]} 
+                            placeholder="1234"
+                            name="authNo"
+                            value={values.authNo}
+                            onChange={handleChange} 
+                          />
+                        </div>
+                        <button type="button" className={Style["MemberFormReg-btn"]} onClick={handleVerifyAuthNo}>확인</button>
+                      </div>
+                    </dd>
+                    {!phoneVerified && showAuthNoTimer ? <div className={Style["Message-time"]}>남은 시간 {formattedTime()}</div> : null}
+                  </dl>
+                </div>
               // <!-- 인증번호 입력.Item -->
-            )}
+              ) : null}
           </div>
           {/* <!-- .MemberForm --> */}
           {/* <!-- MessageInfo --> */}
@@ -185,11 +204,20 @@ const SignUpStep2 = ({ setStep, setPhoneAuthValues }) => {
         {/* <!-- BttonFixButton --> */}
         <div className={cx("BttonFixButton", "no-Scroll")}>
           <div className={"site-container"}>
-            {!sendAuthNo ? (
-              <button type="button" className={Style["BttonFixButton-button"]} onClick={handleSendAuthNo}>인증번호 받기</button>
-            ) : (
-              <button type="button" className={Style["BttonFixButton-button"]} onClick={handleNextStep}>인증 완료하기</button>
-            )}
+            {/* {!sendAuthNo ? (
+              <button 
+                type="button" 
+                className={values.phone.length < 9 ? cx("BttonFixButton-button", "is-disable") : Style["BttonFixButton-button"]}
+                onClick={handleSendAuthNo}
+              >인증번호 받기</button>
+            ) : ( */}
+            <button 
+              type="button" 
+              className={!phoneVerified ? cx("BttonFixButton-button", "is-disable") : Style["BttonFixButton-button"]} 
+              onClick={handleNextStep}
+              disabled={!phoneVerified}
+            >인증 완료하기</button>
+            {/* )} */}
           </div>
         </div>
         {/* <!-- .BttonFixButton --> */}

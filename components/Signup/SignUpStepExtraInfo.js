@@ -1,25 +1,48 @@
 import { React, useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import Style from "../../styles/Component.module.css";
 import classNames from 'classnames/bind';
-import { NicknameValidate } from './utils/SignUpValidate';
+import BirthdayModal from './../Modal/SignUp/BirthdayModal';
+import AddressModal from './../Modal/SignUp/AddressModal';
+// import { NicknameValidate } from './utils/SignUpValidate';
+// import axios from 'axios';
 
 const cx = classNames.bind(Style);
 
-const SignUpStepExtraInfo = ({ setStep }) => {
+const SignUpStepExtraInfo = ({ setStep, setExtraValues, initValues, callback }) => {
+	const router = useRouter();
 
 	const [values, setValues] = useState({
-    nickName: ''
+    // nickName: '',
+		birthday: {
+			year: '',
+			month: '',
+			day: ''
+		},
+		sex: '',
+		address: ''
   });
 
-	const [nickNameValidation, setNickNameValidation] = useState({
-		type: false,
-		length: false
-	});
-	const [isCheckedNickName, setIsCheckedNickName] = useState(false);
+	// const [nickNameValidation, setNickNameValidation] = useState({
+	// 	type: false,
+	// 	length: false
+	// });
+	// const [isCheckedNickName, setIsCheckedNickName] = useState(false);
+	const [isSetBirthday, setIsSetBirthday] = useState(false);
+  const [birthdayModalOpen, setBirthdayModalOpen] = useState(false);
+  const [addressModalOpen, setAddressModalOpen] = useState(false);
 
-  const handleNextStep = (e) => {
+  const handleNextStep = async (e) => {
     e.preventDefault();
-    setStep(6);
+
+		setExtraValues({...values});
+		// const result = await callback();
+		// if (result.success) {
+			setStep(7);
+		// } else {
+		// 	alert(result.message);
+		// 	router.push('/login');
+		// }
   };
 
 	const handleChange = (e) => {
@@ -27,11 +50,47 @@ const SignUpStepExtraInfo = ({ setStep }) => {
     setValues({...values, [name]: value});
   };
 
-  useEffect(() => {
-    const validation = NicknameValidate(values.nickName);
-    setNickNameValidation({...validation});
-		// console.log(validation);
-  }, [values]);
+	const handleSelectSex = (e) => {
+    const { name } = e.target;
+    setValues({...values, sex: name});
+	};
+
+	const handleBirthdayCallback = (birthday) => {
+		setValues({...values, birthday: birthday});
+		setIsSetBirthday(true);
+	};
+
+	const handleAddressCallback = (address) => {
+		setValues({...values, address: address});
+	};
+
+	// const checkDuplication = (e) => {
+	// 	e.preventDefault();
+
+	// 	const formData = new FormData();
+  //   formData.append('nickName', values.nickName);
+
+  //   axios({
+  //     method: "POST",
+  //     url: "http://shineware.iptime.org:8081/auth/user/checkNickName",
+  //     data: formData,
+  //   }).then((res) => {
+	// 		setIsCheckedNickName(true);
+  //   }).catch((e) => {
+	// 		alert('중복확인 중 에러가 발생하였습니다.');
+	// 		console.error(e);
+  //   });
+	// };
+
+	useEffect(() => {
+    setValues({...initValues});
+	}, []);
+
+  // useEffect(() => {
+  //   const validation = NicknameValidate(values.nickName);
+  //   setNickNameValidation({...validation});
+	// 	setIsCheckedNickName(false);
+  // }, [values.nickName]);
 
   return (
     <div className="site-body">
@@ -46,11 +105,11 @@ const SignUpStepExtraInfo = ({ setStep }) => {
           {/* <!-- MemberForm --> */}
           <div className={Style["MemberForm"]}>
             {/* <!-- Item --> */}
-            <div className={values.nickName > 0 ? cx("MemberFormItem", "is-Active") : Style["MemberFormItem"]}>
+            {/* <div className={values.nickName.length > 0 && !isCheckedNickName ? cx("MemberFormItem", "is-Active") : Style["MemberFormItem"]}>
               <dl className={Style["MemberFormItem-inner"]}>
                 <dt className={Style["MemberFormItemTitle"]}>닉네임<span className={Style["Required-text"]}>*</span></dt>
                 <dd className={Style["MemberFormItemCont"]}>
-                <div className={isCheckedNickName ? cx("MemberFormItemBtn", "Checking", "is-Pass") : Style["MemberFormItemBtn"]}>
+									<div className={isCheckedNickName ? cx("MemberFormItemBtn", "Checking", "is-Pass") : Style["MemberFormItemBtn"]}>
 										<div className={Style["MemberFormReg"]}>
 											<input 
 												type="text" 
@@ -61,41 +120,40 @@ const SignUpStepExtraInfo = ({ setStep }) => {
 												onChange={handleChange}
 											/>
 										</div>
-										<button type="button" className={Style["MemberFormReg-btn"]}>변경하기</button>
+										<button type="button" className={Style["MemberFormReg-btn"]} onClick={checkDuplication}>중복확인</button>
 									</div>
                 </dd>
               </dl>
-							{/* {!nickNameValidation.length && nickNameValidation.type ? <div className={cx("Error-text", "is-Active")}>이메일은 최소 4자, 최대 20자까지 가능합니다.</div> : null}
-							{!nickNameValidation.type && values.nickName.length > 0 ? <div className={cx("Error-text", "is-Active")}>이메일 형식을 확인해주세요.</div> : null} */}
-            </div>
+							{!nickNameValidation.length && nickNameValidation.type ? <div className={cx("Error-text", "is-Active")}>닉네임은 최소 2자, 최대 20자까지 가능합니다.</div> : null}
+							{!nickNameValidation.type && values.nickName.length > 0 ? <div className={cx("Error-text", "is-Active")}>닉네임 형식을 확인해주세요.</div> : null}
+            </div> */}
             {/* <!-- .Item --> */}
             {/* <!-- Item --> */}
-						<div className={Style["MemberFormItem"]}>
+            <div className={values.birthday.year.length > 0 ? cx("MemberFormItem", "is-Active") : Style["MemberFormItem"]}>
 							<dl className={Style["MemberFormItem-inner"]}>
 								<dt className={Style["MemberFormItemTitle"]}>생년월일<span className={Style["Required-text"]}>*</span></dt>
-								<dd className={Style["MemberFormItemCont"]}>
+								<dd className={Style["MemberFormItemCont"]} onClick={() => setBirthdayModalOpen(true)}>
                   <div className={Style["MemberFormBirthday"]}>
 										<ul className={Style["MemberFormBirthday-inner"]}>
 											<li className={Style["MemberFormBirthday-item"]}>
 												<div className={Style["MemberFormReg"]}>
-													<input type="text" className={Style["MemberFormReg-input"]} readOnly />
+													<input type="text" className={Style["MemberFormReg-input"]} value={values.birthday.year} readOnly />
 												</div>
 											</li>
 											<li className={Style["MemberFormBirthday-item"]}>
 												<div className={Style["MemberFormReg"]}>
-													<input type="text" className={Style["MemberFormReg-input"]} readOnly />
+													<input type="text" className={Style["MemberFormReg-input"]} value={values.birthday.month} readOnly />
 												</div>
 											</li>
 											<li className={Style["MemberFormBirthday-item"]}>
 												<div className={Style["MemberFormReg"]}>
-													<input type="text" className={Style["MemberFormReg-input"]} readOnly />
+													<input type="text" className={Style["MemberFormReg-input"]} value={values.birthday.day} readOnly />
 												</div>
 											</li>
 										</ul>
 									</div>
 								</dd>
 							</dl>
-							
 						</div>
 						{/* <!-- .Item --> */}
             {/* <!-- Item --> */}
@@ -106,13 +164,27 @@ const SignUpStepExtraInfo = ({ setStep }) => {
 									<ul className={Style["ApplySectionList"]}>
 										<li className={Style["ApplySectionList-item"]}>
 											<label className={Style["MemberFormBasicRadio"]}>
-												<input type="radio" name="BasicRadio" className={Style["MemberFormBasicRadio-input"]} />
+												<input 
+													type="radio" 
+													name="woman" 
+													className={Style["MemberFormBasicRadio-input"]} 
+													onClick={handleSelectSex} 
+													checked={values.sex == 'woman'} 
+													readOnly 
+												/>
 												<span className={Style["MemberFormBasicRadio-text"]}>여성</span>
 											</label>
 										</li>
 										<li className={Style["ApplySectionList-item"]}>
 											<label className={Style["MemberFormBasicRadio"]}>
-												<input type="radio" name="BasicRadio" className={Style["MemberFormBasicRadio-input"]} />
+												<input 
+													type="radio" 
+													name="man" 
+													className={Style["MemberFormBasicRadio-input"]} 
+													onClick={handleSelectSex} 
+													checked={values.sex == 'man'} 
+													readOnly 
+												/>
 												<span className={Style["MemberFormBasicRadio-text"]}>남성</span>
 											</label>
 										</li>
@@ -129,8 +201,9 @@ const SignUpStepExtraInfo = ({ setStep }) => {
 										<div className={Style["MemberFormItemTitle"]}>현 주소</div>
 									</dt>
 									<dd className={Style["MemberFormAddress-cont"]}>
-										<a href="#" className={Style["MemberFormAddress-link"]}>지역 선택</a>
-										{/* <a href="#" className={Style["MemberFormAddress-link"]}>'서울시' 선택 완료</a> */}
+										<a href="#" className={values.address ? cx("MemberFormAddress-link", "is-Active") : Style["MemberFormAddress-link"]} onClick={() => setAddressModalOpen(true)}>
+											{!values.address ? '지역 선택' : values.address + '선택 완료'}
+										</a>
 									</dd>
 								</dl>
 							</div>
@@ -143,11 +216,26 @@ const SignUpStepExtraInfo = ({ setStep }) => {
         {/* <!-- BttonFixButton --> */}
         <div className={cx("BttonFixButton", "no-Scroll")}>
           <div className={"site-container"}>
-						<button type="button" className={Style["BttonFixButton-button"]} onClick={handleNextStep}>입력 완료하기</button>
+						<button 
+							type="button" 
+							className={isSetBirthday ? Style["BttonFixButton-button"] : cx("BttonFixButton-button", "is-disable")} 
+							onClick={handleNextStep}
+						>입력 완료하기</button>
           </div>
         </div>
         {/* <!-- .BttonFixButton --> */}
       </div>
+			<BirthdayModal
+        isOpen={birthdayModalOpen}
+        onRequestClose={() => setBirthdayModalOpen(false)}
+        callback={handleBirthdayCallback}
+        values={values}
+			/>
+			<AddressModal
+        isOpen={addressModalOpen}
+        onRequestClose={() => setAddressModalOpen(false)}
+        callback={handleAddressCallback}
+			/>
       {/* /* <!-- .컨텐츠 끝 --> */}
     </div>
   )

@@ -1,10 +1,11 @@
 import { React, useEffect, useState } from 'react';
 import Style from "../../styles/Component.module.css";
 import classNames from 'classnames/bind';
+import { EmailValidate } from './utils/SignUpValidate';
 
 const cx = classNames.bind(Style);
 
-const SignUpStep3 = ({ setStep }) => {
+const SignUpStep3 = ({ setStep, setEmailValues, initValues }) => {
 
   const [values, setValues] = useState({
     email: ''
@@ -13,17 +14,23 @@ const SignUpStep3 = ({ setStep }) => {
 
   const handleNextStep = (e) => {
     e.preventDefault();
+    setEmailValues({...values});
     setStep(4);
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setValues({ ...values, [name]: value});
+    setValues({...values, [name]: value});
   };
 
   useEffect(() => {
-
+    setValues({...initValues});
   }, []);
+  
+  useEffect(() => {
+    const validation = EmailValidate(values.email);
+    setValidation(validation.type);
+  }, [values.email]);
 
   return (
     <div className="site-body">
@@ -66,9 +73,9 @@ const SignUpStep3 = ({ setStep }) => {
           <div className={"site-container"}>
 						<button 
               type="button" 
-              className={Style["BttonFixButton-button"]} 
+              className={!validation ? cx("BttonFixButton-button", "is-disable") : Style["BttonFixButton-button"]} 
               onClick={handleNextStep} 
-              disabled={validation && values.email.length > 0}
+              disabled={!validation && values.email.length >= 0}
             >다음</button>
           </div>
         </div>

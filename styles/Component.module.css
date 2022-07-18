@@ -5973,11 +5973,11 @@ body .MemberFormBirthday .MemberFormReg-input{
 	transform:translateY(-50%);
 }
 
-.is-Active .MemberFormAddress-link{
+.is-Active.MemberFormAddress-link{
 	color:#000;
 }
 
-.is-Active .MemberFormAddress-link:after{
+.is-Active.MemberFormAddress-link:after{
 	background-image:url(../public/icon/ico_input_arrow.svg);
 }
 
@@ -6174,7 +6174,7 @@ body .BirthdaySlide-wrapper{
 	padding:3.75rem 0;
 }
 
-.swiper-slide-active .BirthdaySlideText{
+.swiper-slide-active.BirthdaySlideText{
 	font-size:1.25rem;
 	color:#000;
 	font-weight:bold;

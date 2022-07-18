@@ -8,7 +8,6 @@ import * as userInfoActions from "../redux/store/modules/userInfo";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import Script from 'next/script';
-import MenuLoginButton from './../components/Button/Login/MenuLoginButton';
 import { JAVASCRIPT_KEY } from '../components/Button/Login/LoginConstant';
 import { CheckLogin, GetNewAccessTokenByRefreshToken } from './../components/Button/Login/Utils/LoginUtil';
 import { GetCookie } from "../components/Button/Login/Utils/CookieUtil";
@@ -71,10 +70,7 @@ function TravelX({ Component, pageProps }) {
         strategy="beforeInteractive"
       />
       <Script src="https://developers.kakao.com/sdk/js/kakao.js" strategy="beforeInteractive" />
-      {/* <Script src="validator.js" strategy="beforeInteractive" />
-      <Script src="multifield.js" strategy="beforeInteractive" /> */}
-      <ScrollTopArrow></ScrollTopArrow>      
-      {/* <MenuLoginButton /> */}
+      <ScrollTopArrow></ScrollTopArrow>
       <Component {...pageProps} />
     </div>
   );

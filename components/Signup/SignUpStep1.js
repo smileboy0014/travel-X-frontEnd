@@ -4,19 +4,21 @@ import classNames from 'classnames/bind';
 
 const cx = classNames.bind(Style);
 
-const SignUpStep1 = ({ setStep, setAgreeValues }) => {
+const SignUpStep1 = ({ setStep, setAgreeValues, initValues }) => {
 
   const [values, setValues] = useState({
     agreeAge: false,
     agreeService: false,
     agreePrivacy: false,
-    agreeMarketing: false
+    agreeMarketing: false,
+    agreeAll: false
   });
-  const [agreeAll, setAgreeAll] = useState(false);
+
+  const [isChecked, setIsChecked] = useState(false);
 
   const handleNextStep = (e) => {
     e.preventDefault();
-    setAgreeValues(values);
+    setAgreeValues({...values});
     setStep(2);
   };
 
@@ -26,19 +28,26 @@ const SignUpStep1 = ({ setStep, setAgreeValues }) => {
   };
 
   const handleAgreeAll = (e) => {
-    setAgreeAll(!agreeAll);
-
     setValues({
-      agreeAge: !agreeAll,
-      agreeService: !agreeAll,
-      agreePrivacy: !agreeAll,
-      agreeMarketing: !agreeAll
+      agreeAge: !values.agreeAll,
+      agreeService: !values.agreeAll,
+      agreePrivacy: !values.agreeAll,
+      agreeMarketing: !values.agreeAll,
+      agreeAll: !values.agreeAll
     });
   };
 
   useEffect(() => {
-
+    setValues({...initValues});
+    
   }, []);
+
+  useEffect(() => {
+    if (values.agreeAge && values.agreeService && values.agreePrivacy) 
+      setIsChecked(true);
+    else
+      setIsChecked(false);
+  }, [values])
 
   return (
     <div className="site-body">
@@ -54,7 +63,7 @@ const SignUpStep1 = ({ setStep, setAgreeValues }) => {
           <div className={Style["AgreeForm"]}>
             <div className={Style["AgreeFormAll"]}>
               <label className={Style["LageAgreeFormLabel"]}>
-                <input type="checkbox" className={Style["LageAgreeFormLabel-input"]} name="AgreeFormLabelAll" checked={agreeAll} readOnly />
+                <input type="checkbox" className={Style["LageAgreeFormLabel-input"]} name="AgreeFormLabelAll" checked={values.agreeAll} readOnly />
                 <span className={Style["LageAgreeFormLabel-text"]} onClick={handleAgreeAll}>모두 동의 (선택 정보 포함)</span>
               </label>
             </div>
@@ -93,7 +102,12 @@ const SignUpStep1 = ({ setStep, setAgreeValues }) => {
         {/* <!-- BttonFixButton --> */}
         <div className={cx("BttonFixButton", "no-Scroll")}>
           <div className={"site-container"}>
-            <button type="button" className={Style["BttonFixButton-button"]} onClick={handleNextStep}>동의하고 가입하기</button>
+            <button 
+              type="button" 
+              className={!isChecked ? cx("BttonFixButton-button", "is-disable") : Style["BttonFixButton-button"]} 
+              onClick={handleNextStep}
+              disabled={!isChecked}
+            >동의하고 가입하기</button>
           </div>
         </div>
         {/* <!-- .BttonFixButton --> */}

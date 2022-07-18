@@ -47,8 +47,20 @@ export const NicknameValidate = (nickName) => {
   if (/^[가-힣|a-z|A-Z|0-9|]+$/.test(nickName)) {
     validation.type = true;
   } 
-  if (nickName.length >= 4 && nickName.length <= 20) {
+  if (nickName.length >= 2 && nickName.length <= 20) {
     validation.length = true;
+  }
+
+  return validation;
+};
+
+export const EmailValidate = (email) => {
+  const validation = {
+    type: false
+  };
+
+  if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+    validation.type = true;
   }
 
   return validation;

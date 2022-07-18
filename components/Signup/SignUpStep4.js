@@ -5,7 +5,7 @@ import { PasswdValidate } from './utils/SignUpValidate';
 
 const cx = classNames.bind(Style);
 
-const SignUpStep4 = ({ setStep, setPasswdValues }) => {
+const SignUpStep4 = ({ setStep, setPasswdValues, setPasswdValidateValues, initValues, initValidateValues }) => {
 
   const [values, setValues] = useState({
     passwd: '',
@@ -24,13 +24,19 @@ const SignUpStep4 = ({ setStep, setPasswdValues }) => {
   const handleNextStep = (e) => {
     e.preventDefault();
     setStep(5);
-    setPasswdValues(values);
+    setPasswdValues({...values});
+    setPasswdValidateValues({...validateValues});
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setValues({...values, [name]: value});
   };
+
+  useEffect(() => {
+    setValues({...initValues});
+    setValidateValues({...initValidateValues});
+  }, []);
 
   useEffect(() => {
     const validation = PasswdValidate(values);
@@ -50,7 +56,7 @@ const SignUpStep4 = ({ setStep, setPasswdValues }) => {
           {/* <!-- MemberForm --> */}
           <div className={Style["MemberForm"]}>
             {/* <!-- Item --> */}
-            <div className={values.passwd.length > 0 ? cx("MemberFormItem", "is-Active") : Style["MemberFormItem"]}>
+            <div className={Style["MemberFormItem"]}>
               <dl className={Style["MemberFormItem-inner"]}>
                 <dt className={Style["MemberFormItemTitle"]}>비밀번호 입력</dt>
                 <dd className={Style["MemberFormItemCont"]}>
@@ -87,7 +93,7 @@ const SignUpStep4 = ({ setStep, setPasswdValues }) => {
             </div>
             {/* <!-- .Item --> */}
             {/* <!-- Item --> */}
-            <div className={values.confirmPasswd.length > 0 ? cx("MemberFormItem", "is-Active") : Style["MemberFormItem"]}>
+            <div className={Style["MemberFormItem"]}>
 							<dl className={Style["MemberFormItem-inner"]}>
 								<dt className={Style["MemberFormItemTitle"]}>비밀번호 확인</dt>
 								<dd className={Style["MemberFormItemCont"]}>
@@ -121,7 +127,7 @@ const SignUpStep4 = ({ setStep, setPasswdValues }) => {
         {/* <!-- BttonFixButton --> */}
         <div className={cx("BttonFixButton", "no-Scroll")}>
           <div className={"site-container"}>
-						<button type="button" className={Style["BttonFixButton-button"]} onClick={handleNextStep} disabled={!validateValues.validateAll}>다음</button>
+						<button type="button" className={!validateValues.validateAll ? cx("BttonFixButton-button", "is-disable") : Style["BttonFixButton-button"]} onClick={handleNextStep} disabled={!validateValues.validateAll}>다음</button>
           </div>
         </div>
         {/* <!-- .BttonFixButton --> */}
