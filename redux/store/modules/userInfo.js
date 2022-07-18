@@ -5,7 +5,7 @@ const initialState = {
     auth: false,
     id: null,
     accessToken: null,
-    name: '',
+    nickName: '',
     email: '',
     pub: ''
   }

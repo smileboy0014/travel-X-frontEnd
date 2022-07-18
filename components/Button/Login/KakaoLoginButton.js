@@ -24,6 +24,7 @@ const KakaoLoginButton = () => {
   const handleKakaoLogin = (e) => {
     e.preventDefault();
     // 1. 인가 코드 요청 / 토큰 발급
+    
     window.Kakao.Auth.login({
       scope,
       success: (loginResponse) => {
@@ -42,7 +43,10 @@ const KakaoLoginButton = () => {
             console.log(result);
             if (result.auth) {
               console.debug(`KakaoUserId: ${userResponse.id}`);
-              dispatch(userInfoActions.setUserInfo({ pub: PUBLISHER_KAKAO, id: userResponse.id, auth: true }));
+              // 이름 정보 필요해서 넣어 줌 by gtpark
+              // console.log(result);
+              // debugger;
+              dispatch(userInfoActions.setUserInfo({ pub: PUBLISHER_KAKAO, id: userResponse.id, auth: true, nickName: result.nickName}));
               const params = new URLSearchParams(location.search);
               const curRedirectUri = params.get('redirectUri');
         

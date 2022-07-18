@@ -1,10 +1,12 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
 import Style from "../../styles/Component.module.css";
 import DetailTopNavbar from "../../components/NavBar/DetailTopNavbar";
 import classNames from 'classnames/bind';
 import Link from 'next/link';
+import { data } from "jquery";
 
 const cx = classNames.bind(Style);
 
@@ -12,8 +14,187 @@ const ModifyMyInfo = () => {
 	// debugger;
 	// const redirectUri = useSelector(({ redirectUri }) => redirectUri.value);
 	// console.log(`redirectUri is ${redirectUri}`);
-	const { auth } = useSelector((state) => state.userInfo.info);
-	console.log(`auth is ${auth}`);
+	const router = useRouter();
+	const userInfo = useSelector((state) => state.userInfo.info);
+	// console.log(userInfo);
+	// male, female 로 남자, 여자 나눔
+	const [sexType, setSexType] = useState("MALE");
+	const [birthday, setBirthday] = useState({ year: "", month: "", day: "" })
+	const [user, setUser] = useState({
+		id: "",
+		authPublisher: "",
+		userId: "",
+		password: "",
+		nickName: null,
+		userExtraInfo: {
+			name: "",
+			phoneNumber: "",
+			birthday: "",
+			gender: "",
+			location: ""
+		}
+	});
+	// debugger;
+
+	const onChangeHandler = (value, type) => {
+		// debugger;
+		switch (type) {
+			case 'name':
+				setUser((current) => {
+					let newUser = { ...current };
+					newUser['userExtraInfo'].name = value;
+					return newUser;
+				});
+				// console.log(user);
+				break;
+
+			case 'phoneNumber':
+				setUser((current) => {
+					let newUser = { ...current };
+					newUser['userExtraInfo'].phoneNumber = value;
+					return newUser;
+				});
+				// console.log(user);
+				break;
+
+			case 'location':
+				setUser((current) => {
+					let newUser = { ...current };
+					newUser['userExtraInfo'].location = value;
+					return newUser;
+				});
+				// console.log(user);
+				break;
+
+			case 'sex': {
+				setSexType(value);
+				break;
+			}
+
+			case 'year':
+				setBirthday((current) => {
+					let newBirthday = { ...current };
+					newBirthday[type] = value;
+					return newBirthday;
+				});
+				// console.log(birthday);
+				break;
+
+
+			case 'month':
+				setBirthday((current) => {
+					let newBirthday = { ...current };
+					newBirthday[type] = value;
+					return newBirthday;
+				});
+				// console.log(birthday);
+				break;
+
+
+			case 'day':
+				setBirthday((current) => {
+					let newBirthday = { ...current };
+					newBirthday[type] = value;
+					return newBirthday;
+				});
+				// console.log(birthday);
+				break;
+
+			// case ['year','month', 'day']: {
+			// 	setBirthday((current) => {
+			// 		let newBirthday = { ...current };
+			// 		newBirthday[type] = value;
+			// 		return newBirthday;
+			// 	});
+			// 	console.log(birthday);
+			// 	break;
+			// }
+
+		}
+
+		// console.log(user);
+	}
+
+	const splitBirthdayFun = (data) => {
+		if (data) {
+			// debugger;
+			setBirthday({ year: data.substring(0, 4), month: data.substring(4, 6), day: data.substring(6, 8) })
+		}
+	}
+
+	const checkNumber = (type, data) => {
+		// debugger;
+		if(type === 'month' && data.month.length < 2 && parseInt(data.month) < 10){
+			data.month = '0'+data.month;
+			// console.log(data.month);
+		} else if(type === 'day' && data.day.length < 2 && parseInt(data.day) < 10 ){
+			data.day = '0'+data.day;
+			// console.log(data.day);
+		}
+
+	}
+	const combineBirthdayFun = (data) =>{
+
+		checkNumber('month',data);
+		checkNumber('day',data);
+		console.log(data);
+		return data.year+data.month+data.day;
+	}
+
+	const getUserInfo = () => {
+
+		const formData = new FormData();
+		formData.append('authPublisher', userInfo.pub);
+		formData.append('userId', userInfo.id);
+		formData.append('password', userInfo.pwd ? userInfo.pwd : null);
+
+		axios.post('http://shineware.iptime.org:8081/auth/user/get', formData)
+			.then((res) => {
+				// debugger;
+				if (res.data !== undefined) {
+					// console.log(res.data);
+					setUser(res.data);
+					setSexType(res.data.userExtraInfo.gender);
+					splitBirthdayFun(res.data.userExtraInfo.birthday);
+				}
+			}).catch((e) => {
+				console.log(e);
+			})
+	}
+
+	const modifyExtraInfo = () => {
+		// console.log(user);
+		// console.log(birthday);
+		// console.log(combineBirthdayFun(birthday));
+
+		const formData = new FormData();
+		formData.append('authPublisher', user.authPublisher);
+		formData.append('birthday', combineBirthdayFun(birthday));
+		formData.append('gender', sexType);
+		formData.append('location', user.userExtraInfo.location);
+		formData.append('name', user.userExtraInfo.name);
+		formData.append('phoneNumber', user.userExtraInfo.phoneNumber);
+		formData.append('password', user.password ? user.pwd : null);
+		formData.append('userId', user.userId);
+	
+
+		axios.post('http://shineware.iptime.org:8081/auth/user/modifyExtraInfo', formData)
+			.then((res) => {
+				if (res.data !== undefined) {
+					console.log('success to modify user ExtraInfo');
+					router.back();
+				}
+			}).catch((e) => {
+				console.log(e);
+			})
+	}
+
+	useEffect(() => {
+		if(userInfo.id){
+			getUserInfo();
+		}
+	
+	}, [userInfo])
 
 
 	return (
@@ -35,10 +216,10 @@ const ModifyMyInfo = () => {
 					<div className={Style["ApplySection"]}>
 						<div className={"site-container"}>
 							<div className={Style["ApplyHeader"]}>
-								<h2 className={Style["ApplyHeader-name"]}>휜둥이님
+								<h2 className={Style["ApplyHeader-name"]}>{user.nickName ? user.nickName : '닉네임을 입력해주세요.'}
 									<Link href={{
 										pathname: "/myInfo/modifyMyName"
-										
+
 									}}>
 										<button className={Style["ApplyHeader-btn"]} type="button">
 											<span className={Style["ab-text"]}>닉네임 변경</span>
@@ -62,7 +243,8 @@ const ModifyMyInfo = () => {
 											<label className={Style["ReservationInput-label"]} htmlFor="Reservation-user">성명</label>
 										</dt>
 										<dd className={Style["ReservationInput-text"]}>
-											<input type="text" placeholder="성명을 입력해주세요." className={Style["ReservationInput-input"]} />
+											<input type="text" placeholder="성명을 입력해주세요." defaultValue={user.userExtraInfo.name} onChange={(e) => onChangeHandler(e.target.value, 'name')}
+												className={Style["ReservationInput-input"]} />
 										</dd>
 									</dl>
 								</div>
@@ -74,7 +256,8 @@ const ModifyMyInfo = () => {
 											<label className={Style["ReservationInput-label"]} htmlFor="Reservation-user">휴대폰 번호</label>
 										</dt>
 										<dd className={Style["ReservationInput-text"]}>
-											<input type="tel" placeholder="010-1234-5678" className={Style["ReservationInput-input"]} />
+											<input type="tel" placeholder="010-1234-5678" defaultValue={user.userExtraInfo.phoneNumber} onChange={(e) => onChangeHandler(e.target.value, 'phoneNumber')}
+												className={Style["ReservationInput-input"]} />
 										</dd>
 									</dl>
 								</div>
@@ -98,13 +281,17 @@ const ModifyMyInfo = () => {
 											<div className={Style["ReservationBirthday"]}>
 												<ul className={Style["ReservationBirthday-inner"]}>
 													<li className={Style["ReservationBirthday-item"]}>
-														<input type="number" placeholder={2000} className={Style["ReservationBirthday-input"]} />
+														<input type="number" placeholder={2000} defaultValue={birthday.year} onChange={(e) => onChangeHandler(e.target.value, 'year')}
+															className={Style["ReservationBirthday-input"]} />
+
 													</li>
 													<li className={Style["ReservationBirthday-item"]}>
-														<input type="number" placeholder={10} className={Style["ReservationBirthday-input"]} />
+														<input type="number" placeholder={10} defaultValue={birthday.month} onChange={(e) => onChangeHandler(e.target.value, 'month')}
+															className={Style["ReservationBirthday-input"]} />
 													</li>
 													<li className={Style["ReservationBirthday-item"]}>
-														<input type="number" placeholder={14} className={Style["ReservationBirthday-input"]} />
+														<input type="number" placeholder={14} defaultValue={birthday.day} onChange={(e) => onChangeHandler(e.target.value, 'day')}
+															className={Style["ReservationBirthday-input"]} />
 													</li>
 												</ul>
 											</div>
@@ -123,13 +310,15 @@ const ModifyMyInfo = () => {
 											<ul className={Style["ApplySectionList"]}>
 												<li className={Style["ApplySectionList-item"]}>
 													<label className={Style["BasicRadio"]}>
-														<input type="radio" name="BasicRadio" className={Style["BasicRadio-input"]} />
+														<input type="radio" name="BasicRadio" value="FEMALE" onChange={(e) => onChangeHandler(e.target.value, 'sex')}
+															checked={sexType === "FEMALE"} className={Style["BasicRadio-input"]} />
 														<span className={Style["BasicRadio-text"]}>여성</span>
 													</label>
 												</li>
 												<li className={Style["ApplySectionList-item"]}>
 													<label className={Style["BasicRadio"]}>
-														<input type="radio" name="BasicRadio" className={Style["BasicRadio-input"]} />
+														<input type="radio" name="BasicRadio" value="MALE" onChange={(e) => onChangeHandler(e.target.value, 'sex')}
+															checked={sexType === "MALE"} className={Style["BasicRadio-input"]} />
 														<span className={Style["BasicRadio-text"]}>남성</span>
 													</label>
 												</li>
@@ -145,7 +334,9 @@ const ModifyMyInfo = () => {
 											<label className={Style["ReservationInput-label"]} htmlFor="Reservation-user">현 주소</label>
 										</dt>
 										<dd className={Style["ReservationInput-text"]}>
-											<input type="tel" className={cx("ReservationInput-input", "ico-Arrow")} placeholder="지역선택" />
+											<input type="tel" className={cx("ReservationInput-input", "ico-Arrow")} onChange={(e) => onChangeHandler(e.target.value, 'location')}
+												defaultValue={user.userExtraInfo.location} placeholder="지역선택" />
+
 										</dd>
 									</dl>
 								</div>
@@ -166,7 +357,7 @@ const ModifyMyInfo = () => {
 					{/* BttonFixButton */}
 					<div className={Style["BttonFixButton"]}>
 						<div className={"site-container"}>
-							<button type="button" className={Style["BttonFixButton-button"]}>저장하기</button>
+							<button type="button" className={Style["BttonFixButton-button"]} onClick={() => modifyExtraInfo()}>저장하기</button>
 						</div>
 					</div>
 					{/* .BttonFixButton */}

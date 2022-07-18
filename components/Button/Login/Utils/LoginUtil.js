@@ -3,7 +3,7 @@ import { CLIENT_SECRET, PUBLISHER_KAKAO, PUBLISHER_TRAVELX, PUBLISHER_NAVER, RES
 import { GetCookie, SetCookie } from './CookieUtil';
 
 export const LoginToTravelXServer = async (publisher, userId, pwd = null) => {
-  const result = { auth: false, userId: "", status: "" }
+  const result = { auth: false, userId: "", status: "", nickName:"" }
   try {
     const formData = new FormData();
     formData.append('authPublisher', publisher);
@@ -15,7 +15,9 @@ export const LoginToTravelXServer = async (publisher, userId, pwd = null) => {
     
     result.auth = true;
     result.userId = userId;
-
+    // 이름 정보 안 넣어줘서 넣어 줌 by gtpark
+    result.nickName = res.data.nickName;
+    // debugger;
     return result;
   } catch (e) {
     // console.error(e);
@@ -38,7 +40,7 @@ export const LoginByTravelXUserToTravelXServer = async (userId, password = null)
 
     const tokenFormData = new FormData();
     tokenFormData.append('token', generateTokenResponse.data);
-
+    
     const userInfoResponse = await axios.post('http://shineware.iptime.org:8081/auth/user/getUserInfo', tokenFormData);
     // console.log('TravelX User Info Response', userInfoResponse.data);
     const result = await LoginToTravelXServer(PUBLISHER_TRAVELX, userInfoResponse.data.userId, password);
@@ -75,6 +77,7 @@ export const RegisterUserToTravelXServer = async (publisher, userId, password = 
 };
 
 export const CheckLogin = async (authPublisher) => {
+  // debugger;
   let result = { auth: false, id: null };
   
   switch (authPublisher) {
@@ -91,7 +94,7 @@ export const CheckLogin = async (authPublisher) => {
           fail: (e) => {
             // TODO : e값 형태 확인하기
             // debugger;
-            if (e.code == 401 || e.response.status == '401') {
+            if (e.code == 401 || (e.response && e.response.status == '401')) {
               GetNewAccessTokenByRefreshToken(PUBLISHER_KAKAO);
             } else {
               result = { auth: false, id: null };
