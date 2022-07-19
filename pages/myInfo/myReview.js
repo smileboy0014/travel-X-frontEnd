@@ -10,6 +10,10 @@ import MyReviewMoreModal from "../../components/Modal/MyReview/MyReviewMoreModal
 import MyReviewDeleteModal from "../../components/Modal/MyReview/MyReviewDeleteModal";
 import classNames from 'classnames/bind';
 import Link from 'next/link';
+import {propertyTypeFilter} from '../../shared/js/CommonFilter';
+import {DEFAULT_API_URL} from '../../shared/js/CommonConstant';
+import {changeDateForm} from '../../shared/js/CommonFun';
+
 
 const cx = classNames.bind(Style);
 
@@ -35,14 +39,14 @@ const MyReview = () => {
 		// debugger;
 		axios({
 			method: "GET",
-			url: "http://shineware.iptime.org:8081/review/getByUserId",
+			url: DEFAULT_API_URL+"/review/getByUserId",
 			params: {
 				userId: userInfo.id,
 				from: from,
 				size: size
 			},
 		}).then((res) => {
-
+			console.log(res.data);
 			if (res.data !== undefined && res.data.length > 0) {
 				// debugger;
 				let filterReviews = res.data.map((review) => {
@@ -116,17 +120,6 @@ const MyReview = () => {
 
 	}
 
-	const formattingDate = (date) =>{
-		let dateArr;
-    if (date != null) {
-      dateArr = date.split('T');
-      return dateArr[0]
-    } else {
-      return null;
-    }
-
-	}
-
 	useEffect(() => {
 		// debugger;
 		// console.log(`is review loading is ${isReviewLoading}`);
@@ -141,7 +134,7 @@ const MyReview = () => {
 	}, [isReviewLoading])
 
 	useEffect(() =>{
-		debugger;
+		// debugger;
 		if(returnCallHttpMethod){
 			// debugger;
 			getMyReviews();
@@ -167,7 +160,9 @@ const MyReview = () => {
 
 	useEffect(() => {
 		// debugger;
-		getMyReviews();
+	
+			getMyReviews();
+		
 	}, [])
 
 
@@ -216,26 +211,25 @@ const MyReview = () => {
 										</span>
 									</button>
 									<div className={Style["ReviewPostItemSecHeadMeta"]}>
-										<span className={cx("ReviewPostItemSecHeadMeta-item", "icoHotel")}>호텔</span>
-										<span className={Style["ReviewPostItemSecHeadMeta-item"]}>슈페리어 트윈 호텔</span>
+										<span className={cx("ReviewPostItemSecHeadMeta-item", "icoHotel")}>{propertyTypeFilter(item.roomDocument.propertyType)}</span>
+										<span className={Style["ReviewPostItemSecHeadMeta-item"]}>{item.roomDocument.propertyName}</span>
 									</div>
-									<div className={Style["ReviewPostItemSecHeadTitle"]}>슈페리어 트윈 (넷플릭스 - 숙소 문의)</div>
+									<div className={Style["ReviewPostItemSecHeadTitle"]}>{item.roomDocument.roomName}</div>
 								</div>
 								<div className={Style["ReviewPostItemMeta"]}>
 									<div className="ReviewPostItemMetaHead">
 										<div className={Style["ReviewPostItemMetaHead-name"]}>{item.userId}</div>
+
 										<div className={Style["BasicGrade"]}>
+
 											<div className={Style["BasicGradeStar"]}>
 												<span className={cx("BasicGradeStar-item", "check")}></span>
-												<span className={cx("BasicGradeStar-item", "check")}></span>
-												<span className={cx("BasicGradeStar-item", "check")}></span>
-												<span className={cx("BasicGradeStar-item", "check")}></span>
-												<span className={cx("BasicGradeStar-item")}></span>
 											</div>
+
 											<div className={Style["BasicGradeCount"]}>{item.averageScore} /5</div>
 										</div>
 									</div>
-									<div className={Style["ReviewPostItemMeta-date"]}>{formattingDate(item.date)}</div>
+									<div className={Style["ReviewPostItemMeta-date"]}>{changeDateForm(item.date)}</div>
 								</div>
 								<div className={Style["ReviewPostItemText"]}>
 									<button type="button" style={item.moreContents !== undefined && item.moreContents == true ? { display: 'block' } : { display: 'none' }} className={Style["ReviewPostItemTextBtn"]} onClick={() => onClickHandler('disappear', item, index)}>...<span className={Style["ReviewPostItemTextBtn-text"]}>더읽기</span></button>
@@ -251,7 +245,7 @@ const MyReview = () => {
 								{item.reviewReply.data != null ? <div className={Style["RewviewAnswer"]}>
 									<div className={Style["RewviewAnswerHeader"]}>
 										<div className={Style["RewviewAnswerHeader-name"]}>호텔주인</div>
-										<div className={Style["RewviewAnswerHeader-date"]}>{item.reviewReply.data}</div>
+										<div className={Style["RewviewAnswerHeader-date"]}>{changeDateForm(item.reviewReply.data)}</div>
 									</div>
 									<div className={Style["RewviewAnswerText"]}>{item.reviewReply.data}
 									</div>

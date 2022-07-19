@@ -6,8 +6,8 @@ import "swiper/css";
 import "swiper/css";
 import "swiper/css/pagination";
 import 'swiper/css/scrollbar';
+import {propertyTypeFilter} from '../../../shared/js/CommonFilter';
 import Link from "next/link";
-
 
 const MapResultCarousel = (props) => {
   // debugger;
@@ -55,7 +55,7 @@ const MapResultCarousel = (props) => {
                     />
                   </div>
                   <div className={Style["MapListCont"]}>
-                    <div className={Style["MapListCont-meta"]}>{item.type}</div>
+                    <div className={Style["MapListCont-meta"]}>{propertyTypeFilter(item.type)}</div>
                     <div className={Style["MapListCont-title"]}>{item.name}</div>
                     <div className={Style["MapListContGrade"]}>
                       <span className={Style["MapListContGrade-current"]}>

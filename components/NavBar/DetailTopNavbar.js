@@ -6,10 +6,19 @@ import ShareModal from "../Modal/Share/ShareModal";
 const DetailTopNavbar = ({ HeaderTitle }) => {
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const router = useRouter();
+  const onClickHandler = () =>{
+    // debugger;
+    if(router.route === '/myInfo'){
+      router.push('/');
+    } else {
+      router.back();
+    }
+    
+  }
 
   return (
     <>
-      <button className={Style["HeaderBack"]} onClick={() => router.back()}>
+      <button className={Style["HeaderBack"]} onClick={() => onClickHandler()}>
         <span className="ab-text">Back</span>
       </button>
       <div className={Style["HeaderTitle"]}>{HeaderTitle}</div>

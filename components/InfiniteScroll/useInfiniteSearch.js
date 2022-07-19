@@ -3,6 +3,7 @@ import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import * as searchResultActions from "../../redux/store/modules/searchResult";
 import mapBound from "../../redux/store/modules/mapBound";
+import {SEARCH_API_URL} from '../../shared/js/CommonConstant';
 
 export default function useInfiniteSearch(
   query,
@@ -146,7 +147,7 @@ export default function useInfiniteSearch(
       // debugger;
       axios({
         method: "GET",
-        url: "http://shineware.iptime.org:5050/search",
+        url: SEARCH_API_URL+"/search",
         params: param,
       })
         .then((res) => {
@@ -198,7 +199,7 @@ export default function useInfiniteSearch(
       // debugger;
       axios({
         method: "GET",
-        url: "http://shineware.iptime.org:5050/search",
+        url: SEARCH_API_URL+"/search",
         params: param,
       })
         .then((res) => {
@@ -242,7 +243,7 @@ export default function useInfiniteSearch(
       // debugger;
       axios({
         method: "GET",
-        url: "http://shineware.iptime.org:5050/search",
+        url: SEARCH_API_URL+"/search",
         params: param,
       })
         .then((res) => {

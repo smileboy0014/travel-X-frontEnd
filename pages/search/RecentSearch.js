@@ -28,12 +28,12 @@ const RecentSearch = ({
         id: Date.now(),
         text: sendSearchValue,
       };
-      debugger;
+      // debugger;
       let nowKewords = (localStorage.getItem("keywords") != null && localStorage.getItem("keywords") !== '') ? JSON.parse(localStorage.getItem("keywords")) : []; 
       const nextKeyword = nowKewords.filter((keyword) => {
         return keyword.text != newKeyword.text;
       });
-      debugger;
+      // debugger;
       localStorage.setItem("keywords", JSON.stringify([newKeyword, ...nextKeyword]));
       setKeywords([newKeyword, ...nextKeyword]);
     }
