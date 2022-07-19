@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import PesonalModal from "../../components/Modal/Personal/PersonalModal";
 import { useSelector } from "react-redux";
 import Style from "../../styles/Component.module.css";
+import {AUTO_COMPLETE_API_URL} from '../../shared/js/CommonConstant';
 
 const SearchBar = ({
   getSearchValue,
@@ -47,7 +48,7 @@ const SearchBar = ({
 
   const getAutoComplt = () => {
     Axios.get(
-      "http://shineware.iptime.org:5051/autocomplete?query=" + searchValue
+      AUTO_COMPLETE_API_URL+"/autocomplete?query=" + searchValue
     )
       .then((res) => {
         console.log("res.data: " + JSON.stringify(res.data["address"]));

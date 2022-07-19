@@ -1,5 +1,6 @@
 import { forwardRef, useEffect, Fragment } from "react";
 import SearchCard from "./SearchCard";
+import {propertyTypeFilter} from '../../shared/js/CommonFilter';
 
 const sampleImage =
   "image.goodchoice.kr/resize_490x348/adimg_new/891/279402/934791805cb0b0b25a27081f1dd3f584.jpg";
@@ -46,11 +47,13 @@ const SearchResultList = (props, ref) => {
                 basePrice={priceComma(room.basePrice)}
                 extraPrice={priceComma(room.extraPrice)}
                 propertyName={room.propertyName}
-                propertyType={
-                  room.propertyType !== undefined
-                    ? room.propertyType
-                    : "N/A"
-                }
+                propertyType={propertyTypeFilter(room.propertyType)}
+            
+                // propertyType={
+                //   room.propertyType !== undefined
+                //     ? room.propertyType
+                //     : "N/A"
+                // }
                 roomName={room.roomName}
                 stock={room.stock}
                 useType={room.useType}

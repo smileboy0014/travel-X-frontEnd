@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import * as scrollY from "../../../redux/store/modules/scrollY";
 import DetailCalendarModal from "../../../components/Modal/Calendar/DetailCalendarModal";
 import PesonalModal from "../../../components/Modal/Personal/PersonalModal";
+import {propertyTypeFilter} from '../../../shared/js/CommonFilter';
 import classNames from 'classnames/bind';
 
 const cx = classNames.bind(Style);
@@ -193,9 +194,10 @@ const DetailView = () => {
                   <div className={Style["DetailHeaderMeta"]}>
                     {/* <RiHotelLine size={10} /> */}
                     <span className={cx("DetailHeaderMeta-item", "icoHotel")}>
-                      {rooms.propertyInfo.type !== undefined
+                      {propertyTypeFilter(rooms.propertyInfo.type)}
+                      {/* {rooms.propertyInfo.type !== undefined
                         ? rooms.propertyInfo.type
-                        : "숙박 타입: N/A"}
+                        : "숙박 타입: N/A"} */}
                     </span>
 
                     <span className={Style["DetailHeaderMeta-item"]}>
