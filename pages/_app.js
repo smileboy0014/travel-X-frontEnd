@@ -32,11 +32,11 @@ function TravelX({ Component, pageProps }) {
         let checkLogin = await CheckLogin(authPublisher);
         
         if (checkLogin.auth) {
-          dispatch(userInfoActions.setUserInfo({ pub: authPublisher, id: checkLogin.id, auth: true }));
+          dispatch(userInfoActions.setUserInfo({ pub: authPublisher, id: checkLogin.id, auth: true, nickName: checkLogin.nickName }));
         } else {
           localStorage.removeItem("pub");
           localStorage.removeItem("tx");
-          dispatch(userInfoActions.setUserInfo({ pub: null, id: null, auth: false }));
+          dispatch(userInfoActions.setUserInfo({ pub: null, id: null, auth: false, nickName: null }));
         }
       }
     }

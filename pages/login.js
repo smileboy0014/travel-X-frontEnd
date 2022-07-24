@@ -1,6 +1,6 @@
 import { React, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as userInfoActions from "../redux/store/modules/userInfo";
 import Style from '../styles/Component.module.css';
 import { CheckLogin, LoginByTravelXUserToTravelXServer } from '../components/Button/Login/Utils/LoginUtil';
@@ -13,6 +13,7 @@ const cx = classNames.bind(Style);
 const Login = () => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const userInfo = useSelector((state) => state.userInfo.info);
 
   const [tab, setTab] = useState(0);
   const [passwdType, setPasswdType] = useState("password");
@@ -88,27 +89,27 @@ const Login = () => {
       let checkLogin = await CheckLogin(authPublisher);
       
       if (checkLogin.auth) {
-        dispatch(userInfoActions.setUserInfo({ pub: authPublisher, id: checkLogin.id, auth: true }));
+        dispatch(userInfoActions.setUserInfo({ 
+          pub: authPublisher, 
+          id: checkLogin.id, 
+          auth: true, 
+          nickName: checkLogin.nickName, 
+          userExtraInfo: checkLogin.userExtraInfo 
+        }));
         history.go(1);
       } else {
         localStorage.removeItem("pub");
         localStorage.removeItem("tx");
-        dispatch(userInfoActions.setUserInfo({ pub: null, id: null, auth: false }));
+        dispatch(userInfoActions.setUserInfo({ pub: null, id: null, auth: false, userExtraInfo: {}, nickName: null, accessToken: null }));
       }
     }
   }
 
   useEffect(() => {
-    handleCheckLogin();
-    // const authPublisher = localStorage.getItem("pub");
-
-    // // routeStart 이벤트 함수로 로그인 체크하므로 여기선 pub 값만 확인
-    // if (authPublisher) {
-    //   const params = new URLSearchParams(location.search);
-    //   const curRedirectUri = params.get('redirectUri');
-
-    //   router.push(curRedirectUri ? curRedirectUri : '/');
-    // }
+    // handleCheckLogin();
+    if (userInfo.auth) {
+      history.go(1);
+    }
   }, []);
 
   return (
