@@ -3,7 +3,7 @@ import { CLIENT_SECRET, PUBLISHER_KAKAO, PUBLISHER_TRAVELX, PUBLISHER_NAVER, RES
 import { GetCookie, SetCookie } from './CookieUtil';
 
 export const LoginToTravelXServer = async (publisher, userId, pwd = null) => {
-  const result = { auth: false, userId: "", status: "", nickName:"" }
+  const result = { auth: false, id: "", status: "", nickName:"" }
   try {
     const formData = new FormData();
     formData.append('authPublisher', publisher);
@@ -14,7 +14,7 @@ export const LoginToTravelXServer = async (publisher, userId, pwd = null) => {
     console.log('TravelX Login /auth/user/get Response', res);
     
     result.auth = true;
-    result.userId = userId;
+    result.id = userId;
     // 이름 정보 안 넣어줘서 넣어 줌 by gtpark
     result.nickName = res.data.nickName;
     result.userExtraInfo = res.data.userExtraInfo;
@@ -209,15 +209,11 @@ export const SetLoginInfoToLocalStorage = (authPublisher, token = null) => {
 
 export const CleanLoginInfoInLocalStorage = (authPublisher) => {
   switch (authPublisher) {
-    case PUBLISHER_KAKAO: {
-      localStorage.removeItem("pub");
-      break;
-    }
+    case PUBLISHER_KAKAO:
     case PUBLISHER_NAVER: {
       break;
     }
     case PUBLISHER_TRAVELX: {
-      localStorage.removeItem("pub");
       localStorage.removeItem("tx");
       break;
     }

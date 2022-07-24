@@ -46,7 +46,7 @@ const MyInfo = () => {
       
     DeleteCookie("RT");
     CleanLoginInfoInLocalStorage(publisher);
-    dispatch(userInfoActions.setUserInfo({ accessToken: null, id: null, auth: false, nickName: null, pub: null }));
+    dispatch(userInfoActions.setUserInfo({ accessToken: null, id: null, auth: false, nickName: null, pub: null, userExtraInfo: {} }));
   };
 
 	return (
