@@ -17,6 +17,7 @@ export const LoginToTravelXServer = async (publisher, userId, pwd = null) => {
     result.userId = userId;
     // 이름 정보 안 넣어줘서 넣어 줌 by gtpark
     result.nickName = res.data.nickName;
+    result.userExtraInfo = res.data.userExtraInfo;
     // debugger;
     return result;
   } catch (e) {
@@ -87,9 +88,10 @@ export const CheckLogin = async (authPublisher) => {
       if (accessToken) {
         await window.Kakao.API.request({
           url: '/v1/user/access_token_info',
-          success: (res) => {
-            result = { auth: true, id: res.id };
+          success: async (res) => {
             // console.log(res);
+            result.id = res.id;
+            
           },
           fail: (e) => {
             // TODO : e값 형태 확인하기
@@ -105,10 +107,15 @@ export const CheckLogin = async (authPublisher) => {
             console.error(e);
           }
         });
+
+        // 유저 정보 매핑을 위한 로그인용 API (/get) 호출
+        result = await LoginToTravelXServer(PUBLISHER_KAKAO, result.id);
+        // console.log(result);
+        return result;
       } else {
         CleanLoginInfoInLocalStorage();
       }
-
+      
       break;
     case PUBLISHER_NAVER: 
       
@@ -121,7 +128,16 @@ export const CheckLogin = async (authPublisher) => {
       
       try {
         const userInfoResponse = await axios.post('http://shineware.iptime.org:8081/auth/user/getUserInfo', tokenFormData);
-        result = { auth: true, id: userInfoResponse.data.userId };
+        if (userInfoResponse.data) {
+          result = { 
+            auth: true, 
+            id: userInfoResponse.data.userId, 
+            nickName: userInfoResponse.data.nickName, 
+            userExtraInfo: userInfoResponse.data.userExtraInfo 
+          };
+        } else 
+          result = { auth: false, id: null };
+        
       } catch (e) {
         result = { auth: false, id: null };
         console.error(e);

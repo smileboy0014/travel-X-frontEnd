@@ -46,7 +46,14 @@ const KakaoLoginButton = () => {
               // 이름 정보 필요해서 넣어 줌 by gtpark
               // console.log(result);
               // debugger;
-              dispatch(userInfoActions.setUserInfo({ pub: PUBLISHER_KAKAO, id: userResponse.id, auth: true, nickName: result.nickName}));
+              dispatch(userInfoActions.setUserInfo({ 
+                pub: PUBLISHER_KAKAO, 
+                id: userResponse.id, 
+                auth: true, 
+                nickName: result.nickName, 
+                userExtraInfo: result.userExtraInfo
+              }));
+
               const params = new URLSearchParams(location.search);
               const curRedirectUri = params.get('redirectUri');
         

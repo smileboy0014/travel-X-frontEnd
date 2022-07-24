@@ -6,6 +6,7 @@ const initialState = {
     id: null,
     accessToken: null,
     nickName: '',
+    userExtraInfo: '',
     email: '',
     pub: ''
   }

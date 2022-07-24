@@ -174,7 +174,7 @@ export const SignUp = () => {
   useEffect(() => {
     // const authPublisher = localStorage.getItem("pub");
     const authPublisher = info.pub;
-    // console.log(info);
+    console.log(info);
     switch (authPublisher) {
       case PUBLISHER_KAKAO: {
         if (window.Kakao.Auth.getAccessToken()) {
