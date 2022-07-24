@@ -9,10 +9,12 @@ export default function useInfiniteSearch(
   query,
   fromPageNumber,
   toPageNumber,
-  filterValue,
+  useType,
+  propertyTypeValue,
   callHttpMethod
 
 ) {
+  // debugger;
   // const [fromPage, setFromPage] = useState(0);
   const [totalHitCount, setTotalHitCount] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -21,7 +23,10 @@ export default function useInfiniteSearch(
   const [returnCallHttpMethod, setReturnCallHttpMethod] = useState(true);
   const [hasMore, setHasMore] = useState(true);
   const dispatch = useDispatch();
+
   const { searchDate } = useSelector((state) => state.date);
+
+  // const propertyTypeValue = useSelector(({ propertyType }) => propertyType);
 
   const searchTypeValue = useSelector(({ searchType }) => searchType.value);
 
@@ -52,6 +57,7 @@ export default function useInfiniteSearch(
   }
 
   function paramsSerializer(paramObj) {
+    // debugger;
     return (paramObj = paramObj.join(","));
   }
 
@@ -64,42 +70,22 @@ export default function useInfiniteSearch(
   }
 
   function setParam() {
-    const parmas = {};
-    if (filterValue.hotel && filterValue.hotel.length > 0) {
-      return (parmas = {
-        day: filterValue.rent && filterValue.rent.includes("hDay") ? true : false,
-        night: filterValue.rent && filterValue.rent.includes("fDay") ? true : false,
-        checkinDate: FormattingDate(new Date(searchDate.start)),
-        checkoutDate: FormattingDate(new Date(searchDate.end)),
-        adult: adultCounterValue,
-        child: childCounterValue,
-        baby: babyCounterValue,
-        query: query,
-        searchType:
-          searchTypeValue == null ? "RANKING" : searchTypeValue.searchTypeValue,
-        from: fromPageNumber,
-        size: toPageNumber,
-        types:
-          paramsSerializer(filterValue.hotel).length > 0
-            ? paramsSerializer(filterValue.hotel)
-            : "HOTEL",
-      });
-    } else {
-      return (parmas = {
-        day: filterValue.rent && filterValue.rent.includes("hDay") ? true : false,
-        night: filterValue.rent && filterValue.rent.includes("fDay") ? true : false,
-        checkinDate: FormattingDate(new Date(searchDate.start)),
-        checkoutDate: FormattingDate(new Date(searchDate.end)),
-        adult: adultCounterValue,
-        child: childCounterValue,
-        baby: babyCounterValue,
-        query: query,
-        searchType:
-          searchTypeValue == null ? "RANKING" : searchTypeValue.searchTypeValue,
-        from: fromPageNumber,
-        size: toPageNumber,
-      });
-    }
+// debugger;
+    return {
+      day: useType.DAY ? true : false,
+      night: useType.NIGHT ? true : false,
+      checkinDate: FormattingDate(new Date(searchDate.start)),
+      checkoutDate: FormattingDate(new Date(searchDate.end)),
+      adult: adultCounterValue,
+      child: childCounterValue,
+      baby: babyCounterValue,
+      query: query,
+      searchType:
+        searchTypeValue == null ? "RANKING" : searchTypeValue,
+      from: fromPageNumber,
+      size: toPageNumber,
+      types: paramsSerializer(propertyTypeValue)
+    };
   }
 
   useEffect(() => {
@@ -110,12 +96,12 @@ export default function useInfiniteSearch(
     }
   }, [rooms]);
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    if (query != undefined) {
-      setRooms([]);
-    }
-  }, [query, filterValue]);
+  //   if (query != undefined) {
+  //     setRooms([]);
+  //   }
+  // }, [query, useType]);
 
   useEffect(()=>{
     if(callHttpMethod){
@@ -124,7 +110,7 @@ export default function useInfiniteSearch(
   }, [callHttpMethod])
 
   useEffect(() => {
-    console.log("9999999: " + mapBoundValue);
+    // console.log("9999999: " + mapBoundValue);
     // console.log("88888888: " + mapBoundNorthEastValue["lat"]);
     // console.log("88888888: " + mapBoundNorthEastValue["lng"]);
     // console.log("99999999: " + mapBoundSouthWestValue["lat"]);
@@ -134,16 +120,19 @@ export default function useInfiniteSearch(
   // SRP에서 검색 시(필터 검색 포함) 일반적으로 가져오는 API
   useEffect(() => {
     if (query != undefined) {
+      console.log('일반적인 srp 결과 가져오는 API 시작!!!!!!');
       setLoading(true);
       setError(false);
-      console.log('query', query);
-      console.log('toPageNumber', toPageNumber);
-      console.log('searchDate', searchDate);
-      console.log('adultCounterValue', adultCounterValue);
-      console.log('childCounterValue', childCounterValue);
-      console.log('searchTypeValue', searchTypeValue);
-      console.log('filterValue', filterValue);
-      let param = setParam();
+      // console.log('query', query);
+      // console.log('toPageNumber', toPageNumber);
+      // console.log('searchDate', searchDate);
+      // console.log('adultCounterValue', adultCounterValue);
+      // console.log('childCounterValue', childCounterValue);
+      // console.log('searchTypeValue', searchTypeValue);
+      // console.log('useType', useType);
+      const param = setParam();
+      console.log(`param type is ${param.types}`);
+      console.log(`param useType is ${param.searchType}`);
       // debugger;
       axios({
         method: "GET",
@@ -155,6 +144,7 @@ export default function useInfiniteSearch(
           console.log(res.data.roomDocumentList);
           dispatch(searchResultActions.saveData(res.data.roomDocumentList));
           // console.log(`totalHitCount is ${res.data.totalHitCount}`);
+          // debugger;
           setTotalHitCount(res.data.totalHitCount);
           setRooms((prevState) => (
             {
@@ -176,15 +166,18 @@ export default function useInfiniteSearch(
     adultCounterValue,
     childCounterValue,
     searchTypeValue,
-    filterValue
+    useType,
+    propertyTypeValue
   ]);
 
   // 지도에서 보기 들어가서 현 지도에서 검색 클릭 시 찾아오는 API
   useEffect(() => {
     if (mapBoundValue > 0) {
       var param = {
-        day: filterValue.rent && filterValue.rent.includes("hDay") ? true : false,
-        night: filterValue.rent && filterValue.rent.includes("fDay") ? true : false,
+        // day: filterValue.rent && filterValue.rent.includes("hDay") ? true : false,
+        // night: filterValue.rent && filterValue.rent.includes("fDay") ? true : false,
+        day: useType.DAY ? true : false,
+        night: useType.NIGHT  ? true : false,
         checkinDate: FormattingDate(new Date(searchDate.start)),
         checkoutDate: FormattingDate(new Date(searchDate.end)),
         adult: adultCounterValue,

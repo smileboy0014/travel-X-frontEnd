@@ -15,6 +15,7 @@ import searchType from "./searchType";
 import reviewSearchType from "./reviewSearchType";
 import mapBound from "./mapBound";
 import redirectUri from "./redirectUri";
+import propertyType from "./propertyType";
 import userInfo from "./userInfo";
 
 const reducer = (state, action) => {
@@ -37,7 +38,8 @@ const reducer = (state, action) => {
     reviewSearchType,
     mapBound,
     redirectUri,
-    userInfo
+    userInfo,
+    propertyType
   })(state, action);
 };
 

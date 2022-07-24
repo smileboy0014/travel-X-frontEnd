@@ -13,6 +13,7 @@ import DetailCalendarModal from "../../../components/Modal/Calendar/DetailCalend
 import PesonalModal from "../../../components/Modal/Personal/PersonalModal";
 import {propertyTypeFilter} from '../../../shared/js/CommonFilter';
 import classNames from 'classnames/bind';
+import {priceComma}  from '../../../shared/js/CommonFun';
 
 const cx = classNames.bind(Style);
 
@@ -40,10 +41,6 @@ const DetailView = () => {
   const babyCounterValue = useSelector(
     ({ babyCounter }) => babyCounter.value
   );
-
-  const priceComma = (price) => {
-    return price ? price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : 0;
-  };
 
   function addZero(value) {
     if (value >= 10) {

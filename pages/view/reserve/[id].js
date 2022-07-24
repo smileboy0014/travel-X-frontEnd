@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import classNames from 'classnames/bind';
 import DetailTopNavbar from "../../../components/NavBar/DetailTopNavbar";
+import {priceComma}  from '../../../shared/js/CommonFun';
 
 
 const cx = classNames.bind(Style);
@@ -67,10 +68,6 @@ const ReserveView = () => {
     } else {
       setIsOpenExtraOptionStyle(!isOpenExtraOptionStyle);
     }
-  };
-
-  const priceComma = (price) => {
-    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
   useEffect(() => {

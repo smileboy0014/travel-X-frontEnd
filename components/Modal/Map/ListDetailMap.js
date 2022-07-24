@@ -6,6 +6,7 @@ import Style from "../../../styles/Component.module.css";
 import { useSelector, useDispatch } from "react-redux";
 import * as mapBoundActions from "../../../redux/store/modules/mapBound";
 import classNames from 'classnames/bind';
+import {priceComma}  from '../../../shared/js/CommonFun';
 
 const cx = classNames.bind(Style);
 
@@ -115,10 +116,6 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
     });
 
     return clusters;
-  };
-
-  const priceComma = (price) => {
-    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
   const addRoomMapMarker = () => {
@@ -249,7 +246,7 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
 
   // useEffect(() => {}, [mapSouthWest, mapNorthEast, test]);
 
-  const onSearchMap = () => {
+  const onSearchMap = () => { 
     dispatch(mapBoundActions.increment());
     dispatch(mapBoundActions.setNorthEast(mapNorthEast));
     dispatch(mapBoundActions.setSouthWest(mapSouthWest));

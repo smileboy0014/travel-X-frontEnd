@@ -25,18 +25,22 @@ const Post = ({ item }) => {
   const [listFilterIsUp, setListFilterIsUp] = useState(false);
   const [listFilterIsNone, setListFilterIsNone] = useState(false);
   const [lastScrollTop, setLastScrollTop] = useState(0);
+  const [useType, setUseType] = useState({ DAY: true, NIGHT: true });
   // HTTP Method call 요청 했을 때 다시 리뷰 리스트 불러오는 신호 줄 수 있도록 하는 값
   const [callHttpMethod, setCallHttpMethod] = useState(false);
   const router = useRouter();
   const { id } = router.query;
   const dispatch = useDispatch();
+  const propertyTypeValue = useSelector(({ propertyType }) => propertyType);
   const scrollYValue = useSelector(({ scrollY }) => scrollY.value);
   const [viewList, setViewList] = useState([]);
   const [toPageNumber, setToPageNumber] = useState(20);
   const [fromPageNumber, setFromPageNumber] = useState(0);
   const [roomLength, setRoomLength] = useState(0);
+  const [nowLoading, setNowLoading] = useState(true);
 
-  const filterValue = useSelector(({ roomFilter }) => roomFilter);
+  // const filterValue = useSelector(({ roomFilter }) => roomFilter);
+
   const DELTA = 5;
 
   useEffect(() => {
@@ -44,13 +48,14 @@ const Post = ({ item }) => {
     setFromPageNumber(0);
     setToPageNumber(20);
 
-  }, [filterValue]);
+  }, [useType]);
 
   const { rooms, totalHitCount, hasMore, loading, error, returnCallHttpMethod } = useInfiniteSearch(
     id,
     fromPageNumber,
     toPageNumber,
-    filterValue,
+    useType,
+    propertyTypeValue,
     callHttpMethod
   );
   const observer = useRef();
@@ -92,6 +97,24 @@ const Post = ({ item }) => {
     setListFilterIsNone(true);
   };
 
+  const handleChangeValue = (type) => {
+    // debugger;
+    if (type == 'DAY') {
+      setUseType((current) => {
+        let newType = { ...current };
+        newType.DAY = !useType.DAY;
+        return newType;
+      })
+    } else {
+      setUseType((current) => {
+        let newType = { ...current };
+        newType.NIGHT = !useType.NIGHT;
+        return newType;
+      })
+    }
+    filterCallbackHandler();
+  }
+
   useEffect(() => {
     dispatch(scrollY.scrollY(0));
   }, []);
@@ -115,8 +138,8 @@ const Post = ({ item }) => {
     if (yValue > lastScrollTop && yValue > navbarHeight) {
       setListFilterIsUp(true);
 
-		} else {
-			if(yValue + window.outerHeight < document.body.scrollHeight || yValue == 0) {
+    } else {
+      if (yValue + window.outerHeight < document.body.scrollHeight || yValue == 0) {
         setListFilterIsUp(false);
       }
     }
@@ -126,54 +149,66 @@ const Post = ({ item }) => {
   useEffect(() => {
     // debugger;
     // rooms.item && console.log(`rooms length is ${rooms.item.length}`);
-    
-    if (rooms.item !== undefined && rooms.item.length > 0 ) {
-      setRoomLength(rooms.item.length);
-      
-      // 방 갯수가 20개 이상일 때
-      if((rooms.item.length < totalHitCount) && roomLength < rooms.item.length){
-        console.log('총 방 갯수가 20 이상이야!!!!!');
-        // 바로 rooms 배열을 수정하려고 하면 에러가 나서 한번 새로운 배열을 만들어 주고 수정
-        let list = rooms.item.map((value) => {
-        return value;
-      });
-      // debugger;
+    // console.log(nowLoading);
+    if (!nowLoading) {
+      if (rooms.item !== undefined && rooms.item.length > 0) {
+        setRoomLength(rooms.item.length);
 
-        if(rooms.item.length < 21){
-          list.splice(rooms.item.length/2,0,{roomId:''});
-          setViewList(list);
-        } else {
-          list.splice(rooms.item.length-20,0,{roomId:''});
-          setViewList(list);
+        // 방 갯수가 20개 이상일 때
+        if ((rooms.item.length < totalHitCount) && roomLength < rooms.item.length) {
+          console.log('총 방 갯수가 20 이상이야!!!!!');
+          // 바로 rooms 배열을 수정하려고 하면 에러가 나서 한번 새로운 배열을 만들어 주고 수정
+          let list = rooms.item.map((value) => {
+            return value;
+          });
+          // debugger;
+
+          if (rooms.item.length < 21) {
+            list.splice(rooms.item.length / 2, 0, { roomId: '' });
+            setViewList(list);
+          } else {
+            list.splice(rooms.item.length - 20, 0, { roomId: '' });
+            setViewList(list);
+          }
+
+          // list.splice(rooms.item.length-10,0,{roomId:''});
+          //   setViewList(list);
+
+        }
+        // 방 갯수가 20개 보다 적을 때
+        else {
+          console.log('총 방 갯수가 20 미만이거나 더이상 없어!!!!!!!');
+          setViewList(rooms.item);
         }
 
-        // list.splice(rooms.item.length-10,0,{roomId:''});
-        //   setViewList(list);
-        
-      } 
-      // 방 갯수가 20개 보다 적을 때
-      else {
-        console.log('총 방 갯수가 20 미만이거나 더이상 없어!!!!!!!');
-        setViewList(rooms.item);
+      } else {
+        console.log('완전 초기화!!!');
+        setViewList([]);
+        // console.log(`totalhitcount는 남았지만 실제로 아닌 경우`);
       }
-    
-    } else {
-      console.log(`totalhitcount는 남았지만 실제로 아닌 경우`);
-    } 
-  }, [rooms]);
+    }
+
+  }, [rooms, nowLoading]);
 
   useEffect(() => {
-    console.log(listFilterIsUp);
+    // console.log(listFilterIsUp);
   }, [listFilterIsUp]);
 
-  useEffect(()=>{
+  useEffect(() => {
     // debugger;
-    console.log(`returnCallHttpMethod is ${returnCallHttpMethod}`);
-    console.log(`callHttpMethod is ${callHttpMethod}`);
-      if(!returnCallHttpMethod){
-        setCallHttpMethod(false);
-      }
-  },[returnCallHttpMethod])
+    // console.log(`returnCallHttpMethod is ${returnCallHttpMethod}`);
+    // console.log(`callHttpMethod is ${callHttpMethod}`);
+    if (!returnCallHttpMethod) {
+      setCallHttpMethod(false);
+    }
+  }, [returnCallHttpMethod])
+
+  useEffect(() => {
+    // debugger;
+    // console.log(`loading is ${loading}`);
+    // console.log(`nowLoading is ${nowLoading}`);
+    setNowLoading(loading);
+  }, [loading])
 
   return (
     <div className="site">
@@ -213,10 +248,24 @@ const Post = ({ item }) => {
                 <>
                   {searchAutoComptValue.length < 1 ? (
                     <div className={Style["ListFilterButton"]}>
-                      <div className={Style["ListFilterButton-list"]}>
-                        <OptionFilterButton callback={filterCallbackHandler} />
-                        <OrderByFilterButton callback={filterCallbackHandler} />
-                      </div>
+                      <ul className={Style["ListFilterButton-list"]}>
+
+                        <li className={Style["ListFilterButton-item"]}>
+                          <a className={useType.DAY ? cx("RadiusBtn", "is-Current") : cx("RadiusBtn")}
+                            onClick={() => handleChangeValue('DAY')}>대실</a>
+                        </li>
+                        <li className={Style["ListFilterButton-item"]}>
+                          <a className={useType.NIGHT ? cx("RadiusBtn", "is-Current") : cx("RadiusBtn")}
+                            onClick={() => handleChangeValue('NIGHT')}>숙박</a>
+                        </li>
+                        <li className={Style["ListFilterButton-item"]}>
+                          <OptionFilterButton typeCount={propertyTypeValue.length} callback={filterCallbackHandler} />
+                        </li>
+                        <li className={Style["ListFilterButton-item"]}>
+                          {/* <button type="button" className={Style["RadiusSelect js-SortOpen"]}>정렬기준</button> */}
+                          <OrderByFilterButton callback={filterCallbackHandler} />
+                        </li>
+                      </ul>
                     </div>
                   ) : (
                     ""

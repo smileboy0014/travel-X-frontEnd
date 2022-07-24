@@ -158,7 +158,15 @@ const ModifyMyInfo = () => {
 				// debugger;
 				if (res.data !== undefined) {
 					// console.log(res.data);
-					res.data.userExtraInfo = {};
+					if(res.data.userExtraInfo == null){
+							res.data.userExtraInfo = {
+								name: "",
+								phoneNumber: "",
+								birthday: "",
+								gender: "",
+								location: ""
+							}
+					}
 					setUser(res.data);
 					setSexType(res.data.userExtraInfo.gender);
 					splitBirthdayFun(res.data.userExtraInfo.birthday);
