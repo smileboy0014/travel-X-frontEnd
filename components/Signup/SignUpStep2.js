@@ -68,6 +68,7 @@ const SignUpStep2 = ({ setStep, setPhoneAuthValues, initValues }) => {
       // 인증번호 타이머 시작
       const time = new Date();
       time.setMinutes(time.getMinutes() + AUTH_NO_EXPIRE_TIME);
+      time.setSeconds(time.getSeconds() + 2);
       setExpireTime(time);
       setDisableSendAuthNo(true); // 인증번호 받기 버튼 비활성화
       
@@ -90,6 +91,11 @@ const SignUpStep2 = ({ setStep, setPhoneAuthValues, initValues }) => {
     }).then((res) => {
       setPhoneVerified(true);
     }).catch((e) => {
+      if (e.response.status == '406') {
+        alert(e.response.data.message);
+      } else {
+        alert('인증 번호 확인 중 에러가 발생하였습니다.');
+      }
       console.error(e);
     });
   };
@@ -102,7 +108,7 @@ const SignUpStep2 = ({ setStep, setPhoneAuthValues, initValues }) => {
       const counter = setInterval(() => {
         const gap = Math.floor(new Date(expireTime.getTime() - new Date().getTime()) / 1000);
         setAuthNoTime(gap > 0 ? gap : 0);
-        if (gap < 120) {
+        if (gap < 175) {
           setDisableSendAuthNo(false);
         }
       }, 1000);
@@ -116,7 +122,15 @@ const SignUpStep2 = ({ setStep, setPhoneAuthValues, initValues }) => {
       // console.log("timer 리소스 해제 완료")
       clearInterval(authNoTimer);
     }
-  }, [authNoTime])
+  }, [authNoTime]);
+
+  useEffect(() => {    
+    setSendAuthNo(false);
+    setPhoneVerified(false);
+    setDisableSendAuthNo(false);
+    if (authNoTimer) clearInterval(authNoTimer);
+    if (authNoAlertTimer) clearTimeout(authNoAlertTimer);
+  }, [values.phone])
 
   useEffect(() => {
     setValues({...values, ...initValues});
@@ -154,10 +168,9 @@ const SignUpStep2 = ({ setStep, setPhoneAuthValues, initValues }) => {
                           name="phone"
                           value={values.phone}
                           onChange={handleChange}
-                          disabled={phoneVerified}
                         />
                       </div>
-                      <button type="button" className={Style["MemberFormReg-btn"]} onClick={handleSendAuthNo}>인증번호 받기</button>
+                      <button type="button" className={Style["MemberFormReg-btn"]} onClick={handleSendAuthNo} disabled={disableSendAuthNo || values.phone.length == 0}>{sendAuthNo ? '재요청' : '인증번호 받기'}</button>
                     </div>
                   </dd>
                 </dl>

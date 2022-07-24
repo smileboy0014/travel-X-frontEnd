@@ -3,11 +3,13 @@ import Style from "../../styles/Component.module.css";
 import classNames from 'classnames/bind';
 import { NicknameValidate } from './utils/SignUpValidate';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 
 const cx = classNames.bind(Style);
 
 const SignUpStep5 = ({ setStep, setNicknameValues, initValues, callback }) => {
 
+  const router = useRouter();
 	const [values, setValues] = useState({
     nickName: ''
   });
@@ -21,14 +23,14 @@ const SignUpStep5 = ({ setStep, setNicknameValues, initValues, callback }) => {
   const handleNextStep = async (e) => {
     e.preventDefault();
 
-		setNicknameValues({...values});
-		// const result = await callback();
+		const result = await callback();
 
-		// if (result.success) {
+		if (result.success) {
 			setStep(6);
-		// } else {
-		// 	alert("회원가입 도중 에러가 발생하였습니다.")
-		// }
+		} else {
+			alert(result.message);
+      // router.push('/login');
+		}
   };
 
 	const handleChange = (e) => {
@@ -48,6 +50,7 @@ const SignUpStep5 = ({ setStep, setNicknameValues, initValues, callback }) => {
       data: formData,
     }).then((res) => {
 			setIsCheckedNickName(true);
+      setNicknameValues({...values});
     }).catch((e) => {
 			if (e.response.status == '409') {
 				alert(e.response.data.message);
@@ -96,7 +99,7 @@ const SignUpStep5 = ({ setStep, setNicknameValues, initValues, callback }) => {
 												onChange={handleChange}
 											/>
 										</div>
-										<button type="button" className={Style["MemberFormReg-btn"]} onClick={checkDuplication}>중복확인</button>
+										<button type="button" className={Style["MemberFormReg-btn"]} onClick={checkDuplication} disabled={isCheckedNickName}>중복확인</button>
 									</div>
                 </dd>
               </dl>

@@ -19,8 +19,8 @@ const SignUpStepExtraInfo = ({ setStep, setExtraValues, initValues, callback }) 
 			month: '',
 			day: ''
 		},
-		sex: '',
-		address: ''
+		gender: '',
+		location: ''
   });
 
 	// const [nickNameValidation, setNickNameValidation] = useState({
@@ -35,14 +35,14 @@ const SignUpStepExtraInfo = ({ setStep, setExtraValues, initValues, callback }) 
   const handleNextStep = async (e) => {
     e.preventDefault();
 
-		setExtraValues({...values});
-		// const result = await callback();
-		// if (result.success) {
+		const result = await callback();
+
+		if (result.success) {
 			setStep(7);
-		// } else {
-		// 	alert(result.message);
-		// 	router.push('/login');
-		// }
+		} else {
+			alert(result.message);
+			router.push('/login');
+		}
   };
 
 	const handleChange = (e) => {
@@ -50,9 +50,9 @@ const SignUpStepExtraInfo = ({ setStep, setExtraValues, initValues, callback }) 
     setValues({...values, [name]: value});
   };
 
-	const handleSelectSex = (e) => {
+	const handleSelectGender = (e) => {
     const { name } = e.target;
-    setValues({...values, sex: name});
+    setValues({...values, gender: name});
 	};
 
 	const handleBirthdayCallback = (birthday) => {
@@ -60,8 +60,8 @@ const SignUpStepExtraInfo = ({ setStep, setExtraValues, initValues, callback }) 
 		setIsSetBirthday(true);
 	};
 
-	const handleAddressCallback = (address) => {
-		setValues({...values, address: address});
+	const handleAddressCallback = (location) => {
+		setValues({...values, location: location});
 	};
 
 	// const checkDuplication = (e) => {
@@ -85,6 +85,10 @@ const SignUpStepExtraInfo = ({ setStep, setExtraValues, initValues, callback }) 
 	useEffect(() => {
     setValues({...initValues});
 	}, []);
+
+	useEffect(() => {
+		setExtraValues({...values});
+	}, [values]);
 
   // useEffect(() => {
   //   const validation = NicknameValidate(values.nickName);
@@ -166,10 +170,10 @@ const SignUpStepExtraInfo = ({ setStep, setExtraValues, initValues, callback }) 
 											<label className={Style["MemberFormBasicRadio"]}>
 												<input 
 													type="radio" 
-													name="woman" 
+													name="FEMALE" 
 													className={Style["MemberFormBasicRadio-input"]} 
-													onClick={handleSelectSex} 
-													checked={values.sex == 'woman'} 
+													onClick={handleSelectGender} 
+													checked={values.gender == 'FEMALE'} 
 													readOnly 
 												/>
 												<span className={Style["MemberFormBasicRadio-text"]}>여성</span>
@@ -179,10 +183,10 @@ const SignUpStepExtraInfo = ({ setStep, setExtraValues, initValues, callback }) 
 											<label className={Style["MemberFormBasicRadio"]}>
 												<input 
 													type="radio" 
-													name="man" 
+													name="MALE" 
 													className={Style["MemberFormBasicRadio-input"]} 
-													onClick={handleSelectSex} 
-													checked={values.sex == 'man'} 
+													onClick={handleSelectGender} 
+													checked={values.gender == 'MALE'} 
 													readOnly 
 												/>
 												<span className={Style["MemberFormBasicRadio-text"]}>남성</span>
@@ -201,8 +205,8 @@ const SignUpStepExtraInfo = ({ setStep, setExtraValues, initValues, callback }) 
 										<div className={Style["MemberFormItemTitle"]}>현 주소</div>
 									</dt>
 									<dd className={Style["MemberFormAddress-cont"]}>
-										<a href="#" className={values.address ? cx("MemberFormAddress-link", "is-Active") : Style["MemberFormAddress-link"]} onClick={() => setAddressModalOpen(true)}>
-											{!values.address ? '지역 선택' : values.address + '선택 완료'}
+										<a href="#" className={values.location ? cx("MemberFormAddress-link", "is-Active") : Style["MemberFormAddress-link"]} onClick={() => setAddressModalOpen(true)}>
+											{!values.location ? '지역 선택' : values.location + '선택 완료'}
 										</a>
 									</dd>
 								</dl>

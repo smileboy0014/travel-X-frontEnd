@@ -1,11 +1,12 @@
 import { React, useEffect, useState } from 'react';
 import Style from "../../styles/Component.module.css";
 import classNames from 'classnames/bind';
+import { useRouter } from 'next/router';
 
 const cx = classNames.bind(Style);
 
 const SignUpStepEnd = ({  }) => {
-
+  const router = useRouter();
   useEffect(() => {
 
   }, []);
@@ -18,7 +19,7 @@ const SignUpStepEnd = ({  }) => {
         {/* <!-- BttonFixButton --> */}
         <div className={cx("BttonFixButton", "no-Scroll")}>
           <div className={"site-container"}>
-						<button type="button" className={Style["BttonFixButton-button"]}>확인</button>
+						<button type="button" className={Style["BttonFixButton-button"]} onClick={() => { router.push('/login'); }}>확인</button>
           </div>
         </div>
         {/* <!-- .BttonFixButton --> */}

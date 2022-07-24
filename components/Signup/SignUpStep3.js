@@ -61,7 +61,7 @@ const SignUpStep3 = ({ setStep, setEmailValues, initValues }) => {
                   </div>
                 </dd>
               </dl>
-							{/* {!validation && values.email.length > 0 ? <div className={cx("Error-text", "is-Active")}>이메일 형식을 확인해주세요.</div> : null} */}
+							{!validation && values.email.length > 0 ? <div className={cx("Error-text", "is-Active")}>이메일 형식을 확인해주세요.</div> : null}
             </div>
             {/* <!-- .Item --> */}
           </div>

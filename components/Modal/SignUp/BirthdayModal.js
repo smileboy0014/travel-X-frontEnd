@@ -5,9 +5,9 @@ import SignUpBirthdayCarousel from "../../Card/Carousel/SignUpBirthdayCarousel";
 
 const BirthdayModal = ({ isOpen, onRequestClose, callback }) => {
   const [birthdayIndex, setBirthdayIndex] = useState({
-    year: 53,
-    month: 1,
-    day: 1
+    year: 52,
+    month: 0,
+    day: 0
   });
 
   const [yearList, setYearList] = useState([]);
@@ -17,8 +17,8 @@ const BirthdayModal = ({ isOpen, onRequestClose, callback }) => {
   const lastday = () => {
     if (dayList.length == 0) return;
 
-    let year = yearList[birthdayIndex.year-1];
-    let month = monthList[birthdayIndex.month-1];
+    let year = yearList[birthdayIndex.year];
+    let month = monthList[birthdayIndex.month];
     let day = new Date(new Date(year, month, 1) - 86400000).getDate();
     let tmpDayList = [...dayList];
     let dayindex_len = tmpDayList.length;
@@ -34,13 +34,15 @@ const BirthdayModal = ({ isOpen, onRequestClose, callback }) => {
     }
     
     setDayList([...tmpDayList]);
+
+    
   };
 
   const handleConfirm = () => {
     callback({
-      year: yearList[birthdayIndex.year-1],
-      month: monthList[birthdayIndex.month-1],
-      day: dayList[birthdayIndex.day-1],
+      year: yearList[birthdayIndex.year],
+      month: monthList[birthdayIndex.month],
+      day: dayList[birthdayIndex.day],
     });
 
     onRequestClose(false);
@@ -68,7 +70,7 @@ const BirthdayModal = ({ isOpen, onRequestClose, callback }) => {
 
   useEffect(() => {
     lastday();
-  }, [birthdayIndex.year, birthdayIndex.month])
+  }, [birthdayIndex.year, birthdayIndex.month]);
 
   return (
     <Modal

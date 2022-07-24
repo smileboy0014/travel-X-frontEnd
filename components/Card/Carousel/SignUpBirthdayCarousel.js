@@ -37,7 +37,6 @@ const SignUpBirthdayCarousel = ({ items, setValue, indexState }) => {
       <div className={Style["BirthdaySlide"]}>
         <Swiper
           modules={[]}
-          loop={true}
           observer={true}
           observeParents={true}
           watchOverflow={true}

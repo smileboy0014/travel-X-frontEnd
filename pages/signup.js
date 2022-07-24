@@ -19,6 +19,7 @@ const cx = classNames.bind(Style);
 export const SignUp = () => {
   const router = useRouter();
   const dispatch = useDispatch();
+	const { info } = useSelector((state) => state.userInfo);
   const [step, setStep] = useState(1);
   const [agreeValues, setAgreeValues] = useState({
     agreeAge: false,
@@ -57,12 +58,26 @@ export const SignUp = () => {
 			month: '',
 			day: ''
 		},
-		sex: '',
-		address: ''
+		gender: '',
+		location: ''
   });
 
   const [extRegister, setExtRegister] = useState(false);
 
+  function addZero(value) {
+    if (value >= 10) {
+      return value;
+    }
+    return `0${value}`;
+  }
+
+  function FormattingDate(date) {
+    const year = date.year;
+    const month = addZero(date.month);
+    const day = addZero(date.day);
+
+    return `${year}-${month}-${day}`;
+  }
 
   const handleBackClick = () => {
     if (step == 1 || step == 6 || step == 7) {
@@ -70,59 +85,103 @@ export const SignUp = () => {
       return;
     }
 
-    setStep(--step);
+    if (extRegister) {
+      router.push('/login');
+    } else {
+      setStep(--step);
+    }
   };
 
   const requestSignUp = async () => {
     let result = {
-      success: false
-    }
-    if (!extRegister) {
-      const formData = new FormData();
-      formData.append('authPublisher', PUBLISHER_TRAVELX);
-      formData.append('nickName', nicknameValues.nickName);
-      formData.append('password', passwdValues.passwd);
-  
-      axios({
-        method: "POST",
-        url: "http://shineware.iptime.org:8081/auth/user/register",
-        data: formData,
-      }).then((res) => {
-        result.success = true;
-      }).catch((e) => {
-        alert('회원가입 중 에러가 발생하였습니다.');
-        console.error(e);
-      }).finally(() => {        
-        return result;
-      })
+      success: false,
+      message: ''
     };
+
+    const formData = new FormData();
+
+    if (!extRegister) {
+      formData.append('authPublisher', PUBLISHER_TRAVELX);
+      formData.append('userId', emailValues.email);
+      formData.append('password', passwdValues.passwd);
+    } else {
+      formData.append('authPublisher', info.pub);
+      formData.append('userId', info.id);
+    }
+
+    formData.append('nickName', nicknameValues.nickName);
+
+    try {
+      const registerResponse = await axios.post("http://shineware.iptime.org:8081/auth/user/register", formData);
+      // console.log(registerResponse);
+
+      result.success = true;
+      return result;
+
+    } catch (e) {
+      if (e.response.status == '409') {
+        if (!extRegister) result.message = '이미 가입된 이메일입니다.';
+        else result.message = '이미 가입된 계정입니다.';
+
+      } else {
+        result.message = '회원가입 중 에러가 발생하였습니다.';
+      }
+      console.error(e);
+      
+      return result;
+    }
   };
 
-  const requestExtraInfoAdd = async () => {
+  const requestAddExtraInfo = async () => {
+    let result = {
+      success: false,
+      message: ''
+    };
     const extraFormData = new FormData();
-    extraFormData.append('nickName', values.nickName);
 
-    axios({
-      method: "POST",
-      url: "http://shineware.iptime.org:8081/auth/user/addExtraInfo",
-      data: extraFormData,
-    }).then((res) => {
-			
-    }).catch((e) => {
-			alert('추가정보 저장 중 에러가 발생하였습니다.');
-			console.error(e);
-    });
-    
+    if (!extRegister) {
+      extraFormData.append('authPublisher', PUBLISHER_TRAVELX);
+      extraFormData.append('userId', emailValues.email);
+      extraFormData.append('password', passwdValues.passwd);
+      extraFormData.append('phoneNumber', phoneAuthValues.verifiedPhoneNumber);
+      
+    } else {
+      extraFormData.append('authPublisher', info.pub);
+      extraFormData.append('userId', info.id);
+      // extraFormData.append('phoneNumber', phoneAuthValues.verifiedPhoneNumber);
+    }
+
+    extraFormData.append('nickName', nicknameValues.nickName);
+    extraFormData.append('birthday', FormattingDate(extraValues.birthday));
+    if (extraValues.gender) extraFormData.append('gender', extraValues.gender);
+    if (extraValues.location) extraFormData.append('location', extraValues.location);
+
+    try {
+      const addExtraInfoResponse = await axios.post("http://shineware.iptime.org:8081/auth/user/addExtraInfo", extraFormData);
+      // console.log(addExtraInfoResponse);
+      result.success = true;
+
+      return result;
+    } catch (e) {
+      result.message = '추가정보 저장 중 에러가 발생하였습니다.';
+      console.error(e);
+      
+      return result;
+    }
+
   };
 
   useEffect(() => {
-    const authPublisher = localStorage.getItem("pub");
-
+    // const authPublisher = localStorage.getItem("pub");
+    const authPublisher = info.pub;
+    // console.log(info);
     switch (authPublisher) {
       case PUBLISHER_KAKAO: {
         if (window.Kakao.Auth.getAccessToken()) {
           setStep(5);
           setExtRegister(true);
+        } else {
+          router.push('/login');
         }
 
         break;
@@ -185,7 +244,7 @@ export const SignUp = () => {
         <SignUpStep5 setStep={setStep} setNicknameValues={setNicknameValues} initValues={nicknameValues} callback={requestSignUp} />
       ) : null}
       {step == 6 ? (
-        <SignUpStepExtraInfo setStep={setStep} setExtraValues={setExtraValues} initValues={extraValues} callback={requestExtraInfoAdd} />
+        <SignUpStepExtraInfo setStep={setStep} setExtraValues={setExtraValues} initValues={extraValues} callback={requestAddExtraInfo} />
       ) : null}
       {step == 7 ? (
         <SignUpStepEnd />
