@@ -1,12 +1,16 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
+import * as userInfoActions from "../../redux/store/modules/userInfo";
 import axios from "axios";
 import Style from "../../styles/Component.module.css";
 import DetailTopNavbar from "../../components/NavBar/DetailTopNavbar";
 import classNames from 'classnames/bind';
 import Link from 'next/link';
 import { data } from "jquery";
+import { CleanLoginInfoInLocalStorage } from './../../components/Button/Login/Utils/LoginUtil';
+import { PUBLISHER_KAKAO, PUBLISHER_NAVER, PUBLISHER_TRAVELX } from "../../components/Button/Login/LoginConstant";
+import { DeleteCookie } from './../../components/Button/Login/Utils/CookieUtil';
 
 const cx = classNames.bind(Style);
 
@@ -15,6 +19,7 @@ const ModifyMyInfo = () => {
 	// const redirectUri = useSelector(({ redirectUri }) => redirectUri.value);
 	// console.log(`redirectUri is ${redirectUri}`);
 	const router = useRouter();
+  const dispatch = useDispatch();
 	const userInfo = useSelector((state) => state.userInfo.info);
 	// console.log(userInfo);
 	// male, female 로 남자, 여자 나눔
@@ -198,13 +203,67 @@ const ModifyMyInfo = () => {
 			})
 	}
 
+	// 회원 탈퇴
+	const handleWithdrawer = () => {
+		const authPublisher = localStorage.getItem("pub");
+		
+		const formData = new FormData();
+    formData.append('authPublisher', authPublisher);
+    formData.append('userId', userInfo.id);
+    formData.append('password', ''); // TODO: TRAVELX 유저는 비밀번호 입력 팝업 필요
+		console.log(userInfo);
+		axios({
+      method: "POST",
+      url: "http://shineware.iptime.org:8081/auth/user/delete",
+      data: formData,
+    }).then((res) => {
+			dispatch(userInfoActions.setUserInfo({ pub: null, id: null, auth: false, nickName: null, userExtraInfo: {} }));
+			DeleteCookie("RT");
+    }).catch((e) => {
+			console.error(e.response);
+    });
+
+		switch (authPublisher) {
+			case PUBLISHER_KAKAO: 
+				if (window.Kakao.Auth.getAccessToken()) {
+					window.Kakao.API.request({
+						url: '/v1/user/unlink',
+						success: (response) => {
+							// console.log(response);
+							CleanLoginInfoInLocalStorage(PUBLISHER_KAKAO);
+						},
+						fail: (error) => {
+							console.log(error);
+							alert(error.msg);
+						},
+					});
+		
+					window.Kakao.Auth.setAccessToken(null);
+				}
+	
+				break;
+			case PUBLISHER_NAVER: 
+				
+				break;
+			
+			case PUBLISHER_TRAVELX: 
+	
+				break;
+			
+			default:
+	
+		}
+
+   	router.push('/')
+    
+  };
+
 	useEffect(() => {
 		if(userInfo.id){
 			getUserInfo();
 		}
 	
 	}, [userInfo])
-
 
 	return (
 		<div className="site">
@@ -358,7 +417,7 @@ const ModifyMyInfo = () => {
 					<div className={cx("ApplySection", "Last")}>
 						<div className={"site-container"}>
 							<a href="#;" className={Style["ApplySecession"]}>
-								<div className={Style["ApplySecession-title"]}>회원탈퇴</div>
+								<div className={Style["ApplySecession-title"]} onClick={handleWithdrawer}>회원탈퇴</div>
 							</a>
 						</div>
 					</div>

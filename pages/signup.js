@@ -19,6 +19,7 @@ const cx = classNames.bind(Style);
 export const SignUp = () => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const { gender, nickName } = router.query;
 	const { info } = useSelector((state) => state.userInfo);
   const [step, setStep] = useState(1);
   const [agreeValues, setAgreeValues] = useState({
@@ -172,9 +173,7 @@ export const SignUp = () => {
   };
 
   useEffect(() => {
-    // const authPublisher = localStorage.getItem("pub");
     const authPublisher = info.pub;
-    // console.log(info);
     switch (authPublisher) {
       case PUBLISHER_KAKAO: {
         if (window.Kakao.Auth.getAccessToken()) {
@@ -241,10 +240,10 @@ export const SignUp = () => {
         <SignUpStep4 setStep={setStep} setPasswdValues={setPasswdValues} setPasswdValidateValues={setPasswdValidateValues} initValues={passwdValues} initValidateValues={passwdValidateValues} />
       ) : null}
       {step == 5 ? (
-        <SignUpStep5 setStep={setStep} setNicknameValues={setNicknameValues} initValues={nicknameValues} callback={requestSignUp} />
+        <SignUpStep5 setStep={setStep} setNicknameValues={setNicknameValues} initValues={nicknameValues} callback={requestSignUp} nickName={nickName} />
       ) : null}
       {step == 6 ? (
-        <SignUpStepExtraInfo setStep={setStep} setExtraValues={setExtraValues} initValues={extraValues} callback={requestAddExtraInfo} />
+        <SignUpStepExtraInfo setStep={setStep} setExtraValues={setExtraValues} initValues={extraValues} callback={requestAddExtraInfo} gender={gender} />
       ) : null}
       {step == 7 ? (
         <SignUpStepEnd />

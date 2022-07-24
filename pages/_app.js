@@ -9,8 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import Script from 'next/script';
 import { JAVASCRIPT_KEY } from '../components/Button/Login/LoginConstant';
-import { CheckLogin, GetNewAccessTokenByRefreshToken } from './../components/Button/Login/Utils/LoginUtil';
-import { GetCookie } from "../components/Button/Login/Utils/CookieUtil";
+import { CheckLogin } from './../components/Button/Login/Utils/LoginUtil';
 
 function TravelX({ Component, pageProps }) {
   const [scrollYValue, setScrollYVlue] = useState(0);
@@ -23,20 +22,31 @@ function TravelX({ Component, pageProps }) {
   };
 
   const handleRouteChange = async (url) => {
+    // console.log(url);
+    for (let urlValue of urlFilter) {
+      if (url.includes(urlValue)) return;
+    }
+
     dispatch(redirectUriActions.setRedirectUri(url));
-    
+
     if (!urlFilter.includes(url)) {
       const authPublisher = localStorage.getItem("pub");
-    
+      
       if (authPublisher) {
         let checkLogin = await CheckLogin(authPublisher);
         
         if (checkLogin.auth) {
-          dispatch(userInfoActions.setUserInfo({ pub: authPublisher, id: checkLogin.id, auth: true }));
+          dispatch(userInfoActions.setUserInfo({ 
+            pub: authPublisher, 
+            id: checkLogin.id, 
+            auth: true, 
+            nickName: checkLogin.nickName,
+            userExtraInfo: checkLogin.userExtraInfo 
+          }));
         } else {
           localStorage.removeItem("pub");
           localStorage.removeItem("tx");
-          dispatch(userInfoActions.setUserInfo({ pub: null, id: null, auth: false }));
+          dispatch(userInfoActions.setUserInfo({ pub: null, id: null, auth: false, nickName: null, userExtraInfo: {} }));
         }
       }
     }
@@ -52,7 +62,7 @@ function TravelX({ Component, pageProps }) {
       window.Kakao.init(JAVASCRIPT_KEY);
     }
     
-    handleRouteChange();
+    // handleRouteChange();
     return () => {
       document.body.removeEventListener("scroll", listener);
       router.events.off('routeChangeStart', handleRouteChange);

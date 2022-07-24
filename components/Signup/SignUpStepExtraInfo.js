@@ -9,7 +9,7 @@ import AddressModal from './../Modal/SignUp/AddressModal';
 
 const cx = classNames.bind(Style);
 
-const SignUpStepExtraInfo = ({ setStep, setExtraValues, initValues, callback }) => {
+const SignUpStepExtraInfo = ({ setStep, setExtraValues, initValues, callback, gender }) => {
 	const router = useRouter();
 
 	const [values, setValues] = useState({
@@ -83,7 +83,10 @@ const SignUpStepExtraInfo = ({ setStep, setExtraValues, initValues, callback }) 
 	// };
 
 	useEffect(() => {
-    setValues({...initValues});
+    setValues({
+			...initValues,
+			gender: gender ? (gender == 'male' ? 'MALE' : 'FEMALE') : ''
+		});
 	}, []);
 
 	useEffect(() => {
