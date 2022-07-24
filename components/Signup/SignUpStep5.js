@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 
 const cx = classNames.bind(Style);
 
-const SignUpStep5 = ({ setStep, setNicknameValues, initValues, callback }) => {
+const SignUpStep5 = ({ setStep, setNicknameValues, initValues, callback, nickName }) => {
 
   const router = useRouter();
 	const [values, setValues] = useState({
@@ -62,7 +62,10 @@ const SignUpStep5 = ({ setStep, setNicknameValues, initValues, callback }) => {
 	};
 
 	useEffect(() => {
-    setValues({...initValues});
+    setValues({
+      ...initValues, 
+      nickName: nickName ? nickName : ''
+    });
 	}, []);
 
   useEffect(() => {
