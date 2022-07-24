@@ -18,7 +18,7 @@ const RoomOrderbyModal = ({ isOpen, onRequestClose, callback }) => {
       >
         <div className="site-container">
           <div className={Style["FilterPopHeader"]}>
-            <div className={Style["FilterPopHeader-title"]}>필터</div>
+            <div className={Style["FilterPopHeader-title"]}>정렬기준</div>
             <button
               className={Style["FilterPopHeader-close"]}
               onClick={() => onRequestClose(false)}

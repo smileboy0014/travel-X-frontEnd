@@ -3,6 +3,8 @@ import style from "../../styles/Component.module.css";
 import SearchResultCarousel from "./Carousel/SearchResultCarousel";
 import Link from 'next/link'
 import classNames from 'classnames/bind';
+import { useTypeFilter } from '../../shared/js/CommonFilter';
+import { splitDateForm } from '../../shared/js/CommonFun';
 
 const cx = classNames.bind(style);
 
@@ -11,10 +13,7 @@ function SearchResult(props) {
   return (
     <li className={style["ProductList-item"]}>
       <div className={style["ProductItem"]}>
-        <div className={style["ProductItem-address"]}>
-          {props.address}
-        </div>
-        
+
         <div className={style["ProductSlide"]}>
           <SearchResultCarousel items={props.images} roomId={props.id} useType={props.useType} />
           <div className={style["ProductItemCont"]}>
@@ -25,6 +24,7 @@ function SearchResult(props) {
               }}
             >
               <a className={style["ProductItemCont-link"]}>
+
                 <div className={style["ProductItemMeta"]}>
                   <span className={cx("ProductItemMeta-item", "icoHotel")}>
                     {props.propertyType}
@@ -34,16 +34,18 @@ function SearchResult(props) {
                   </span>
                 </div>
                 <div className={style["ProductItemTitle"]}>{props.roomName}</div>
-                <div className={style["ProductItemGrade"]}>
-                  <span className={style["ProductItemGrade-current"]}>{props.averageScore}</span>
-                  <span className={style["ProductItemGrade-total"]}>{"(" + props.reviewCount + ")"}</span>
+
+                <div className={style["ProductItemGradeAddress"]}>
+                  <div className={style["ProductItemGrade"]}>
+                    <span className={props.reviewCount == 0 ? cx("ProductItemGrade-current", "no-Review") : cx("ProductItemGrade-current")}>{props.averageScore}</span>
+                    <span className={style["ProductItemGrade-total"]}>{"(" + props.reviewCount + ")"}</span>
+                  </div>
+                  <div className={style["ProductItemGradeAddress-text"]}>{props.address}</div>
                 </div>
                 <div className={style["ProductItemFilter"]}>
                   <span className={style["ProductItemFilter-item"]}>
-                    기준: {props.baseUser}인 최대: {props.maxUser}인
-                  </span>
-                  <span className={style["ProductItemFilter-item"]}>
-                    체크인: {props.checkinInfo} 체크아웃:{props.checkoutInfo}인
+                    <span className={style["ProductItemFilter-title"]}>{useTypeFilter(props.useType)}</span>
+                    <span className={style["ProductItemFilter-text"]}> {splitDateForm(props.checkinInfo ? props.checkinInfo : props.maxUseTimeInfo, props.useType)}</span>
                   </span>
                 </div>
                 <div className={style["ProductItemPrice"]}>

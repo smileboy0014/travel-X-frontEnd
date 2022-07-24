@@ -51,7 +51,7 @@ const SearchBar = ({
       AUTO_COMPLETE_API_URL+"/autocomplete?query=" + searchValue
     )
       .then((res) => {
-        console.log("res.data: " + JSON.stringify(res.data["address"]));
+        // console.log("res.data: " + JSON.stringify(res.data["address"]));
 
         getSearchAutoComptValue(res.data["address"]);
         getSearchAutoComptPropertyNameValue(res.data["propertyName"]);

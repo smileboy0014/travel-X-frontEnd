@@ -13,7 +13,7 @@ const RoomOrderby = ({ onRequestClose, callback }) => {
   const handleSaveClick = (e) => {
     console.log(" e.target.value: " + e.target.value);
     callback();
-    dispatch(searchType.setSearchType({ searchTypeValue }));
+    dispatch(searchType.setSearchType(searchTypeValue ));
     onRequestClose(false);
   };
 
@@ -22,6 +22,7 @@ const RoomOrderby = ({ onRequestClose, callback }) => {
   };
 
   useEffect(() => {
+    // debugger;
     setSearchTypeValue(
       getSearchTypeValue === null
         ? "RANKING"

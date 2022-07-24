@@ -17,3 +17,15 @@ export function propertyTypeFilter(type){
     return 'N/A';
   }
 }
+
+// 방 정보에서 숙박 유형 한글로 바꿔주는 funciotn
+export function useTypeFilter(type){
+  switch(type){
+    case 'DAY':
+      return '대실';
+    case 'NIGHT':
+      return '숙박';
+    default :
+    return 'N/A';
+  }
+}

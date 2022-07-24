@@ -39,8 +39,8 @@ const KakaoLoginButton = () => {
           success: async (userResponse) => {
             // console.debug(`Kakao_User_ID: ${userResponse.id}`);
             const result = await LoginToTravelXServer(PUBLISHER_KAKAO, userResponse.id);
-            // const result = await LoginToTravelXServer(PUBLISHER_KAKAO, 'kakao_test_user_id_12');
-            // console.log(result);
+            // const result = await LoginToTravelXServer(PUBLISHER_KAKAO, 'kakao_test_user_id_3');
+            console.log(result);
             if (result.auth) {
               console.debug(`KakaoUserId: ${userResponse.id}`);
               // 이름 정보 필요해서 넣어 줌 by gtpark
@@ -51,9 +51,9 @@ const KakaoLoginButton = () => {
               const curRedirectUri = params.get('redirectUri');
         
               router.push(curRedirectUri ? curRedirectUri : '/');
-            } else if (result.status == RESPONSE_STATUS_NOT_FOUND) {
+            } else if (result.code == RESPONSE_STATUS_NOT_FOUND) {
               dispatch(userInfoActions.setUserInfo({ pub: PUBLISHER_KAKAO, id: userResponse.id }));
-              // dispatch(userInfoActions.setUserInfo({ pub: PUBLISHER_KAKAO, id: 'kakao_test_user_id_12' }));
+              // dispatch(userInfoActions.setUserInfo({ pub: PUBLISHER_KAKAO, id: 'kakao_test_user_id_3' }));
               router.push('/signup');
             }
             

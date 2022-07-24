@@ -19,6 +19,7 @@ const cx = classNames.bind(Style);
 
 const MyReview = () => {
 	const router = useRouter();
+	const [error,setError] = useState(false);
 	const userInfo = useSelector((state) => state.userInfo.info);
 	const [from, setFrom] = useState(0);
 	const [size, setSize] = useState(10);

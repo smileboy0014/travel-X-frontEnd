@@ -1,6 +1,7 @@
 import { forwardRef, useEffect, Fragment } from "react";
 import SearchCard from "./SearchCard";
 import {propertyTypeFilter} from '../../shared/js/CommonFilter';
+import {priceComma}  from '../../shared/js/CommonFun';
 
 const sampleImage =
   "image.goodchoice.kr/resize_490x348/adimg_new/891/279402/934791805cb0b0b25a27081f1dd3f584.jpg";
@@ -10,9 +11,7 @@ const SearchResultList = (props, ref) => {
   const { rooms } = props;
   // console.log(`SRP 룸 갯수는 ${rooms.length} 이다!!!!!`);
 
-  const priceComma = (price) => {
-    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  };
+ 
 
   return (
     <>

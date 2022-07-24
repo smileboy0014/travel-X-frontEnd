@@ -24,7 +24,7 @@ const RoomFilterModal = ({ isOpen, onRequestClose, callback }) => {
             >
               초기화
             </button>
-            <div className={Style["FilterPopHeader-title"]}>필터</div>
+            <div className={Style["FilterPopHeader-title"]}>숙소유형</div>
             <button
               className={Style["FilterPopHeader-close"]}
               onClick={() => onRequestClose(false)}
