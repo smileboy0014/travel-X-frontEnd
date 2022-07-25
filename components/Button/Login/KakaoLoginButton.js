@@ -60,7 +60,7 @@ const KakaoLoginButton = () => {
               const curRedirectUri = params.get('redirectUri');
 
               router.push(curRedirectUri ? curRedirectUri : '/');
-            } else if (result.code == RESPONSE_STATUS_NOT_FOUND) {
+            } else if (result.status == RESPONSE_STATUS_NOT_FOUND) {
               dispatch(userInfoActions.setUserInfo({ pub: PUBLISHER_KAKAO, id: userResponse.id }));
 
               // dispatch(userInfoActions.setUserInfo({ pub: PUBLISHER_KAKAO, id: 'kakao_test_user_id_13' }));
