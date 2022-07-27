@@ -1,12 +1,15 @@
 import { React, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { useSelector } from "react-redux";
 import Style from "../../styles/Component.module.css";
 import QnaList from '../../components/Qna/QnaList';
 import QnaApply from '../../components/Qna/QnaApply';
+import axios from 'axios';
 
 const Qna = () => {
   const router = useRouter();
 
+	const userInfo = useSelector((state) => state.userInfo.info);
   const [page, setPage] = useState('list');
   const [data, setData] = useState([]);
 
@@ -45,16 +48,29 @@ const Qna = () => {
     }
   };
 
-  useEffect(() => {
-    let list = [
-      { title: "예약내역이 안보여요.", content: "예약취소는 어떻게 해야 하나요?", date: "2022-04-04", answer: "문의답변 문의답변 문의답변", isEnd: true, isActive: false },
-      { title: "예약내역이 안보여요.", content: "예약취소는 어떻게 해야 하나요?", date: "2022-04-04", answer: "", isEnd: false, isActive: false },
-      { title: "예약내역이 안보여요.", content: "예약취소는 어떻게 해야 하나요?", date: "2022-04-04", answer: "", isEnd: false, isActive: false },
-      { title: "예약내역이 안보여요.", content: "예약취소는 어떻게 해야 하나요?", date: "2022-04-04", answer: "문의답변 문의답변 문의답변", isEnd: true, isActive: false },
-    ];
+  const fetchInqueryList = async () => {
+    let params = {
+      authPublisher: userInfo.pub,
+      userId: userInfo.id
+    };
 
-    setData([...list]);
-  }, []);
+    axios({
+      method: "GET",
+      url: "http://shineware.iptime.org:8081/inquiry/get",
+      params: params
+    }).then((res) => {
+      // console.log(res.data);
+      setData([...res.data]);
+    }).catch((e) => {
+      console.error(e);
+    });
+  }
+
+  useEffect(() => {
+    if (page == 'list') {
+      fetchInqueryList();
+    }
+  }, [page]);
 
   return (
     <div className="site">
@@ -82,8 +98,7 @@ const Qna = () => {
           (
             <QnaApply 
               setPage={setPage}
-              setData={setData}
-              data={data}
+              fetchInqueryList={fetchInqueryList}
             />
           )}
         </div>

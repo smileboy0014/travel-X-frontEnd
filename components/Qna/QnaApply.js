@@ -1,81 +1,118 @@
 import { React, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
 import Style from "../../styles/Component.module.css";
 import classNames from 'classnames/bind';
-import validate from './QnaValidate';
 import axios from 'axios';
+import { EmailValidate, PhoneValidate } from './../../shared/js/CommonValidate';
 
 const cx = classNames.bind(Style);
 
-const useForm = ({ initialValues, onSubmit, validate }) => {
+const useForm = ({ initialValues, onSubmit }) => {
   const [values, setValues] = useState(initialValues);
-  const [errors, setErrors] = useState({});
+  const [validation, setValidation] = useState({
+    email: true,
+    phone: true,
+    title: false,
+    content: false,
+  });
+  const [validationAll, setValidationAll] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+	const userInfo = useSelector((state) => state.userInfo.info);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleValidation = (name, value) => {
+    setValidation({ ...validation, [name]: value });
+  };
+
+  const handleSubmit = (e) => {
     setSubmitting(true);
     e.preventDefault();
 
     const formData = new FormData();
-    // formData.append('authPublisher', publisher ? publisher : "TRAVELX");
-    // formData.append('userId', publisher ? id : values.email);
-    // formData.append('password', publisher ? null : values.password);
+    formData.append('authPublisher', userInfo.pub);
+    formData.append('userId', userInfo.id);
+    formData.append('title', values.qnaApplyTitle);
+    formData.append('contents', values.qnaApplyContent);
+    formData.append('email', values.email);
+    formData.append('phoneNumber', values.phone);
 
-    // axios({
-    //   method: "POST",
-    //   url: "http://shineware.iptime.org:8081/qna/apply",
-    //   data: formData,
-    // }).then((res) => {
-    //   console.log(res.data);
-    //   onSubmit();
-    // }).catch((e) => {
-    //   if (e.response.status == '409') {
-    //     alert('이미 등록된 사용자입니다.');
-    //   } else {
-    //     console.error(e);
-    //   }
-    // });
-
-    onSubmit();
+    axios({
+      method: "POST",
+      url: "http://shineware.iptime.org:8081/inquiry/register",
+      data: formData,
+    }).then((res) => {
+      onSubmit();
+    }).catch((e) => {
+      console.error(e);
+    }).finally(() => {
+      setSubmitting(false);
+    });
   };
 
-  useEffect(() => {
-    if (submitting) {
-      if (Object.keys(errors).length === 0) {
-        onSubmit(values);
-      }
-      setSubmitting(false);
-    }
-  }, [errors]);
+  // useEffect(() => {
+  //   if (submitting) {
+  //     if (Object.keys(errors).length === 0) {
+  //       onSubmit(values);
+  //     }
+  //     setSubmitting(false);
+  //   }
+  // }, [errors]);
 
   useEffect(() => {
-    setErrors(validate(values));
-  }, [values]);
+    if (values.email.length == 0) {
+      handleValidation('email', true);
+      return;
+    }
+    handleValidation('email', EmailValidate(values.email).syntax);
+  }, [values.email]);
+
+  useEffect(() => {
+    if (values.phone.length == 0) {
+      handleValidation('phone', true);
+      return;
+    }
+    handleValidation('phone', PhoneValidate(values.phone).syntax);
+  }, [values.phone]);
+
+  useEffect(() => {
+    handleValidation('title', values.qnaApplyTitle.length > 0);
+  }, [values.qnaApplyTitle]);
+
+  useEffect(() => {
+    handleValidation('content', values.qnaApplyContent.length >= 10);
+  }, [values.qnaApplyContent]);
+
+  useEffect(() => {
+    if (validation.email && validation.phone && validation.title && validation.content) {
+      setValidationAll(true);
+    } else {
+      setValidationAll(false);
+    }
+  }, [validation])
 
   return {
     values,
-    errors,
+    validation,
     submitting,
     handleChange,
-    handleSubmit
+    handleSubmit,
+    validationAll
   };
 }
 
-const QnaApply = ({ setPage, data, setData }) => {
+const QnaApply = ({ setPage, fetchInqueryList }) => {
   const [contentByte, setContentByte] = useState('0/1000');
-  const { values, errors, submitting, handleChange, handleSubmit } = useForm({
+  const { values, validation, submitting, handleChange, handleSubmit, validationAll } = useForm({
     initialValues: { email: "", phone: "", qnaApplyTitle: "", qnaApplyContent: "" },
     onSubmit: () => {
-      // TODO: get list api 실행
-      setData([...data, { title: values.qnaApplyTitle, content: values.qnaApplyContent, date: "2022-06-20", answer: "문의답변 문의답변 문의답변", isEnd: false, isActive: false }])
+      // fetchInqueryList();
       setPage('list');
-    },
-    validate
+    }
   });
 
   const CheckByte = (str, maxByte) => {
@@ -119,7 +156,6 @@ const QnaApply = ({ setPage, data, setData }) => {
   }
 
   useEffect(() => {
-
   }, []);
 
   return (
@@ -143,13 +179,13 @@ const QnaApply = ({ setPage, data, setData }) => {
                     type="text"
                     name="email"
                     className={Style["ReservationInput-input"]}
-                    placeholder="이메일을 입력해주세요." 
+                    placeholder="id@gmail.com" 
                     value={values.email}
                     onChange={handleChange}
                   />
-                  {errors.email ? errors.email : null}
                 </dd>
               </dl>
+              {!validation.email && values.email.length > 0 ? <div className={cx("Error-text", "is-Active")}>이메일 형식을 확인해주세요.</div> : null}
             </div>
             <div className={Style["ReservationInput"]}>
               <dl className={Style["ReservationInput-inner"]}>
@@ -158,15 +194,16 @@ const QnaApply = ({ setPage, data, setData }) => {
                 </dt>
                 <dd className={Style["ReservationInput-text"]}>
                   <input 
-                    type="number" 
+                    type="text" 
                     name="phone"
                     className={Style["ReservationInput-input"]}
-                    placeholder="전화번호를 입력해주세요."
+                    placeholder="010-1234-5678"
                     value={values.phone}
                     onChange={handleChange}
                   />
                 </dd>
               </dl>
+              {!validation.phone && values.phone.length > 0 ? <div className={cx("Error-text", "is-Active")}>휴대폰번호 형식을 확인해주세요.</div> : null}
             </div>
           </div>
         </div>
@@ -181,6 +218,7 @@ const QnaApply = ({ setPage, data, setData }) => {
                 value={values.qnaApplyTitle}
                 onChange={handleChange}  
               />
+              {values.qnaApplyTitle.length == 0 ? <div className={cx("Error-text", "is-Active")}>문의제목을 입력해주세요.</div> : null}
             </div>
           </div>
         </div>
@@ -198,15 +236,17 @@ const QnaApply = ({ setPage, data, setData }) => {
                 onKeyUp={CheckLength(values.qnaApplyContent, 1000)}
               />
             </div>
-            <div className={Style["ContactSectionCount"]}><span id="byteInfo" className={Style["ContactSectionCount-text"]}>{contentByte}</span></div>
+            <div className={Style["ContactSectionCount"]}>
+              <span id="byteInfo" className={Style["ContactSectionCount-text"]} style={values.qnaApplyContent.length < 10 ? { color: 'red' } : null}>{contentByte}</span>
+            </div>
           </div>
         </div>
         <div className={Style["BttonFixButton"]}>
           <div className={"site-container"}>
             <button 
               type="submit"
-              className={values.qnaApplyContent.length >= 10 ? Style["BttonFixButton-button"] : cx("BttonFixButton-button", "is-disable")}
-              disabled={submitting}
+              className={!submitting && validationAll ? Style["BttonFixButton-button"] : cx("BttonFixButton-button", "is-disable")}
+              disabled={submitting || !validationAll}
             >작성 완료</button>
           </div>
         </div>
