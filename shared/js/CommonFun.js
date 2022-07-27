@@ -22,12 +22,13 @@ export function splitDateForm(date, type) {
     dateArr = date.split(':');
     return ((type == 'NIGHT' && !dateArr[0].includes('시부터')) ? dateArr[0] + '시부터' : date);
   } else {
-    return null;
+    return '숙소문의';
   }
 }
 
 export function priceComma(price) {
-  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+  return price ? price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0';
 };
 
 

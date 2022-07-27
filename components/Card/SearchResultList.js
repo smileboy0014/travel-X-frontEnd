@@ -11,8 +11,6 @@ const SearchResultList = (props, ref) => {
   const { rooms } = props;
   // console.log(`SRP 룸 갯수는 ${rooms.length} 이다!!!!!`);
 
- 
-
   return (
     <>
       {rooms &&
