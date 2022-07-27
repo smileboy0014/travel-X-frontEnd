@@ -11,9 +11,10 @@ import { useRouter } from "next/router";
 import * as scrollY from "../../../redux/store/modules/scrollY";
 import DetailCalendarModal from "../../../components/Modal/Calendar/DetailCalendarModal";
 import PesonalModal from "../../../components/Modal/Personal/PersonalModal";
-import {propertyTypeFilter} from '../../../shared/js/CommonFilter';
+import { propertyTypeFilter } from '../../../shared/js/CommonFilter';
 import classNames from 'classnames/bind';
-import {priceComma}  from '../../../shared/js/CommonFun';
+import { priceComma, splitDateForm } from '../../../shared/js/CommonFun';
+import { useTypeFilter } from '../../../shared/js/CommonFilter';
 
 const cx = classNames.bind(Style);
 
@@ -138,9 +139,16 @@ const DetailView = () => {
         // console.log(res.data.priceDetails);
         // console.log(res.data.propertyInfo);
         // console.log(res.data.roomInfo);
+
+        // 이미지 수가 너무 많을 경우, 보기 불편해서 최대 SRP에서 보이는 이미지 갯수를 10개로 제한함 by gt.park
+        let imgs = null;
+        if(res.data.roomInfo.images && res.data.roomInfo.images.length > 10){
+          imgs = res.data.roomInfo.images.slice(0,10);
+        }
+
         setRooms((prevState) => ({
           ...prevState,
-          item: res.data.roomInfo.images ? res.data.roomInfo.images : [],
+          item: res.data.roomInfo.images ? (imgs ? imgs: res.data.roomInfo.images) : [],
           roomInfo: res.data.roomInfo ? res.data.roomInfo : [],
           availableDates: res.data.availableDates
             ? res.data.availableDates
@@ -208,7 +216,7 @@ const DetailView = () => {
                   {/* 필터 페이지로 이동하는 부분  */}
 
                   <div className={Style["DetailHeaderGrade"]}>
-                    <span className={Style["DetailHeaderGrade-current"]}>{rooms.reviewSummary.averageReviewScore}</span>
+                    <span className={(rooms.reviewSummary && rooms.reviewSummary.reviewCount == 0) ? cx("DetailHeaderGrade-current", "no-Review") : Style["DetailHeaderGrade-current"]}>{rooms.reviewSummary.averageReviewScore}</span>
                     <Link
                       href={{
                         pathname: "/view/review/[id]",
@@ -238,10 +246,11 @@ const DetailView = () => {
                         최대 {` ${rooms.roomInfo.maxUser}`}인
                       </span>
                       <span className={Style["DetailHeaderInfoFilter-item"]}>
-                        체크인: {rooms.roomInfo.nightInfo && rooms.roomInfo.nightInfo.checkinInfo.MONDAY}{" "}
-                        체크아웃:{rooms.roomInfo.nightInfo && rooms.roomInfo.nightInfo.checkoutInfo.MONDAY}
-                        인
-                      </span>
+                        <span className={Style["DetailHeaderInfoFilter-tit"]}>
+                          {useTypeFilter(rooms.roomInfo.useType)}
+                        </span>
+                        {' '+splitDateForm(rooms.roomInfo.useType == 'NIGHT' ? rooms.roomInfo.nightInfo && rooms.roomInfo.nightInfo.checkinInfo.MONDAY : rooms.roomInfo.dayInfo && rooms.roomInfo.dayInfo.maxUseTimeInfo.MONDAY, rooms.roomInfo.useType)}</span>
+
                     </div>
                   </div>
                 </div>
@@ -346,7 +355,7 @@ const DetailView = () => {
                   <ul className={Style["DetailInfoItemService"]}>
                     {
                       (rooms.roomInfo != undefined
-                      && (rooms.roomInfo.extraOptionList.length > 0)) ? 
+                        && (rooms.roomInfo.extraOptionList.length > 0)) ?
                         rooms.roomInfo.extraOptionList.map((item, index) => (
                           <li className={Style["DetailInfoItemService-item"]} key={index}>
                             <dl className={Style["DetailInfoItemService-inner"]}>
@@ -354,11 +363,11 @@ const DetailView = () => {
                               <dd className={Style["DetailInfoItemService-text"]}>{priceComma(item.price)}원</dd>
                             </dl>
                           </li>
-                        )) : 
+                        )) :
                         <p className={Style["DetailInfoItem-text"]}>
-                        {"추가 가능 옵션이 없습니다."}
-                      </p>
-                       
+                          {"추가 가능 옵션이 없습니다."}
+                        </p>
+
                     }
                   </ul>
                 </div>
@@ -428,21 +437,21 @@ const DetailView = () => {
             </div>
 
             {/* <ReserveButton></ReserveButton> */}
-              <div className={cx("BttonFixButton", "with-Like")}>
-                <div className="site-container">
-                  <button type="button" className={userWish ? cx("BttonFixButton-like", "is-Active") : Style["BttonFixButton-like"]} onClick={handleMyWish}><span className="ab-text">좋아요</span></button>
-                  <Link
-                    href={{
-                      pathname: "/view/reserve/[id]",
-                      query: { id: id, useType: useType },
-                    }}
-                  >
-                    <button type="button" className={Style["BttonFixButton-button"]}>
-                      예약하기
-                    </button>
-                  </Link>
-                </div>
+            <div className={cx("BttonFixButton", "with-Like")}>
+              <div className="site-container">
+                <button type="button" className={userWish ? cx("BttonFixButton-like", "is-Active") : Style["BttonFixButton-like"]} onClick={handleMyWish}><span className="ab-text">좋아요</span></button>
+                <Link
+                  href={{
+                    pathname: "/view/reserve/[id]",
+                    query: { id: id, useType: useType },
+                  }}
+                >
+                  <button type="button" className={Style["BttonFixButton-button"]}>
+                    예약하기
+                  </button>
+                </Link>
               </div>
+            </div>
 
 
             <DetailCalendarModal
