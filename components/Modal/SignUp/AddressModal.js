@@ -25,9 +25,14 @@ const AddressModal = ({ isOpen, onRequestClose, callback, initValue }) => {
     onRequestClose(true);
   };
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   console.log(initValue);
+  //   setAddress(initValue);
+  // }, []);
+
+  useEffect(()=>{
     setAddress(initValue);
-  }, []);
+  },[initValue])
 
   return (
     <Modal

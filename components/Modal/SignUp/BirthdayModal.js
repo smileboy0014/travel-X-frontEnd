@@ -3,7 +3,7 @@ import Modal from "react-modal";
 import Style from "../../../styles/Component.module.css";
 import SignUpBirthdayCarousel from "../../Card/Carousel/SignUpBirthdayCarousel";
 
-const BirthdayModal = ({ isOpen, onRequestClose, callback }) => {
+const BirthdayModal = ({ isOpen, onRequestClose, callback, values }) => {
   const [birthdayIndex, setBirthdayIndex] = useState({
     year: 52,
     month: 0,
@@ -23,20 +23,28 @@ const BirthdayModal = ({ isOpen, onRequestClose, callback }) => {
     let tmpDayList = [...dayList];
     let dayindex_len = tmpDayList.length;
 
-    if (day > dayindex_len){
-      for(let i=(dayindex_len+1); i<=day; i++) {
+    if (day > dayindex_len) {
+      for (let i = (dayindex_len + 1); i <= day; i++) {
         tmpDayList.push(i);
       }
-    } else if (day < dayindex_len){
-      for(let i=dayindex_len; i>day; i--){
+    } else if (day < dayindex_len) {
+      for (let i = dayindex_len; i > day; i--) {
         tmpDayList.pop();
       }
     }
-    
+
     setDayList([...tmpDayList]);
 
-    
+
   };
+
+  const correctValue = (birthday) => {
+
+    let correctObj = {
+      year: birthday.year - 1940, month: birthday.month - 1, day: birthday.day - 1
+    };
+    return correctObj;
+  }
 
   const handleConfirm = () => {
     callback({
@@ -49,24 +57,34 @@ const BirthdayModal = ({ isOpen, onRequestClose, callback }) => {
   }
 
   useEffect(() => {
+
     const START_YEAR = 1940;
-    const END_YEAR = (new Date()).getFullYear()-7;
+    const END_YEAR = (new Date()).getFullYear() - 7;
     const yearList = [];
     const monthList = [];
     const dayList = [];
-    for (let i=START_YEAR; i<END_YEAR; i++) {
+    for (let i = START_YEAR; i < END_YEAR; i++) {
       yearList.push(i);
     }
-    for (let i=1; i<13; i++) {
+    for (let i = 1; i < 13; i++) {
       monthList.push(i);
     }
-    for (let i=1; i<32; i++) {
+    for (let i = 1; i < 32; i++) {
       dayList.push(i);
     }
     setYearList([...yearList]);
     setMonthList([...monthList]);
     setDayList([...dayList]);
+
   }, []);
+
+  useEffect(() => {
+    if (values.year !== '') {
+      // debugger;
+      const birthdayCorrectData = correctValue(values);
+      setBirthdayIndex(birthdayCorrectData);
+    }
+  }, [values])
 
   useEffect(() => {
     lastday();
@@ -92,27 +110,27 @@ const BirthdayModal = ({ isOpen, onRequestClose, callback }) => {
             <div className={Style["BirthdaySelectList-inner"]}>
               {/* <!-- 년 --> */}
               <div className={Style["BirthdaySelectList-item"]}>
-                <SignUpBirthdayCarousel 
-                  items={yearList} 
-                  setValue={(selectedYear) => setBirthdayIndex({...birthdayIndex, year: selectedYear})}
+                <SignUpBirthdayCarousel
+                  items={yearList}
+                  setValue={(selectedYear) => setBirthdayIndex({ ...birthdayIndex, year: selectedYear })}
                   indexState={birthdayIndex.year}
                 />
               </div>
               {/* <!-- .년 --> */}
               {/* <!-- 월 --> */}
               <div className={Style["BirthdaySelectList-item"]}>
-                <SignUpBirthdayCarousel 
-                  items={monthList} 
-                  setValue={(selectedMonth) => setBirthdayIndex({...birthdayIndex, month: selectedMonth})}
+                <SignUpBirthdayCarousel
+                  items={monthList}
+                  setValue={(selectedMonth) => setBirthdayIndex({ ...birthdayIndex, month: selectedMonth })}
                   indexState={birthdayIndex.month}
                 />
               </div>
               {/* <!-- .월 --> */}
               {/* <!-- 일 --> */}
               <div className={Style["BirthdaySelectList-item"]}>
-                <SignUpBirthdayCarousel 
-                  items={dayList} 
-                  setValue={(selectedDay) => setBirthdayIndex({...birthdayIndex, day: selectedDay})}
+                <SignUpBirthdayCarousel
+                  items={dayList}
+                  setValue={(selectedDay) => setBirthdayIndex({ ...birthdayIndex, day: selectedDay })}
                   indexState={birthdayIndex.day}
                 />
               </div>
