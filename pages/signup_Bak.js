@@ -5,7 +5,7 @@ import * as userInfoActions from "../redux/store/modules/userInfo";
 import Style from '../styles/Login.module.css';
 import axios from 'axios';
 import validate from '../components/Button/Login/Utils/Validate';
-import { PUBLISHER_KAKAO, PUBLISHER_NAVER, PUBLISHER_TRAVELX } from '../components/Button/Login/LoginConstant';
+import { PUBLISHER_KAKAO, PUBLISHER_NAVER, PUBLISHER_TRAVELX } from '../shared/js/CommonConstant';
 import Link from 'next/link';
 
 const useForm = ({ initialValues, onSubmit, validate }) => {

@@ -9,7 +9,7 @@ import classNames from 'classnames/bind';
 import Link from 'next/link';
 import { data } from "jquery";
 import { CleanLoginInfoInLocalStorage } from './../../components/Button/Login/Utils/LoginUtil';
-import { PUBLISHER_KAKAO, PUBLISHER_NAVER, PUBLISHER_TRAVELX } from "../../components/Button/Login/LoginConstant";
+import { PUBLISHER_KAKAO, PUBLISHER_NAVER, PUBLISHER_TRAVELX } from "../../shared/js/CommonConstant";
 import { DeleteCookie } from './../../components/Button/Login/Utils/CookieUtil';
 import BirthdayModal from '../../components/Modal/SignUp/BirthdayModal';
 import AddressModal from '../../components/Modal/SignUp/AddressModal';
@@ -147,57 +147,57 @@ const ModifyMyInfo = () => {
 
 	// 회원 탈퇴
 	const handleWithdrawer = () => {
-		const authPublisher = localStorage.getItem("pub");
+		if (confirm('정말로 탈퇴하시겠습니까?')) {
+			const formData = new FormData();
+			formData.append('authPublisher', userInfo.pub);
+			formData.append('userId', userInfo.id);
+			formData.append('password', ''); // TODO: TRAVELX 유저는 비밀번호 입력 팝업 필요
+			// console.log(userInfo);
 
-		const formData = new FormData();
-		formData.append('authPublisher', authPublisher);
-		formData.append('userId', userInfo.id);
-		formData.append('password', ''); // TODO: TRAVELX 유저는 비밀번호 입력 팝업 필요
-		console.log(userInfo);
-		axios({
-			method: "POST",
-			url: "http://shineware.iptime.org:8081/auth/user/delete",
-			data: formData,
-		}).then((res) => {
-			dispatch(userInfoActions.setUserInfo({ pub: null, id: null, auth: false, nickName: null, userExtraInfo: {} }));
-			DeleteCookie("RT");
-		}).catch((e) => {
-			console.error(e.response);
-		});
-
-		switch (authPublisher) {
-			case PUBLISHER_KAKAO:
-				if (window.Kakao.Auth.getAccessToken()) {
-					window.Kakao.API.request({
-						url: '/v1/user/unlink',
-						success: (response) => {
-							// console.log(response);
-							CleanLoginInfoInLocalStorage(PUBLISHER_KAKAO);
-						},
-						fail: (error) => {
-							console.log(error);
-							alert(error.msg);
-						},
-					});
-
-					window.Kakao.Auth.setAccessToken(null);
-				}
-
-				break;
-			case PUBLISHER_NAVER:
-
-				break;
-
-			case PUBLISHER_TRAVELX:
-
-				break;
-
-			default:
-
+			axios({
+				method: "POST",
+				url: "http://shineware.iptime.org:8081/auth/user/delete",
+				data: formData,
+			}).then((res) => {
+				dispatch(userInfoActions.setUserInfo({ pub: null, id: null, auth: false, nickName: null, userExtraInfo: {} }));
+				DeleteCookie("RT");
+			}).catch((e) => {
+				console.error(e.response);
+			});
+	
+			switch (userInfo.pub) {
+				case PUBLISHER_KAKAO:
+					if (window.Kakao.Auth.getAccessToken()) {
+						window.Kakao.API.request({
+							url: '/v1/user/unlink',
+							success: (response) => {
+								// console.log(response);
+								CleanLoginInfoInLocalStorage(PUBLISHER_KAKAO);
+							},
+							fail: (error) => {
+								console.log(error);
+								alert(error.msg);
+							},
+						});
+	
+						window.Kakao.Auth.setAccessToken(null);
+					}
+	
+					break;
+				case PUBLISHER_NAVER:
+	
+					break;
+	
+				case PUBLISHER_TRAVELX:
+	
+					break;
+	
+				default:
+	
+			}
+	
+			router.push('/')
 		}
-
-		router.push('/')
-
 	};
 
 	useEffect(() => {
