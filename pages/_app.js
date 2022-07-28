@@ -23,10 +23,6 @@ function TravelX({ Component, pageProps }) {
 
   const handleRouteChange = async (url) => {
     // console.log(url);
-    for (let urlValue of urlFilter) {
-      if (url.includes(urlValue)) return;
-    }
-
     dispatch(redirectUriActions.setRedirectUri(url));
 
     if (!urlFilter.includes(url)) {
@@ -62,7 +58,7 @@ function TravelX({ Component, pageProps }) {
       window.Kakao.init(JAVASCRIPT_KEY);
     }
     
-    // handleRouteChange();
+    handleRouteChange();
     return () => {
       document.body.removeEventListener("scroll", listener);
       router.events.off('routeChangeStart', handleRouteChange);
