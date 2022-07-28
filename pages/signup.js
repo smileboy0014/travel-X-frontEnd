@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as userInfoActions from "../redux/store/modules/userInfo";
 import Style from '../styles/Component.module.css';
 import axios from 'axios';
-import { PUBLISHER_KAKAO, PUBLISHER_NAVER, PUBLISHER_TRAVELX } from './../components/Button/Login/LoginConstant';
+import { PUBLISHER_KAKAO, PUBLISHER_NAVER, PUBLISHER_TRAVELX } from './../shared/js/CommonConstant';
 import SignUpStep1 from '../components/Signup/SignUpStep1';
 import SignUpStep2 from '../components/Signup/SignUpStep2';
 import SignUpStep3 from '../components/Signup/SignUpStep3';
@@ -200,12 +200,12 @@ export const SignUp = () => {
   }, []);
 
   useEffect(() => {
-    console.log(agreeValues);
-    console.log(phoneAuthValues);
-    console.log(emailValues);
-    console.log(passwdValues);
-    console.log(passwdValidateValues);
-    console.log(extraValues);
+    // console.log(agreeValues);
+    // console.log(phoneAuthValues);
+    // console.log(emailValues);
+    // console.log(passwdValues);
+    // console.log(passwdValidateValues);
+    // console.log(extraValues);
   }, [step]);
 
   return (

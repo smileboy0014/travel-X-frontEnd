@@ -1,9 +1,10 @@
 import axios from 'axios';
-import { CLIENT_SECRET, PUBLISHER_KAKAO, PUBLISHER_TRAVELX, PUBLISHER_NAVER, REST_API_KEY, RESPONSE_STATUS_NOT_FOUND, RESPONSE_STATUS_BAD_REQUEST } from '../LoginConstant';
+import { CLIENT_SECRET, PUBLISHER_KAKAO, PUBLISHER_TRAVELX, PUBLISHER_NAVER, REST_API_KEY } from '../../../../shared/js/CommonConstant';
 import { GetCookie, SetCookie } from './CookieUtil';
 
 export const LoginToTravelXServer = async (publisher, userId, pwd = null) => {
   const result = { auth: false, id: "", status: "", nickName:"" }
+
   try {
     const formData = new FormData();
     formData.append('authPublisher', publisher);
@@ -11,7 +12,7 @@ export const LoginToTravelXServer = async (publisher, userId, pwd = null) => {
     formData.append('password', pwd);
 
     const res = await axios.post('http://shineware.iptime.org:8081/auth/user/get', formData);
-    console.log('TravelX Login /auth/user/get Response', res);
+    // console.log('TravelX Login /auth/user/get Response', res);
     
     result.auth = true;
     result.id = userId;

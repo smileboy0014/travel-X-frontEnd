@@ -22,10 +22,15 @@ function TravelX({ Component, pageProps }) {
   };
 
   const handleRouteChange = async (url) => {
-    // console.log(url);
+    // console.log();
     dispatch(redirectUriActions.setRedirectUri(url));
+    
+    let originUrl = "";
+    if (url) {
+      originUrl = url.split(/[?#]/)[0];
+    }
 
-    if (!urlFilter.includes(url)) {
+    if (!urlFilter.includes(originUrl)) {
       const authPublisher = localStorage.getItem("pub");
       
       if (authPublisher) {

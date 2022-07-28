@@ -236,7 +236,7 @@ const SignUpStepExtraInfo = ({ setStep, setExtraValues, initValues, callback, ge
         isOpen={birthdayModalOpen}
         onRequestClose={() => setBirthdayModalOpen(false)}
         callback={handleBirthdayCallback}
-        values={values}
+        values={values.birthday}
 			/>
 			<AddressModal
         isOpen={addressModalOpen}

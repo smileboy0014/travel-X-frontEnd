@@ -5,7 +5,7 @@ import * as userInfoActions from "../../../redux/store/modules/userInfo";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { LoginToTravelXServer, SetLoginInfoToLocalStorage } from "./Utils/LoginUtil";
-import { PUBLISHER_KAKAO, RESPONSE_STATUS_NOT_FOUND, REST_API_KEY } from "./LoginConstant";
+import { PUBLISHER_KAKAO, RESPONSE_STATUS_NOT_FOUND, REST_API_KEY } from "./../../../shared/js/CommonConstant";
 import { SetCookie } from './Utils/CookieUtil';
 import classNames from 'classnames/bind';
 
@@ -37,14 +37,14 @@ const KakaoLoginButton = () => {
         window.Kakao.API.request({
           url: '/v2/user/me',
           success: async (userResponse) => {
-            // console.debug(`Kakao_User_ID: ${userResponse.id}`);
+            console.debug(`Kakao_User_ID: ${userResponse.id}`);
             const result = await LoginToTravelXServer(PUBLISHER_KAKAO, userResponse.id);
             
             // const result = await LoginToTravelXServer(PUBLISHER_KAKAO, 'kakao_test_user_id_13');
             // console.log(result);
 
             if (result.auth) {
-              console.debug(`KakaoUserId: ${userResponse.id}`);
+              // console.debug(`KakaoUserId: ${userResponse.id}`);
               // 이름 정보 필요해서 넣어 줌 by gtpark
               // console.log(result);
               // debugger;

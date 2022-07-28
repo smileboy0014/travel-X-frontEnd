@@ -5,7 +5,7 @@ import * as userInfoActions from "../redux/store/modules/userInfo";
 import Style from '../styles/Component.module.css';
 import { CheckLogin, LoginByTravelXUserToTravelXServer } from '../components/Button/Login/Utils/LoginUtil';
 import KakaoLoginButton from '../components/Button/Login/KakaoLoginButton';
-import { PUBLISHER_TRAVELX } from '../components/Button/Login/LoginConstant';
+import { PUBLISHER_TRAVELX } from '../shared/js/CommonConstant';
 import classNames from 'classnames/bind';
 
 const cx = classNames.bind(Style);

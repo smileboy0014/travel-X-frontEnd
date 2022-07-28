@@ -6,7 +6,7 @@ import DetailTopNavbar from "../components/NavBar/DetailTopNavbar";
 import classNames from 'classnames/bind';
 import Link from 'next/link';
 import * as userInfoActions from "../redux/store/modules/userInfo";
-import { PUBLISHER_KAKAO, PUBLISHER_NAVER, PUBLISHER_TRAVELX } from "./../components/Button/Login/LoginConstant";
+import { PUBLISHER_KAKAO, PUBLISHER_NAVER, PUBLISHER_TRAVELX } from "./../shared/js/CommonConstant";
 import { CleanLoginInfoInLocalStorage } from "./../components/Button/Login/Utils/LoginUtil";
 import { DeleteCookie } from './../components/Button/Login/Utils/CookieUtil';
 
