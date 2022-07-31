@@ -29,7 +29,11 @@ const DetailView = () => {
   const [changeStyle, setChangeStyle] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
-  const { id, useType, person } = router.query;
+  // const { id, useType, person } = router.query;
+  const [queries, setQueries] = useState({
+    id: '',
+    useType: ''
+  });
   const { detailDate } = useSelector((state) => state.date);
   const userInfo = useSelector((state) => state.userInfo.info);
   const week = new Array("일", "월", "화", "수", "목", "금", "토");
@@ -62,17 +66,18 @@ const DetailView = () => {
   const handleMyWish = (e) => {
     e.preventDefault();
 
+    if (userInfo.id) {
       let wish;
       const formData = new FormData();
 
-      if (rooms && rooms.userWish) {
+      if (userWish) {
         wish = {
           method: "DELETE",
           url: "/wish/delete",
           userWish: false
         };
 
-        formData.append('wishId', userInfo.id);
+        formData.append('wishId', rooms.wishId);
       } else {
         wish = {
           method: "POST",
@@ -81,8 +86,8 @@ const DetailView = () => {
         };
 
         formData.append('userId', userInfo.id);
-        formData.append('roomId', id);
-        formData.append('useType', useType);
+        formData.append('roomId', queries.id);
+        formData.append('useType', queries.useType);
       }
 
       Axios({
@@ -91,11 +96,14 @@ const DetailView = () => {
         data: formData,
       }).then((res) => {
         setUserWish(wish.userWish);
+        setRooms({ ...rooms, wishId: res.data.id});
         console.log(res.data);
       }).catch((e) => {
         console.error(e);
       });
-
+    } else {
+      router.push(`/login?redirectUri=/view/detail/${queries.id}?useType=${queries.useType}`)
+    }
   }
 
   useEffect(() => {
@@ -109,9 +117,16 @@ const DetailView = () => {
   }, [scrollYValue]);
 
   useEffect(() => {
+    if (router.isReady) {
+      const { id, useType } = router.query;
+      setQueries({ id: id, useType: useType });
+    }
+  }, [router.isReady])
+
+  useEffect(() => {
     setSlide(false);
     dispatch(scrollY.scrollY(0));
-    console.log(rooms);
+    // console.log(rooms);
 
     return () => {
       setSlide(true);
@@ -119,19 +134,20 @@ const DetailView = () => {
   }, []);
 
   useEffect(() => {
-    if (id !== undefined) {
+    if (queries.id !== undefined && queries.id !== '') {
       Axios({
         method: "GET",
         url: "http://shineware.iptime.org:8081/pdp/info",
         params: {
-          roomId: id,
-          useType: useType,
+          roomId: queries.id,
+          useType: queries.useType,
           checkinDate: FormattingDate(new Date(detailDate.start)),
           checkoutDate: FormattingDate(new Date(detailDate.end)),
           adult: adultCounterValue,
           children: childCounterValue,
           baby: babyCounterValue,
-          userId: userInfo.id
+          userId: userInfo.id,
+          authPublisher: userInfo.pub
         },
       }).then((res) => {
         console.log(res.data);
@@ -156,11 +172,12 @@ const DetailView = () => {
           priceDetails: res.data.priceDetails ? res.data.priceDetails : [],
           propertyInfo: res.data.propertyInfo ? res.data.propertyInfo : [],
           reviewSummary: res.data.reviewSummary ? res.data.reviewSummary : [],
+          wishId: res.data.wishId
         }));
         setUserWish(res.data.userWish);
       });
     }
-  }, [id,
+  }, [queries.id,
     detailDate.start,
     detailDate.end,
     adultCounterValue,
@@ -220,7 +237,7 @@ const DetailView = () => {
                     <Link
                       href={{
                         pathname: "/view/review/[id]",
-                        query: { id: id },
+                        query: { id: queries.id },
                       }}
                     ><a>
                         <span className={Style["DetailHeaderGrade-link"]}>후기 {rooms.reviewSummary.reviewCount}개</span>
@@ -424,7 +441,7 @@ const DetailView = () => {
               <Link
                 href={{
                   pathname: "/view/review/[id]",
-                  query: { id: id },
+                  query: { id: queries.id },
                 }}
               >
                 <a href="#;" className={Style["DetailReview-link"]}>
@@ -442,8 +459,8 @@ const DetailView = () => {
                 <button type="button" className={userWish ? cx("BttonFixButton-like", "is-Active") : Style["BttonFixButton-like"]} onClick={handleMyWish}><span className="ab-text">좋아요</span></button>
                 <Link
                   href={{
-                    pathname: userInfo.id ? "/view/reserve/[id]" : "/login",
-                    query: userInfo.id ? { id: id, useType: useType } : { redirectUri: `/view/detail/${id}?useType=${useType}` },
+                    pathname: "/view/reserve/[id]",
+                    query: { id: queries.id, useType: queries.useType },
                   }}
                 >
                   <button type="button" className={Style["BttonFixButton-button"]}>
