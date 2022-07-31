@@ -84,7 +84,7 @@ const BirthdayModal = ({ isOpen, onRequestClose, callback, values }) => {
       const birthdayCorrectData = correctValue(values);
       setBirthdayIndex(birthdayCorrectData);
     }
-    console.log(birthdayIndex);
+    // console.log(birthdayIndex);
   }, [values])
 
   useEffect(() => {

@@ -1,4 +1,3 @@
-import { func } from "prop-types";
 
 // 날짜 포맷 변경(YYYY-MM-DD HH:mm:ss)
 export function timestamp(date) {
