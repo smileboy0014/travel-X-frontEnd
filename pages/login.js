@@ -108,7 +108,8 @@ const Login = () => {
   useEffect(() => {
     // handleCheckLogin();
     if (userInfo.auth) {
-      history.go(1);
+      // history.go(1);
+      router.push('/');
     }
   }, []);
 
