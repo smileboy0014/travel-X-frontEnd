@@ -8,6 +8,7 @@ import * as scrollY from "../../../redux/store/modules/scrollY";
 import classNames from 'classnames/bind';
 import DetailTopNavbar from "../../../components/NavBar/DetailTopNavbar";
 import {priceComma}  from '../../../shared/js/CommonFun';
+import { KorEngNumValidate, PhoneValidate } from './../../../shared/js/CommonValidate';
 
 
 const cx = classNames.bind(Style);
@@ -22,7 +23,6 @@ const ReserveView = () => {
 
   const router = useRouter();
   const dispatch = useDispatch();
-  // const { id, useType } = router.query;
 	const userInfo = useSelector((state) => state.userInfo.info);
 
   const [values, setValues] = useState({
@@ -30,7 +30,11 @@ const ReserveView = () => {
     useType: '',
     name: '',
     phone: '',
-    visitMethod: ''
+    visitMethod: 'WALK'
+  });
+  const [validation, setValidation] = useState({
+    name: false,
+    phone: false
   });
 
   const [isOpenReserveInfoStyle, setIsOpenReserveInfoStyle] = useState(true);
@@ -61,6 +65,10 @@ const ReserveView = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
+  };
+
+  const handleValidation = (name, value) => {
+    setValidation({ ...validation, [name]: value });
   };
   
   const handleSelectVisitMethod = (e) => {
@@ -100,63 +108,37 @@ const ReserveView = () => {
     }
   };
 
-  const setFormData = (formData, data, parentKey) => {
-    if (!(formData instanceof FormData)) return;
-    if (!(data instanceof Object)) return;
-    Object.keys(data).forEach((key) => {
-      const val = data[key];
-      if (parentKey) key = `${parentKey}[${key}]`;
-      if (val instanceof Object && !Array.isArray(val)) {
-        return setFormData(formData, val, key);
-      }
-      if (Array.isArray(val)) {
-        val.forEach((v, idx) => {
-          if (v instanceof Object) {
-            setFormData(formData, v, `${key}[${idx}]`);
-          } else {
-            formData.append(`${key}[${idx}]`, v);
-          }
-        });
-      } else {
-        formData.append(key, val);
-      }
-    });
-  }
-
   const handlePayButton = () => {
-    const order = {
-      // order: {
-        "adult": adultCounterValue,
-        "child": childCounterValue,
-        "baby": babyCounterValue,
-        "basePrice": rooms.priceDetails.BASE,
-        "checkinDay": FormattingDate(new Date(detailDate.start)),
-        "checkoutDay": FormattingDate(new Date(detailDate.end)),
-        "extraPrice": rooms.priceDetails.EXTRA,
-        "name": values.name,
-        "optionPrice": optionTotalPrice,
-        "orderDate": new Date().toString(),
-        "phoneNumber": values.phone,
-        "roomId": values.id,
-        "useType": values.useType,
-        "userId": userInfo.id,
-        "authPublisher": userInfo.pub,
-        "visitMethod": values.visitMethod
-      // }
-    };
 
     const formData = new FormData();
-    setFormData(formData, order);
+    formData.append("adult", adultCounterValue);
+    formData.append("child", childCounterValue);
+    formData.append("baby", babyCounterValue);
+    formData.append("basePrice", rooms.priceDetails.BASE);
+    formData.append("extraPrice", rooms.priceDetails.EXTRA);
+    formData.append("optionPrice", optionTotalPrice);
+    formData.append("checkinDay", FormattingDate(new Date(detailDate.start)));
+    formData.append("checkoutDay", FormattingDate(new Date(detailDate.end)));
+    formData.append("orderDate", (new Date()).toISOString());
+    formData.append("roomId", values.id);
+    formData.append("useType", values.useType);
+    formData.append("visitMethod", values.visitMethod);
 
-    console.log(formData);
+    formData.append("name", values.name);
+    formData.append("phoneNumber", values.phone);
 
-    //TODO : API axios POST
+    formData.append("userId", userInfo.id);
+    formData.append("authPublisher", userInfo.pub);
+
+    // console.log(formData);
+
     axios({
       method: "POST",
       url: "http://shineware.iptime.org:8081/order/reservation",
       data: formData
     }).then((res) => {
-      console.log(res)
+      // console.log(res)
+      router.push('/myInfo/myReservation');
     }).catch((e) => {
       console.error(e);
     });
@@ -230,6 +212,16 @@ const ReserveView = () => {
   }
 
   useEffect(() => {
+    const nameVal = KorEngNumValidate(values.name);
+    handleValidation('name', nameVal.syntax && values.name.length > 0 ? true : false);
+  }, [values.name]);
+
+  useEffect(() => {
+    const phoneVal = PhoneValidate(values.phone);
+    handleValidation('phone', phoneVal.syntax && values.phone.length > 0 ? true : false);
+  }, [values.phone]);
+
+  useEffect(() => {
     if(router.isReady){
       fetchRoomInfo();
       dispatch(scrollY.scrollY(0));
@@ -244,6 +236,11 @@ const ReserveView = () => {
     setOptionTotalPrice(totalPrice);
   }, [extraOptionStateList])
 
+  useEffect(() => {
+    if (!userInfo.id) {
+      router.push('/login');
+    }
+  }, []);
 
   return (
     <div className="site">
@@ -309,11 +306,11 @@ const ReserveView = () => {
                     </div>
                     <div className={Style["ReservationInfo-item"]}>
                       <span className={cx("ReservationInfo-text", "ico-User")}>
-                        {adultCounterValue > 0 ? `성인 ${adultCounterValue}명` : ""}
+                        {adultCounterValue > 0 ? `성인 ${adultCounterValue}` : ""}
                         {childCounterValue > 0 ? `, ` : ""}
-                        {childCounterValue > 0 ? `어린이 ${childCounterValue}명` : ""}
+                        {childCounterValue > 0 ? `어린이 ${childCounterValue}` : ""}
                         {babyCounterValue > 0 ? `, ` : ""}
-                        {babyCounterValue > 0 ? `유아 ${babyCounterValue}명` : ""}
+                        {babyCounterValue > 0 ? `유아 ${babyCounterValue}` : ""}
                       </span>
                     </div>
                   </div>
@@ -370,6 +367,8 @@ const ReserveView = () => {
                         />
                       </dd>
                     </dl>
+                    {values.name.length == 0 ? <div className={cx("Error-text", "is-Active")}>이름을 입력해주세요.</div> : null}
+                    {!validation.name && values.name.length > 0 ? <div className={cx("Error-text", "is-Active")}>이름 형식을 확인해주세요.</div> : null}
                   </div>
                   {/* <!-- .ReservationInput --> */}
                   {/* <!-- ReservationInput --> */}
@@ -388,6 +387,8 @@ const ReserveView = () => {
                         />
                       </dd>
                     </dl>
+                    {values.phone.length == 0 ? <div className={cx("Error-text", "is-Active")}>전화번호를 입력해주세요.</div> : null}
+                    {!validation.phone  && values.phone.length > 0 ? <div className={cx("Error-text", "is-Active")}>전화번호 형식을 확인해주세요. (예. 010-1234-5678)</div> : null}
                   </div>
                   {/* <!-- .ReservationInput --> */}
                 </dd>
@@ -496,7 +497,11 @@ const ReserveView = () => {
                       <li className={Style["OptionPriceSection-item"]}>
                         <dl className={Style["OptionPriceSection-inner"]}>
                           <dt className={Style["OptionPriceSection-title"]}>인원 추가</dt>
-                          <dd className={Style["OptionPriceSection-price"]}>{extraTotalPrice}원 (1인)</dd>
+                          <dd className={Style["OptionPriceSection-price"]}>
+                            {priceComma(rooms.priceDetails ? rooms.priceDetails.EXTRA : 0)}원 ({rooms.roomInfo ? 
+                              (adultCounterValue + childCounterValue + babyCounterValue) >= rooms.roomInfo.baseUser ? (adultCounterValue + childCounterValue + babyCounterValue) - rooms.roomInfo.baseUser 
+                              : 0 
+                            : 0}인)</dd>
                         </dl>
                       </li>
                     </ul>
@@ -642,7 +647,8 @@ const ReserveView = () => {
               <p className={Style["ResultInfoText"]}><span className={Style["color-blue"]}>이용규칙, 취소 및 환불 규칙, 개인정보 수집 및 이용 및 개인정보 제3자 제공</span> 에 동의하실 경우 결제하기를 클릭해주세요.</p>
               <button 
                 type="button" 
-                className={Style["FilterPopFooter-button"]}
+                className={validation.name && validation.phone ? Style["FilterPopFooter-button"] : cx("FilterPopFooter-button", "color-Gray")}
+                disabled={!validation.name || !validation.phone}
                 onClick={handlePayButton}
               >
                 {rooms.priceDetails !== undefined
