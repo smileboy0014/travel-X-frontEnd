@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Style from "../../../styles/Component.module.css";
-import Axios from "axios";
+import axios from "axios";
 import Link from "next/link";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
+import * as scrollY from "../../../redux/store/modules/scrollY";
 import classNames from 'classnames/bind';
 import DetailTopNavbar from "../../../components/NavBar/DetailTopNavbar";
 import {priceComma}  from '../../../shared/js/CommonFun';
@@ -21,10 +22,12 @@ const ReserveView = () => {
 
   const router = useRouter();
   const dispatch = useDispatch();
-  const { id, useType, person } = router.query;
+  // const { id, useType } = router.query;
 	const userInfo = useSelector((state) => state.userInfo.info);
 
   const [values, setValues] = useState({
+    id: '',
+    useType: '',
     name: '',
     phone: '',
     visitMethod: ''
@@ -97,33 +100,74 @@ const ReserveView = () => {
     }
   };
 
+  const setFormData = (formData, data, parentKey) => {
+    if (!(formData instanceof FormData)) return;
+    if (!(data instanceof Object)) return;
+    Object.keys(data).forEach((key) => {
+      const val = data[key];
+      if (parentKey) key = `${parentKey}[${key}]`;
+      if (val instanceof Object && !Array.isArray(val)) {
+        return setFormData(formData, val, key);
+      }
+      if (Array.isArray(val)) {
+        val.forEach((v, idx) => {
+          if (v instanceof Object) {
+            setFormData(formData, v, `${key}[${idx}]`);
+          } else {
+            formData.append(`${key}[${idx}]`, v);
+          }
+        });
+      } else {
+        formData.append(key, val);
+      }
+    });
+  }
+
   const handlePayButton = () => {
-    const param = {
-      "adult": adultCounterValue,
-      "child": childCounterValue,
-      "baby": babyCounterValue,
-      "basePrice": rooms.priceDetails.BASE,
-      "checkinDay": "string",
-      "checkoutDay": "string",
-      "extraPrice": rooms.priceDetails.EXTRA,
-      "name": values.name,
-      "optionPrice": optionTotalPrice,
-      "orderDate": new Date().toString(),
-      "phoneNumber": values.phone,
-      "roomId": rooms.roomInfo.roomId,
-      "useType": rooms.roomInfo.useType,
-      "userId": userInfo.id,
-      "authPublisher": userInfo.pub,
-      "visitMethod": values.visitMethod
+    const order = {
+      // order: {
+        "adult": adultCounterValue,
+        "child": childCounterValue,
+        "baby": babyCounterValue,
+        "basePrice": rooms.priceDetails.BASE,
+        "checkinDay": FormattingDate(new Date(detailDate.start)),
+        "checkoutDay": FormattingDate(new Date(detailDate.end)),
+        "extraPrice": rooms.priceDetails.EXTRA,
+        "name": values.name,
+        "optionPrice": optionTotalPrice,
+        "orderDate": new Date().toString(),
+        "phoneNumber": values.phone,
+        "roomId": values.id,
+        "useType": values.useType,
+        "userId": userInfo.id,
+        "authPublisher": userInfo.pub,
+        "visitMethod": values.visitMethod
+      // }
     };
 
+    const formData = new FormData();
+    setFormData(formData, order);
+
+    console.log(formData);
+
     //TODO : API axios POST
+    axios({
+      method: "POST",
+      url: "http://shineware.iptime.org:8081/order/reservation",
+      data: formData
+    }).then((res) => {
+      console.log(res)
+    }).catch((e) => {
+      console.error(e);
+    });
   };
 
-  useEffect(() => {
+  const fetchRoomInfo = () => {
+    const { id, useType } = router.query;
+    setValues({ ...values, id: id, useType: useType });
 
     if (id !== undefined) {
-      Axios({
+      axios({
         method: "GET",
         url: "http://shineware.iptime.org:8081/pdp/info",
         params: {
@@ -183,7 +227,14 @@ const ReserveView = () => {
 
       });
     }
-  }, []);
+  }
+
+  useEffect(() => {
+    if(router.isReady){
+      fetchRoomInfo();
+      dispatch(scrollY.scrollY(0));
+    }
+  }, [router.isReady]);
 
   useEffect(() => {
     let totalPrice = 0;
@@ -314,7 +365,8 @@ const ReserveView = () => {
                           type="text"
                           name="name" 
                           className={Style["ReservationInput-input"]}
-                          value={userInfo.extraInfo && userInfo.extraInfo.phoneNumber ? userInfo.extraInfo.phoneNumber : ""}
+                          value={values.name}
+                          onChange={handleChange}
                         />
                       </dd>
                     </dl>
@@ -331,7 +383,7 @@ const ReserveView = () => {
                           type="tel" 
                           name="phone"
                           className={Style["ReservationInput-input"]}
-                          value={userInfo.extraInfo && userInfo.extraInfo.name ? userInfo.extraInfo.name : ""}
+                          value={values.phone}
                           onChange={handleChange}
                         />
                       </dd>
@@ -575,7 +627,7 @@ const ReserveView = () => {
                   </div>
                   <div className={Style["PayMethodListForm"]}>
                     <label className={Style["PayMethodListCheck"]}>
-                      <input type="checkbox" name="PayMethodListCheck" className={Style["PayMethodListCheck-input"]} />
+                      <input type="checkbox" name="PayMethodListCheck" className={Style["PayMethodListCheck-input"]} readOnly />
                       <span className={Style["PayMethodListCheck-text"]}>이 결제수단을 다음에도 사용</span>
                     </label>
                   </div>
