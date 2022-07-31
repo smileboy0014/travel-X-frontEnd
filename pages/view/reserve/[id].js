@@ -1,51 +1,51 @@
 import React, { useEffect, useState } from "react";
 import Style from "../../../styles/Component.module.css";
-import Axios from "axios";
+import axios from "axios";
 import Link from "next/link";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
+import * as scrollY from "../../../redux/store/modules/scrollY";
 import classNames from 'classnames/bind';
 import DetailTopNavbar from "../../../components/NavBar/DetailTopNavbar";
 import {priceComma}  from '../../../shared/js/CommonFun';
+import { KorEngNumValidate, PhoneValidate } from './../../../shared/js/CommonValidate';
 
 
 const cx = classNames.bind(Style);
 const ReserveView = () => {
   const [rooms, setRooms] = useState([]);
+  const [extraTotalPrice, setExtraTotalPrice] = useState(0);
   const [optionTotalPrice, setOptionTotalPrice] = useState(0);
-  const [optionPrice1, setOptionPrice1] = useState(1);
-  const [optionPrice2, setOptionPrice2] = useState(1);
-  const [optionPrice3, setOptionPrice3] = useState(1);
-  const [optionPrice4, setOptionPrice4] = useState(1);
-  const [basePrice1, setbasePrice1] = useState(0);
-  const [basePrice2, setbasePrice2] = useState(0);
-  const [basePrice3, setbasePrice3] = useState(0);
-  const [basePrice4, setbasePrice4] = useState(0);
-  const [extraOptionList, setExtraOptionList] = useState([]);
+  const [extraOptionStateList, setExtraOptionStateList] = useState([]);
 
-  const [chekIn, setCheckIn] = useState("");
-  const [chekOut, setCheckOut] = useState("");
-
-  const [roomId, setRommId] = useState("");
-  const [roomUseType, setRoomUseType] = useState("");
+  const [checkIn, setCheckIn] = useState(null);
+  const [checkOut, setCheckOut] = useState(null);
 
   const router = useRouter();
   const dispatch = useDispatch();
-  const { id, useType, person } = router.query;
+	const userInfo = useSelector((state) => state.userInfo.info);
+
+  const [values, setValues] = useState({
+    id: '',
+    useType: '',
+    name: '',
+    phone: '',
+    visitMethod: 'WALK'
+  });
+  const [validation, setValidation] = useState({
+    name: false,
+    phone: false
+  });
+
   const [isOpenReserveInfoStyle, setIsOpenReserveInfoStyle] = useState(true);
   const [isOpenExtraOptionStyle, setIsOpenExtraOptionStyle] = useState(true);
+
   const { detailDate } = useSelector((state) => state.date);
-  const week = new Array("일", "월", "화", "수", "목", "금", "토");
   const weekEng = new Array("SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY");
-  const adultCounterValue = useSelector(
-    ({ adultCounter }) => adultCounter.value
-  );
-  const childCounterValue = useSelector(
-    ({ childCounter }) => childCounter.value
-  );
-  const babyCounterValue = useSelector(
-    ({ babyCounter }) => babyCounter.value
-  );
+
+  const adultCounterValue = useSelector(({ adultCounter }) => adultCounter.value);
+  const childCounterValue = useSelector(({ childCounter }) => childCounter.value);
+  const babyCounterValue = useSelector(({ babyCounter }) => babyCounter.value);
 
   function addZero(value) {
     if (value >= 10) {
@@ -62,6 +62,44 @@ const ReserveView = () => {
     return `${year}-${month}-${day}`;
   }
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setValues({ ...values, [name]: value });
+  };
+
+  const handleValidation = (name, value) => {
+    setValidation({ ...validation, [name]: value });
+  };
+  
+  const handleSelectVisitMethod = (e) => {
+    const { name } = e.target;
+    setValues({...values, visitMethod: name});
+	};
+
+  const handleExtraOptionState = (index, value) => {
+
+    setExtraOptionStateList((arr) => {
+      if (index > 0) {
+        return [
+          ...arr.slice(0, index),
+          { price: arr[index].price, count: arr[index].count + value },
+          ...arr.slice(index + 1)
+        ];
+      } else if (index == values.length) {
+        return [
+          ...arr.slice(0, index),
+          { price: arr[index].price, count: arr[index].count + value }
+        ];
+      } else {
+        return [
+          { price: arr[index].price, count: arr[index].count + value },
+          ...arr.slice(index + 1)
+        ];
+      }
+    });
+
+  }
+
   const onClickHandler = (type) => {
     if (type === 'reserveInfo') {
       setIsOpenReserveInfoStyle(!isOpenReserveInfoStyle);
@@ -70,20 +108,48 @@ const ReserveView = () => {
     }
   };
 
-  useEffect(() => {
-    var price1 = basePrice1 * optionPrice1;
-    var price2 = basePrice2 * optionPrice2;
-    var price3 = basePrice3 * optionPrice3;
-    var price4 = basePrice4 * optionPrice4;
-    setOptionTotalPrice(price1 + price2 + price3 + price4)
-  }, [optionPrice1, optionPrice2, optionPrice3, optionPrice4]);
+  const handlePayButton = () => {
 
+    const formData = new FormData();
+    formData.append("adult", adultCounterValue);
+    formData.append("child", childCounterValue);
+    formData.append("baby", babyCounterValue);
+    formData.append("basePrice", rooms.priceDetails.BASE);
+    formData.append("extraPrice", rooms.priceDetails.EXTRA);
+    formData.append("optionPrice", optionTotalPrice);
+    formData.append("checkinDay", FormattingDate(new Date(detailDate.start)));
+    formData.append("checkoutDay", FormattingDate(new Date(detailDate.end)));
+    formData.append("orderDate", (new Date()).toISOString());
+    formData.append("roomId", values.id);
+    formData.append("useType", values.useType);
+    formData.append("visitMethod", values.visitMethod);
 
+    formData.append("name", values.name);
+    formData.append("phoneNumber", values.phone);
 
-  useEffect(() => {
+    formData.append("userId", userInfo.id);
+    formData.append("authPublisher", userInfo.pub);
+
+    // console.log(formData);
+
+    axios({
+      method: "POST",
+      url: "http://shineware.iptime.org:8081/order/reservation",
+      data: formData
+    }).then((res) => {
+      // console.log(res)
+      router.push('/myInfo/myReservation');
+    }).catch((e) => {
+      console.error(e);
+    });
+  };
+
+  const fetchRoomInfo = () => {
+    const { id, useType } = router.query;
+    setValues({ ...values, id: id, useType: useType });
 
     if (id !== undefined) {
-      Axios({
+      axios({
         method: "GET",
         url: "http://shineware.iptime.org:8081/pdp/info",
         params: {
@@ -97,9 +163,26 @@ const ReserveView = () => {
 
         },
       }).then((res) => {
+        if (res.data.roomInfo.useType == 'NIGHT') {
+          if (res.data.roomInfo && res.data.roomInfo.nightInfo && res.data.roomInfo.nightInfo.checkinInfo) {
+            setCheckIn(res.data.roomInfo.nightInfo.checkinInfo[weekEng[new Date(detailDate.start).getDay()]]);
+            setCheckOut(res.data.roomInfo.nightInfo.checkoutInfo[weekEng[new Date(detailDate.end).getDay()]]);
+          }
+        } else {
+          if (res.data.roomInfo && res.data.roomInfo.dayInfo && res.data.roomInfo.dayInfo.checkinInfo) {
+            setCheckIn(res.data.roomInfo.dayInfo.checkinInfo[weekEng[new Date(detailDate.start).getDay()]]);
+            setCheckOut(res.data.roomInfo.dayInfo.checkoutInfo[weekEng[new Date(detailDate.end).getDay()]]);
+          }
+          
+        }
 
-        setCheckIn(res.data.roomInfo.nightInfo.checkinInfo[weekEng[new Date(detailDate.start).getDay()]]);
-        setCheckOut(res.data.roomInfo.nightInfo.checkoutInfo[weekEng[new Date(detailDate.end).getDay()]]);
+        // 개발용 임시 데이터
+        // res.data.roomInfo.extraOptionList = [
+        //   { title: '바베큐', description: '구성 : 돼지생갈비, 생삼겹살, 닭봉, 대하, 소시지, 구이용야채, 쌈야채, 각종소스, 라면, 햇반', price: '10000' },
+        //   { title: '조식', description: '구성 : 돼지생갈비, 생삼겹살, 닭봉, 대하, 소시지, 구이용야채, 쌈야채, 각종소스, 라면, 햇반', price: '10000' },
+        //   { title: '중식', description: '구성 : 돼지생갈비, 생삼겹살, 닭봉, 대하, 소시지, 구이용야채, 쌈야채, 각종소스, 라면, 햇반', price: '10000' },
+        //   { title: '야식', description: '구성 : 돼지생갈비, 생삼겹살, 닭봉, 대하, 소시지, 구이용야채, 쌈야채, 각종소스, 라면, 햇반', price: '10000' },
+        // ];
 
         setRooms((prevState) => ({
           ...prevState,
@@ -110,35 +193,54 @@ const ReserveView = () => {
             : [],
           priceDetails: res.data.priceDetails ? res.data.priceDetails : [],
           propertyInfo: res.data.propertyInfo ? res.data.propertyInfo : [],
-          reviewSummary: res.data.reviewSummary ? res.data.reviewSummary : [],
+          reviewSummary: res.data.reviewSummary ? res.data.reviewSummary : []
         }));
 
-
         if (res.data.roomInfo.extraOptionList.length > 0) {
-
-          setExtraOptionList(res.data.roomInfo.extraOptionList)
-
-
-          console.log(res.data.roomInfo.extraOptionList);
-
-          if (res.data.roomInfo.extraOptionList[0] != undefined) {
-            setbasePrice1(res.data.roomInfo.extraOptionList[0].price)
+          let optionStateList = [];
+          for (let option of res.data.roomInfo.extraOptionList) {
+            optionStateList.push({
+              price: option.price,
+              count: 0
+            });
           }
-          if (res.data.roomInfo.extraOptionList[1] != undefined) {
-            setbasePrice2(res.data.roomInfo.extraOptionList[1].price)
-          }
-          if (res.data.roomInfo.extraOptionList[2] != undefined) {
-            setbasePrice3(res.data.roomInfo.extraOptionList[2].price)
-          }
-          if (res.data.roomInfo.extraOptionList[3] != undefined) {
-            setbasePrice4(res.data.roomInfo.extraOptionList[3].price)
-          }
+          setExtraOptionStateList(optionStateList);
         }
 
       });
     }
-  }, []);
+  }
 
+  useEffect(() => {
+    const nameVal = KorEngNumValidate(values.name);
+    handleValidation('name', nameVal.syntax && values.name.length > 0 ? true : false);
+  }, [values.name]);
+
+  useEffect(() => {
+    const phoneVal = PhoneValidate(values.phone);
+    handleValidation('phone', phoneVal.syntax && values.phone.length > 0 ? true : false);
+  }, [values.phone]);
+
+  useEffect(() => {
+    if(router.isReady){
+      fetchRoomInfo();
+      dispatch(scrollY.scrollY(0));
+    }
+  }, [router.isReady]);
+
+  useEffect(() => {
+    let totalPrice = 0;
+    for (let option of extraOptionStateList) {
+      totalPrice += option.price * option.count
+    }
+    setOptionTotalPrice(totalPrice);
+  }, [extraOptionStateList])
+
+  useEffect(() => {
+    if (!userInfo.id) {
+      router.push('/login');
+    }
+  }, []);
 
   return (
     <div className="site">
@@ -160,30 +262,24 @@ const ReserveView = () => {
             <div className="site-container">
               <dl className={isOpenReserveInfoStyle ? cx("ResultSection-inner", "is-Open") : "ResultSection-inner"}>
                 <dt className="ResultSectionTitle">
-                  <button className={Style["ResultSectionTitle-text"]} onClick={() => onClickHandler('reserveInfo')} type="button">예약 정보</button>
+                  <button 
+                    className={Style["ResultSectionTitle-text"]} 
+                    onClick={() => onClickHandler('reserveInfo')} 
+                    type="button"
+                  >예약 정보</button>
                 </dt>
                 <dd className={cx("ResultSectionCont", "SlideDrop")}>
                   <div className={Style["DetailHeaderMeta"]}>
                     <span className={cx("DetailHeaderMeta-item", "icoHotel")}>
-                      {rooms.propertyInfo !== undefined
-                        ? rooms.propertyInfo.type
-                        : "숙박 타입: N/A"}
+                      {rooms.propertyInfo ? rooms.propertyInfo.type : "숙박 타입: N/A"}
                     </span>
                     <span className={Style["DetailHeaderMeta-item"]}>
-
-                      {rooms.propertyInfo !== undefined
-                        ? rooms.propertyInfo.propertyName
-                        : ""}
-
+                      {rooms.propertyInfo ? rooms.propertyInfo.name : ""}
                     </span>
                   </div>
                   <div className={Style["DetailHeaderTitle"]}>
-
-                    {rooms.propertyInfo !== undefined
-                      ? rooms.propertyInfo.name
-                      : ""}
-
-
+                    {rooms.roomInfo && rooms.roomInfo.name ? 
+                      rooms.roomInfo.name : ""}
                   </div>
                   <div className={Style["DetailHeaderInfo"]}>
                     <div className={Style["DetailHeaderInfoAddress"]}>
@@ -197,30 +293,24 @@ const ReserveView = () => {
                   <div className={Style["ReservationInfo"]}>
                     <div className={Style["ReservationInfo-item"]}>
                       <span className={cx("ReservationInfo-text", "ico-Cal")}>
-                        {`${new Date(detailDate.start).getMonth() + 1}.${new Date(
-                          detailDate.start
-                        ).getDate()}(${week[new Date(detailDate.start).getDay()]
-                          }) - ${new Date(detailDate.end).getMonth() + 1
-                          }.${new Date(detailDate.end).getDate()}(${week[new Date(detailDate.end).getDay()]
-                          })`}
-                      </span>
-                      <span className={Style["DetailPaymentDate-day"]}>
-                        {Math.ceil(
-                          (new Date(detailDate.end).getTime() -
-                            new Date(detailDate.start).getTime()) /
-                          (1000 * 60 * 60 * 24)
-                        )}
-                        박
-
+                        {`${new Date(detailDate.start).getMonth() + 1}월 ${new Date(detailDate.start).getDate()}일 
+                        - ${new Date(detailDate.end).getMonth() + 1}월 ${new Date(detailDate.end).getDate()}일 `}
+                        <strong>
+                          {Math.ceil(
+                            (new Date(detailDate.end).getTime() -
+                              new Date(detailDate.start).getTime()) /
+                            (1000 * 60 * 60 * 24)
+                          )}박
+                        </strong>
                       </span>
                     </div>
                     <div className={Style["ReservationInfo-item"]}>
                       <span className={cx("ReservationInfo-text", "ico-User")}>
-                        {adultCounterValue > 0 ? `성인 ${adultCounterValue}명` : ""}
+                        {adultCounterValue > 0 ? `성인 ${adultCounterValue}` : ""}
                         {childCounterValue > 0 ? `, ` : ""}
-                        {childCounterValue > 0 ? `어린이 ${childCounterValue}명` : ""}
+                        {childCounterValue > 0 ? `어린이 ${childCounterValue}` : ""}
                         {babyCounterValue > 0 ? `, ` : ""}
-                        {babyCounterValue > 0 ? `유아 ${babyCounterValue}명` : ""}
+                        {babyCounterValue > 0 ? `유아 ${babyCounterValue}` : ""}
                       </span>
                     </div>
                   </div>
@@ -231,7 +321,7 @@ const ReserveView = () => {
                       <dl className="ReservationCheck-inner">
                         <dt className={Style["ReservationCheck-title"]}>체크인</dt>
                         <dd className={Style["ReservationCheck-text"]}>
-                          {chekIn}
+                          {checkIn}
                         </dd>
                       </dl>
                     </div>
@@ -239,7 +329,7 @@ const ReserveView = () => {
                       <dl className="ReservationCheck-inner">
                         <dt className={Style["ReservationCheck-title"]}>체크아웃</dt>
                         <dd className={Style["ReservationCheck-text"]}>
-                          {chekOut}
+                          {checkOut}
 
                         </dd>
                       </dl>
@@ -268,9 +358,17 @@ const ReserveView = () => {
                           <span className={Style["necessary"]}>*</span></label>
                       </dt>
                       <dd className="ReservationInput-text">
-                        <input type="text" className={Style["ReservationInput-input"]} />
+                        <input 
+                          type="text"
+                          name="name" 
+                          className={Style["ReservationInput-input"]}
+                          value={values.name}
+                          onChange={handleChange}
+                        />
                       </dd>
                     </dl>
+                    {values.name.length == 0 ? <div className={cx("Error-text", "is-Active")}>이름을 입력해주세요.</div> : null}
+                    {!validation.name && values.name.length > 0 ? <div className={cx("Error-text", "is-Active")}>이름 형식을 확인해주세요.</div> : null}
                   </div>
                   {/* <!-- .ReservationInput --> */}
                   {/* <!-- ReservationInput --> */}
@@ -280,9 +378,17 @@ const ReserveView = () => {
                         <label className={Style["ReservationInput-label"]}>휴대폰 번호 <span className={Style["necessary"]}>*</span></label>
                       </dt>
                       <dd className="ReservationInput-text">
-                        <input type="tel" className={Style["ReservationInput-input"]} />
+                        <input 
+                          type="tel" 
+                          name="phone"
+                          className={Style["ReservationInput-input"]}
+                          value={values.phone}
+                          onChange={handleChange}
+                        />
                       </dd>
                     </dl>
+                    {values.phone.length == 0 ? <div className={cx("Error-text", "is-Active")}>전화번호를 입력해주세요.</div> : null}
+                    {!validation.phone  && values.phone.length > 0 ? <div className={cx("Error-text", "is-Active")}>전화번호 형식을 확인해주세요. (예. 010-1234-5678)</div> : null}
                   </div>
                   {/* <!-- .ReservationInput --> */}
                 </dd>
@@ -301,13 +407,27 @@ const ReserveView = () => {
                   <ul className={Style["ResultSectionList"]}>
                     <li className={Style["ResultSectionList-item"]}>
                       <label className={Style["BasicRadio"]}>
-                        <input type="radio" name="BasicRadio" className={Style["BasicRadio-input"]} />
+                        <input 
+                          type="radio" 
+                          name="WALK" 
+                          className={Style["BasicRadio-input"]} 
+                          checked={values.visitMethod == 'WALK'} 
+                          onClick={handleSelectVisitMethod}
+                          readOnly
+                        />
                         <span className={Style["BasicRadio-text"]}>도보</span>
                       </label>
                     </li>
                     <li className={Style["ResultSectionList-item"]}>
                       <label className={Style["BasicRadio"]}>
-                        <input type="radio" name="BasicRadio" className={Style["BasicRadio-input"]} />
+                        <input 
+                          type="radio" 
+                          name="CAR" 
+                          className={Style["BasicRadio-input"]} 
+                          checked={values.visitMethod == 'CAR'} 
+                          onClick={handleSelectVisitMethod}
+                          readOnly
+                        />
                         <span className={Style["BasicRadio-text"]}>자동차</span>
                       </label>
                     </li>
@@ -328,129 +448,40 @@ const ReserveView = () => {
                   {/* <!-- OptionFilter --> */}
                   <div className={Style["OptionFilter"]}>
                     <ul className={Style["FilterNumberList"]}>
-
-                      {basePrice1 != 0 ?
-                        <li className={Style["FilterNumberList-item"]}>
-                          <dl className={Style["FilterNumberList-inner"]}>
-                            <dt className={Style["FilterNumberListTitle"]}>
-                              <span className={Style["FilterNumberListTitle-title"]}>{extraOptionList[0].title}</span>
-                              <span className={Style["FilterNumberListTitle-price"]}>{priceComma(basePrice1)}원</span>
-                              <span className={Style["FilterNumberListTitle-text"]}>{extraOptionList[0].description}</span>
-                            </dt>
-                            <dd className={Style["FilterNumberListCont"]}>
-                              <div className={Style["BasicCount"]}>
-                                <button
-                                  disabled={optionPrice1 == 0}
-                                  onClick={() => setOptionPrice1(optionPrice1 - 1)}
-                                  type="button" className={optionPrice1 == 0 ? cx("BasicCount-button", "minus") : cx("BasicCount-button", "minus")}>
-                                  <span className="ab-text">minus</span></button>
-                                <span className="BasicCount-text">{optionPrice1}</span>
-                                <button
-                                  onClick={
-                                    () => setOptionPrice1(optionPrice1 + 1)
-                                  }
-                                  type="button" className={cx("BasicCount-button", "plus")}><span className="ab-text">plus</span>
-                                </button>
-                              </div>
-                            </dd>
-                          </dl>
-                        </li>
-
-                        : ""}
-                      {basePrice2 != 0 ?
-                        <li className={Style["FilterNumberList-item"]}>
-                          <dl className={Style["FilterNumberList-inner"]}>
-                            <dt className={Style["FilterNumberListTitle"]}>
-
-                              <span className={Style["FilterNumberListTitle-title"]}>{extraOptionList[1].title}</span>
-                              <span className={Style["FilterNumberListTitle-price"]}>{priceComma(basePrice2)}원</span>
-                              <span className={Style["FilterNumberListTitle-text"]}>{extraOptionList[1].description}</span>
-
-
-
-                            </dt>
-                            <dd className={Style["FilterNumberListCont"]}>
-                              <div className={Style["BasicCount"]}>
-                                <button
-                                  disabled={optionPrice2 == 0}
-                                  onClick={() => setOptionPrice2(optionPrice2 - 1)}
-                                  type="button" className={optionPrice2 == 0 ? cx("BasicCount-button", "minus") : cx("BasicCount-button", "minus")}>
-                                  <span className="ab-text">minus</span></button>
-                                <span className="BasicCount-text">{optionPrice2}</span>
-                                <button
-                                  onClick={
-                                    () => setOptionPrice2(optionPrice2 + 1)
-                                  }
-                                  type="button" className={cx("BasicCount-button", "plus")}><span className="ab-text">plus</span></button>
-                              </div>
-                            </dd>
-                          </dl>
-                        </li>
-
-                        : ""}
-                      {basePrice3 != 0 ?
-                        <li className={Style["FilterNumberList-item"]}>
-                          <dl className={Style["FilterNumberList-inner"]}>
-                            <dt className={Style["FilterNumberListTitle"]}>
-
-
-                              <span className={Style["FilterNumberListTitle-title"]}>{extraOptionList[2].title}</span>
-                              <span className={Style["FilterNumberListTitle-price"]}>{priceComma(basePrice3)}원</span>
-                              <span className={Style["FilterNumberListTitle-text"]}>{extraOptionList[2].description}</span>
-
-
-
-                            </dt>
-                            <dd className={Style["FilterNumberListCont"]}>
-                              <div className={Style["BasicCount"]}>
-                                <button
-                                  disabled={optionPrice3 == 0}
-                                  onClick={() => setOptionPrice3(optionPrice3 - 1)}
-                                  type="button" className={optionPrice3 == 0 ? cx("BasicCount-button", "minus") : cx("BasicCount-button", "minus")}>
-                                  <span className="ab-text">minus</span></button>
-                                <span className="BasicCount-text">{optionPrice3}</span>
-                                <button
-                                  onClick={
-                                    () => setOptionPrice3(optionPrice3 + 1)
-                                  }
-                                  type="button" className={cx("BasicCount-button", "plus")}><span className="ab-text">plus</span></button>
-                              </div>
-                            </dd>
-                          </dl>
-                        </li>
-
-                        : ""}
-                      {basePrice4 != 0 ?
-                        <li className={Style["FilterNumberList-item"]}>
-                          <dl className={Style["FilterNumberList-inner"]}>
-                            <dt className={Style["FilterNumberListTitle"]}>
-
-                              <span className={Style["FilterNumberListTitle-title"]}>{extraOptionList[3].title}</span>
-                              <span className={Style["FilterNumberListTitle-price"]}>{priceComma(basePrice4)}원</span>
-                              <span className={Style["FilterNumberListTitle-text"]}>{extraOptionList[3].description}</span>
-
-
-
-                            </dt>
-                            <dd className={Style["FilterNumberListCont"]}>
-                              <div className={Style["BasicCount"]}>
-                                <button
-                                  disabled={optionPrice4 == 0}
-                                  onClick={() => setOptionPrice4(optionPrice4 - 1)}
-                                  type="button" className={optionPrice4 == 0 ? cx("BasicCount-button", "minus") : cx("BasicCount-button", "minus")}>
-                                  <span className="ab-text">minus</span></button>
-                                <span className="BasicCount-text">{optionPrice4}</span>
-                                <button
-                                  onClick={
-                                    () => setOptionPrice4(optionPrice4 + 1)
-                                  }
-                                  type="button" className={cx("BasicCount-button", "plus")}><span className="ab-text">plus</span></button>
-                              </div>
-                            </dd>
-                          </dl>
-                        </li>
-                        : ""}
-
+                      {rooms.roomInfo && rooms.roomInfo.extraOptionList ? rooms.roomInfo.extraOptionList.map((option, index) => {
+                        return (
+                          <li className={Style["FilterNumberList-item"]} key={index}>
+                            <dl className={Style["FilterNumberList-inner"]}>
+                              <dt className={Style["FilterNumberListTitle"]}>
+                                <span className={Style["FilterNumberListTitle-title"]}>{option.title}</span>
+                                <span className={Style["FilterNumberListTitle-price"]}>{priceComma(option.price)}원</span>
+                                <span className={Style["FilterNumberListTitle-text"]}>{option.description}</span>
+                              </dt>
+                              {extraOptionStateList[index] ? (
+                                <dd className={Style["FilterNumberListCont"]}>
+                                  <div className={Style["BasicCount"]}>
+                                    <button
+                                      disabled={extraOptionStateList[index].count == 0}
+                                      onClick={() => handleExtraOptionState(index, -1)}
+                                      type="button" className={extraOptionStateList[index].count == 0 ? cx("BasicCount-button", "minus", "is-disabled") : cx("BasicCount-button", "minus")}
+                                    >
+                                      <span className="ab-text">minus</span></button>
+                                      <span className={Style["BasicCount-text"]}>{extraOptionStateList[index].count}</span>
+                                    <button
+                                      onClick={() => handleExtraOptionState(index, 1)}
+                                      type="button" 
+                                      className={cx("BasicCount-button", "plus")}
+                                    >
+                                      <span className="ab-text">plus</span>
+                                    </button>
+                                  </div>
+                                </dd>
+                              ) : null}
+                            </dl>
+                          </li>
+                        )
+                      })
+                      : null}
                     </ul>
                   </div>
                   {/* <!-- .OptionFilter --> */}
@@ -466,7 +497,11 @@ const ReserveView = () => {
                       <li className={Style["OptionPriceSection-item"]}>
                         <dl className={Style["OptionPriceSection-inner"]}>
                           <dt className={Style["OptionPriceSection-title"]}>인원 추가</dt>
-                          <dd className={Style["OptionPriceSection-price"]}>10,000원 (1인)</dd>
+                          <dd className={Style["OptionPriceSection-price"]}>
+                            {priceComma(rooms.priceDetails ? rooms.priceDetails.EXTRA : 0)}원 ({rooms.roomInfo ? 
+                              (adultCounterValue + childCounterValue + babyCounterValue) >= rooms.roomInfo.baseUser ? (adultCounterValue + childCounterValue + babyCounterValue) - rooms.roomInfo.baseUser 
+                              : 0 
+                            : 0}인)</dd>
                         </dl>
                       </li>
                     </ul>
@@ -479,7 +514,7 @@ const ReserveView = () => {
                               <dd className={Style["OptionPriceSum-price"]}>
                                 {rooms.priceDetails !== undefined
                                   ? priceComma(rooms.priceDetails.BASE)
-                                  : ""} 원
+                                  : ""}원
                               </dd>
                             </dl>
                           </li>
@@ -487,9 +522,7 @@ const ReserveView = () => {
                             <dl className="OptionPriceSum-inner">
                               <dt className={Style["OptionPriceSum-title"]}>추가옵션</dt>
                               <dd className={Style["OptionPriceSum-price"]}>
-
-                                {priceComma(optionTotalPrice)}
-
+                                {priceComma(optionTotalPrice)}원
                               </dd>
                             </dl>
                           </li>
@@ -499,7 +532,7 @@ const ReserveView = () => {
                               <dd className={Style["OptionPriceSum-price"]}>
                                 {rooms.priceDetails !== undefined
                                   ? priceComma(rooms.priceDetails.EXTRA)
-                                  : ""} 원
+                                  : ""}원
                               </dd>
                             </dl>
                           </li>
@@ -510,11 +543,9 @@ const ReserveView = () => {
                           <dt className={Style["OptionTotalPrice-title"]}>총 금액</dt>
                           <dd className={Style["OptionTotalPrice-text"]}>
 
-
                             {rooms.priceDetails !== undefined
                               ? priceComma(rooms.priceDetails.BASE + optionTotalPrice + rooms.priceDetails.EXTRA)
                               : ""} 원
-
 
                           </dd>
                         </dl>
@@ -539,39 +570,69 @@ const ReserveView = () => {
                     <ul className={Style["PayMethodList-list"]}>
                       <li className={Style["PayMethodList-item"]}>
                         <a className={Style["PayMethodListItem"]}>
-                          <span className={cx("PayMethodListItem-text", "ico-kakaopay")}>카카오페이</span>
+                          <label href="#" className={Style["PayMethodListItem"]}>
+                            <input type="radio" className={Style["PayMethodListItem-radio"]} name="PayMethodList" readOnly />
+                            <span className={Style["PayMethodListItem-inner"]}>
+                              <span className={cx("PayMethodListItem-text", "ico-kakaopay")}>카카오페이</span>
+                            </span>
+                          </label>
                         </a>
                       </li>
                       <li className={Style["PayMethodList-item"]}>
                         <a className={Style["PayMethodListItem"]}>
-                          <span className={cx("PayMethodListItem-text", "ico-toss")}>토스</span>
+                          <label href="#" className={Style["PayMethodListItem"]}>
+                            <input type="radio" className={Style["PayMethodListItem-radio"]} name="PayMethodList" readOnly />
+                            <span className={Style["PayMethodListItem-inner"]}>
+                              <span className={cx("PayMethodListItem-text", "ico-toss")}>토스</span>
+                            </span>
+                          </label>
                         </a>
                       </li>
                       <li className={Style["PayMethodList-item"]}>
                         <a className={Style["PayMethodListItem"]}>
-                          <span className={cx("PayMethodListItem-text", "ico-naverpay")}>네이버페이</span>
+                          <label href="#" className={Style["PayMethodListItem"]}>
+                            <input type="radio" className={Style["PayMethodListItem-radio"]} name="PayMethodList" readOnly />
+                            <span className={Style["PayMethodListItem-inner"]}>
+                              <span className={cx("PayMethodListItem-text", "ico-naverpay")}>네이버페이</span>
+                            </span>
+                          </label>
                         </a>
                       </li>
                       <li className={Style["PayMethodList-item"]}>
                         <a className={Style["PayMethodListItem"]}>
-                          <span className={cx("PayMethodListItem-text", "ico-payco")}>페이코</span>
+                          <label href="#" className={Style["PayMethodListItem"]}>
+                            <input type="radio" className={Style["PayMethodListItem-radio"]} name="PayMethodList" readOnly />
+                            <span className={Style["PayMethodListItem-inner"]}>
+                              <span className={cx("PayMethodListItem-text", "ico-payco")}>페이코</span>
+                            </span>
+                          </label>
                         </a>
                       </li>
                       <li className={Style["PayMethodList-item"]}>
                         <a className={Style["PayMethodListItem"]}>
-                          <span className={Style["PayMethodListItem-text"]}>신용/체크카드</span>
+                          <label href="#" className={Style["PayMethodListItem"]}>
+                            <input type="radio" className={Style["PayMethodListItem-radio"]} name="PayMethodList" readOnly />
+                            <span className={Style["PayMethodListItem-inner"]}>
+                              <span className={cx("PayMethodListItem-text")}>신용/체크카드</span>
+                            </span>
+                          </label>
                         </a>
                       </li>
                       <li className={Style["PayMethodList-item"]}>
                         <a className={Style["PayMethodListItem"]}>
-                          <span className={Style["PayMethodListItem-text"]}>무통장입금</span>
+                          <label href="#" className={Style["PayMethodListItem"]}>
+                            <input type="radio" className={Style["PayMethodListItem-radio"]} name="PayMethodList" readOnly />
+                            <span className={Style["PayMethodListItem-inner"]}>
+                              <span className={Style["PayMethodListItem-text"]}>무통장입금</span>
+                            </span>
+                          </label>
                         </a>
                       </li>
                     </ul>
                   </div>
                   <div className={Style["PayMethodListForm"]}>
                     <label className={Style["PayMethodListCheck"]}>
-                      <input type="checkbox" name="PayMethodListCheck" className={Style["PayMethodListCheck-input"]} />
+                      <input type="checkbox" name="PayMethodListCheck" className={Style["PayMethodListCheck-input"]} readOnly />
                       <span className={Style["PayMethodListCheck-text"]}>이 결제수단을 다음에도 사용</span>
                     </label>
                   </div>
@@ -584,7 +645,12 @@ const ReserveView = () => {
           <div className={Style["ResultLastSection"]}>
             <div className="site-container">
               <p className={Style["ResultInfoText"]}><span className={Style["color-blue"]}>이용규칙, 취소 및 환불 규칙, 개인정보 수집 및 이용 및 개인정보 제3자 제공</span> 에 동의하실 경우 결제하기를 클릭해주세요.</p>
-              <button type="button" className={Style["FilterPopFooter-button"]}>
+              <button 
+                type="button" 
+                className={validation.name && validation.phone ? Style["FilterPopFooter-button"] : cx("FilterPopFooter-button", "color-Gray")}
+                disabled={!validation.name || !validation.phone}
+                onClick={handlePayButton}
+              >
                 {rooms.priceDetails !== undefined
                   ? priceComma(rooms.priceDetails.BASE + optionTotalPrice + rooms.priceDetails.EXTRA)
                   : ""} 원 결제하기

@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import Script from 'next/script';
 import { JAVASCRIPT_KEY } from '../components/Button/Login/LoginConstant';
 import { CheckLogin } from './../components/Button/Login/Utils/LoginUtil';
+import Spinner from "../components/Spinner/Spinner";
 
 function TravelX({ Component, pageProps }) {
   const [scrollYValue, setScrollYVlue] = useState(0);
@@ -82,6 +83,7 @@ function TravelX({ Component, pageProps }) {
         strategy="beforeInteractive"
       />
       <Script src="https://developers.kakao.com/sdk/js/kakao.js" strategy="beforeInteractive" />
+      <Spinner></Spinner>
       <ScrollTopArrow></ScrollTopArrow>
       <Component {...pageProps} />
     </div>

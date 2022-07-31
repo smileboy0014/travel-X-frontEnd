@@ -104,7 +104,6 @@ const DetailView = () => {
     } else {
       router.push(`/login?redirectUri=/view/detail/${queries.id}?useType=${queries.useType}`)
     }
-
   }
 
   useEffect(() => {
@@ -328,7 +327,7 @@ const DetailView = () => {
                             총요금
                           </dt>
                           <dd className={Style["DetailPaymentFreeTotal-price"]}>
-                            {priceComma(rooms.priceDetails.BASE)} 원
+                            {priceComma(rooms.priceDetails.BASE + rooms.priceDetails.EXTRA)} 원
                           </dd>
                         </dl>
                       </div>
@@ -482,6 +481,7 @@ const DetailView = () => {
 
             <PesonalModal
               isOpen={personalModalOpen}
+              maxUser={rooms.roomInfo.maxUser}
               onRequestClose={() => setPersonalModalOpen(false)}
             />
 

@@ -17,6 +17,7 @@ import mapBound from "./mapBound";
 import redirectUri from "./redirectUri";
 import propertyType from "./propertyType";
 import userInfo from "./userInfo";
+import spinnerOn from "./spinnerOn";
 
 const reducer = (state, action) => {
   if (action.type === HYDRATE) {
@@ -39,7 +40,8 @@ const reducer = (state, action) => {
     mapBound,
     redirectUri,
     userInfo,
-    propertyType
+    propertyType,
+    spinnerOn
   })(state, action);
 };
 

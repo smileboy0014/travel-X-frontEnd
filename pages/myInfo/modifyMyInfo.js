@@ -13,6 +13,9 @@ import { PUBLISHER_KAKAO, PUBLISHER_NAVER, PUBLISHER_TRAVELX } from "../../share
 import { DeleteCookie } from './../../components/Button/Login/Utils/CookieUtil';
 import BirthdayModal from '../../components/Modal/SignUp/BirthdayModal';
 import AddressModal from '../../components/Modal/SignUp/AddressModal';
+// import { changeSpinnerState, CommonFun } from "../../shared/js/CommonFun";
+import * as spinnerActions from "../../redux/store/modules/spinnerOn";
+// import {Spinner} from "../../components/Spinner/Spinner";
 
 const cx = classNames.bind(Style);
 
@@ -200,6 +203,16 @@ const ModifyMyInfo = () => {
 		}
 	};
 
+	useEffect(()=>{
+		// debugger;
+		// Spinner(true);
+		// chnageState(true);
+		// changeSpinnerState(true);
+		debugger;
+		dispatch(spinnerActions.setState(true))
+
+	}, [])
+
 	useEffect(() => {
 		const objCopy = {...userInfo};
 		if (userInfo.id) {
@@ -218,6 +231,13 @@ const ModifyMyInfo = () => {
 			setBirthdayAndLocationValue(objCopy.userExtraInfo);
 			setSexType(objCopy.userExtraInfo.gender)
 			setUser(objCopy);
+			// changeSpinnerState(false);
+			debugger;
+			// dispatch(spinnerActions.setState(false));
+			setTimeout(()=>{
+				dispatch(spinnerActions.setState(false));
+			}, 500)
+			
 		}
 
 	}, [userInfo])
