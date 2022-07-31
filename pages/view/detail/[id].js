@@ -310,7 +310,7 @@ const DetailView = () => {
                             총요금
                           </dt>
                           <dd className={Style["DetailPaymentFreeTotal-price"]}>
-                            {priceComma(rooms.priceDetails.BASE)} 원
+                            {priceComma(rooms.priceDetails.BASE + rooms.priceDetails.EXTRA)} 원
                           </dd>
                         </dl>
                       </div>
