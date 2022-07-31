@@ -4,7 +4,7 @@ import PersonalCounter from "./PersonalCounter";
 import Style from "../../../styles/Component.module.css";
 import { useSelector, useDispatch } from "react-redux";
 
-const PersonalModal = ({ isOpen, onRequestClose }) => {
+const PersonalModal = ({ isOpen, onRequestClose, maxUser }) => {
   const [clear, setClear] = useState(false);
 
   return (
@@ -38,6 +38,7 @@ const PersonalModal = ({ isOpen, onRequestClose }) => {
               setClear(value);
             }}
             onRequestClose={(value) => onRequestClose(value)}
+            maxUser={maxUser}
           ></PersonalCounter>
 
         </div>

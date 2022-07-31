@@ -464,6 +464,7 @@ const DetailView = () => {
 
             <PesonalModal
               isOpen={personalModalOpen}
+              maxUser={rooms.roomInfo.maxUser}
               onRequestClose={() => setPersonalModalOpen(false)}
             />
 

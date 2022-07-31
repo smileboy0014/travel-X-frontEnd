@@ -8,7 +8,7 @@ import classNames from 'classnames/bind';
 
 const cx = classNames.bind(Style);
 
-const PersonalCounter = ({ onRequestClear, onSetClear, onRequestClose }) => {
+const PersonalCounter = ({ onRequestClear, onSetClear, onRequestClose, maxUser }) => {
   const dispatch = useDispatch();
   const adultValue = useSelector(({ adultCounter }) => adultCounter.value);
   const childValue = useSelector(({ childCounter }) => childCounter.value);
@@ -16,8 +16,13 @@ const PersonalCounter = ({ onRequestClear, onSetClear, onRequestClose }) => {
   const [adultNumber, setAdultNumber] = useState(adultValue);
   const [childNumber, setChildNumber] = useState(childValue);
   const [babyNumber, setBabyNumber] = useState(babyValue);
+  const [totalNumber, setTotalNumber] = useState(0);
 
   const adultIncreaseNumber = () => {
+    if (totalNumber + 1 > maxUser) {
+      alert('최대 인원을 넘을 수 없습니다.');
+      return;
+    }
     setAdultNumber(adultNumber + 1);
   };
 
@@ -28,6 +33,10 @@ const PersonalCounter = ({ onRequestClear, onSetClear, onRequestClose }) => {
   };
 
   const childIncreaseNumber = () => {
+    if (totalNumber + 1 > maxUser) {
+      alert('최대 인원을 넘을 수 없습니다.');
+      return;
+    }
     setChildNumber(childNumber + 1);
   };
 
@@ -38,6 +47,10 @@ const PersonalCounter = ({ onRequestClear, onSetClear, onRequestClose }) => {
   };
 
   const babyIncreaseNumber = () => {
+    if (totalNumber + 1 > maxUser) {
+      alert('최대 인원을 넘을 수 없습니다.');
+      return;
+    }
     setBabyNumber(babyNumber + 1);
   };
 
@@ -62,6 +75,10 @@ const PersonalCounter = ({ onRequestClear, onSetClear, onRequestClose }) => {
       onClearClick();
     }
   }, [onRequestClear]);
+
+  useEffect(() => {
+    setTotalNumber(adultNumber + childNumber + babyNumber);
+  }, [adultNumber, childNumber, babyNumber])
 
   const onClearClick = () => {
     setAdultNumber(1);
