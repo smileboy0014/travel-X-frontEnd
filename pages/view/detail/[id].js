@@ -62,39 +62,43 @@ const DetailView = () => {
   const handleMyWish = (e) => {
     e.preventDefault();
 
-    let wish;
-    const formData = new FormData();
+    if (userInfo.id) {
+      let wish;
+      const formData = new FormData();
 
-    if (rooms && rooms.userWish) {
-      wish = {
-        method: "DELETE",
-        url: "/wish/delete",
-        userWish: false
-      };
+      if (userWish) {
+        wish = {
+          method: "DELETE",
+          url: "/wish/delete",
+          userWish: false
+        };
 
-      formData.append('wishId', userInfo.id);
+        formData.append('wishId', userInfo.id);
+      } else {
+        wish = {
+          method: "POST",
+          url: "/wish/register",
+          userWish: true
+        };
+
+        formData.append('userId', userInfo.id);
+        formData.append('roomId', id);
+        formData.append('useType', useType);
+      }
+
+      Axios({
+        method: wish.method,
+        url: `http://shineware.iptime.org:8081${wish.url}`,
+        data: formData,
+      }).then((res) => {
+        setUserWish(wish.userWish);
+        console.log(res.data);
+      }).catch((e) => {
+        console.error(e);
+      });
     } else {
-      wish = {
-        method: "POST",
-        url: "/wish/register",
-        userWish: true
-      };
-
-      formData.append('userId', userInfo.id);
-      formData.append('roomId', id);
-      formData.append('useType', useType);
+      router.push(`/login?redirectUri=/view/detail/${id}?useType=${useType}`)
     }
-
-    Axios({
-      method: wish.method,
-      url: `http://shineware.iptime.org:8081${wish.url}`,
-      data: formData,
-    }).then((res) => {
-      setUserWish(wish.userWish);
-      console.log(res.data);
-    }).catch((e) => {
-      console.error(e);
-    });
 
   }
 
