@@ -11,7 +11,7 @@ const cx = classNames.bind(Style);
 
 const MyWish = () => {
   const router = useRouter();
-	const userId = useSelector((state) => state.userInfo.info.id);
+	const userInfo = useSelector((state) => state.userInfo.info);
 
   const [rooms, setRooms] = useState([]);
 
@@ -41,7 +41,8 @@ const MyWish = () => {
 
   const getData = () => {
     let params = {
-      userId: userId
+      userId: userInfo.id,
+      authPublisher: userInfo.pub
     };
     axios({
       method: "GET",
@@ -57,7 +58,7 @@ const MyWish = () => {
 
   useEffect(() => {
     getData();
-  }, [userId]);
+  }, [userInfo.id]);
 
   return (
     <div className="site">

@@ -86,6 +86,7 @@ const DetailView = () => {
         };
 
         formData.append('userId', userInfo.id);
+        formData.append('authPublisher', userInfo.pub);
         formData.append('roomId', queries.id);
         formData.append('useType', queries.useType);
       }
@@ -174,7 +175,7 @@ const DetailView = () => {
           reviewSummary: res.data.reviewSummary ? res.data.reviewSummary : [],
           wishId: res.data.wishId
         }));
-        setUserWish(res.data.userWish);
+        setUserWish(res.data.wishId ? true : false);
       });
     }
   }, [queries.id,
