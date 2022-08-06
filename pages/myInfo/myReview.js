@@ -10,22 +10,21 @@ import MyReviewMoreModal from "../../components/Modal/MyReview/MyReviewMoreModal
 import MyReviewDeleteModal from "../../components/Modal/MyReview/MyReviewDeleteModal";
 import classNames from 'classnames/bind';
 import Link from 'next/link';
-import {propertyTypeFilter} from '../../shared/js/CommonFilter';
-import {DEFAULT_API_URL} from '../../shared/js/CommonConstant';
-import {changeDateForm} from '../../shared/js/CommonFun';
-
+import { propertyTypeFilter } from '../../shared/js/CommonFilter';
+import { DEFAULT_API_URL } from '../../shared/js/CommonConstant';
+import { changeDateForm } from '../../shared/js/CommonFun';
+import * as spinnerActions from "../../redux/store/modules/spinnerOn";
 
 const cx = classNames.bind(Style);
 
 const MyReview = () => {
 	const router = useRouter();
-	const [error,setError] = useState(false);
+	const dispatch = useDispatch();
+	const [error, setError] = useState(false);
 	const userInfo = useSelector((state) => state.userInfo.info);
 	const [from, setFrom] = useState(0);
 	const [size, setSize] = useState(10);
-	const [loading, setLoading] = useState(true);
-	// 이미지 포함 리뷰 로딩이 완료 되있는 것 판별
-	const [isReviewLoading, setIsReviewLoading] = useState(true);
+	const [loading, setLoading] = useState(false);
 	const [, updateState] = useState();
 	const forceUpdate = useCallback(() => updateState({}), []);
 	const [returnCallHttpMethod, setReturnCallHttpMethod] = useState(false);
@@ -38,10 +37,12 @@ const MyReview = () => {
 
 	const getMyReviews = () => {
 		// debugger;
+		setLoading(true);
 		axios({
 			method: "GET",
-			url: DEFAULT_API_URL+"/review/getByUserId",
+			url: DEFAULT_API_URL + "/review/getByUserId",
 			params: {
+				authPublisher: userInfo.pub,
 				userId: userInfo.id,
 				from: from,
 				size: size
@@ -60,25 +61,26 @@ const MyReview = () => {
 					}
 				})
 				// setMyReviewData((prevState) => (
-
 				// 	[...prevState,
 				// 	...filterReviews]
 				// ));
 				// debugger;
 				setMyReviewData(filterReviews);
-				setLoading(false);
 				// console.log(`getReviews result is ${reviewSummary.averageReviewScore}`);
 			}
 		}).catch((error) => {
 			console.log(error);
 			setError(true);
+		}).finally(()=>{
+			setLoading(false);
 		})
 
 	}
 
 	const handleViewDetailCarousel = (item) => {
 		if (item.hasImage) {
-			return (<ReviewDetailCarousel reviewLoading={() => setIsReviewLoading(false)} galleryData={(data) => setLayerGalleryList(data)} data={item.imageIdList} />);
+			return (
+				<ReviewDetailCarousel galleryData={(data) => setLayerGalleryList(data)} data={item.images} />);
 		}
 	}
 
@@ -112,43 +114,31 @@ const MyReview = () => {
 	const execReturnType = (type) => {
 
 		if (type === 'delete') {
-
 			setMyReviewMoreModalOpen(false);
 			setMyReviewDeleteModalOpen(true);
 		} else {
 			router.push('/myInfo/modifyMyReview');
 		}
-
 	}
 
 	useEffect(() => {
 		// debugger;
-		// console.log(`is review loading is ${isReviewLoading}`);
-		if (!isReviewLoading) {
-			// 강제로 리뷰 이미지 불러왔을 때 리랜더링 하기!!!
-			setTimeout(() => {
-				forceUpdate();
-			}, 500)
-
-			// console.log(`force update!!!!!`);
-		}
-	}, [isReviewLoading])
-
-	useEffect(() =>{
-		// debugger;
-		if(returnCallHttpMethod){
+		if (returnCallHttpMethod) {
 			// debugger;
+			myReviewData.length = 0;
 			getMyReviews();
-			
 			setReturnCallHttpMethod(false);
-
 		}
-	},[returnCallHttpMethod])
+	
+	}, [returnCallHttpMethod])
 
 	useEffect(() => {
 		if (layerGalleryList != null && layerGalleryList.length > 0) {
 			setLayerGalleryOpen(true);
 		}
+		return function cleanup() {
+      layerGalleryList.length = 0;
+    };
 	}, [layerGalleryList]);
 
 	useEffect(() => {
@@ -161,10 +151,15 @@ const MyReview = () => {
 
 	useEffect(() => {
 		// debugger;
-	
+		if (userInfo.id) {
 			getMyReviews();
-		
-	}, [])
+		}
+	}, [userInfo])
+
+	useEffect(() => {
+		// console.log(loading);
+		dispatch(spinnerActions.setState(loading));
+	}, [loading])
 
 
 	return (
@@ -199,14 +194,11 @@ const MyReview = () => {
 						</button>
 					</Link>
 					{/* .temporary */}
-
-					{!loading && myReviewData.length > 0 && myReviewData.map((item, index) =>
-
-						<div className="ReviewPost" key={index}>
-							{/* item */}
-							<div className={Style["MyReviewPostItem"]}>
+					<div className="ReviewPost" >
+						{!loading && myReviewData.length > 0 && myReviewData.map((item, index) =>
+							<div className={Style["MyReviewPostItem"]} key={index}>
 								<div className={Style["ReviewPostItemSecHead"]}>
-									<button type="button" className={Style["ReviewPostMore"]} onClick={() => onClickHandler('moreView','',index)}>
+									<button type="button" className={Style["ReviewPostMore"]} onClick={() => onClickHandler('moreView', '', index)}>
 										<span className="ab-text">
 											더보기
 										</span>
@@ -219,7 +211,7 @@ const MyReview = () => {
 								</div>
 								<div className={Style["ReviewPostItemMeta"]}>
 									<div className="ReviewPostItemMetaHead">
-										<div className={Style["ReviewPostItemMetaHead-name"]}>{item.userId}</div>
+										<div className={Style["ReviewPostItemMetaHead-name"]}>{item.userNickName ? item.userNickName : item.userId}</div>
 
 										<div className={Style["BasicGrade"]}>
 
@@ -251,12 +243,10 @@ const MyReview = () => {
 									<div className={Style["RewviewAnswerText"]}>{item.reviewReply.data}
 									</div>
 								</div> : <div></div>}
-
 								{/* .RewviewAnswer */}
 							</div>
-							{/* .item */}
-						</div>
-					)}
+						)}
+					</div>
 				</div>
 				{/* .컨텐츠 끝 */}
 			</div>
@@ -265,10 +255,10 @@ const MyReview = () => {
 			<LayerGallery data={layerGalleryList} isOpen={layerGalleryOpen} onRequestClose={() => setLayerGalleryOpen(false)} />
 			{/* <!-- .LayerGallery --> */}
 			<MyReviewMoreModal isOpen={myReviewMoreModalOpen} onRequestClose={() => setMyReviewMoreModalOpen(false)} returnType={(type) => execReturnType(type)} />
-			<MyReviewDeleteModal selectReview={selectReview} isOpen={myReviewDeleteModalOpen} 
-			onRequestClose={() => setMyReviewDeleteModalOpen(false)}
-			methodCallBack={(type) => setReturnCallHttpMethod(type)}
-			 />
+			<MyReviewDeleteModal selectReview={selectReview} isOpen={myReviewDeleteModalOpen}
+				onRequestClose={() => setMyReviewDeleteModalOpen(false)}
+				methodCallBack={(type) => setReturnCallHttpMethod(type)}
+			/>
 		</div>
 	);
 }

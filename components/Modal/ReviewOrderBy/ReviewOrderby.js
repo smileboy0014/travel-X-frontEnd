@@ -29,8 +29,7 @@ const ReviewOrderby = ({ onRequestClose }) => {
     } else {
       setSearchTypeValue(getSearchTypeValue);
     }
-
-  }, [])
+  }, []);
 
   useEffect(() => {
     setSearchTypeValue(

@@ -6,8 +6,8 @@ import classNames from 'classnames/bind';
 const SelectTopNavbar = ({tabType}) => {
   const router = useRouter();
   const cx = classNames.bind(Style);
-  const [selectType, setSelectType] = useState('beforeUse');
-  const [tabList,setTabList] = useState(['beforeUse','afterUse','cancelHistory'])
+  const [selectType, setSelectType] = useState('reserved');
+  // const [tabList,setTabList] = useState(['reserved','used','canceled']);
 
   const onClickHandler = (type) => {
     // console.log(idx);
@@ -24,14 +24,14 @@ const SelectTopNavbar = ({tabType}) => {
       <div className={Style["TopTab"]}>
         <ul className={Style["TopTab-list"]}>
 
-          <li className={selectType == 'beforeUse' ? cx("TopTab-item", "is-Current") : cx("TopTab-item")}>
-            <a className={Style["TopTab-link"]} onClick={() => onClickHandler('beforeUse')}>이용전</a>
+          <li className={selectType == 'reserved' ? cx("TopTab-item", "is-Current") : cx("TopTab-item")}>
+            <a className={Style["TopTab-link"]} onClick={() => onClickHandler('reserved')}>예약 완료</a>
           </li>
-          <li className={selectType == 'afterUse' ? cx("TopTab-item", "is-Current") : cx("TopTab-item")}>
-            <a className={Style["TopTab-link"]} onClick={() => onClickHandler('afterUse')}>이용완료</a>
+          <li className={selectType == 'used' ? cx("TopTab-item", "is-Current") : cx("TopTab-item")}>
+            <a className={Style["TopTab-link"]} onClick={() => onClickHandler('used')}>이용 완료</a>
           </li>
-          <li className={selectType == 'cancelHistory' ? cx("TopTab-item", "is-Current") : cx("TopTab-item")}>
-            <a className={Style["TopTab-link"]} onClick={() => onClickHandler('cancelHistory')}>취소 내역</a>
+          <li className={selectType == 'canceled' ? cx("TopTab-item", "is-Current") : cx("TopTab-item")}>
+            <a className={Style["TopTab-link"]} onClick={() => onClickHandler('canceled')}>취소 내역</a>
           </li>
 
         </ul>

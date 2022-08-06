@@ -5,7 +5,7 @@ import axios from "axios";
 import Style from "../../styles/Component.module.css";
 import DetailTopNavbar from "../../components/NavBar/DetailTopNavbar";
 import classNames from 'classnames/bind';
-
+import { DEFAULT_API_URL } from '../../shared/js/CommonConstant';
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper";
 import "swiper/css";
@@ -240,7 +240,7 @@ const AddyMyReview = () => {
 
 	const handleAddReview = () => {
 		// debugger;
-		const roomId = '62cb48c06dd9780111d5c524';
+		const roomId = '62cb524e6dd9780111d6129b';
 		
 		const formData = new FormData();
 
@@ -255,6 +255,7 @@ const AddyMyReview = () => {
     // formData.append('imageList[0]', imgFile[0]);
     // formData.append('review', review);
     // formData.append('review.date', formattingDate());
+		formData.append('review.authPublisher',userInfo.pub);
     formData.append('review.cleanScore',cleanScore);
     formData.append('review.comfortScore',comfortScore);
     formData.append('review.facilityScore',facilityScore);
@@ -274,7 +275,7 @@ const AddyMyReview = () => {
 
     axios({
       method: "POST",
-      url: "http://shineware.iptime.org:8081/review/register",
+      url: DEFAULT_API_URL+"/review/register",
       data: formData,
       headers: {
         "Content-Type": "multipart/form-data"

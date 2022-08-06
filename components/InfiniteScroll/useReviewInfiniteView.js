@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
+import { DEFAULT_API_URL } from '../../shared/js/CommonConstant';
+import * as spinnerActions from "../../redux/store/modules/spinnerOn";
 
 const useReviewInfiniteVeiw = (roomId, roomType, fromPageNumber, toPageNumber, sortOption, onlyImage, callHttpMethod) => {
 
   // debugger;
   // console.log(`props is did!!!!##########################`);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [returnCallHttpMethod, setReturnCallHttpMethod] = useState(true);
   const [reviewData, setReviewData] = useState([]);
@@ -17,7 +20,7 @@ const useReviewInfiniteVeiw = (roomId, roomType, fromPageNumber, toPageNumber, s
 
     axios({
       method: "GET",
-      url: "http://shineware.iptime.org:8081/review/summary",
+      url: DEFAULT_API_URL + "/review/summary",
       params: {
         roomId: roomId,
         useType: roomType
@@ -37,7 +40,7 @@ const useReviewInfiniteVeiw = (roomId, roomType, fromPageNumber, toPageNumber, s
     // debugger;
     axios({
       method: "GET",
-      url: "http://shineware.iptime.org:8081/review/get",
+      url: DEFAULT_API_URL+"/review/get",
       params: {
         roomId: roomId,
         useType: roomType,
@@ -50,11 +53,12 @@ const useReviewInfiniteVeiw = (roomId, roomType, fromPageNumber, toPageNumber, s
 
       if (res.data !== undefined) {
         // debugger;
-        setReviewData((prevState) => (
-          [...prevState,
-          ...res.data]
+        // setReviewData((prevState) => (
+        //   [...prevState,
+        //   ...res.data]
 
-        ));
+        // ));
+        setReviewData(res.data);
         setLoading(false);
         // console.log(`getReviews result is ${reviewSummary.averageReviewScore}`);
       }
@@ -79,7 +83,7 @@ const useReviewInfiniteVeiw = (roomId, roomType, fromPageNumber, toPageNumber, s
       // debugger;
       axios({
         method: "GET",
-        url: "http://shineware.iptime.org:8081/review/get",
+        url: DEFAULT_API_URL + "/review/get",
         params: {
           roomId: roomId,
           useType: roomType,
@@ -120,21 +124,27 @@ const useReviewInfiniteVeiw = (roomId, roomType, fromPageNumber, toPageNumber, s
   }, [reviewData]);
 
   useEffect(() => {
-    getReviewSummary();
-  }, [roomId]);
+    if (roomId !== undefined) {
+      getReviewSummary();
+    }
+  }, []);
+
+  useEffect(() => {
+    // console.log(loading);
+    dispatch(spinnerActions.setState(loading));
+  }, [loading])
 
   // Review에서 (필터 검색 포함) 일반적으로 가져오는 API
   useEffect(() => {
     //  debugger;
     if (roomId !== undefined) {
-      console.log(`#####################call useEffect api call!!!!!##########################`);
-      setReviewData([]);
+      // console.log(`#####################call useEffect api call!!!!!##########################`);
+      setLoading(true);
+      reviewData.length = 0;
       getReviews();
     }
 
   }, [roomId, roomType, sortOption, onlyImage])
-
-
 
 
   return { reviewData, reviewSummary, hasMore, loading, error, returnCallHttpMethod };

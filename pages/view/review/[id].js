@@ -1,22 +1,15 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
-import Axios from "axios";
 import { useRouter } from "next/router";
 import Style from "../../../styles/Component.module.css";
 import DetailTopNavbar from "../../../components/NavBar/DetailTopNavbar";
 import LayerGallery from "../../../components/Review/Gallery/LayerGallery";
 // import reviewStyle from "../../../styles/Review.module.css";
-import ReviewCard from "../../../components/Card/Review/ReviewCard";
 import ReviewDetailCarousel from "../../../components/Card/Carousel/ReviewDetailCarousel";
-import AddReviewModal from "../../../components/Modal/Review/AddReviewModal";
-import UpdateReviewModal from "../../../components/Modal/Review/UpdateReviewModal";
-import DeleteReviewModal from "../../../components/Modal/Review/DeleteReviewModal";
-import ReviewDetailModal from "../../../components/Modal/Review/ReviewDetailModal";
 import ReviewOrderbyModal from "../../../components/Modal/ReviewOrderBy/ReviewOrderbyModal";
-import ProgressBar from "../../../components/Progress/ProgressBar";
 import { useSelector, useDispatch } from "react-redux";
 import classNames from 'classnames/bind';
-import { height } from "dom7";
 import useReviewInfiniteVeiw from "../../../components/InfiniteScroll/useReviewInfiniteView";
+import * as reviewSearchType from "../../../redux/store/modules/reviewSearchType";
 
 const cx = classNames.bind(Style);
 
@@ -30,17 +23,9 @@ const Review = () => {
   const [callHttpMethod, setCallHttpMethod] = useState(false);
   // 방 상세 별점 볼 수 있도록 하는 값
   const [isOpenStyle, setIsOpenStyle] = useState(true);
-  // 이미지 포함 리뷰 로딩이 완료 되있는 것 판별
-  const [isReviewLoading, setIsReviewLoading] = useState(true);
-
   const [layerGalleryOpen, setLayerGalleryOpen] = useState(false);
   const [reviewOrderbyModalOpen, setReviewOrderbyModalOpen] = useState(false);
-  const [addReviewModalOpen, setAddReviewModalOpen] = useState(false);
-  const [updateReviewModalOpen, setUpdateReviewModalOpen] = useState(false);
-  const [updatedata, setUpdateData] = useState(null);
-  const [deleteReviewModalOpen, setDeleteReviewModalOpen] = useState(false);
   const [reviewLength, setReviewLength] = useState(0);
-  const [reviewDetailModalOpen, setReviewDetailModalOpen] = useState(false);
   const [toPageNumber, setToPageNumber] = useState(20);
   const [fromPageNumber, setFromPageNumber] = useState(0);
   const [onlyImage, setOnlyImage] = useState(false);
@@ -48,20 +33,10 @@ const Review = () => {
   const forceUpdate = useCallback(() => updateState({}), []);
   const dispatch = useDispatch();
   const [reviews, setReviews] = useState([]);
-  const [viewContent, setViewContent] = useState([]);
-  const [viewWithPictureContent, setViewWithPictureContent] = useState([]);
-
   const sortOption = useSelector(({ reviewSearchType }) => reviewSearchType.value);
 
-  useEffect(() => {
-    // debugger;
-    setFromPageNumber(0);
-    setToPageNumber(20);
-
-  }, [sortOption, onlyImage]);
-  
   const { reviewData, reviewSummary, hasMore, loading, error, returnCallHttpMethod } = useReviewInfiniteVeiw(
-    id, useType, fromPageNumber, toPageNumber, sortOption, onlyImage ,callHttpMethod
+    id, useType, fromPageNumber, toPageNumber, sortOption, onlyImage, callHttpMethod
   );
 
   const observer = useRef();
@@ -72,7 +47,7 @@ const Review = () => {
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
-          debugger;
+          // debugger;
           setFromPageNumber(fromPageNumber + 20);
           setCallHttpMethod(true);
           // console.log(`무한 스크롤 호출 API 훅 걸렸어!!!!!!!`);
@@ -95,19 +70,9 @@ const Review = () => {
   const onClickHandler = (type, data, index) => {
     if (type === 'openAll') {
       setIsOpenStyle(!isOpenStyle);
-    } else if (type === 'addReview') {
-      setAddReviewModalOpen(true);
-    } else if (type === 'update') {
-      setUpdateData(data);
-      setUpdateReviewModalOpen(true);
-    } else if (type === 'delete') {
-      // debugger;
-      setUpdateData(data);
-      setDeleteReviewModalOpen(true);
     } else if (type === 'disappear') {
       // debugger;
       // console.log(reviews[index]);
-
       if (index > 0) {
         setReviews((arr) => {
           return [
@@ -124,10 +89,8 @@ const Review = () => {
           ];
         });
       }
-
       // forceUpdate();
       // dataList[index] = data;
-
     }
     else {
       setReviewOrderbyModalOpen(true);
@@ -232,7 +195,7 @@ const Review = () => {
     if (checked) {
       // setReviews(viewWithPictureContent);
       setOnlyImage(true);
-    } 
+    }
     else {
       // setReviews(viewContent);
       setOnlyImage(false);
@@ -241,7 +204,7 @@ const Review = () => {
 
   const handleViewDetailCarousel = (item) => {
     if (item.hasImage) {
-      return (<ReviewDetailCarousel reviewLoading={()=>setIsReviewLoading(false)} galleryData={(data) => setLayerGalleryList(data)} data={item.imageIdList} />);
+      return (<ReviewDetailCarousel galleryData={(data) => setLayerGalleryList(data)} data={item.images} />);
     }
   }
 
@@ -336,28 +299,16 @@ const Review = () => {
   };
 
   useEffect(() => {
-    // setIsOpenStyle(true);
-    // setReviewOrderbyModalOpen(false);
-    // setLayerGalleryList([]);
-  }, []);
-
-  useEffect(()=>{
     // debugger;
-    // console.log(`is review loading is ${isReviewLoading}`);
-    if(!isReviewLoading){
-      // 강제로 리뷰 이미지 불러왔을 때 리랜더링 하기!!!
-      setTimeout(()=>{
-        forceUpdate();
-      }, 500)
-      
-      // console.log(`force update!!!!!`);
-    }
-  },[isReviewLoading])
+    setFromPageNumber(0);
+    setToPageNumber(20);
+
+  }, [sortOption, onlyImage]);
 
   useEffect(() => {
-    debugger;
+    // debugger;
     if (reviewData !== undefined && reviewData.length > 0) {
-      debugger;
+      // debugger;
       setReviewLength(reviewData.length);
 
       let filterReviews = reviewData.map((review) => {
@@ -371,15 +322,15 @@ const Review = () => {
       })
 
       // 리뷰 갯수가 20개 이상일 때
-      if((reviewData.length < reviewSummary.reviewCount) && reviewLength < reviewData.length){
+      if ((reviewData.length < reviewSummary.reviewCount) && reviewLength < reviewData.length) {
         // console.log('총 리뷰 갯수가 20 이상이야!!!!!');
 
-        if(reviewData.length < 21){
-          filterReviews.splice(reviewData.length/2,0,{id:''});
+        if (reviewData.length < 21) {
+          filterReviews.splice(reviewData.length / 2, 0, { id: '' });
           // setViewContent(filterReviews);
           setReviews(filterReviews);
         } else {
-          filterReviews.splice(reviewData.length-20,0,{id:''});
+          filterReviews.splice(reviewData.length - 20, 0, { id: '' });
           // setViewContent(filterReviews);
           setReviews(filterReviews);
         }
@@ -393,22 +344,11 @@ const Review = () => {
       // setViewWithPictureContent(filterReviews.filter(data => data.hasImage));
     }
 
-    setTimeout(()=>{
+    setTimeout(() => {
       forceUpdate();
     }, 500)
 
   }, [reviewData]);
-
-
-  // useEffect(() => {
-  //   if (viewContent.length > 0) {
-  //     // setDataSetting(true);
-  //     setReviews(viewContent);
-  //     console.log(`viewContents length is ${viewContent.length}`);
-  //     console.log(`viewWithPictureContent length is ${viewWithPictureContent.length}`);
-  //   }
-  // }, [viewContent]);
-
 
   useEffect(() => {
     if (layerGalleryList != null && layerGalleryList.length > 0) {
@@ -432,10 +372,14 @@ const Review = () => {
   useEffect(() => {
     // console.log(`returnCallHttpMethod is ${returnCallHttpMethod}`);
     // console.log(`callHttpMethod is ${callHttpMethod}`);
-    if(!returnCallHttpMethod){
+    if (!returnCallHttpMethod) {
       setCallHttpMethod(false);
     }
   }, [returnCallHttpMethod]);
+
+  useEffect(()=>{
+    dispatch(reviewSearchType.setReviewSearchType("DATE"));
+  }, [])
 
   return (
     <div className="site">
@@ -456,16 +400,6 @@ const Review = () => {
           {/* <!-- ReviewHeader --> */}
           <div className={Style["ReviewHeader"]}>
             <div className="site-container">
-              {/* temporary area */}
-              <div className="testArea">
-                <button type="button"
-                  style={{ position: 'relative', marginTop: "20px" }}
-                  className={Style["DetailPaymentDate-button"]}
-                  onClick={() => onClickHandler('addReview')}>
-                  리뷰 등록
-                </button>
-              </div>
-              {/* temporary area */}
               <dl className={isOpenStyle ? "ReviewHeader-inner" : cx("ReviewHeader-inner", "is-Open")}>
                 <dt className={Style["ReviewHeaderTitle"]}>
                   <div className={Style["ReviewHeaderTitle-text"]}>전체 평점</div>
@@ -515,14 +449,10 @@ const Review = () => {
                 // }
                 if (item.id != undefined && item.id === '') {
                   return <div ref={lastroomElementRef} key={item}></div>;
-                } 
+                }
                 else {
                   return (
                     <div className={Style["ReviewPostItem"]} key={index} >
-                      {/* temporary area */}
-                      <button type="button" style={{ position: 'relative' }} className={Style["DetailPaymentDate-button"]} onClick={() => onClickHandler('update', item)}>리뷰 수정</button>
-                      <button type="button" style={{ position: 'relative' }} className={Style["DetailPaymentDate-button"]} onClick={() => onClickHandler('delete', item)}>리뷰 삭제</button>
-                      {/* temporary area */}
                       <div className={Style["ReviewPostItemMeta"]}>
                         <div className="ReviewPostItemMetaHead">
                           <div className={Style["ReviewPostItemMetaHead-name"]}>{item.userId}</div>
@@ -568,9 +498,6 @@ const Review = () => {
         {/* <!-- .LayerGallery --> */}
       </div>
       {/* <!-- .Body --> */}
-      <AddReviewModal isSave={() => setCallHttpMethod(true)} isOpen={addReviewModalOpen} onRequestClose={() => setAddReviewModalOpen(false)} />
-      <UpdateReviewModal isSave={() => setCallHttpMethod(true)} isOpen={updateReviewModalOpen} onRequestClose={() => setUpdateReviewModalOpen(false)} updateData={updatedata} />
-      <DeleteReviewModal isSave={() => setCallHttpMethod(true)} isOpen={deleteReviewModalOpen} onRequestClose={() => setDeleteReviewModalOpen(false)} updateData={updatedata} />
     </div>
     // </div>
   );
