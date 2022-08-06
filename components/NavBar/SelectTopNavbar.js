@@ -3,29 +3,35 @@ import Style from "../../styles/Component.module.css";
 import { useRouter } from "next/router";
 import classNames from 'classnames/bind';
 
-const SelectTopNavbar = () => {
+const SelectTopNavbar = ({tabType}) => {
   const router = useRouter();
   const cx = classNames.bind(Style);
-  const [selectIdx, setSelectIdx] = useState(0);
+  const [selectType, setSelectType] = useState('beforeUse');
+  const [tabList,setTabList] = useState(['beforeUse','afterUse','cancelHistory'])
 
-  const onClickHandler = (idx) => {
+  const onClickHandler = (type) => {
     // console.log(idx);
-    setSelectIdx(idx);
+    setSelectType(type);
   }
+
+  useEffect(()=>{
+    // debugger;
+    tabType(selectType);
+  },[selectType])
 
   return (
     <>
       <div className={Style["TopTab"]}>
         <ul className={Style["TopTab-list"]}>
 
-          <li className={selectIdx == 0 ? cx("TopTab-item", "is-Current") : cx("TopTab-item")}>
-            <a className={Style["TopTab-link"]} onClick={() => onClickHandler(0)}>이용전</a>
+          <li className={selectType == 'beforeUse' ? cx("TopTab-item", "is-Current") : cx("TopTab-item")}>
+            <a className={Style["TopTab-link"]} onClick={() => onClickHandler('beforeUse')}>이용전</a>
           </li>
-          <li className={selectIdx == 1 ? cx("TopTab-item", "is-Current") : cx("TopTab-item")}>
-            <a className={Style["TopTab-link"]} onClick={() => onClickHandler(1)}>이용완료</a>
+          <li className={selectType == 'afterUse' ? cx("TopTab-item", "is-Current") : cx("TopTab-item")}>
+            <a className={Style["TopTab-link"]} onClick={() => onClickHandler('afterUse')}>이용완료</a>
           </li>
-          <li className={selectIdx == 2 ? cx("TopTab-item", "is-Current") : cx("TopTab-item")}>
-            <a className={Style["TopTab-link"]} onClick={() => onClickHandler(2)}>취소 내역</a>
+          <li className={selectType == 'cancelHistory' ? cx("TopTab-item", "is-Current") : cx("TopTab-item")}>
+            <a className={Style["TopTab-link"]} onClick={() => onClickHandler('cancelHistory')}>취소 내역</a>
           </li>
 
         </ul>
