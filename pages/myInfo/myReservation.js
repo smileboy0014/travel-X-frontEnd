@@ -17,21 +17,22 @@ const cx = classNames.bind(Style);
 const MyReservation = () => {
 	const router = useRouter();
 	const dispatch = useDispatch();
+	// const spinnerState = useSelector((state) => state.spinnerOn.state);
 	const userInfo = useSelector((state) => state.userInfo.info);
 	const [error, setError] = useState(false);
-	const [loading, setLoading] = useState(true);
-	const [beforeUseList, setBeforeUseList] = useState([]);
-	const [afterUseList, setAfterUseList] = useState([]);
-	const [cancelList, setCancelList] = useState([]);
-	const [tabType, setTapType] = useState('beforeUse');
+	const [loading, setLoading] = useState(false);
+	const [reservedList, setReservedList] = useState([]);
+	const [usedList, setUsedList] = useState([]);
+	const [canceledList, setCanceledList] = useState([]);
+	const [tabType, setTapType] = useState('');
 
-	const getOrderListByUserIdBeforeCheckin = () => {
+	const getOrderListByUserIdBeforeCheckout = () => {
 		// debugger;
 		setLoading(true);
-		console.log('getOrderListByUserIdBeforeCheckin start!!!');
+		// console.log('getOrderListByUserIdBeforeCheckout start!!!');
 		axios({
 			method: "GET",
-			url: DEFAULT_API_URL + "/order/getOrderListByUserIdBeforeCheckin",
+			url: DEFAULT_API_URL + "/order/getOrderListByUserIdBeforeCheckout",
 			params: {
 				userId: userInfo.id,
 				authPublisher: userInfo.pub
@@ -39,21 +40,22 @@ const MyReservation = () => {
 		}).then((res) => {
 			if (res.data !== undefined && res.data.length > 0) {
 				console.log(res.data);
-				setBeforeUseList(res.data);
-				console.log(res.data);
+				setReservedList(res.data);
+				// console.log(res.data);
 			}
 		}).catch((error) => {
 			console.log(error);
 			setError(true);
 		}).finally(() => {
-			console.log('finally!!');
+			//console.log('finally!!');
 			setLoading(false);
 		})
 	}
+
 	const getOrderListByUserIdAfterCheckout = () => {
 		// debugger;
 		setLoading(true);
-		console.log('getOrderListByUserIdAfterCheckout start!!!');
+		// console.log('getOrderListByUserIdAfterCheckout start!!!');
 		axios({
 			method: "GET",
 			url: DEFAULT_API_URL + "/order/getOrderListByUserIdAfterCheckout",
@@ -64,14 +66,14 @@ const MyReservation = () => {
 		}).then((res) => {
 			if (res.data !== undefined && res.data.length > 0) {
 				console.log(res.data);
-				setBeforeUseList(res.data);
-				console.log(res.data);
+				setUsedList(res.data);
+				// console.log(res.data);
 			}
 		}).catch((error) => {
 			console.log(error);
 			setError(true);
 		}).finally(() => {
-			console.log('finally!!');
+			//console.log('finally!!');
 			setLoading(false);
 		})
 	}
@@ -89,21 +91,21 @@ const MyReservation = () => {
 			},
 		}).then((res) => {
 			if (res.data !== undefined && res.data.length > 0) {
-				console.log(res.data);
-				setBeforeUseList(res.data);
+				// console.log(res.data);
+				setCanceledList(res.data);
 				console.log(res.data);
 			}
 		}).catch((error) => {
 			console.log(error);
 			setError(true);
 		}).finally(() => {
-			console.log('finally!!');
+			//console.log('finally!!');
 			setLoading(false);
 		})
 	}
 
 	const peopleTypeForm = (adult, child, baby) => {
-		debugger;
+		// debugger;
 		let adultStr = adult > 0 ? '성인 ' + adult + '명' : '';
 		let childStr = child > 0 ? '아동 ' + child + '명' : '';
 		let babyStr = baby > 0 ? '유아 ' + baby + '명' : '';
@@ -111,171 +113,172 @@ const MyReservation = () => {
 	}
 
 	const showList = (type) => {
+		// console.log(`type showlist is ${type}`);
 		switch (type) {
-			case 'beforeUse':
-				{
-					beforeUseList && beforeUseList.map((data, idx) => {
-						return (
-							<li className={Style["ReservationList-item"]} key={idx}>
-								<div className={Style["ReservationListItem"]} >
-									<div className={Style["ReservationListItemHeader"]}>
-										<div className={Style["ReservationListItemHeader-date"]}>{changeDateForm(data.orderDate)}</div>
-										<Link href={{
-											pathname: "/myInfo/myReservation/[orderId]",
-											query: { orderId: data.orderId }
-										}}>
-											<a href="#;" className={Style["ReservationListItemHeader-link"]}>상세보기</a>
-										</Link>
+			case 'reserved':
+				// console.log(`type showlist is reserved ${type}`);
+				return (reservedList && reservedList.map((data, idx) => {
+					return (
+						<li className={Style["ReservationList-item"]} key={idx}>
+							<div className={Style["ReservationListItem"]} >
+								<div className={Style["ReservationListItemHeader"]}>
+									<div className={Style["ReservationListItemHeader-date"]}>{changeDateForm(data.orderDate)}</div>
+									<Link href={{
+										pathname: "/myInfo/myReservation/[orderId]",
+										query: { orderId: data.orderId }
+									}}>
+										<a href="#;" className={Style["ReservationListItemHeader-link"]}>상세보기</a>
+									</Link>
+								</div>
+								<div className={Style["ReservationListItemBody"]}>
+									<div className={Style["ReservationListItemMeta"]}>
+										<span className={cx("ReservationListItemMeta-item", "icoHotel")}>{propertyTypeFilter(data.roomDocument.propertyType)}</span>
+										<span className={Style["ReservationListItemMeta-item"]}>{data.roomDocument.propertyName}</span>
 									</div>
-									<div className={Style["ReservationListItemBody"]}>
-										<div className={Style["ReservationListItemMeta"]}>
-											<span className={cx("ReservationListItemMeta-item", "icoHotel")}>{propertyTypeFilter(data.roomDocument.propertyType)}</span>
-											<span className={Style["ReservationListItemMeta-item"]}>{data.roomDocument.propertyName}</span>
+									<div className={Style["ReservationListItemBox"]}>
+										<div className={Style["ReservationListItemBoxThumb"]}>
+											{data.roomDocument.images.map((img, idx) => {
+												if (idx < 1) {
+													return (<img className={Style["ReservationListItemBoxThumb-img"]} key={idx} src={"http://" + img} alt="" />)
+												}
+											})}
 										</div>
-										<div className={Style["ReservationListItemBox"]}>
-											<div className={Style["ReservationListItemBoxThumb"]}>
-												{data.roomDocument.images.map((img, idx) => {
-													if (idx < 1) {
-														return (<img className={Style["ReservationListItemBoxThumb-img"]} key={idx} src={"http://" + img} alt="" />)
-													}
-												})}
-											</div>
-											<div className={Style["ReservationListItemBoxText"]}>
-												<div className={Style["ReservationListItemBoxText-title"]}>{data.roomDocument.roomName}</div>
-												<div className="ReservationListItemBoxMeta">
-													<ul className="ReservationListItemBoxMeta-inner">
-														<li className={cx("ReservationListItemBoxMeta-item", "ico-Cal")}>{checkinForm(data.checkinDay, data.checkoutDay, data.useType)}</li>
-														<li className={cx("ReservationListItemBoxMeta-item", "ico-User")}>{peopleTypeForm(data.adult, data.child, data.baby)}</li>
-													</ul>
-												</div>
+										<div className={Style["ReservationListItemBoxText"]}>
+											<div className={Style["ReservationListItemBoxText-title"]}>{data.roomDocument.roomName}</div>
+											<div className="ReservationListItemBoxMeta">
+												<ul className="ReservationListItemBoxMeta-inner">
+													<li className={cx("ReservationListItemBoxMeta-item", "ico-Cal")}>{checkinForm(data.checkinDay, data.checkoutDay, data.useType)}</li>
+													<li className={cx("ReservationListItemBoxMeta-item", "ico-User")}>{peopleTypeForm(data.adult, data.child, data.baby)}</li>
+												</ul>
 											</div>
 										</div>
 									</div>
 								</div>
-							</li>
-						)
-					})
-				}
+							</div>
+						</li>
+					)
+				}))
 
-			case 'afterUse':
-				{
-					afterUseList && afterUseList.map((data, idx) => {
-						return (
-							<li className={Style["ReservationList-item"]} key={idx}>
-								<div className={Style["ReservationListItem"]} >
-									<div className={Style["ReservationListItemHeader"]}>
-										<div className={Style["ReservationListItemHeader-date"]}>{changeDateForm(data.orderDate)}</div>
-										<Link href={{
-											pathname: "/myInfo/myReservation/[orderId]",
-											query: { orderId: data.orderId }
-										}}>
-											<a href="#;" className={Style["ReservationListItemHeader-link"]}>상세보기</a>
-										</Link>
+			case 'used':
+				return (usedList && usedList.map((data, idx) => {
+					return (
+						<li className={Style["ReservationList-item"]} key={idx}>
+							<div className={Style["ReservationListItem"]} >
+								<div className={Style["ReservationListItemHeader"]}>
+									<div className={Style["ReservationListItemHeader-date"]}>{changeDateForm(data.orderDate)}</div>
+									<Link href={{
+										pathname: "/myInfo/myReservation/[orderId]",
+										query: { orderId: data.orderId }
+									}}>
+										<a href="#;" className={Style["ReservationListItemHeader-link"]}>상세보기</a>
+									</Link>
+								</div>
+								<div className={Style["ReservationListItemBody"]}>
+									<div className={Style["ReservationListItemMeta"]}>
+										<span className={cx("ReservationListItemMeta-item", "icoHotel")}>{propertyTypeFilter(data.roomDocument.propertyType)}</span>
+										<span className={Style["ReservationListItemMeta-item"]}>{data.roomDocument.propertyName}</span>
 									</div>
-									<div className={Style["ReservationListItemBody"]}>
-										<div className={Style["ReservationListItemMeta"]}>
-											<span className={cx("ReservationListItemMeta-item", "icoHotel")}>{propertyTypeFilter(data.roomDocument.propertyType)}</span>
-											<span className={Style["ReservationListItemMeta-item"]}>{data.roomDocument.propertyName}</span>
+									<div className={Style["ReservationListItemBox"]}>
+										<div className={Style["ReservationListItemBoxThumb"]}>
+											{data.roomDocument.images.map((img, idx) => {
+												if (idx < 1) {
+													return (<img className={Style["ReservationListItemBoxThumb-img"]} key={idx} src={"http://" + img} alt="" />)
+												}
+											})}
 										</div>
-										<div className={Style["ReservationListItemBox"]}>
-											<div className={Style["ReservationListItemBoxThumb"]}>
-												{data.roomDocument.images.map((img, idx) => {
-													if (idx < 1) {
-														return (<img className={Style["ReservationListItemBoxThumb-img"]} key={idx} src={"http://" + img} alt="" />)
-													}
-												})}
-											</div>
-											<div className={Style["ReservationListItemBoxText"]}>
-												<div className={Style["ReservationListItemBoxText-title"]}>{data.roomDocument.roomName}</div>
-												<div className="ReservationListItemBoxMeta">
-													<ul className="ReservationListItemBoxMeta-inner">
-														<li className={cx("ReservationListItemBoxMeta-item", "ico-Cal")}>{checkinForm(data.checkinDay, data.checkoutDay, data.useType)}</li>
-														<li className={cx("ReservationListItemBoxMeta-item", "ico-User")}>{peopleTypeForm(data.adult, data.child, data.baby)}</li>
-													</ul>
-												</div>
+										<div className={Style["ReservationListItemBoxText"]}>
+											<div className={Style["ReservationListItemBoxText-title"]}>{data.roomDocument.roomName}</div>
+											<div className="ReservationListItemBoxMeta">
+												<ul className="ReservationListItemBoxMeta-inner">
+													<li className={cx("ReservationListItemBoxMeta-item", "ico-Cal")}>{checkinForm(data.checkinDay, data.checkoutDay, data.useType)}</li>
+													<li className={cx("ReservationListItemBoxMeta-item", "ico-User")}>{peopleTypeForm(data.adult, data.child, data.baby)}</li>
+												</ul>
 											</div>
 										</div>
 									</div>
 								</div>
-							</li>
-						)
-					})
-				}
+							</div>
+						</li>
+					)
+				}))
 
-			case 'cancelHistory':
-				{
-					cancelList && cancelList.map((data, idx) => {
-						return (
-							<li className={Style["ReservationList-item"]} key={idx}>
-								<div className={Style["ReservationListItem"]} >
-									<div className={Style["ReservationListItemHeader"]}>
-										<div className={Style["ReservationListItemHeader-date"]}>{changeDateForm(data.orderDate)}</div>
-										<Link href={{
-											pathname: "/myInfo/myReservation/[orderId]",
-											query: { orderId: data.orderId }
-										}}>
-											<a href="#;" className={Style["ReservationListItemHeader-link"]}>상세보기</a>
-										</Link>
+			case 'canceled':
+				return (canceledList && canceledList.map((data, idx) => {
+					return (
+						<li className={Style["ReservationList-item"]} key={idx}>
+							<div className={Style["ReservationListItem"]} >
+								<div className={Style["ReservationListItemHeader"]}>
+									<div className={Style["ReservationListItemHeader-date"]}>{changeDateForm(data.orderDate)}</div>
+									<Link href={{
+										pathname: "/myInfo/myReservation/[orderId]",
+										query: { orderId: data.orderId }
+									}}>
+										<a href="#;" className={Style["ReservationListItemHeader-link"]}>상세보기</a>
+									</Link>
+								</div>
+								<div className={Style["ReservationListItemBody"]}>
+									<div className={Style["ReservationListItemMeta"]}>
+										<span className={cx("ReservationListItemMeta-item", "icoHotel")}>{propertyTypeFilter(data.roomDocument.propertyType)}</span>
+										<span className={Style["ReservationListItemMeta-item"]}>{data.roomDocument.propertyName}</span>
 									</div>
-									<div className={Style["ReservationListItemBody"]}>
-										<div className={Style["ReservationListItemMeta"]}>
-											<span className={cx("ReservationListItemMeta-item", "icoHotel")}>{propertyTypeFilter(data.roomDocument.propertyType)}</span>
-											<span className={Style["ReservationListItemMeta-item"]}>{data.roomDocument.propertyName}</span>
+									<div className={Style["ReservationListItemBox"]}>
+										<div className={Style["ReservationListItemBoxThumb"]}>
+											{data.roomDocument.images.map((img, idx) => {
+												if (idx < 1) {
+													return (<img className={Style["ReservationListItemBoxThumb-img"]} key={idx} src={"http://" + img} alt="" />)
+												}
+											})}
 										</div>
-										<div className={Style["ReservationListItemBox"]}>
-											<div className={Style["ReservationListItemBoxThumb"]}>
-												{data.roomDocument.images.map((img, idx) => {
-													if (idx < 1) {
-														return (<img className={Style["ReservationListItemBoxThumb-img"]} key={idx} src={"http://" + img} alt="" />)
-													}
-												})}
-											</div>
-											<div className={Style["ReservationListItemBoxText"]}>
-												<div className={Style["ReservationListItemBoxText-title"]}>{data.roomDocument.roomName}</div>
-												<div className="ReservationListItemBoxMeta">
-													<ul className="ReservationListItemBoxMeta-inner">
-														<li className={cx("ReservationListItemBoxMeta-item", "ico-Cal")}>{checkinForm(data.checkinDay, data.checkoutDay, data.useType)}</li>
-														<li className={cx("ReservationListItemBoxMeta-item", "ico-User")}>{peopleTypeForm(data.adult, data.child, data.baby)}</li>
-													</ul>
-												</div>
+										<div className={Style["ReservationListItemBoxText"]}>
+											<div className={Style["ReservationListItemBoxText-title"]}>{data.roomDocument.roomName}</div>
+											<div className="ReservationListItemBoxMeta">
+												<ul className="ReservationListItemBoxMeta-inner">
+													<li className={cx("ReservationListItemBoxMeta-item", "ico-Cal")}>{checkinForm(data.checkinDay, data.checkoutDay, data.useType)}</li>
+													<li className={cx("ReservationListItemBoxMeta-item", "ico-User")}>{peopleTypeForm(data.adult, data.child, data.baby)}</li>
+												</ul>
 											</div>
 										</div>
 									</div>
 								</div>
-							</li>
-						)
-					})
-				}
+							</div>
+						</li>
+					)
+				}))
 		}
 	}
 
 	useEffect(() => {
-		// dispatch(spinnerActions.setState(true));
-		// getMyReservation();
-	}, [])
+		// debugger;
+		// console.log('userInfo');
+		getOrderListByUserIdBeforeCheckout();
+	}, [userInfo.id])
 
 	useEffect(() => {
-		console.log(loading);
+		// console.log(loading);
 		dispatch(spinnerActions.setState(loading));
 	}, [loading])
 
 	useEffect(() => {
-		console.log('loadingBefore');
+		// console.log('loadingBefore');
 		// dispatch(spinnerActions.setState(true));
 		switch (tabType) {
-			case 'beforeUse':
-				getOrderListByUserIdBeforeCheckin();
+			case 'reserved':
+				// console.log('reserved');
+				reservedList.length = 0;
+				getOrderListByUserIdBeforeCheckout();
 				break;
-			case 'afterUse':
+			case 'used':
+				usedList.length = 0;
 				getOrderListByUserIdAfterCheckout();
 				break;
-			case 'cancelHistory':
+			case 'canceled':
+				canceledList.length = 0;
 				getCancelOrderListByUserId();
 				break;
 			default:
-				getOrderListByUserIdBeforeCheckin();
+			// reservedList.length = 0;
+			// getOrderListByUserIdBeforeCheckout();
 		}
-		console.log(tabType);
 	}, [tabType])
 
 	return (
@@ -299,48 +302,7 @@ const MyReservation = () => {
 						{/* ReservationList */}
 						<div className="ReservationList">
 							<ul className={Style["ReservationList-list"]}>
-								{showList()}
-								{/* {beforeUseList && beforeUseList.map((data, idx) => {
-									return (
-										<li className={Style["ReservationList-item"]} key={idx}>
-											<div className={Style["ReservationListItem"]} >
-												<div className={Style["ReservationListItemHeader"]}>
-													<div className={Style["ReservationListItemHeader-date"]}>{changeDateForm(data.orderDate)}</div>
-													<Link href={{
-														pathname: "/myInfo/myReservation/[orderId]",
-														query: { orderId: data.orderId }
-													}}>
-														<a href="#;" className={Style["ReservationListItemHeader-link"]}>상세보기</a>
-													</Link>
-												</div>
-												<div className={Style["ReservationListItemBody"]}>
-													<div className={Style["ReservationListItemMeta"]}>
-														<span className={cx("ReservationListItemMeta-item", "icoHotel")}>{propertyTypeFilter(data.roomDocument.propertyType)}</span>
-														<span className={Style["ReservationListItemMeta-item"]}>{data.roomDocument.propertyName}</span>
-													</div>
-													<div className={Style["ReservationListItemBox"]}>
-														<div className={Style["ReservationListItemBoxThumb"]}>
-															{data.roomDocument.images.map((img, idx) => {
-																if (idx < 1) {
-																	return (<img className={Style["ReservationListItemBoxThumb-img"]} key={idx} src={"http://" + img} alt="" />)
-																}
-															})}
-														</div>
-														<div className={Style["ReservationListItemBoxText"]}>
-															<div className={Style["ReservationListItemBoxText-title"]}>{data.roomDocument.roomName}</div>
-															<div className="ReservationListItemBoxMeta">
-																<ul className="ReservationListItemBoxMeta-inner">
-																	<li className={cx("ReservationListItemBoxMeta-item", "ico-Cal")}>{checkinForm(data.checkinDay, data.checkoutDay, data.useType)}</li>
-																	<li className={cx("ReservationListItemBoxMeta-item", "ico-User")}>{peopleTypeForm(data.adult, data.child, data.baby)}</li>
-																</ul>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</li>
-									)
-								})} */}
+								{!loading ? showList(tabType) : ''}
 							</ul>
 						</div>
 						{/* .ReservationList */}

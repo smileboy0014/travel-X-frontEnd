@@ -4250,6 +4250,7 @@ body .ReviewPostClose{
 	left:0;
 	right:0;
 	bottom:0;
+	z-index:1000;
 	background-color:rgba(0,0,0,0.5);
 }
 
@@ -6574,7 +6575,7 @@ body .is-Active .LoginEmailBtn-btn{
 	top:50%;
 	left:50%;
 	transform:translate(-50%, -50%);
-	height:100%;
+	height:80px;
 	width: 100%;
 }
 
@@ -6619,7 +6620,7 @@ body .is-Active .LoginEmailBtn-btn{
 
 .GalleryList{
 	/* margin-top:1.25rem; */
-	margin-top:9.25rem;
+	margin-top:15.25rem;
 	border-radius:0.5rem 0.5rem;
 	overflow:hidden;
 	position:relative;
@@ -6647,7 +6648,7 @@ body .is-Active .LoginEmailBtn-btn{
 	transform:translate(-50%, -50%);
 	/* height:150px;
 	width: 150px; */
-	height:450px;
+	height:300px;
 	width: 450px;
 }
 

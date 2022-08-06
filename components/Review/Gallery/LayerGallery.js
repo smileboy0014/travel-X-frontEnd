@@ -9,33 +9,6 @@ import "swiper/css";
 import "swiper/css/pagination";
 import 'swiper/css/scrollbar';
 
-const modalStyle = {
-
-  overlay: {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)'
-  },
-  content: {
-    position: 'absolute',
-    top: '40px',
-    left: '40px',
-    right: '40px',
-    bottom: '40px',
-    border: '1px solid #ccc',
-    background: '#fff',
-    overflow: 'auto',
-    WebkitOverflowScrolling: 'touch',
-    borderRadius: '4px',
-    outline: 'none',
-    padding: '20px'
-  }
-
-}
-
 const LayerGallery = (props) => {
   // debugger;
   const { data, isOpen, onRequestClose } = props;
@@ -70,8 +43,8 @@ const LayerGallery = (props) => {
         {/* <div className={Style["LayerGallery"]}> */}
         <button
           className={Style["LayerGallery-close"]}
-          onClick={() => onRequestClose(false)} 
-          />
+          onClick={() => onRequestClose(false)}
+        />
         <Swiper
           modules={[Pagination]}
           pagination={true}
@@ -92,35 +65,19 @@ const LayerGallery = (props) => {
                 <div className={Style["GalleryList"]}>
                   <div className={Style["Gallery-link"]}>
                     <div className={Style["GalleryThumb"]}>
-                      <a href="#;" className="ReviewSlide-link">
+                      {/* <a href="123" className="ReviewSlide-link"> */}
                         <img
-                          src={(!item.includes(".kr") && !item.includes(".com")) ? item : "http://" + item}
+                          // src={(!item.includes(".kr") && !item.includes(".com")) ? item : "http://" + item}
+                          src={"http://" + item}
                           alt="room-img"
                         />
-                      </a>
+                      {/* </a> */}
                     </div>
                   </div>
                 </div>
               </SwiperSlide>
             ))}
         </Swiper>
-
-        {/* <div className="LayerGallerySlide-slide swiper-slide">
-                  <div className="LayerGallerySlide-thumb">
-                    <a href="#;" className="LayerGallerySlide-link">
-                      <img src="../assets/images/dummy/Mask Group@2x.png" alt="" />
-                    </a>
-                  </div>
-                </div>
-
-                <div className="LayerGallerySlide-slide swiper-slide">
-                  <div className="LayerGallerySlide-thumb">
-                    <a href="#;" className="LayerGallerySlide-link">
-                      <img src="../assets/images/dummy/Mask Group@2x.png" alt="" />
-                    </a>
-                  </div>
-                </div> */}
-
       </Modal>
     </>
 
