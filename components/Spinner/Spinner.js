@@ -44,13 +44,15 @@ const Spinner = () => {
 
   useEffect(() => {
     // debugger;
-    if(spinnerState){
-      setState(spinnerState);
-    } else {
-      setTimeout(()=>{
-        setState(spinnerState);
-      },1500)
-    }
+    setState(spinnerState);
+
+    // if(spinnerState){
+    //   setState(spinnerState);
+    // } else {
+    //   setTimeout(()=>{
+    //     setState(spinnerState);
+    //   },1500)
+    // }
     
   }, [spinnerState])
 

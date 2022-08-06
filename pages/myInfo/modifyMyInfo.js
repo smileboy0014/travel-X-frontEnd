@@ -16,6 +16,7 @@ import AddressModal from '../../components/Modal/SignUp/AddressModal';
 // import { changeSpinnerState, CommonFun } from "../../shared/js/CommonFun";
 import * as spinnerActions from "../../redux/store/modules/spinnerOn";
 // import {Spinner} from "../../components/Spinner/Spinner";
+import {DEFAULT_API_URL} from '../../shared/js/CommonConstant'
 
 const cx = classNames.bind(Style);
 
@@ -137,7 +138,7 @@ const ModifyMyInfo = () => {
 		formData.append('userId', user.id);
 
 		debugger;
-		axios.post('http://shineware.iptime.org:8081/auth/user/modifyExtraInfo', formData)
+		axios.post(DEFAULT_API_URL+'/auth/user/modifyExtraInfo', formData)
 			.then((res) => {
 				if (res.data !== undefined) {
 					console.log('success to modify user ExtraInfo');
@@ -159,7 +160,7 @@ const ModifyMyInfo = () => {
 
 			axios({
 				method: "POST",
-				url: "http://shineware.iptime.org:8081/auth/user/delete",
+				url: DEFAULT_API_URL+"/auth/user/delete",
 				data: formData,
 			}).then((res) => {
 				dispatch(userInfoActions.setUserInfo({ pub: null, id: null, auth: false, nickName: null, userExtraInfo: {} }));
@@ -232,11 +233,11 @@ const ModifyMyInfo = () => {
 			setSexType(objCopy.userExtraInfo.gender)
 			setUser(objCopy);
 			// changeSpinnerState(false);
-			debugger;
-			// dispatch(spinnerActions.setState(false));
-			setTimeout(()=>{
-				dispatch(spinnerActions.setState(false));
-			}, 500)
+			// debugger;
+			dispatch(spinnerActions.setState(false));
+			// setTimeout(()=>{
+			// 	dispatch(spinnerActions.setState(false));
+			// }, 500)
 			
 		}
 
@@ -261,13 +262,13 @@ const ModifyMyInfo = () => {
 					<div className={Style["ApplySection"]}>
 						<div className={"site-container"}>
 							<div className={Style["ApplyHeader"]}>
-								<h2 className={Style["ApplyHeader-name"]}>{user.nickName ? user.nickName : '닉네임을 입력해주세요.'}
+								<h2 className={Style["ApplyHeader-name"]}>{user.nickName ? user.nickName+'님' : '닉네임을 입력해주세요.'}
 									<Link href={{
 										pathname: "/myInfo/modifyMyName"
 
 									}}>
 										<button className={Style["ApplyHeader-btn"]} type="button">
-											<span className={Style["ab-text"]}>닉네임 변경</span>
+											<span className={"ab-text"}>닉네임 변경</span>
 										</button>
 									</Link>
 								</h2>

@@ -10,6 +10,8 @@ const DetailTopNavbar = ({ HeaderTitle }) => {
     // debugger;
     if(router.route === '/myInfo'){
       router.push('/');
+    } else if(router.route === '/myInfo/myReservation') {
+      router.push('/myInfo');
     } else {
       router.back();
     }
