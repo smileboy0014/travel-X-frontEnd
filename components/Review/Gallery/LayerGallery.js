@@ -12,23 +12,8 @@ import 'swiper/css/scrollbar';
 const LayerGallery = (props) => {
   // debugger;
   const { data, isOpen, onRequestClose } = props;
-  const [openLayerGalleryStyle, setOpenLayerGalleryStyle] = useState(false);
-
+  // console.log(data);
   const cx = classNames.bind(Style);
-
-  const onClickHandler = () => {
-    onRequestClose(false);
-  }
-
-  useEffect(() => {
-    if (isOpen) {
-      setOpenLayerGalleryStyle(true);
-    } else {
-      setOpenLayerGalleryStyle(false);
-    }
-
-  }, [isOpen]);
-
 
   // console.log(props);
   return (
@@ -40,7 +25,6 @@ const LayerGallery = (props) => {
         overlayClassName={Style["LayerGalleryOverlay"]}
         onRequestClose={() => onRequestClose(false)}
       >
-        {/* <div className={Style["LayerGallery"]}> */}
         <button
           className={Style["LayerGallery-close"]}
           onClick={() => onRequestClose(false)}
@@ -65,7 +49,7 @@ const LayerGallery = (props) => {
                 <div className={Style["GalleryList"]}>
                   <div className={Style["Gallery-link"]}>
                     <div className={Style["GalleryThumb"]}>
-                      {/* <a href="123" className="ReviewSlide-link"> */}
+                      {/* <a href="#" className="ReviewSlide-link"> */}
                         <img
                           // src={(!item.includes(".kr") && !item.includes(".com")) ? item : "http://" + item}
                           src={"http://" + item}

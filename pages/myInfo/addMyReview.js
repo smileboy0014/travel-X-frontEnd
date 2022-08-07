@@ -33,8 +33,16 @@ const AddyMyReview = () => {
 	const handleChangeFile = (event) => {
 
 		// debugger;
-		console.log(`이미지 파일은 ${event.target.files}`);
-		setImgFile(event.target.files);
+		// 사진 첨부 갯수가 6개 이상일 경우 5개까지로 짜르기
+		if(event.target.files.length > 5){
+			// console.log('길이가 5개 이상!!');
+			let fileListArr = Array.from(event.target.files);
+			const newArr = fileListArr.splice(0, 5);
+			setImgFile(newArr);
+		} else {
+			setImgFile(event.target.files);
+		}
+	
 		//fd.append("file", event.target.files)
 		setImgBase64([]);
 		for (var i = 0; i < event.target.files.length; i++) {
@@ -60,7 +68,7 @@ const AddyMyReview = () => {
 		}
 	}
 
-	const handleRemoveFile = (index) =>{
+	const handleRemoveFile = (index) => {
 		// debugger;
 		const fileListArr = Array.from(imgFile);
 		fileListArr.splice(index, 1);
@@ -241,55 +249,55 @@ const AddyMyReview = () => {
 	const handleAddReview = () => {
 		// debugger;
 		const roomId = '62cb524e6dd9780111d6129b';
-		
+
 		const formData = new FormData();
 
-    if(imgFile != undefined){
-      for (let i = 0; i < imgFile.length; i++) {
-        formData.append('imageList['+i+']', imgFile[i]);
-        // imageList.push(imgFile[i]);
-      }
-    }
-   
+		if (imgFile != undefined) {
+			for (let i = 0; i < imgFile.length; i++) {
+				formData.append('imageList[' + i + ']', imgFile[i]);
+				// imageList.push(imgFile[i]);
+			}
+		}
 
-    // formData.append('imageList[0]', imgFile[0]);
-    // formData.append('review', review);
-    // formData.append('review.date', formattingDate());
-		formData.append('review.authPublisher',userInfo.pub);
-    formData.append('review.cleanScore',cleanScore);
-    formData.append('review.comfortScore',comfortScore);
-    formData.append('review.facilityScore',facilityScore);
-    formData.append('review.kindnessScore',kindnessScore);
-    formData.append('review.priceScore',priceScore);
-    // formData.append('review.title',reviewContent.title);
-    formData.append('review.contents',reviewContent);
-    formData.append('review.roomId',roomId);
-    formData.append('review.useType',"NIGHT");
-    formData.append('review.userId',userInfo.id);
 
-    // debugger;
+		// formData.append('imageList[0]', imgFile[0]);
+		// formData.append('review', review);
+		// formData.append('review.date', formattingDate());
+		formData.append('review.authPublisher', userInfo.pub);
+		formData.append('review.cleanScore', cleanScore);
+		formData.append('review.comfortScore', comfortScore);
+		formData.append('review.facilityScore', facilityScore);
+		formData.append('review.kindnessScore', kindnessScore);
+		formData.append('review.priceScore', priceScore);
+		// formData.append('review.title',reviewContent.title);
+		formData.append('review.contents', reviewContent);
+		formData.append('review.roomId', roomId);
+		formData.append('review.useType', "NIGHT");
+		formData.append('review.userId', userInfo.id);
 
-    // axios.post("http://shineware.iptime.org:8081/review/post", review, {
-    //   headers: { "Content-Type": `multipart/form-data` }
-    // }
+		// debugger;
 
-    axios({
-      method: "POST",
-      url: DEFAULT_API_URL+"/review/register",
-      data: formData,
-      headers: {
-        "Content-Type": "multipart/form-data"
-      }
-    }).then((res) => {
-      console.log(`save is successed!!`);
-      console.log(res);
-    })
-      .catch((error) => {
-        console.log(error);
-      })
-      .finally(() => {
+		// axios.post("http://shineware.iptime.org:8081/review/post", review, {
+		//   headers: { "Content-Type": `multipart/form-data` }
+		// }
+
+		axios({
+			method: "POST",
+			url: DEFAULT_API_URL + "/review/register",
+			data: formData,
+			headers: {
+				"Content-Type": "multipart/form-data"
+			}
+		}).then((res) => {
+			console.log(`save is successed!!`);
+			console.log(res);
+		})
+			.catch((error) => {
+				console.log(error);
+			})
+			.finally(() => {
 				router.back();
-      })
+			})
 
 	}
 
@@ -374,11 +382,13 @@ const AddyMyReview = () => {
 										viewImgList.map((item, index) => (
 											<SwiperSlide key={index}>
 												<div className={Style["EditImageSlideItem"]}>
-													<button type="button" className={Style["EditImageSlideItem-close"]} onClick={() => handleRemoveFile(index)}><span className={"ab-text"}>Close</span></button>
-													<img
-														src={item}
-														alt="room-img"
-													/>
+										
+														<button type="button" className={Style["EditImageSlideItem-close"]} onClick={() => handleRemoveFile(index)}><span className={"ab-text"}>Close</span></button>
+														<img className={Style["EditImageSlideItem-img"]}
+															src={item}
+															alt="room-img"
+														/>
+												
 												</div>
 											</SwiperSlide>
 										))}
