@@ -202,16 +202,6 @@ const MyReview = () => {
 						</div>
 					</div>
 					{/* .ReviewHeader */}
-
-					{/* temporary */}
-					<Link href={{
-						pathname: "/myInfo/addMyReview"
-					}}>
-						<button type="button" className={Style["FilterPopFooter-button"]}>
-							등록
-						</button>
-					</Link>
-					{/* .temporary */}
 					<div className="ReviewPost" >
 						{!loading && myReviewData.length > 0 && myReviewData.map((item, index) =>
 							<div className={Style["MyReviewPostItem"]} key={index}>
@@ -272,7 +262,8 @@ const MyReview = () => {
 			{/* <!-- LayerGallery --> */}
 			<LayerGallery data={layerGalleryList} isOpen={layerGalleryOpen} onRequestClose={() => setLayerGalleryOpen(false)} />
 			{/* <!-- .LayerGallery --> */}
-			<MyReviewMoreModal isOpen={myReviewMoreModalOpen} onRequestClose={() => setMyReviewMoreModalOpen(false)} returnType={(type) => execReturnType(type)} />
+			<MyReviewMoreModal isOpen={myReviewMoreModalOpen} onRequestClose={() => setMyReviewMoreModalOpen(false)} 
+			returnType={(type) => execReturnType(type)} />
 			<CommonAlertModal selectData={selectReview}
 				content={alertContent}
 				isOpen={alertModalOpen}

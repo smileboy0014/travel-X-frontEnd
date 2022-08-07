@@ -1,6 +1,7 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
+import * as spinnerActions from "../../redux/store/modules/spinnerOn";
 import axios from "axios";
 import Style from "../../styles/Component.module.css";
 import DetailTopNavbar from "../../components/NavBar/DetailTopNavbar";
@@ -8,6 +9,7 @@ import classNames from 'classnames/bind';
 import { DEFAULT_API_URL } from '../../shared/js/CommonConstant';
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper";
+import { propertyTypeFilter } from '../../shared/js/CommonFilter';
 import "swiper/css";
 import "swiper/css";
 import "swiper/css/pagination";
@@ -17,6 +19,11 @@ const cx = classNames.bind(Style);
 
 const AddyMyReview = () => {
 	const router = useRouter();
+	const { orderId } = router.query;
+	const [orderRoom, setOrderRoom] = useState(null);
+	const [error, setError] = useState(false);
+	const [loading, setLoading] = useState(false);
+	const dispatch = useDispatch();
 	const userInfo = useSelector((state) => state.userInfo.info);
 	const [kindnessScore, setKindnessScore] = useState(0);
 	const [cleanScore, setCleanScore] = useState(0);
@@ -24,8 +31,6 @@ const AddyMyReview = () => {
 	const [facilityScore, setFacilityScore] = useState(0);
 	const [priceScore, setPriceScore] = useState(0);
 	const [reviewContent, setReviewContent] = useState('');
-
-
 	const [imgBase64, setImgBase64] = useState([]); // 파일 base64
 	const [imgFile, setImgFile] = useState(null);	//파일	
 	const [viewImgList, setViewImgList] = useState([]);
@@ -246,10 +251,31 @@ const AddyMyReview = () => {
 		}
 	}
 
+	const getByOrderId = () => {
+		setLoading(true);
+		// console.log(orderId);
+		// debugger;
+		axios({
+			method: "GET",
+			url: DEFAULT_API_URL + "/order/getByOrderId",
+			params: {
+				orderId: orderId
+			},
+		}).then((res) => {
+			if (res.data !== undefined) {
+				console.log(res.data);
+				setOrderRoom(res.data);
+			}
+		}).catch((error) => {
+			console.log(error);
+			setError(true);
+		}).finally(() => {
+			setLoading(false);
+		})
+	}
+
 	const handleAddReview = () => {
 		// debugger;
-		const roomId = '62cb524e6dd9780111d6129b';
-
 		const formData = new FormData();
 
 		if (imgFile != undefined) {
@@ -258,12 +284,10 @@ const AddyMyReview = () => {
 				// imageList.push(imgFile[i]);
 			}
 		}
-
-
 		// formData.append('imageList[0]', imgFile[0]);
 		// formData.append('review', review);
 		// formData.append('review.date', formattingDate());
-		formData.append('review.authPublisher', userInfo.pub);
+		formData.append('review.authPublisher', orderRoom.authPublisher);
 		formData.append('review.cleanScore', cleanScore);
 		formData.append('review.comfortScore', comfortScore);
 		formData.append('review.facilityScore', facilityScore);
@@ -271,9 +295,9 @@ const AddyMyReview = () => {
 		formData.append('review.priceScore', priceScore);
 		// formData.append('review.title',reviewContent.title);
 		formData.append('review.contents', reviewContent);
-		formData.append('review.roomId', roomId);
+		formData.append('review.roomId', orderRoom.roomId);
 		formData.append('review.useType', "NIGHT");
-		formData.append('review.userId', userInfo.id);
+		formData.append('review.userId', orderRoom.userId);
 
 		// debugger;
 
@@ -298,8 +322,17 @@ const AddyMyReview = () => {
 			.finally(() => {
 				router.back();
 			})
-
 	}
+
+	useEffect(()=>{
+		// console.log(orderId);
+		getByOrderId();
+	},[orderId]);
+
+	useEffect(() => {
+		// console.log(loading);
+		dispatch(spinnerActions.setState(loading));
+	}, [loading])
 
 	useEffect(() => {
 		if (imgFile) {
@@ -311,7 +344,6 @@ const AddyMyReview = () => {
 			setViewImgList(nowImgList);
 		}
 	}, [imgFile])
-
 
 
 	return (
@@ -327,17 +359,16 @@ const AddyMyReview = () => {
 			{/* .Header */}
 			{/* Body */}
 			<div className="site-body">
-				{/* 컨텐츠 시작 */}
-				<div className={Style["ReviewEditPage"]}>
+				{(orderRoom && !loading) ? <div className={Style["ReviewEditPage"]}>
 					{/* Body */}
 					{/* ReviewEditHeader */}
 					<div className={Style["ReviewEditHeader"]}>
 						<div className="site-container">
 							<div className={Style["ReviewEditHeaderMeta"]}>
-								<span className={cx("ReviewEditHeaderMeta-item", "icoHotel")}>호텔</span>
-								<span className={Style["ReviewEditHeaderMeta-item"]}>슈페리어 트윈 호텔</span>
+								<span className={cx("ReviewEditHeaderMeta-item", "icoHotel")}>{propertyTypeFilter(orderRoom.roomDocument.propertyType)}</span>
+								<span className={Style["ReviewEditHeaderMeta-item"]}>{orderRoom.roomDocument.propertyName}</span>
 							</div>
-							<div className={Style["ReviewEditHeaderTitle"]}>슈페리어 트윈 (넷플릭스 - 숙소 문의)</div>
+							<div className={Style["ReviewEditHeaderTitle"]}>{orderRoom.roomDocument.roomName}</div>
 						</div>
 					</div>
 					{/* .ReviewEditHeader */}
@@ -408,7 +439,9 @@ const AddyMyReview = () => {
 						</div>
 					</div>
 					{/* .BttonFixButton */}
-				</div>
+				</div> : ''}
+				{/* 컨텐츠 시작 */}
+				
 				{/* .컨텐츠 끝 */}
 			</div>
 			{/* .Body */}
