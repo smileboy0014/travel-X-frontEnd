@@ -15,16 +15,6 @@ export function changeDateForm(date) {
   }
 }
 
-export function checkinForm(checkin,checkout, type) {
-  if(checkin && checkout && type === 'NIGHT'){
-    let strArr1 = checkin.split('-');
-    let strArr2 = checkout.split('-');
-    return strArr1[1]+'월 '+strArr1[2]+'일'+' ~ '+strArr2[1]+'월 '+strArr2[2]+'일';
-  } else {
-    return '숙소 문의';
-  }
-}
-
 export function splitDateForm(date, type) {
   let dateArr;
   if (date != null && date !== '') {
@@ -36,8 +26,24 @@ export function splitDateForm(date, type) {
 }
 
 export function priceComma(price) {
-
   return price ? price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0';
 };
+
+export function checkinForm(checkin,checkout, type) {
+  if(checkin && checkout && type === 'NIGHT'){
+    let strArr1 = checkin.split('-');
+    let strArr2 = checkout.split('-');
+    return strArr1[1]+'월 '+strArr1[2]+'일'+' ~ '+strArr2[1]+'월 '+strArr2[2]+'일';
+  } else {
+    return '숙소 문의';
+  }
+}
+
+export function peopleTypeForm(adult, child, baby) {
+  let adultStr = adult > 0 ? '성인 ' + adult + '명' : '';
+		let childStr = child > 0 ? '아동 ' + child + '명' : '';
+		let babyStr = baby > 0 ? '유아 ' + baby + '명' : '';
+		return adultStr + ((adultStr !== '' && (childStr !== '' || babyStr !== '')) ? ', ' : '') + childStr + (babyStr !== '' ? ', ' : '') + babyStr;
+}
 
 

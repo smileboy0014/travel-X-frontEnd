@@ -8,7 +8,7 @@ import SelectTopNavbar from "../../components/NavBar/SelectTopNavbar";
 import classNames from 'classnames/bind';
 import Link from 'next/link';
 import { DEFAULT_API_URL } from '../../shared/js/CommonConstant';
-import { changeDateForm, checkinForm } from '../../shared/js/CommonFun';
+import { changeDateForm, checkinForm, peopleTypeForm } from '../../shared/js/CommonFun';
 import { propertyTypeFilter } from '../../shared/js/CommonFilter';
 import * as spinnerActions from "../../redux/store/modules/spinnerOn";
 
@@ -104,14 +104,6 @@ const MyReservation = () => {
 		})
 	}
 
-	const peopleTypeForm = (adult, child, baby) => {
-		// debugger;
-		let adultStr = adult > 0 ? '성인 ' + adult + '명' : '';
-		let childStr = child > 0 ? '아동 ' + child + '명' : '';
-		let babyStr = baby > 0 ? '유아 ' + baby + '명' : '';
-		return adultStr + ((adultStr !== '' && (childStr !== '' || babyStr !== '')) ? ', ' : '') + childStr + (babyStr !== '' ? ', ' : '') + babyStr;
-	}
-
 	const showList = (type) => {
 		// console.log(`type showlist is ${type}`);
 		switch (type) {
@@ -125,7 +117,7 @@ const MyReservation = () => {
 									<div className={Style["ReservationListItemHeader-date"]}>{changeDateForm(data.orderDate)}</div>
 									<Link href={{
 										pathname: "/myInfo/myReservation/[orderId]",
-										query: { orderId: data.orderId }
+										query: { orderId: data.orderId, state: type }
 									}}>
 										<a href="#;" className={Style["ReservationListItemHeader-link"]}>상세보기</a>
 									</Link>
@@ -137,11 +129,11 @@ const MyReservation = () => {
 									</div>
 									<div className={Style["ReservationListItemBox"]}>
 										<div className={Style["ReservationListItemBoxThumb"]}>
-											{data.roomDocument.images.map((img, idx) => {
+											{data.roomDocument.images.length > 0 ? data.roomDocument.images.map((img, idx) => {
 												if (idx < 1) {
 													return (<img className={Style["ReservationListItemBoxThumb-img"]} key={idx} src={"http://" + img} alt="" />)
 												}
-											})}
+											}): ''}
 										</div>
 										<div className={Style["ReservationListItemBoxText"]}>
 											<div className={Style["ReservationListItemBoxText-title"]}>{data.roomDocument.roomName}</div>
@@ -163,12 +155,12 @@ const MyReservation = () => {
 				return (usedList && usedList.map((data, idx) => {
 					return (
 						<li className={Style["ReservationList-item"]} key={idx}>
-							<div className={Style["ReservationListItem"]} >
+							<div className={cx("ReservationListItem", "is-End")} >
 								<div className={Style["ReservationListItemHeader"]}>
 									<div className={Style["ReservationListItemHeader-date"]}>{changeDateForm(data.orderDate)}</div>
 									<Link href={{
 										pathname: "/myInfo/myReservation/[orderId]",
-										query: { orderId: data.orderId }
+										query: { orderId: data.orderId, state: type }
 									}}>
 										<a href="#;" className={Style["ReservationListItemHeader-link"]}>상세보기</a>
 									</Link>
@@ -180,11 +172,11 @@ const MyReservation = () => {
 									</div>
 									<div className={Style["ReservationListItemBox"]}>
 										<div className={Style["ReservationListItemBoxThumb"]}>
-											{data.roomDocument.images.map((img, idx) => {
+											{data.roomDocument.images.length > 0 ? data.roomDocument.images.map((img, idx) => {
 												if (idx < 1) {
 													return (<img className={Style["ReservationListItemBoxThumb-img"]} key={idx} src={"http://" + img} alt="" />)
 												}
-											})}
+											}) : ''}
 										</div>
 										<div className={Style["ReservationListItemBoxText"]}>
 											<div className={Style["ReservationListItemBoxText-title"]}>{data.roomDocument.roomName}</div>
@@ -206,12 +198,12 @@ const MyReservation = () => {
 				return (canceledList && canceledList.map((data, idx) => {
 					return (
 						<li className={Style["ReservationList-item"]} key={idx}>
-							<div className={Style["ReservationListItem"]} >
+							<div className={cx("ReservationListItem", "is-End")} >
 								<div className={Style["ReservationListItemHeader"]}>
 									<div className={Style["ReservationListItemHeader-date"]}>{changeDateForm(data.orderDate)}</div>
 									<Link href={{
 										pathname: "/myInfo/myReservation/[orderId]",
-										query: { orderId: data.orderId }
+										query: { orderId: data.orderId, state: type }
 									}}>
 										<a href="#;" className={Style["ReservationListItemHeader-link"]}>상세보기</a>
 									</Link>
@@ -223,11 +215,11 @@ const MyReservation = () => {
 									</div>
 									<div className={Style["ReservationListItemBox"]}>
 										<div className={Style["ReservationListItemBoxThumb"]}>
-											{data.roomDocument.images.map((img, idx) => {
+											{data.roomDocument.images.length > 0 ? data.roomDocument.images.map((img, idx) => {
 												if (idx < 1) {
 													return (<img className={Style["ReservationListItemBoxThumb-img"]} key={idx} src={"http://" + img} alt="" />)
 												}
-											})}
+											}): ''}
 										</div>
 										<div className={Style["ReservationListItemBoxText"]}>
 											<div className={Style["ReservationListItemBoxText-title"]}>{data.roomDocument.roomName}</div>
