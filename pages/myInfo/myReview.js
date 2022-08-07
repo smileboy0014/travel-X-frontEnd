@@ -7,7 +7,7 @@ import LayerGallery from "../../components/Review/Gallery/LayerGallery";
 import DetailTopNavbar from "../../components/NavBar/DetailTopNavbar";
 import ReviewDetailCarousel from "../../components/Card/Carousel/ReviewDetailCarousel";
 import MyReviewMoreModal from "../../components/Modal/MyReview/MyReviewMoreModal";
-import MyReviewDeleteModal from "../../components/Modal/MyReview/MyReviewDeleteModal";
+import CommonAlertModal from "../../components/Modal/Alert/CommonAlertModal"
 import classNames from 'classnames/bind';
 import Link from 'next/link';
 import { propertyTypeFilter } from '../../shared/js/CommonFilter';
@@ -17,6 +17,8 @@ import * as spinnerActions from "../../redux/store/modules/spinnerOn";
 
 const cx = classNames.bind(Style);
 
+const alertContent = '삭제된 후기는 복구할 수 없습니다.';
+
 const MyReview = () => {
 	const router = useRouter();
 	const dispatch = useDispatch();
@@ -25,14 +27,12 @@ const MyReview = () => {
 	const [from, setFrom] = useState(0);
 	const [size, setSize] = useState(10);
 	const [loading, setLoading] = useState(false);
-	const [, updateState] = useState();
-	const forceUpdate = useCallback(() => updateState({}), []);
 	const [returnCallHttpMethod, setReturnCallHttpMethod] = useState(false);
 	const [myReviewData, setMyReviewData] = useState([]);
 	const [layerGalleryList, setLayerGalleryList] = useState([]);
 	const [layerGalleryOpen, setLayerGalleryOpen] = useState(false);
 	const [myReviewMoreModalOpen, setMyReviewMoreModalOpen] = useState(false);
-	const [myReviewDeleteModalOpen, setMyReviewDeleteModalOpen] = useState(false);
+	const [alertModalOpen, setAlertModalOpen] = useState(false);
 	const [selectReview, setSelectReview] = useState({});
 
 	const getMyReviews = () => {
@@ -71,10 +71,29 @@ const MyReview = () => {
 		}).catch((error) => {
 			console.log(error);
 			setError(true);
-		}).finally(()=>{
+		}).finally(() => {
 			setLoading(false);
 		})
+	}
 
+	const reviewDelete = (data) => {
+
+		axios({
+			method: "DELETE",
+			url: DEFAULT_API_URL + "/review/delete",
+			params: {
+				reviewId: data.id,
+			},
+
+		}).then((res) => {
+			console.log(`delete review successed!!`);
+		})
+			.catch((error) => {
+				console.log(error);
+			})
+			.finally(() => {
+				setReturnCallHttpMethod(true);
+			})
 	}
 
 	const handleViewDetailCarousel = (item) => {
@@ -115,7 +134,8 @@ const MyReview = () => {
 
 		if (type === 'delete') {
 			setMyReviewMoreModalOpen(false);
-			setMyReviewDeleteModalOpen(true);
+			// setMyReviewDeleteModalOpen(true);
+			setAlertModalOpen(true)
 		} else {
 			router.push('/myInfo/modifyMyReview');
 		}
@@ -129,16 +149,13 @@ const MyReview = () => {
 			getMyReviews();
 			setReturnCallHttpMethod(false);
 		}
-	
+
 	}, [returnCallHttpMethod])
 
 	useEffect(() => {
 		if (layerGalleryList != null && layerGalleryList.length > 0) {
 			setLayerGalleryOpen(true);
 		}
-		return function cleanup() {
-      layerGalleryList.length = 0;
-    };
 	}, [layerGalleryList]);
 
 	useEffect(() => {
@@ -152,6 +169,7 @@ const MyReview = () => {
 	useEffect(() => {
 		// debugger;
 		if (userInfo.id) {
+			console.log("userInfo");
 			getMyReviews();
 		}
 	}, [userInfo])
@@ -255,9 +273,11 @@ const MyReview = () => {
 			<LayerGallery data={layerGalleryList} isOpen={layerGalleryOpen} onRequestClose={() => setLayerGalleryOpen(false)} />
 			{/* <!-- .LayerGallery --> */}
 			<MyReviewMoreModal isOpen={myReviewMoreModalOpen} onRequestClose={() => setMyReviewMoreModalOpen(false)} returnType={(type) => execReturnType(type)} />
-			<MyReviewDeleteModal selectReview={selectReview} isOpen={myReviewDeleteModalOpen}
-				onRequestClose={() => setMyReviewDeleteModalOpen(false)}
-				methodCallBack={(type) => setReturnCallHttpMethod(type)}
+			<CommonAlertModal selectData={selectReview}
+				content={alertContent}
+				isOpen={alertModalOpen}
+				onRequestClose={(state) => setAlertModalOpen(state)}
+				methodCallBack={(data) => reviewDelete(data)}
 			/>
 		</div>
 	);
