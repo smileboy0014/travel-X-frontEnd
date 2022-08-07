@@ -5,7 +5,7 @@ import classNames from 'classnames/bind';
 
 const cx = classNames.bind(Style);
 
-const MyReviewMoreModal = ({ isOpen, onRequestClose, returnType}) => {
+const MyReviewMoreModal = ({selectData, isOpen, onRequestClose, returnType}) => {
   // const [returnType, setReturnType] = useState('');
   // debugger;
   const onClickHandler = (type) =>{
