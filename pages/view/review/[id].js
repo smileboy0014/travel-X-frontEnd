@@ -106,11 +106,21 @@ const Review = () => {
   }
 
   const handleIndividualStarScore = (item) => {
-    let averageScore = Math.round((item.kindnessScore + item.cleanScore + item.comfortScore + item.facilityScore + item.priceScore) / 5);
+    // let averageScore = Math.round((item.kindnessScore + item.cleanScore + item.comfortScore + item.facilityScore + item.priceScore) / 5);
+    let averageScore = ((item.kindnessScore + item.cleanScore + item.comfortScore + item.facilityScore + item.priceScore) / 5).toFixed(1);
     item.averageScore = averageScore;
-    if (averageScore < 1) {
-      averageScore = 1;
-    }
+    // if (averageScore < 1) {
+    //   averageScore = 1;
+    // }
+
+    return (
+      <>
+        <div className={Style["BasicGradeStar"]}>
+          <span className={cx("BasicGradeStar-item", "check")}></span>
+        </div>
+        <div className={Style["BasicGradeCount"]}>{averageScore} /5</div>
+      </>
+    );
     switch (averageScore) {
       case 1:
         return (
@@ -322,7 +332,8 @@ const Review = () => {
       })
 
       // 리뷰 갯수가 20개 이상일 때
-      if ((reviewData.length < reviewSummary.reviewCount) && reviewLength < reviewData.length) {
+      // if ((reviewData.length < reviewSummary.reviewCount) && reviewLength < reviewData.length) {
+      if ((reviewData.length < reviewSummary.reviewCount)) {
         // console.log('총 리뷰 갯수가 20 이상이야!!!!!');
 
         if (reviewData.length < 21) {
@@ -377,7 +388,7 @@ const Review = () => {
     }
   }, [returnCallHttpMethod]);
 
-  useEffect(()=>{
+  useEffect(() => {
     dispatch(reviewSearchType.setReviewSearchType("DATE"));
   }, [])
 
@@ -455,10 +466,13 @@ const Review = () => {
                     <div className={Style["ReviewPostItem"]} key={index} >
                       <div className={Style["ReviewPostItemMeta"]}>
                         <div className="ReviewPostItemMetaHead">
-                          <div className={Style["ReviewPostItemMetaHead-name"]}>{item.userId}</div>
+                          <div className={Style["ReviewPostItemMetaHead-name"]}>{item.userNickName ? item.userNickName : ''}</div>
                           <div className={Style["BasicGrade"]}>
-                            {handleIndividualStarScore(item)}
-
+                            {/* {handleIndividualStarScore(item)} */}
+                            <div className={Style["BasicGradeStar"]}>
+                              <span className={cx("BasicGradeStar-item", "check")}></span>
+                            </div>
+                            <div className={Style["BasicGradeCount"]}>{item.averageScore} /5</div>
                           </div>
                         </div>
                         <div className={Style["ReviewPostItemMeta-date"]}>{handleFormattingDate(item.date)}</div>

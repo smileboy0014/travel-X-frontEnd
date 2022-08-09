@@ -18,7 +18,7 @@ export default function useInfiniteSearch(
   // debugger;
   // const [fromPage, setFromPage] = useState(0);
   const [totalHitCount, setTotalHitCount] = useState(1);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [rooms, setRooms] = useState([]);
   const [returnCallHttpMethod, setReturnCallHttpMethod] = useState(true);
@@ -159,12 +159,12 @@ export default function useInfiniteSearch(
             ...prevState,
             item: res.data.roomDocumentList,
           }));
-
-          setLoading(false);
         })
         .catch((error) => {
           console.log(error);
           setError(true);
+        }).finally(()=>{
+          setLoading(false);
         });
     }
 
@@ -261,12 +261,14 @@ export default function useInfiniteSearch(
           let newArr = {item:rooms.item.concat(res.data.roomDocumentList)};
           setRooms(newArr);
           // console.log(`그전 방 크기는 !!!!!! ${rooms.item.length}`);
-          setLoading(false);
+          
           setReturnCallHttpMethod(false);
         })
         .catch((error) => {
           console.log(error);
           setError(true);
+        }).finally(()=>{
+          setLoading(false);
         });
     }
 
