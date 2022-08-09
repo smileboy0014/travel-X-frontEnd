@@ -219,7 +219,7 @@ const MyReview = () => {
 								</div>
 								<div className={Style["ReviewPostItemMeta"]}>
 									<div className="ReviewPostItemMetaHead">
-										<div className={Style["ReviewPostItemMetaHead-name"]}>{item.userNickName ? item.userNickName : item.userId}</div>
+										<div className={Style["ReviewPostItemMetaHead-name"]}>{item.userNickName ? item.userNickName : ''}</div>
 
 										<div className={Style["BasicGrade"]}>
 

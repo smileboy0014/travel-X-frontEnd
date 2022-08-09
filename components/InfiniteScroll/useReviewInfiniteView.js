@@ -58,6 +58,7 @@ const useReviewInfiniteVeiw = (roomId, roomType, fromPageNumber, toPageNumber, s
         //   ...res.data]
 
         // ));
+        console.log(res.data);
         setReviewData(res.data);
         setLoading(false);
         // console.log(`getReviews result is ${reviewSummary.averageReviewScore}`);
