@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import * as searchResultActions from "../../redux/store/modules/searchResult";
+import * as spinnerActions from "../../redux/store/modules/spinnerOn";
 import mapBound from "../../redux/store/modules/mapBound";
 import {SEARCH_API_URL} from '../../shared/js/CommonConstant';
 
@@ -17,7 +18,7 @@ export default function useInfiniteSearch(
   // debugger;
   // const [fromPage, setFromPage] = useState(0);
   const [totalHitCount, setTotalHitCount] = useState(1);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [rooms, setRooms] = useState([]);
   const [returnCallHttpMethod, setReturnCallHttpMethod] = useState(true);
@@ -117,6 +118,12 @@ export default function useInfiniteSearch(
     // console.log("99999999: " + mapBoundSouthWestValue["lng"]);
   }, [mapBoundValue]);
 
+  // 스피너 관련 useEffect
+  useEffect(() => {
+		// console.log(loading);
+		dispatch(spinnerActions.setState(loading));
+	}, [loading]);
+
   // SRP에서 검색 시(필터 검색 포함) 일반적으로 가져오는 API
   useEffect(() => {
     if (query != undefined) {
@@ -131,8 +138,8 @@ export default function useInfiniteSearch(
       // console.log('searchTypeValue', searchTypeValue);
       // console.log('useType', useType);
       const param = setParam();
-      console.log(`param type is ${param.types}`);
-      console.log(`param useType is ${param.searchType}`);
+      // console.log(`param type is ${param.types}`);
+      // console.log(`param useType is ${param.searchType}`);
       // debugger;
       axios({
         method: "GET",
@@ -141,7 +148,8 @@ export default function useInfiniteSearch(
       })
         .then((res) => {
           // debugger;
-          console.log(res.data.roomDocumentList);
+          // console.log(`######### API length is ${res.data.roomDocumentList.length}, totalCount is ${res.data.totalHitCount} #################`);
+          // console.log(res.data.roomDocumentList);
           dispatch(searchResultActions.saveData(res.data.roomDocumentList));
           // console.log(`totalHitCount is ${res.data.totalHitCount}`);
           // debugger;
@@ -203,7 +211,6 @@ export default function useInfiniteSearch(
             alert('검색 결과가 없습니다.');
             return;
           }
-
           dispatch(searchResultActions.saveData(res.data.roomDocumentList));
 
           setTotalHitCount(res.data.totalHitCount);
@@ -250,7 +257,7 @@ export default function useInfiniteSearch(
           // dispatch(searchResultActions.saveData(res.data.roomDocumentList));
 
           setTotalHitCount(res.data.totalHitCount);
-          console.log(`totalHitCount is ${totalHitCount}`);
+          // console.log(`totalHitCount is ${totalHitCount}`);
           let newArr = {item:rooms.item.concat(res.data.roomDocumentList)};
           setRooms(newArr);
           // console.log(`그전 방 크기는 !!!!!! ${rooms.item.length}`);

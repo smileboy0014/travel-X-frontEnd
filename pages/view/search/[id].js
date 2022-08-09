@@ -15,12 +15,10 @@ import CalendarModal from "../../../components/Modal/Calendar/CalendarModal";
 import ListDetailMap from "../../../components/Modal/Map/ListDetailMap";
 import * as scrollY from "../../../redux/store/modules/scrollY";
 import classNames from 'classnames/bind';
-import Link from 'next/link'
 
 const cx = classNames.bind(Style);
 
 const Post = ({ item }) => {
-  const [showModal, setShowModal] = useState(false);
   const [recentListView, setRecentListView] = useState(false);
   const [listFilterIsUp, setListFilterIsUp] = useState(false);
   const [listFilterIsNone, setListFilterIsNone] = useState(false);
@@ -89,6 +87,7 @@ const Post = ({ item }) => {
 
   const filterCallbackHandler = () => {
     document.body.scrollTop = 0;
+    setRoomLength(0);
     dispatch(scrollY.scrollY(0));
   }
 
@@ -155,7 +154,9 @@ const Post = ({ item }) => {
         setRoomLength(rooms.item.length);
 
         // 방 갯수가 20개 이상일 때
-        if ((rooms.item.length < totalHitCount) && roomLength < rooms.item.length) {
+        // debugger;
+        // if ((rooms.item.length < totalHitCount) && roomLength <= rooms.item.length) {
+        if ((rooms.item.length < totalHitCount) && (roomLength != rooms.item.length )) {
           console.log('총 방 갯수가 20 이상이야!!!!!');
           // 바로 rooms 배열을 수정하려고 하면 에러가 나서 한번 새로운 배열을 만들어 주고 수정
           let list = rooms.item.map((value) => {
