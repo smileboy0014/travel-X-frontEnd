@@ -24,8 +24,6 @@ const MyReservationDetailView = () => {
 	const [error, setError] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const userInfo = useSelector((state) => state.userInfo.info);
-	// 만약 리뷰 작성이 완료 됐거나 리뷰 작성 기한이 지났으면 true, 리뷰 작성이 가능하면 false
-	const [writtenReview, setWrittenReview] = useState(false);
 	// 예약취소가 가능하면 true, 예약취소가 불가능(이미 체크 인 시간이 지난 경우) 하면 false
 	const [possibleCancel, setPossibleCancel] = useState(false);
 	const [orderRoom, setOrderRoom] = useState(null);
@@ -129,7 +127,7 @@ const MyReservationDetailView = () => {
 										</div>
 									</div>
 								</div>
-								{state === 'canceled' ? '' : <div className="ReservSingleHeaderBtn">
+								{state !== 'used' ? '' : <div className="ReservSingleHeaderBtn">
 									{/*<div className="ReservSingleHeaderBtn-btn is-disable">후기 작성하기 (30일 이내)</div> 후기작성 종료 */}
 									{/*<div className="ReservSingleHeaderBtn-btn is-disable">후기 작성 완료</div> 후기작성 완료 */}
 									{/*<div className="ReservSingleHeaderBtn-btn is-disable">후기 작성 기간 만료</div> 후기작성 기간 만료 */}
@@ -137,9 +135,9 @@ const MyReservationDetailView = () => {
 										pathname: "/myInfo/addMyReview/[roomId]",
 										query:{roomId:orderRoom.roomDocument.roomId}
 									}}> */}
-										<button type="button" className={writtenReview ? cx("ReservSingleHeaderBtn-btn", "is-disable") : cx("ReservSingleHeaderBtn-btn")}
-											onClick={()=> !writtenReview ? moveToPage() : '' }>
-											{!writtenReview ? reviewBtnContents[0] : reviewBtnContents[1]}</button>
+										<button type="button" className={orderRoom.reviewWritable ? cx("ReservSingleHeaderBtn-btn") : cx("ReservSingleHeaderBtn-btn", "is-disable")}
+											onClick={()=> orderRoom.reviewWritable  ? moveToPage() : '' }>
+											{(orderRoom.reviewWritable) ? reviewBtnContents[0] : reviewBtnContents[1]}</button>
 									{/* </Link> */}
 								</div>
 								}
