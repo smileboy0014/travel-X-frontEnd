@@ -50,6 +50,7 @@ body {
 	word-break:keep-all; 
 	text-size-adjust:none; 
 	overflow-y:scroll;
+  z-index: 1100;
 }
 
 h1,h2,h3,h4,h5,h6 {
