@@ -7,7 +7,7 @@ import LayerGallery from "../../components/Review/Gallery/LayerGallery";
 import DetailTopNavbar from "../../components/NavBar/DetailTopNavbar";
 import ReviewDetailCarousel from "../../components/Card/Carousel/ReviewDetailCarousel";
 import MyReviewMoreModal from "../../components/Modal/MyReview/MyReviewMoreModal";
-import CommonAlertModal from "../../components/Modal/Alert/CommonAlertModal"
+import CommonAlertModal from "../../components/Modal/Alert/CommonAlertModal";
 import classNames from 'classnames/bind';
 import Link from 'next/link';
 import { propertyTypeFilter } from '../../shared/js/CommonFilter';
@@ -17,7 +17,7 @@ import * as spinnerActions from "../../redux/store/modules/spinnerOn";
 
 const cx = classNames.bind(Style);
 
-const alertContent = '삭제된 후기는 복구할 수 없습니다.';
+const alertContent = "삭제된 후기는 다시 복구할 수 없습니다. \n 삭제하시겠습니까?";
 
 const MyReview = () => {
 	const router = useRouter();

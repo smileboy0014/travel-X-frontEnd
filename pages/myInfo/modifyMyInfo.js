@@ -13,12 +13,15 @@ import { PUBLISHER_KAKAO, PUBLISHER_NAVER, PUBLISHER_TRAVELX } from "../../share
 import { DeleteCookie } from './../../components/Button/Login/Utils/CookieUtil';
 import BirthdayModal from '../../components/Modal/SignUp/BirthdayModal';
 import AddressModal from '../../components/Modal/SignUp/AddressModal';
+import CommonAlertModal from "../../components/Modal/Alert/CommonAlertModal";
 // import { changeSpinnerState, CommonFun } from "../../shared/js/CommonFun";
 import * as spinnerActions from "../../redux/store/modules/spinnerOn";
 // import {Spinner} from "../../components/Spinner/Spinner";
-import {DEFAULT_API_URL} from '../../shared/js/CommonConstant'
+import { DEFAULT_API_URL } from '../../shared/js/CommonConstant'
 
 const cx = classNames.bind(Style);
+
+const alertContent = '삭제된 회원은 다시 복구할 수 없습니다. \n 탈퇴하시겠습니까?';
 
 const ModifyMyInfo = () => {
 	// debugger;
@@ -28,6 +31,7 @@ const ModifyMyInfo = () => {
 	// console.log(userInfo);
 	// male, female 로 남자, 여자 나눔
 	const [sexType, setSexType] = useState("MALE");
+	const [alertModalOpen, setAlertModalOpen] = useState(false);
 	const [birthday, setBirthday] = useState({ year: "", month: "", day: "" })
 	const [user, setUser] = useState({
 		id: "",
@@ -39,7 +43,7 @@ const ModifyMyInfo = () => {
 			name: "",
 			phoneNumber: "",
 			birthday: "",
-			gender:  "MALE",
+			gender: "MALE",
 			location: ""
 		}
 	});
@@ -94,13 +98,13 @@ const ModifyMyInfo = () => {
 		// console.log(user);
 	}
 
-	const splitTheBirthdayData = (value) =>{
-		return { year: value.substring(0, 4), month: value.substring(4, 6), day: value.substring(6, 8)  };
+	const splitTheBirthdayData = (value) => {
+		return { year: value.substring(0, 4), month: value.substring(4, 6), day: value.substring(6, 8) };
 	}
 
 	const setBirthdayAndLocationValue = (data) => {
 		if (data) {
-			setValues({ ...values, birthday: splitTheBirthdayData(data.birthday), location: data.location});
+			setValues({ ...values, birthday: splitTheBirthdayData(data.birthday), location: data.location });
 		}
 	}
 
@@ -116,10 +120,10 @@ const ModifyMyInfo = () => {
 	}
 	const combineBirthdayFun = (data) => {
 
-		checkNumber('month',data, data.month.toString());
-		checkNumber('day',data, data.day.toString());
+		checkNumber('month', data, data.month.toString());
+		checkNumber('day', data, data.day.toString());
 		console.log(data);
-		return ''+data.year + data.month + data.day;
+		return '' + data.year + data.month + data.day;
 	}
 
 	const modifyExtraInfo = () => {
@@ -138,7 +142,7 @@ const ModifyMyInfo = () => {
 		formData.append('userId', user.id);
 
 		debugger;
-		axios.post(DEFAULT_API_URL+'/auth/user/modifyExtraInfo', formData)
+		axios.post(DEFAULT_API_URL + '/auth/user/modifyExtraInfo', formData)
 			.then((res) => {
 				if (res.data !== undefined) {
 					console.log('success to modify user ExtraInfo');
@@ -150,8 +154,8 @@ const ModifyMyInfo = () => {
 	}
 
 	// 회원 탈퇴
-	const handleWithdrawer = () => {
-		if (confirm('정말로 탈퇴하시겠습니까?')) {
+	const userDelete = () => {
+		
 			const formData = new FormData();
 			formData.append('authPublisher', userInfo.pub);
 			formData.append('userId', userInfo.id);
@@ -160,7 +164,7 @@ const ModifyMyInfo = () => {
 
 			axios({
 				method: "POST",
-				url: DEFAULT_API_URL+"/auth/user/delete",
+				url: DEFAULT_API_URL + "/auth/user/delete",
 				data: formData,
 			}).then((res) => {
 				dispatch(userInfoActions.setUserInfo({ pub: null, id: null, auth: false, nickName: null, userExtraInfo: {} }));
@@ -168,7 +172,7 @@ const ModifyMyInfo = () => {
 			}).catch((e) => {
 				console.error(e.response);
 			});
-	
+
 			switch (userInfo.pub) {
 				case PUBLISHER_KAKAO:
 					if (window.Kakao.Auth.getAccessToken()) {
@@ -183,28 +187,28 @@ const ModifyMyInfo = () => {
 								alert(error.msg);
 							},
 						});
-	
+
 						window.Kakao.Auth.setAccessToken(null);
 					}
-	
+
 					break;
 				case PUBLISHER_NAVER:
-	
+
 					break;
-	
+
 				case PUBLISHER_TRAVELX:
-	
+
 					break;
-	
+
 				default:
-	
+
 			}
-	
+
 			router.push('/')
-		}
+		
 	};
 
-	useEffect(()=>{
+	useEffect(() => {
 		// debugger;
 		// Spinner(true);
 		// chnageState(true);
@@ -215,7 +219,7 @@ const ModifyMyInfo = () => {
 	}, [])
 
 	useEffect(() => {
-		const objCopy = {...userInfo};
+		const objCopy = { ...userInfo };
 		if (userInfo.id) {
 			// console.log(userInfo);
 			// 회원가입 할때 추가정보를 하나도 입력해주지 않은 경우
@@ -238,7 +242,7 @@ const ModifyMyInfo = () => {
 			// setTimeout(()=>{
 			// 	dispatch(spinnerActions.setState(false));
 			// }, 500)
-			
+
 		}
 
 	}, [userInfo])
@@ -262,7 +266,7 @@ const ModifyMyInfo = () => {
 					<div className={Style["ApplySection"]}>
 						<div className={"site-container"}>
 							<div className={Style["ApplyHeader"]}>
-								<h2 className={Style["ApplyHeader-name"]}>{user.nickName ? user.nickName+'님' : '닉네임을 입력해주세요.'}
+								<h2 className={Style["ApplyHeader-name"]}>{user.nickName ? user.nickName + '님' : '닉네임을 입력해주세요.'}
 									<Link href={{
 										pathname: "/myInfo/modifyMyName"
 
@@ -327,7 +331,7 @@ const ModifyMyInfo = () => {
 											<div className={Style["ReservationBirthday"]}>
 												<ul className={Style["ReservationBirthday-inner"]}>
 													<li className={Style["ReservationBirthday-item"]}>
-														<input type="number" placeholder={2000} defaultValue={values.birthday.year} readOnly 
+														<input type="number" placeholder={2000} defaultValue={values.birthday.year} readOnly
 															className={Style["ReservationBirthday-input"]} />
 
 													</li>
@@ -336,7 +340,7 @@ const ModifyMyInfo = () => {
 															className={Style["ReservationBirthday-input"]} />
 													</li>
 													<li className={Style["ReservationBirthday-item"]}>
-														<input type="number" placeholder={14} defaultValue={values.birthday.day} readOnly 
+														<input type="number" placeholder={14} defaultValue={values.birthday.day} readOnly
 															className={Style["ReservationBirthday-input"]} />
 													</li>
 												</ul>
@@ -379,7 +383,7 @@ const ModifyMyInfo = () => {
 											<label className={Style["ReservationInput-label"]} htmlFor="Reservation-user">현 주소</label>
 										</dt>
 										<dd className={Style["ReservationInput-text"]} onClick={() => setAddressModalOpen(true)}>
-											<input type="tel" className={cx("ReservationInput-input", "ico-Arrow")} readOnly 
+											<input type="tel" className={cx("ReservationInput-input", "ico-Arrow")} readOnly
 												defaultValue={values.location} placeholder="지역선택" />
 
 										</dd>
@@ -394,7 +398,7 @@ const ModifyMyInfo = () => {
 					<div className={cx("ApplySection", "Last")}>
 						<div className={"site-container"}>
 							<a href="#;" className={Style["ApplySecession"]}>
-								<div className={Style["ApplySecession-title"]} onClick={handleWithdrawer}>회원탈퇴</div>
+								<div className={Style["ApplySecession-title"]} onClick={() => setAlertModalOpen(true)}>회원탈퇴</div>
 							</a>
 						</div>
 					</div>
@@ -421,6 +425,13 @@ const ModifyMyInfo = () => {
 					callback={handleAddressCallback}
 					initValue={values.location}
 
+				/>
+
+				<CommonAlertModal 
+					content={alertContent}
+					isOpen={alertModalOpen}
+					onRequestClose={(state) => setAlertModalOpen(state)}
+					methodCallBack={() => userDelete()}
 				/>
 			</div>
 			{/* .Body */}

@@ -35,7 +35,7 @@ const CommonAlertModal = ({ selectData, content, isOpen, onRequestClose, methodC
             ></button>
           </div>
           <div className={Style["CenterPopBoxBody"]}>
-            <p className={Style["CenterPopBoxBody-text"]}>{content}<br />삭제하시겠습니까?</p>
+            <p className={Style["CenterPopBoxBody-text"]}>{content}</p>
           </div>
           <div className="CenterPopBoxBtn">
             <ul className={Style["CenterPopBoxBtn-inner"]}>

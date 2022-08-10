@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import Style from "../../styles/Component.module.css";
 import DetailTopNavbar from "../../components/NavBar/DetailTopNavbar";
 import classNames from 'classnames/bind';
-
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper";
 import "swiper/css";
