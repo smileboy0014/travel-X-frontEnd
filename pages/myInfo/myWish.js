@@ -1,19 +1,22 @@
 import { React, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import axios from 'axios';
 import Style from "../../styles/Component.module.css";
 import classNames from 'classnames/bind';
 import MyWishCard from '../../components/Card/MyWishCard';
+import * as spinnerActions from "../../redux/store/modules/spinnerOn";
 
 
 const cx = classNames.bind(Style);
 
 const MyWish = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
 	const userInfo = useSelector((state) => state.userInfo.info);
 
   const [rooms, setRooms] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const handleClick = (item, index) => {
     
@@ -53,12 +56,16 @@ const MyWish = () => {
       setRooms([...res.data]);
     }).catch((e) => {
       console.error(e);
-    });
+    }).finally(() => setLoading(false));
   };
 
   useEffect(() => {
     getData();
   }, [userInfo.id]);
+
+  useEffect(() => {
+    dispatch(spinnerActions.setState(loading));
+  }, [loading]);
 
   return (
     <div className="site">

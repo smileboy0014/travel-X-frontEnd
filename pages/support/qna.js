@@ -1,17 +1,20 @@
 import { React, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Style from "../../styles/Component.module.css";
 import QnaList from '../../components/Qna/QnaList';
 import QnaApply from '../../components/Qna/QnaApply';
 import axios from 'axios';
+import * as spinnerActions from "../../redux/store/modules/spinnerOn";
 
 const Qna = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
 
 	const userInfo = useSelector((state) => state.userInfo.info);
   const [page, setPage] = useState('list');
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);  
 
   const handleClick = (e, item, index) => {
     e.preventDefault();
@@ -63,7 +66,7 @@ const Qna = () => {
       setData([...res.data]);
     }).catch((e) => {
       console.error(e);
-    });
+    }).finally(() => setLoading(false));
   }
 
   useEffect(() => {
@@ -71,6 +74,10 @@ const Qna = () => {
       fetchInqueryList();
     }
   }, [page]);
+
+  useEffect(() => {
+    dispatch(spinnerActions.setState(loading));
+  }, [loading]);
 
   return (
     <div className="site">

@@ -26,7 +26,7 @@ const MyReview = () => {
 	const userInfo = useSelector((state) => state.userInfo.info);
 	const [from, setFrom] = useState(0);
 	const [size, setSize] = useState(10);
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 	const [returnCallHttpMethod, setReturnCallHttpMethod] = useState(false);
 	const [myReviewData, setMyReviewData] = useState([]);
 	const [layerGalleryList, setLayerGalleryList] = useState([]);

@@ -1,10 +1,12 @@
 import { React, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { useDispatch } from "react-redux";
 import Style from "../../styles/Component.module.css";
+import * as spinnerActions from "../../redux/store/modules/spinnerOn";
 
 const Setting = () => {
   const router = useRouter();
-
+  const dispatch = useDispatch();
   const [values, setValues] = useState([]);
 
   const handleBackClick = () => {
@@ -12,7 +14,7 @@ const Setting = () => {
   };
 
   useEffect(() => {
-
+    dispatch(spinnerActions.setState(false));
   }, []);
 
   return (

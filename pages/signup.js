@@ -2,6 +2,7 @@ import { React, useEffect, useState, Component } from 'react';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import * as userInfoActions from "../redux/store/modules/userInfo";
+import * as spinnerActions from "../../../redux/store/modules/spinnerOn";
 import Style from '../styles/Component.module.css';
 import axios from 'axios';
 import { PUBLISHER_KAKAO, PUBLISHER_NAVER, PUBLISHER_TRAVELX } from './../shared/js/CommonConstant';
@@ -22,6 +23,7 @@ export const SignUp = () => {
   const { gender, nickName } = router.query;
 	const { info } = useSelector((state) => state.userInfo);
   const [step, setStep] = useState(1);
+  const [loading, setLoading] = useState(true);
   const [agreeValues, setAgreeValues] = useState({
     agreeAge: false,
     agreeService: false,
@@ -113,6 +115,7 @@ export const SignUp = () => {
     formData.append('nickName', nicknameValues.nickName);
 
     try {
+      setLoading(true);
       const registerResponse = await axios.post("http://shineware.iptime.org:8081/auth/user/register", formData);
       // console.log(registerResponse);
 
@@ -130,6 +133,8 @@ export const SignUp = () => {
       console.error(e);
       
       return result;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -197,7 +202,12 @@ export const SignUp = () => {
         // TODO: 로그인 실패 팝업
     }
 
+    setLoading(false);
   }, []);
+
+  useEffect(() => {
+    dispatch(spinnerActions.setState(loading));
+  }, [loading]);
 
   useEffect(() => {
     // console.log(agreeValues);
