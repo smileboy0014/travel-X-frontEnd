@@ -5,7 +5,7 @@ import Style from "../../styles/Component.module.css";
 import classNames from 'classnames/bind';
 import axios from 'axios';
 import { EmailValidate, PhoneValidate } from './../../shared/js/CommonValidate';
-import * as spinnerActions from "../../../redux/store/modules/spinnerOn";
+import * as spinnerActions from "../../redux/store/modules/spinnerOn";
 
 const cx = classNames.bind(Style);
 
