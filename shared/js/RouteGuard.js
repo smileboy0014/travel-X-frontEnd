@@ -13,7 +13,7 @@ const RouteGuard = ({ children }) => {
   
   const [authorized, setAuthorized] = useState(false);
 
-  const privatePaths = ['/view/reserve', '/myInfo/modifyMyInfo'];
+  const privatePaths = ['/view/reserve', '/myInfo/modifyMyInfo', '/support/qna'];
   const queryPaths = ['/info'];
 
   const goLoginPage = () => {
