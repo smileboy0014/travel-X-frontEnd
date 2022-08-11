@@ -2,7 +2,7 @@ import { React, useEffect, useState, Component } from 'react';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import * as userInfoActions from "../redux/store/modules/userInfo";
-import * as spinnerActions from "../../../redux/store/modules/spinnerOn";
+import * as spinnerActions from "../redux/store/modules/spinnerOn";
 import Style from '../styles/Component.module.css';
 import axios from 'axios';
 import { PUBLISHER_KAKAO, PUBLISHER_NAVER, PUBLISHER_TRAVELX } from './../shared/js/CommonConstant';
