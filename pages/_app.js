@@ -68,7 +68,7 @@ function TravelX({ Component, pageProps }) {
     return () => {
       document.body.removeEventListener("scroll", listener);
       // router.events.off('routeChangeStart', handleRouteChange);
-      window.Kakao.cleanup();
+      // window.Kakao.cleanup();
     };
   }, []);
 
@@ -82,7 +82,10 @@ function TravelX({ Component, pageProps }) {
         src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=ra1rvd631l&submodules=geocoder"
         strategy="beforeInteractive"
       />
-      <Script src="https://developers.kakao.com/sdk/js/kakao.js" strategy="beforeInteractive" />
+      <Script 
+        src="https://developers.kakao.com/sdk/js/kakao.js" 
+        strategy="beforeInteractive" 
+      />
       <Spinner></Spinner>
       <ScrollTopArrow></ScrollTopArrow>
       <RouteGuard>
