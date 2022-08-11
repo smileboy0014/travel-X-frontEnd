@@ -214,7 +214,7 @@ const ModifyMyInfo = () => {
 		// chnageState(true);
 		// changeSpinnerState(true);
 		debugger;
-		dispatch(spinnerActions.setState(true))
+		dispatch(spinnerActions.setState(false))
 
 	}, [])
 

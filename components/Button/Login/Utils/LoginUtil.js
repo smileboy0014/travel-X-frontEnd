@@ -84,6 +84,9 @@ export const CheckLogin = async (authPublisher) => {
   
   switch (authPublisher) {
     case PUBLISHER_KAKAO: 
+      console.log(window.Kakao);
+      if (!window.Kakao || !window.Kakao.Auth) return result;
+      
       const accessToken = window.Kakao.Auth.getAccessToken();
 
       if (accessToken) {

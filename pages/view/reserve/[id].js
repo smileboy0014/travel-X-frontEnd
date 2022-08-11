@@ -4,11 +4,12 @@ import axios from "axios";
 import Link from "next/link";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
-import * as scrollY from "../../../redux/store/modules/scrollY";
 import classNames from 'classnames/bind';
 import DetailTopNavbar from "../../../components/NavBar/DetailTopNavbar";
 import {priceComma}  from '../../../shared/js/CommonFun';
 import { KorEngNumValidate, PhoneValidate } from './../../../shared/js/CommonValidate';
+import * as scrollY from "../../../redux/store/modules/scrollY";
+import * as spinnerActions from "../../../redux/store/modules/spinnerOn";
 
 
 const cx = classNames.bind(Style);
@@ -20,6 +21,7 @@ const ReserveView = () => {
 
   const [checkIn, setCheckIn] = useState(null);
   const [checkOut, setCheckOut] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const router = useRouter();
   const dispatch = useDispatch();
@@ -109,7 +111,8 @@ const ReserveView = () => {
   };
 
   const handlePayButton = () => {
-
+    setLoading(true);
+    
     const formData = new FormData();
     formData.append("adult", adultCounterValue);
     formData.append("child", childCounterValue);
@@ -141,7 +144,7 @@ const ReserveView = () => {
       router.push('/myInfo/myReservation');
     }).catch((e) => {
       console.error(e);
-    });
+    }).finally(() => setLoading(false));
   };
 
   const fetchRoomInfo = () => {
@@ -207,9 +210,13 @@ const ReserveView = () => {
           setExtraOptionStateList(optionStateList);
         }
 
-      });
+      }).finally(() => setLoading(false));
     }
   }
+
+  useEffect(() => {
+    dispatch(spinnerActions.setState(loading));
+  }, [loading]);
 
   useEffect(() => {
     const nameVal = KorEngNumValidate(values.name);
@@ -237,9 +244,9 @@ const ReserveView = () => {
   }, [extraOptionStateList])
 
   useEffect(() => {
-    if (!userInfo.id) {
-      router.push('/login');
-    }
+    // if (!userInfo.id) {
+    //   router.push('/login');
+    // }
   }, []);
 
   return (

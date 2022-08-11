@@ -8,13 +8,14 @@ import Axios from "axios";
 import Link from "next/link";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
-import * as scrollY from "../../../redux/store/modules/scrollY";
 import DetailCalendarModal from "../../../components/Modal/Calendar/DetailCalendarModal";
 import PesonalModal from "../../../components/Modal/Personal/PersonalModal";
 import { propertyTypeFilter } from '../../../shared/js/CommonFilter';
 import classNames from 'classnames/bind';
 import { priceComma, splitDateForm } from '../../../shared/js/CommonFun';
 import { useTypeFilter } from '../../../shared/js/CommonFilter';
+import * as scrollY from "../../../redux/store/modules/scrollY";
+import * as spinnerActions from "../../../redux/store/modules/spinnerOn";
 
 const cx = classNames.bind(Style);
 
@@ -27,6 +28,7 @@ const DetailView = () => {
   const [personalModalOpen, setPersonalModalOpen] = useState(false);
   const scrollYValue = useSelector(({ scrollY }) => scrollY.value);
   const [changeStyle, setChangeStyle] = useState(false);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
   const dispatch = useDispatch();
   // const { id, useType, person } = router.query;
@@ -122,7 +124,11 @@ const DetailView = () => {
       const { id, useType } = router.query;
       setQueries({ id: id, useType: useType });
     }
-  }, [router.isReady])
+  }, [router.isReady]);
+
+  useEffect(() => {
+    dispatch(spinnerActions.setState(loading));
+  }, [loading]);
 
   useEffect(() => {
     setSlide(false);
@@ -174,9 +180,11 @@ const DetailView = () => {
           propertyInfo: res.data.propertyInfo ? res.data.propertyInfo : [],
           reviewSummary: res.data.reviewSummary ? res.data.reviewSummary : [],
           wishId: res.data.wishId
-        }));
+        }))
         setUserWish(res.data.wishId ? true : false);
-      });
+      }).catch(e => {
+        console.error(e);
+      }).finally(() => setLoading(false));
     }
   }, [queries.id,
     detailDate.start,
@@ -190,7 +198,7 @@ const DetailView = () => {
   return (
     <>
       {rooms.roomInfo == undefined ? (
-        "로딩중"
+        null
       ) : (
         <div className="site">
           {/* <!-- Header --> */}

@@ -1,14 +1,18 @@
 import { React, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { useDispatch } from "react-redux";
 import Style from "../../styles/Component.module.css";
 import classNames from 'classnames/bind';
+import * as spinnerActions from "../../redux/store/modules/spinnerOn";
 
 const cx = classNames.bind(Style);
 
 const Noti = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const [values, setValues] = useState([]);
+  const [loading, setLoading] = useState(true);  
 
   const handleClick = (e, item, index) => {
     e.preventDefault();
@@ -49,7 +53,14 @@ const Noti = () => {
     ];
 
     setValues([...list]);
+
+    // 임시 적용
+    setLoading(false);
   }, []);
+
+  useEffect(() => {
+    dispatch(spinnerActions.setState(loading));
+  }, [loading]);
 
   return (
     <div className="site">

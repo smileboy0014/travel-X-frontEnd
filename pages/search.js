@@ -8,6 +8,7 @@ import CalendarFilterButton from "../components/Button/OptionFilter/CalendarFilt
 import MapFixButton from "../components/Button/Fix/MapFixButton";
 import CalendarModal from "../components/Modal/Calendar/CalendarModal";
 import * as dateActions from "../redux/store/modules/date";
+import * as spinnerActions from "../redux/store/modules/spinnerOn";
 import classNames from 'classnames/bind';
 
 const cx = classNames.bind(Style);
@@ -40,6 +41,7 @@ const Search = () => {
         end: searchDate.end,
       })
     );
+    dispatch(spinnerActions.setState(false));
   }, []);
 
   return (

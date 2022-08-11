@@ -20,7 +20,7 @@ const MyReservation = () => {
 	// const spinnerState = useSelector((state) => state.spinnerOn.state);
 	const userInfo = useSelector((state) => state.userInfo.info);
 	const [error, setError] = useState(false);
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 	const [reservedList, setReservedList] = useState([]);
 	const [usedList, setUsedList] = useState([]);
 	const [canceledList, setCanceledList] = useState([]);
