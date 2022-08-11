@@ -86,11 +86,11 @@ const DetailMap = ({ lat, lng }) => {
 
       // 드레그 여부
       // draggable: false,
-      // zoomControl: true,
-      // zoomControlOptions: {
-      //   //줌 컨트롤의 옵션
-      //   position: naver.maps.Position.TOP_RIGHT,
-      // },
+      zoomControl: true,
+      zoomControlOptions: {
+        //줌 컨트롤의 옵션
+        position: naver.maps.Position.TOP_RIGHT,
+      },
     });
   };
 
