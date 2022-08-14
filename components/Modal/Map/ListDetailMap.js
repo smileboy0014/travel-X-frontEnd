@@ -5,6 +5,7 @@ import { MarkerOverlapRecognizer } from "./MarkerOverlappingRecognizer";
 import Style from "../../../styles/Component.module.css";
 import { useSelector, useDispatch } from "react-redux";
 import * as mapBoundActions from "../../../redux/store/modules/mapBound";
+import * as mapActions from "../../../redux/store/modules/map";
 import classNames from 'classnames/bind';
 import {priceComma}  from '../../../shared/js/CommonFun';
 
@@ -35,6 +36,7 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
   const dispatch = useDispatch();
 
   const searchDataValue = useSelector(({ searchResult }) => searchResult.data);
+  const srpMapOn = useSelector((state) => state.map.srpMapOn);
   const [slide, setSlide] = useState(false);
   const [roomData, setRoomData] = useState([]);
   const [mapObserver, setMapObserver] = useState(0);
@@ -52,7 +54,6 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
     recognizer.setMap(null);
 
     mobileWindows = [];
-    recognizer = null;
     selectedId = "";
     selectedMarker = null;
   };
@@ -69,17 +70,44 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
         });
       }
 
-      recognizer = new MarkerOverlapRecognizer({
-        highlightRect: false,
-        tolerance: 5,
-      });
-      recognizer.setMap(roomMap);
-
-      for (let marker of markers) {
-        marker.setVisible(false);
-        marker.setMap(null);
+      
+    } else {
+      if (roomMap == null) { 
+        roomMap = new naver.maps.Map("roomMap", {
+          center: new naver.maps.LatLng(
+            37.498095,
+            127.027610
+          ),
+          zoom: 14,
+        });
       }
     }
+    
+    for (let marker of markers) {
+      marker.setVisible(false);
+      marker.setMap(null);
+    }
+    markers = [];
+    
+    recognizer = new MarkerOverlapRecognizer({
+      highlightRect: false,
+      tolerance: 5,
+    });
+    recognizer.setMap(roomMap);
+
+    var bounds = roomMap.getBounds();
+    var southWest = bounds.getSW();
+    var northEast = bounds.getNE();
+
+    setMapSouthWest({
+      lat: southWest._lat,
+      lng: southWest._lng,
+    });
+
+    setMapNorthEast({
+      lat: northEast._lat,
+      lng: northEast._lng,
+    });
   };
 
   const clusteringByLocation = (rooms) => {
@@ -123,12 +151,10 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
 
     if (searchDataValue[0] !== undefined) {
       let clusters = clusteringByLocation(Array.from(searchDataValue[0]));
-
+      
       clusters.map((cluster, index) => {
         // debugger;
-        let price =
-          cluster.count == 1 ? `${cluster.minPrice}` : `${cluster.minPrice} ~`;
-
+        let price = cluster.count == 1 ? `${cluster.minPrice}` : `${cluster.minPrice} ~`;
 
         var roomMapMarker = new naver.maps.Marker({
           map: roomMap,
@@ -170,7 +196,6 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
         });
 
         mobileWindows.push(mobileWindow);
-        // markers.push(roomMapMarker);
 
         roomMapMarker.addListener("click", function (e) {
           if (
@@ -237,6 +262,7 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
   }, [searchDataValue]);
 
   useEffect(() => {
+    dispatch(mapActions.setSrpMapOn(true));
     /* 리스트 보기로 화면이 닫혔을 때만 clean up. 
        재 검색 때마다 naver map 중복 할당하여 레이어 겹치는 버그 방지 */
     return () => {
@@ -246,6 +272,7 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
       }
       if (roomMap) roomMap.destroy();
       roomMap = null;
+      dispatch(mapActions.setSrpMapOn(false));
     }
   }, []);
 
