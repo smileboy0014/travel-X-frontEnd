@@ -55,8 +55,6 @@ const RouteGuard = ({ children }) => {
             userExtraInfo: checkLogin.userExtraInfo
           }));
           setAuthorized(true);
-
-          return true;
         } else {
         // 로컬스토리지 값 authPublisher가 있지만 로그인 유저가 아니므로 로그인 관련 상태값 초기화
           CleanLoginInfoInLocalStorage();
@@ -64,13 +62,11 @@ const RouteGuard = ({ children }) => {
           setAuthorized(false);
           if (path != '/login') goLoginPage();
           
-          return false;
         }
       } else {
         setAuthorized(false);
         if (path != '/login') goLoginPage();
 
-        return false;
       }
     } else if (authPublisher) {
       let checkLogin = await CheckLogin(authPublisher);
@@ -85,21 +81,19 @@ const RouteGuard = ({ children }) => {
           nickName: checkLogin.nickName,
           userExtraInfo: checkLogin.userExtraInfo
         }));
+
         setAuthorized(true);
 
-        return true;
       } else {
       // 로컬스토리지 값 authPublisher가 있지만 로그인 유저가 아니므로 로그인 관련 상태값 초기화
         CleanLoginInfoInLocalStorage();
         dispatch(userInfoActions.setUserInfo({ pub: null, id: null, auth: false, nickName: null, userExtraInfo: {} }));
         setAuthorized(true);
         
-        return false;
       }
     } else {
         setAuthorized(true);
 
-        return true;
     }
 
   };

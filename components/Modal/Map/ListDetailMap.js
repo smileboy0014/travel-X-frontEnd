@@ -11,6 +11,7 @@ import {priceComma}  from '../../../shared/js/CommonFun';
 const cx = classNames.bind(Style);
 
 var mobileWindows = [];
+var markers = [];
 var roomMap;
 var recognizer;
 var selectedId = "";
@@ -30,6 +31,9 @@ const mapPinCountStyle = Style["MapPin-count"];
 const mapPinPriceStyle = Style["MapPin-price"];
 
 const DetailMap = ({ lat, lng, onRequestClosed }) => {
+
+  const dispatch = useDispatch();
+
   const searchDataValue = useSelector(({ searchResult }) => searchResult.data);
   const [slide, setSlide] = useState(false);
   const [roomData, setRoomData] = useState([]);
@@ -43,8 +47,6 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
     lat: "",
     lng: "",
   });
-
-  const dispatch = useDispatch();
 
   const initVars = () => {
     recognizer.setMap(null);
@@ -65,13 +67,6 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
           ),
           zoom: 14,
         });
-      } else {
-        let newCenter = new naver.maps.LatLng(
-          searchDataValue[0][0].location.lat,
-          searchDataValue[0][0].location.lon
-        );
-
-        roomMap.setCenter(newCenter);
       }
 
       recognizer = new MarkerOverlapRecognizer({
@@ -79,6 +74,11 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
         tolerance: 5,
       });
       recognizer.setMap(roomMap);
+
+      for (let marker of markers) {
+        marker.setVisible(false);
+        marker.setMap(null);
+      }
     }
   };
 
@@ -189,6 +189,7 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
         });
 
         recognizer.add(roomMapMarker);
+        markers.push(roomMapMarker);
       });
     }
 
@@ -239,7 +240,11 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
     /* 리스트 보기로 화면이 닫혔을 때만 clean up. 
        재 검색 때마다 naver map 중복 할당하여 레이어 겹치는 버그 방지 */
     return () => {
-      roomMap.destroy();
+      for (let marker of markers) {
+        marker.setVisible(false);
+        marker.setMap(null);
+      }
+      if (roomMap) roomMap.destroy();
       roomMap = null;
     }
   }, []);
