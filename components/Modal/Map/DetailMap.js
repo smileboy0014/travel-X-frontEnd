@@ -78,7 +78,7 @@ const DetailMap = ({ lat, lng }) => {
       minZoom: 10,
       maxZoom: 21,
 
-      draggable: false,
+      // draggable: false,
       pinchZoom: false,
       scrollWheel: false,
       keyboardShortcuts: false,
