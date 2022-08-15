@@ -67,7 +67,7 @@ const MyReservationDetailView = () => {
 			})
 	}
 
-	const moveToPage = () =>{
+	const moveToPage = () => {
 		router.push('/myInfo/addMyReview?' + new URLSearchParams({
 			orderId: id
 		}).toString());
@@ -127,20 +127,14 @@ const MyReservationDetailView = () => {
 										</div>
 									</div>
 								</div>
-								{state !== 'used' ? '' : <div className="ReservSingleHeaderBtn">
+								{/* {state !== 'used' ? '' : <div className="ReservSingleHeaderBtn"> */}
 									{/*<div className="ReservSingleHeaderBtn-btn is-disable">후기 작성하기 (30일 이내)</div> 후기작성 종료 */}
 									{/*<div className="ReservSingleHeaderBtn-btn is-disable">후기 작성 완료</div> 후기작성 완료 */}
 									{/*<div className="ReservSingleHeaderBtn-btn is-disable">후기 작성 기간 만료</div> 후기작성 기간 만료 */}
-									{/* <Link href={{
-										pathname: "/myInfo/addMyReview/[roomId]",
-										query:{roomId:orderRoom.roomDocument.roomId}
-									}}> */}
-										<button type="button" className={orderRoom.reviewWritable ? cx("ReservSingleHeaderBtn-btn") : cx("ReservSingleHeaderBtn-btn", "is-disable")}
-											onClick={()=> orderRoom.reviewWritable  ? moveToPage() : '' }>
-											{(orderRoom.reviewWritable) ? reviewBtnContents[0] : reviewBtnContents[1]}</button>
-									{/* </Link> */}
-								</div>
-								}
+									<button type="button" className={!orderRoom.reviewWritable ? cx("ReservSingleHeaderBtn-btn") : cx("ReservSingleHeaderBtn-btn", "is-disable")}
+										onClick={() => !orderRoom.reviewWritable ? moveToPage() : ''}>
+										{(orderRoom.reviewWritable) ? reviewBtnContents[0] : reviewBtnContents[1]}</button>
+								{/* </div>} */}
 							</div>
 						</div>
 					</div>

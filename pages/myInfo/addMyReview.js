@@ -20,6 +20,15 @@ const cx = classNames.bind(Style);
 const AddyMyReview = () => {
 	const router = useRouter();
 	const { orderId } = router.query;
+	const [validation, setValidation] = useState({
+		kindnessScore: false,
+		cleanScore: false,
+		comfortScore: false,
+		facilityScore: false,
+		priceScore: false,
+		reviewContent: false
+
+	});
 	const [orderRoom, setOrderRoom] = useState(null);
 	const [error, setError] = useState(false);
 	const [loading, setLoading] = useState(false);
@@ -78,7 +87,19 @@ const AddyMyReview = () => {
 		const fileListArr = Array.from(imgFile);
 		fileListArr.splice(index, 1);
 		setImgFile(fileListArr);
+	}
 
+	const handleValidation = (name, value) => {
+		setValidation({ ...validation, [name]: value });
+	};
+
+	const validationAllTrue = () =>{
+		if(validation.kindnessScore && validation.cleanScore && validation.comfortScore 
+			&& validation.facilityScore && validation.priceScore && validation.reviewContent ){
+					return true;
+		} else {
+			return false;
+		}
 	}
 
 	const setScore = (e) => {
@@ -88,22 +109,27 @@ const AddyMyReview = () => {
 		switch (strArr[0]) {
 			case 'star1':
 				setKindnessScore(parseInt(strArr[1]));
+				handleValidation('kindnessScore',true);
 				// console.log(kindnessScore);
 				break;
 			case 'star2':
 				setCleanScore(parseInt(strArr[1]));
+				handleValidation('cleanScore',true);
 				// console.log(cleanScore);
 				break;
 			case 'star3':
 				setComfortScore(parseInt(strArr[1]));
+				handleValidation('comfortScore',true);
 				// console.log(comfortScore);
 				break;
 			case 'star4':
 				setFacilityScore(parseInt(strArr[1]));
+				handleValidation('facilityScore',true);
 				// console.log(facilityScore);
 				break;
 			case 'star5':
 				setPriceScore(parseInt(strArr[1]));
+				handleValidation('priceScore',true);
 				// console.log(priceScore);
 				break;
 		}
@@ -284,9 +310,6 @@ const AddyMyReview = () => {
 				// imageList.push(imgFile[i]);
 			}
 		}
-		// formData.append('imageList[0]', imgFile[0]);
-		// formData.append('review', review);
-		// formData.append('review.date', formattingDate());
 		formData.append('review.authPublisher', orderRoom.authPublisher);
 		formData.append('review.cleanScore', cleanScore);
 		formData.append('review.comfortScore', comfortScore);
@@ -300,10 +323,6 @@ const AddyMyReview = () => {
 		formData.append('review.userId', orderRoom.userId);
 
 		// debugger;
-
-		// axios.post("http://shineware.iptime.org:8081/review/post", review, {
-		//   headers: { "Content-Type": `multipart/form-data` }
-		// }
 
 		axios({
 			method: "POST",
@@ -328,6 +347,11 @@ const AddyMyReview = () => {
 		// console.log(orderId);
 		getByOrderId();
 	},[orderId]);
+
+	useEffect(()=>{
+		handleValidation('reviewContent',  reviewContent.length > 0 ? true : false);
+
+	},[reviewContent])
 
 	useEffect(() => {
 		// console.log(loading);
@@ -434,7 +458,9 @@ const AddyMyReview = () => {
 					{/* BttonFixButton */}
 					<div className={Style["BttonFixButton"]}>
 						<div className="site-container">
-							<button type="button" className={Style["BttonFixButton-button"]} onClick={handleAddReview} >작성 완료 </button>{/* 컨텐츠 등록할시 is-disable 클래스 삭제 클릭가능 */}
+							<button type="button" className={(validationAllTrue()) ? Style["BttonFixButton-button"]  : cx("BttonFixButton-button", "is-disable")} 
+							disabled={!validationAllTrue()}
+							onClick={handleAddReview} >작성 완료 </button>{/* 컨텐츠 등록할시 is-disable 클래스 삭제 클릭가능 */}
 							{/*<button type="button" className={Style["BttonFixButton-button"]}>수정 완료</button]}>*/}
 						</div>
 					</div>
