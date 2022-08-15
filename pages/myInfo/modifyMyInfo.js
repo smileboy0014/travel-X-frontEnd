@@ -7,7 +7,6 @@ import Style from "../../styles/Component.module.css";
 import DetailTopNavbar from "../../components/NavBar/DetailTopNavbar";
 import classNames from 'classnames/bind';
 import Link from 'next/link';
-import { data } from "jquery";
 import { CleanLoginInfoInLocalStorage } from './../../components/Button/Login/Utils/LoginUtil';
 import { PUBLISHER_KAKAO, PUBLISHER_NAVER, PUBLISHER_TRAVELX } from "../../shared/js/CommonConstant";
 import { DeleteCookie } from './../../components/Button/Login/Utils/CookieUtil';
@@ -17,7 +16,8 @@ import CommonAlertModal from "../../components/Modal/Alert/CommonAlertModal";
 // import { changeSpinnerState, CommonFun } from "../../shared/js/CommonFun";
 import * as spinnerActions from "../../redux/store/modules/spinnerOn";
 // import {Spinner} from "../../components/Spinner/Spinner";
-import { DEFAULT_API_URL } from '../../shared/js/CommonConstant'
+import { DEFAULT_API_URL } from '../../shared/js/CommonConstant';
+import { KorEngNumValidate, PhoneValidate } from '../../shared/js/CommonValidate';
 
 const cx = classNames.bind(Style);
 
@@ -32,7 +32,6 @@ const ModifyMyInfo = () => {
 	// male, female 로 남자, 여자 나눔
 	const [sexType, setSexType] = useState("MALE");
 	const [alertModalOpen, setAlertModalOpen] = useState(false);
-	const [birthday, setBirthday] = useState({ year: "", month: "", day: "" })
 	const [user, setUser] = useState({
 		id: "",
 		authPublisher: "",
@@ -46,6 +45,11 @@ const ModifyMyInfo = () => {
 			gender: "MALE",
 			location: ""
 		}
+	});
+
+	const [validation, setValidation] = useState({
+		name: true,
+		phone: true
 	});
 
 	const [values, setValues] = useState({
@@ -76,16 +80,16 @@ const ModifyMyInfo = () => {
 		switch (type) {
 			case 'name':
 				setUser((current) => {
-					let newUser = { ...current };
-					newUser['userExtraInfo'].name = value;
+					let newUser = { ...current, 'userExtraInfo': { ...current.userExtraInfo, name: value } };
 					return newUser;
 				});
 				// console.log(user);
 				break;
 			case 'phoneNumber':
 				setUser((current) => {
-					let newUser = { ...current };
-					newUser['userExtraInfo'].phoneNumber = value;
+					// let newUser = { ...current, userExtraInfo: { ...current.userExtraInfo } };
+					// newUser['userExtraInfo'].phoneNumber = value;
+					let newUser = { ...current, 'userExtraInfo': { ...current.userExtraInfo, phoneNumber: value } };
 					return newUser;
 				});
 				// console.log(user);
@@ -99,17 +103,31 @@ const ModifyMyInfo = () => {
 	}
 
 	const splitTheBirthdayData = (value) => {
-		return { year: value.substring(0, 4), month: value.substring(4, 6), day: value.substring(6, 8) };
+		let containIs = (value.includes('-') ? true : false);
+		switch (containIs) {
+			case true:
+				let strAr = value.split('-');
+				return { year: strAr[0], month: strAr[1], day: strAr[2] };
+			case false:
+				return { year: value.substring(0, 4), month: value.substring(4, 6), day: value.substring(6, 8) };
+
+		}
+
 	}
 
 	const setBirthdayAndLocationValue = (data) => {
 		if (data) {
+			// debugger;
 			setValues({ ...values, birthday: splitTheBirthdayData(data.birthday), location: data.location });
 		}
 	}
 
+	const handleValidation = (name, value) => {
+		setValidation({ ...validation, [name]: value });
+	};
+
 	const checkNumber = (type, date, val) => {
-		debugger;
+		// debugger;
 		if (type === 'month' && val.length < 2 && parseInt(val) < 10) {
 			date.month = '0' + val;
 			// console.log(data.month);
@@ -136,12 +154,12 @@ const ModifyMyInfo = () => {
 		formData.append('birthday', combineBirthdayFun(values.birthday));
 		formData.append('gender', sexType);
 		formData.append('location', values.location);
-		formData.append('name', user.userExtraInfo.name);
-		formData.append('phoneNumber', user.userExtraInfo.phoneNumber);
-		formData.append('password', user.password ? user.pwd : null);
+		user.userExtraInfo.name && formData.append('name', user.userExtraInfo.name);
+		user.userExtraInfo.phoneNumber && formData.append('phoneNumber', user.userExtraInfo.phoneNumber);
+		user.password && formData.append('password', user.pwd);
 		formData.append('userId', user.id);
 
-		debugger;
+		// debugger;
 		axios.post(DEFAULT_API_URL + '/auth/user/modifyExtraInfo', formData)
 			.then((res) => {
 				if (res.data !== undefined) {
@@ -155,67 +173,61 @@ const ModifyMyInfo = () => {
 
 	// 회원 탈퇴
 	const userDelete = () => {
-		
-			const formData = new FormData();
-			formData.append('authPublisher', userInfo.pub);
-			formData.append('userId', userInfo.id);
-			formData.append('password', ''); // TODO: TRAVELX 유저는 비밀번호 입력 팝업 필요
-			// console.log(userInfo);
 
-			axios({
-				method: "POST",
-				url: DEFAULT_API_URL + "/auth/user/delete",
-				data: formData,
-			}).then((res) => {
-				dispatch(userInfoActions.setUserInfo({ pub: null, id: null, auth: false, nickName: null, userExtraInfo: {} }));
-				DeleteCookie("RT");
-			}).catch((e) => {
-				console.error(e.response);
-			});
+		const formData = new FormData();
+		formData.append('authPublisher', userInfo.pub);
+		formData.append('userId', userInfo.id);
+		formData.append('password', ''); // TODO: TRAVELX 유저는 비밀번호 입력 팝업 필요
+		// console.log(userInfo);
 
-			switch (userInfo.pub) {
-				case PUBLISHER_KAKAO:
-					if (window.Kakao.Auth.getAccessToken()) {
-						window.Kakao.API.request({
-							url: '/v1/user/unlink',
-							success: (response) => {
-								// console.log(response);
-								CleanLoginInfoInLocalStorage(PUBLISHER_KAKAO);
-							},
-							fail: (error) => {
-								console.log(error);
-								alert(error.msg);
-							},
-						});
+		axios({
+			method: "POST",
+			url: DEFAULT_API_URL + "/auth/user/delete",
+			data: formData,
+		}).then((res) => {
+			dispatch(userInfoActions.setUserInfo({ pub: null, id: null, auth: false, nickName: null, userExtraInfo: {} }));
+			DeleteCookie("RT");
+		}).catch((e) => {
+			console.error(e.response);
+		});
 
-						window.Kakao.Auth.setAccessToken(null);
-					}
+		switch (userInfo.pub) {
+			case PUBLISHER_KAKAO:
+				if (window.Kakao.Auth.getAccessToken()) {
+					window.Kakao.API.request({
+						url: '/v1/user/unlink',
+						success: (response) => {
+							// console.log(response);
+							CleanLoginInfoInLocalStorage(PUBLISHER_KAKAO);
+						},
+						fail: (error) => {
+							console.log(error);
+							alert(error.msg);
+						},
+					});
 
-					break;
-				case PUBLISHER_NAVER:
+					window.Kakao.Auth.setAccessToken(null);
+				}
 
-					break;
+				break;
+			case PUBLISHER_NAVER:
 
-				case PUBLISHER_TRAVELX:
+				break;
 
-					break;
+			case PUBLISHER_TRAVELX:
 
-				default:
+				break;
 
-			}
+			default:
 
-			router.push('/')
-		
+		}
+
+		router.push('/')
+
 	};
 
 	useEffect(() => {
-		// debugger;
-		// Spinner(true);
-		// chnageState(true);
-		// changeSpinnerState(true);
-		debugger;
 		dispatch(spinnerActions.setState(true))
-
 	}, [])
 
 	useEffect(() => {
@@ -224,7 +236,7 @@ const ModifyMyInfo = () => {
 			// console.log(userInfo);
 			// 회원가입 할때 추가정보를 하나도 입력해주지 않은 경우
 			if (!userInfo.userExtraInfo) {
-				debugger;
+				// debugger;
 				objCopy.userExtraInfo = {
 					name: "",
 					phoneNumber: "",
@@ -233,19 +245,37 @@ const ModifyMyInfo = () => {
 					location: ""
 				};
 			}
+			// debugger;
 			setBirthdayAndLocationValue(objCopy.userExtraInfo);
 			setSexType(objCopy.userExtraInfo.gender)
 			setUser(objCopy);
-			// changeSpinnerState(false);
-			// debugger;
 			dispatch(spinnerActions.setState(false));
-			// setTimeout(()=>{
-			// 	dispatch(spinnerActions.setState(false));
-			// }, 500)
 
 		}
 
 	}, [userInfo])
+
+	useEffect(() => {
+
+		if (user.userExtraInfo.name === '' && user.userExtraInfo.name.length === 0) {
+			setValidation({ ...validation, name: true });
+		}
+
+		if (user.userExtraInfo.name) {
+			const nameVal = KorEngNumValidate(user.userExtraInfo.name);
+			handleValidation('name', nameVal.syntax && user.userExtraInfo.name.length > 0 ? true : false);
+		}
+	}, [user.userExtraInfo.name])
+
+	useEffect(() => {
+		if (user.userExtraInfo.phoneNumber === '' && user.userExtraInfo.phoneNumber.length === 0) {
+			setValidation({ ...validation, phone: true });
+		}
+		if (user.userExtraInfo.phoneNumber) {
+			const phoneVal = PhoneValidate(user.userExtraInfo.phoneNumber);
+			handleValidation('phone', phoneVal.syntax && user.userExtraInfo.phoneNumber.length > 0 ? true : false);
+		}
+	}, [user.userExtraInfo.phoneNumber]);
 
 	return (
 		<div className="site">
@@ -293,10 +323,11 @@ const ModifyMyInfo = () => {
 											<label className={Style["ReservationInput-label"]} htmlFor="Reservation-user">성명</label>
 										</dt>
 										<dd className={Style["ReservationInput-text"]}>
-											<input type="text" placeholder="성명을 입력해주세요." defaultValue={user.userExtraInfo.name} onChange={(e) => onChangeHandler(e.target.value, 'name')}
+											<input type="text" placeholder="성명을 입력해주세요." defaultValue={(user.userExtraInfo.name && user.userExtraInfo.name !== 'null') ? user.userExtraInfo.name : ''} onChange={(e) => onChangeHandler(e.target.value, 'name')}
 												className={Style["ReservationInput-input"]} />
 										</dd>
 									</dl>
+									{!validation.name && user.userExtraInfo.name && user.userExtraInfo.name.length > 0 ? <div className={cx("Error-text", "is-Active")}>이름 형식을 확인해주세요.</div> : null}
 								</div>
 								{/* .ReservationInput */}
 								{/* ReservationInput */}
@@ -306,10 +337,11 @@ const ModifyMyInfo = () => {
 											<label className={Style["ReservationInput-label"]} htmlFor="Reservation-user">휴대폰 번호</label>
 										</dt>
 										<dd className={Style["ReservationInput-text"]}>
-											<input type="tel" placeholder="010-1234-5678" defaultValue={user.userExtraInfo.phoneNumber} onChange={(e) => onChangeHandler(e.target.value, 'phoneNumber')}
+											<input type="tel" placeholder="010-1234-5678" defaultValue={(user.userExtraInfo.phoneNumber && user.userExtraInfo.phoneNumber != 'null') ? user.userExtraInfo.phoneNumber : ''} onChange={(e) => onChangeHandler(e.target.value, 'phoneNumber')}
 												className={Style["ReservationInput-input"]} />
 										</dd>
 									</dl>
+									{!validation.phone && user.userExtraInfo.phoneNumber && user.userExtraInfo.phoneNumber.length > 0 ? <div className={cx("Error-text", "is-Active")}>전화번호 형식을 확인해주세요. (예. 010-1234-5678)</div> : null}
 								</div>
 								{/* .ReservationInput */}
 							</div>
@@ -406,7 +438,10 @@ const ModifyMyInfo = () => {
 					{/* BttonFixButton */}
 					<div className={Style["BttonFixButton"]}>
 						<div className={"site-container"}>
-							<button type="button" className={Style["BttonFixButton-button"]} onClick={() => modifyExtraInfo()}>저장하기</button>
+							<button type="button"
+								className={(!validation.name || !validation.phone) ? cx("BttonFixButton-button", "is-disable") : Style["BttonFixButton-button"]}
+								disabled={!validation.name || !validation.phone}
+								onClick={() => modifyExtraInfo()}>저장하기</button>
 						</div>
 					</div>
 					{/* .BttonFixButton */}
@@ -427,7 +462,7 @@ const ModifyMyInfo = () => {
 
 				/>
 
-				<CommonAlertModal 
+				<CommonAlertModal
 					content={alertContent}
 					isOpen={alertModalOpen}
 					onRequestClose={(state) => setAlertModalOpen(state)}

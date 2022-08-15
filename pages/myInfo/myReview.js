@@ -137,7 +137,9 @@ const MyReview = () => {
 			// setMyReviewDeleteModalOpen(true);
 			setAlertModalOpen(true)
 		} else {
-			router.push('/myInfo/modifyMyReview');
+			router.push('/myInfo/modifyMyReview?' + new URLSearchParams({
+				reviewId: selectReview.reviewId
+			}).toString());
 		}
 	}
 
