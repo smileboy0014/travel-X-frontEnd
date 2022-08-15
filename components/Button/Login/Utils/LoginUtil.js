@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { CLIENT_SECRET, PUBLISHER_KAKAO, PUBLISHER_TRAVELX, PUBLISHER_NAVER, REST_API_KEY } from '../../../../shared/js/CommonConstant';
 import { GetCookie, SetCookie } from './CookieUtil';
+import { JAVASCRIPT_KEY } from "../../../../shared/js/CommonConstant";
 
 export const LoginToTravelXServer = async (publisher, userId, pwd = null) => {
   const result = { auth: false, id: "", status: "", nickName:"" }
@@ -84,6 +85,13 @@ export const CheckLogin = async (authPublisher) => {
   
   switch (authPublisher) {
     case PUBLISHER_KAKAO: 
+      // console.log(window.Kakao.Auth);
+      if (!window.Kakao) return result;
+
+      if (!window.Kakao.isInitialized()) {
+        window.Kakao.init(JAVASCRIPT_KEY);
+      }
+
       const accessToken = window.Kakao.Auth.getAccessToken();
 
       if (accessToken) {

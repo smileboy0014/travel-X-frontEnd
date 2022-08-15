@@ -3,7 +3,6 @@ import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import * as searchResultActions from "../../redux/store/modules/searchResult";
 import * as spinnerActions from "../../redux/store/modules/spinnerOn";
-import mapBound from "../../redux/store/modules/mapBound";
 import {SEARCH_API_URL} from '../../shared/js/CommonConstant';
 
 export default function useInfiniteSearch(
@@ -30,6 +29,7 @@ export default function useInfiniteSearch(
   // const propertyTypeValue = useSelector(({ propertyType }) => propertyType);
 
   const searchTypeValue = useSelector(({ searchType }) => searchType.value);
+  const srpMapOn = useSelector(({ map }) => map.srpMapOn);
 
   const adultCounterValue = useSelector(
     ({ adultCounter }) => adultCounter.value
@@ -124,9 +124,13 @@ export default function useInfiniteSearch(
 		dispatch(spinnerActions.setState(loading));
 	}, [loading]);
 
+  useEffect(() => {
+    console.log(srpMapOn);
+  }, [srpMapOn])
+
   // SRP에서 검색 시(필터 검색 포함) 일반적으로 가져오는 API
   useEffect(() => {
-    if (query != undefined) {
+    if (query != undefined && !srpMapOn) {
       console.log('일반적인 srp 결과 가져오는 API 시작!!!!!!');
       setLoading(true);
       setError(false);
@@ -196,6 +200,7 @@ export default function useInfiniteSearch(
         left: mapBoundSouthWestValue["lng"],
         searchType: "GEO_BOUNDING",
         size: toPageNumber,
+        types: paramsSerializer(propertyTypeValue)
       };
       // debugger;
       axios({
@@ -209,6 +214,7 @@ export default function useInfiniteSearch(
 
           if (res.data.totalHitCount < 1) {
             alert('검색 결과가 없습니다.');
+            dispatch(searchResultActions.saveData([]));
             return;
           }
           dispatch(searchResultActions.saveData(res.data.roomDocumentList));

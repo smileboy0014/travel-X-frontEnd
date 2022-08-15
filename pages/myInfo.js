@@ -5,10 +5,11 @@ import Style from "../styles/Component.module.css";
 import DetailTopNavbar from "../components/NavBar/DetailTopNavbar";
 import classNames from 'classnames/bind';
 import Link from 'next/link';
-import * as userInfoActions from "../redux/store/modules/userInfo";
 import { PUBLISHER_KAKAO, PUBLISHER_NAVER, PUBLISHER_TRAVELX } from "./../shared/js/CommonConstant";
 import { CleanLoginInfoInLocalStorage } from "./../components/Button/Login/Utils/LoginUtil";
 import { DeleteCookie } from './../components/Button/Login/Utils/CookieUtil';
+import * as userInfoActions from "../redux/store/modules/userInfo";
+import * as spinnerActions from "../redux/store/modules/spinnerOn";
 
 const cx = classNames.bind(Style);
 
@@ -48,6 +49,10 @@ const MyInfo = () => {
     CleanLoginInfoInLocalStorage(publisher);
     dispatch(userInfoActions.setUserInfo({ accessToken: null, id: null, auth: false, nickName: null, pub: null, userExtraInfo: {} }));
   };
+
+	useEffect(() => {
+    dispatch(spinnerActions.setState(false));
+  }, []);
 
 	return (
 		<div className="site">

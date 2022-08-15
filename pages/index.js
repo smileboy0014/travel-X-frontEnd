@@ -7,6 +7,7 @@ import SearchMapModal from "./../components/Modal/Map/SearchMapModal_Bak";
 import { useDispatch, useSelector } from "react-redux";
 import * as mapActions from "../redux/store/modules/map";
 import * as dateActions from "../redux/store/modules/date";
+import * as spinnerActions from "../redux/store/modules/spinnerOn";
 import SelectSearchLocationModal from "./../components/Modal/Map/SelectSearchLocationModal";
 import PesonalModal from "../components/Modal/Personal/PersonalModal";
 import BottomNavbar from "../components/NavBar/BottomNavbar";
@@ -43,6 +44,10 @@ export default function Home() {
   useEffect(() => {
     dispatch(dateActions.setSearchDate({ start: date[0].toJSON(), end: date[1].toJSON() }));
   }, [date]);
+
+  useEffect(() => {
+    dispatch(spinnerActions.setState(false));
+  }, []);
 
   return (
     <div className={Style.background}>

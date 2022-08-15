@@ -6,7 +6,8 @@ const initialState = {
     longitude: '126.8666797982575' 
   },
   addresses: [],
-  scriptLoaded: false
+  scriptLoaded: false,
+  srpMapOn: false
 };
 const map = createSlice({
   name: "map",
@@ -14,6 +15,9 @@ const map = createSlice({
   reducers: {
     setScriptLoaded: (state, action) => {
       state.scriptLoaded = action.payload;
+    },
+    setSrpMapOn: (state, action) => {
+      state.srpMapOn = action.payload;
     },
     setPos: (state, action) => {
       state.pos = action.payload;
@@ -32,6 +36,6 @@ const map = createSlice({
     }
   },
 });
-export const { setScriptLoaded, setPos, resetPos, setAddr, resetAddr } = map.actions; // 액션 생성함수
+export const { setScriptLoaded, setPos, resetPos, setAddr, resetAddr, setSrpMapOn } = map.actions; // 액션 생성함수
 export default map.reducer; // 리듀서
 export const naverMapScriptLoaded = (state) => state.scriptLoaded.value;

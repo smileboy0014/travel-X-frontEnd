@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import Style from '../../../styles/Component.module.css';
 import * as userInfoActions from "../../../redux/store/modules/userInfo";
+import * as spinnerActions from "../../../redux/store/modules/spinnerOn";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { LoginToTravelXServer, SetLoginInfoToLocalStorage } from "./Utils/LoginUtil";
@@ -24,7 +25,6 @@ const KakaoLoginButton = () => {
   const handleKakaoLogin = (e) => {
     e.preventDefault();
     // 1. 인가 코드 요청 / 토큰 발급
-    
     window.Kakao.Auth.login({
       scope,
       success: (loginResponse) => {
@@ -32,6 +32,7 @@ const KakaoLoginButton = () => {
         SetCookie("RT", loginResponse.refresh_token, '/', loginResponse.refresh_token_expires_in);
         SetLoginInfoToLocalStorage(PUBLISHER_KAKAO);
         // console.debug(`Kakao_Login_Response`, loginResponse);
+        dispatch(spinnerActions.setState(true));
 
         // 2. 사용자 정보 가져오기 (Kakao 데이터베이스에 등록되어있는 UserID)
         window.Kakao.API.request({
@@ -70,10 +71,12 @@ const KakaoLoginButton = () => {
               }).toString());
 
             }
-            
+
+            dispatch(spinnerActions.setState(false));
           },
           fail: (userInfoError) => {
             console.error(userInfoError);
+            dispatch(spinnerActions.setState(false));
           }
         });
       },

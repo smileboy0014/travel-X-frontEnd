@@ -2,6 +2,7 @@ import { React, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import * as userInfoActions from "../redux/store/modules/userInfo";
+import * as spinnerActions from "../redux/store/modules/spinnerOn";
 import Style from '../styles/Component.module.css';
 import { CheckLogin, LoginByTravelXUserToTravelXServer } from '../components/Button/Login/Utils/LoginUtil';
 import KakaoLoginButton from '../components/Button/Login/KakaoLoginButton';
@@ -21,6 +22,7 @@ const Login = () => {
   const [loginCount, setLoginCount] = useState(0);
   const [loginAlertTimer, setLoginAlertTimer] = useState(null);
   const [values, setValues] = useState({ userId: "", pwd: "" });
+  const [loading, setLoading] = useState(true);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -31,6 +33,7 @@ const Login = () => {
     e.preventDefault();
 
     if (values.userId && values.pwd) {
+      setLoading(true);
       const result = await LoginByTravelXUserToTravelXServer(values.userId, values.pwd);
 
       if (result.auth) {
@@ -54,6 +57,8 @@ const Login = () => {
         }, 2500);
         setLoginAlertTimer(timer);
       }
+
+      setLoading(false);
       
     }
   };
@@ -71,7 +76,11 @@ const Login = () => {
   };
 
   const handleBackClick = () => {
-    router.back();
+    if (tab == 1) {
+      setTab(0);
+    } else {
+      router.back();
+    }
   };
 
   const handleChangePasswdType = () => {
@@ -82,28 +91,28 @@ const Login = () => {
     }
   };
 
-  const handleCheckLogin = async () => {
-    const authPublisher = localStorage.getItem("pub");
+  // const handleCheckLogin = async () => {
+  //   const authPublisher = localStorage.getItem("pub");
     
-    if (authPublisher) {
-      let checkLogin = await CheckLogin(authPublisher);
+  //   if (authPublisher) {
+  //     let checkLogin = await CheckLogin(authPublisher);
       
-      if (checkLogin.auth) {
-        dispatch(userInfoActions.setUserInfo({ 
-          pub: authPublisher, 
-          id: checkLogin.id, 
-          auth: true, 
-          nickName: checkLogin.nickName, 
-          userExtraInfo: checkLogin.userExtraInfo 
-        }));
-        history.go(1);
-      } else {
-        localStorage.removeItem("pub");
-        localStorage.removeItem("tx");
-        dispatch(userInfoActions.setUserInfo({ pub: null, id: null, auth: false, userExtraInfo: {}, nickName: null, accessToken: null }));
-      }
-    }
-  }
+  //     if (checkLogin.auth) {
+  //       dispatch(userInfoActions.setUserInfo({ 
+  //         pub: authPublisher, 
+  //         id: checkLogin.id, 
+  //         auth: true, 
+  //         nickName: checkLogin.nickName, 
+  //         userExtraInfo: checkLogin.userExtraInfo 
+  //       }));
+  //       history.go(1);
+  //     } else {
+  //       localStorage.removeItem("pub");
+  //       localStorage.removeItem("tx");
+  //       dispatch(userInfoActions.setUserInfo({ pub: null, id: null, auth: false, userExtraInfo: {}, nickName: null, accessToken: null }));
+  //     }
+  //   }
+  // }
 
   useEffect(() => {
     // handleCheckLogin();
@@ -111,7 +120,12 @@ const Login = () => {
       // history.go(1);
       router.push('/');
     }
+    setLoading(false);
   }, []);
+
+  useEffect(() => {
+    dispatch(spinnerActions.setState(loading));
+  }, [loading]);
 
   return (
     <div className="site">

@@ -1,14 +1,16 @@
 import { React, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Style from "../../styles/Component.module.css";
 import classNames from 'classnames/bind';
 import axios from 'axios';
 import { EmailValidate, PhoneValidate } from './../../shared/js/CommonValidate';
+import * as spinnerActions from "../../redux/store/modules/spinnerOn";
 
 const cx = classNames.bind(Style);
 
 const useForm = ({ initialValues, onSubmit }) => {
+  const dispatch = useDispatch();
   const [values, setValues] = useState(initialValues);
   const [validation, setValidation] = useState({
     email: true,
@@ -62,6 +64,10 @@ const useForm = ({ initialValues, onSubmit }) => {
   //     setSubmitting(false);
   //   }
   // }, [errors]);
+
+  useEffect(() => {
+    dispatch(spinnerActions.setState(submitting));
+  }, [submitting]);
 
   useEffect(() => {
     if (values.email.length == 0) {

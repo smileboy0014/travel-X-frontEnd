@@ -227,7 +227,13 @@ const ModifyMyInfo = () => {
 	};
 
 	useEffect(() => {
-		dispatch(spinnerActions.setState(true))
+
+		// debugger;
+		// Spinner(true);
+		// chnageState(true);
+		// changeSpinnerState(true);
+		dispatch(spinnerActions.setState(false))
+
 	}, [])
 
 	useEffect(() => {
