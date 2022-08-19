@@ -2643,16 +2643,10 @@ body .ListFixButton:before{
 /*=========================================================
   MapSection:MapPin
 =========================================================*/
-.MapPin{
-	position:relative;
-	z-index:5;
-	box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.08);
-}
-
 .MapPin-count{
 	position:absolute;
 	top:-0.5rem;
-	right:-0.5rem;
+	right:-0.3rem;
 	font-size:0.625rem;
 	border:solid 0.0625rem #d0d0d0;
 	border-radius:100%;
@@ -2663,53 +2657,128 @@ body .ListFixButton:before{
 	z-index:5;
 }
 
+.MapPin-small{
+	width: 72px; 
+	height: 36px;
+	z-index:5;
+	position: relative;
+  background-image: url(../public/img/mapPinPrice.png);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.MapPin-medium{
+	width: 84px; 
+	height: 36px;
+	z-index:5;
+	position: relative;
+  background-image: url(../public/img/mapPinPrice.png);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.MapPin-large{
+	width: 96px; 
+	height: 36px;
+	z-index:5;
+	position: relative;
+  background-image: url(../public/img/mapPinPrice.png);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
 .MapPin-price{
-	border:solid 0.0625rem #d0d0d0;
-	background-color:#fff;
-	padding:0.1875rem 0.875rem 0.25rem;
-	font-size:0.75rem;
-	line-height:1.2em;
-	color:#000;
-	border-radius:0.3125rem 0.3125rem;
 	position:relative;
+	font-size:0.75rem;
+	bottom: 7px;
+	color:#000;
 }
 
-.MapPin-price:before{
-	content:"";
-	width:0.3125rem;
-	height:0.3125rem;
-	border-right:solid 0.0625rem #d0d0d0;
-	border-bottom:solid 0.0625rem #d0d0d0;
-	background-color:#fff;
-	transform:translateX(-50%) rotate(45deg);
-	position:absolute;
-	bottom:-0.1875rem;
-	left:50%;
+.MapPin-small.is-Active .MapPin-price{
+	position:relative;
+	font-size:0.75rem;
+	bottom: 7px;
+	color:#fff;
+	font-size:0.80rem;
+	font-weight:bold;
 }
 
+.MapPin-medium.is-Active .MapPin-price{
+	position:relative;
+	font-size:0.75rem;
+	bottom: 7px;
+	color:#fff;
+	font-size:0.80rem;
+	font-weight:bold;
+}
 
-.MapPin.is-Active .MapPin-count{
+.MapPin-large.is-Active .MapPin-price{
+	position:relative;
+	font-size:0.75rem;
+	bottom: 7px;
+	color:#fff;
+	font-size:0.80rem;
+	font-weight:bold;
+}
+
+.MapPin-small.is-Active .MapPin-count{
 	font-size:0.75rem;
 	border-color:#6957e8;
 	color:#6957e8;
-	top:-0.75rem;
-	right:-0.5rem;
+	top:-0.5rem;
+	right:-0.3rem;
 }
 
-.MapPin.is-Active .MapPin-price{
-	font-size:1rem;
-	font-weight:bold;
+.MapPin-medium.is-Active .MapPin-count{
+	font-size:0.75rem;
 	border-color:#6957e8;
-	color:#fff;
-	background-color:#6957e8;
+	color:#6957e8;
+	top:-0.5rem;
+	right:-0.3rem;
 }
 
-.MapPin.is-Active .MapPin-price:before{
+.MapPin-large.is-Active .MapPin-count{
+	font-size:0.75rem;
 	border-color:#6957e8;
-	background-color:#6957e8;
-	width:0.625rem;
-	height:0.625rem;
-	bottom:-0.3125rem;
+	color:#6957e8;
+	top:-0.5rem;
+	right:-0.3rem;
+}
+
+.MapPin-small.is-Active{
+	width: 88px; 
+	height: 36px;
+	z-index:5;
+	position: relative;
+  background-image: url(../public/img/mapPinPriceSelected.png);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+	bottom:0.15rem;
+	right:0.5rem;
+}
+
+.MapPin-medium.is-Active{
+	width: 100px; 
+	height: 36px;
+	z-index:5;
+	position: relative;
+  background-image: url(../public/img/mapPinPriceSelected.png);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+	bottom:0.15rem;
+	right:0.5rem;
+}
+
+.MapPin-large.is-Active{
+	width: 112px; 
+	height: 36px;
+	z-index:5;
+	position: relative;
+  background-image: url(../public/img/mapPinPriceSelected.png);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+	bottom:0.15rem;
+	right:0.5rem;
 }
 
 /*=========================================================

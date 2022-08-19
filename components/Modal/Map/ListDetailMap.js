@@ -27,7 +27,9 @@ const mapContainerStyle = {
   bottom: 0,
 };
 
-const mapPinStyle = Style["MapPin"];
+const mapPinSmallStyle = Style["MapPin-small"];
+const mapPinMediumStyle = Style["MapPin-medium"];
+const mapPinLargeStyle = Style["MapPin-large"];
 const mapPinCountStyle = Style["MapPin-count"];
 const mapPinPriceStyle = Style["MapPin-price"];
 
@@ -49,6 +51,28 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
     lat: "",
     lng: "",
   });
+
+  const getMapPinStyle = (price) => {
+    if (price.toString().length >= 7) {
+      return mapPinLargeStyle;
+    } else if (price.toString().length >= 6) {
+      return mapPinMediumStyle;
+    } else {
+      return mapPinSmallStyle;
+    }
+  };
+
+  const getMapPinType = (price) => {
+    if (price.toString().length >= 7) {
+      return 'MapPin-large';
+    } else if (price.toString().length >= 6) {
+      return 'MapPin-medium';
+    } else {
+      return 'MapPin-small';
+    }
+  };
+
+  
 
   const initVars = () => {
     recognizer.setMap(null);
@@ -147,7 +171,7 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
   };
 
   const addRoomMapMarker = () => {
-    console.log("addRoomMapMarker Function : ", searchDataValue[0]);
+    // console.log("addRoomMapMarker Function : ", searchDataValue[0]);
 
     if (searchDataValue[0] !== undefined) {
       let clusters = clusteringByLocation(Array.from(searchDataValue[0]));
@@ -156,22 +180,22 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
         // debugger;
         let price = cluster.count == 1 ? `${cluster.minPrice}` : `${cluster.minPrice} ~`;
 
-        var roomMapMarker = new naver.maps.Marker({
+        let roomMapMarker = new naver.maps.Marker({
           map: roomMap,
           title: cluster.items[0].propertyName,
           icon: {
             content:
-              `<button id="map_${cluster.items[0].roomId}" class="${mapPinStyle}">` +
+              `<button id="map_${cluster.items[0].roomId}" class="${getMapPinStyle(cluster.minPrice)}">` +
               (cluster.count > 1 ?
                 `<span class="${mapPinCountStyle}">${cluster.count}</span>`
                 : "") +
               `<span class="${mapPinPriceStyle}">${priceComma(price)}</span>` +
               "</button>",
-
             size: new naver.maps.Size(24, 37),
             origin: new naver.maps.Point(0, 0),
             anchor: new naver.maps.Point(40, 30),
             elementId: `map_${cluster.items[0].roomId}`,
+            type: getMapPinType(cluster.minPrice)
           },
           position: new naver.maps.LatLng(
             cluster.items[0].location.lat,
@@ -203,12 +227,12 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
             selectedMarker != null &&
             e.domEvent.target.parentElement.id != selectedId
           ) {
-            document.getElementById(selectedId).className = Style["MapPin"];
+            document.getElementById(selectedId).className = Style[selectedMarker.icon.type];
             selectedMarker.setZIndex(100);
           }
 
           highlightMarker(e.overlay);
-          selectedId = e.domEvent.target.parentElement.id;
+          selectedId = e.domEvent.target.parentElement.id || e.domEvent.target.id;
           selectedMarker = e.overlay;
           setRoomData(mobileWindows[index]);
         });
@@ -237,7 +261,7 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
     function highlightMarker(roomMapMarker) {
       if (document.getElementById(roomMapMarker.icon.elementId) != null) {
         document.getElementById(roomMapMarker.icon.elementId).className =
-          cx("MapPin", "is-Active");
+          cx(roomMapMarker.icon.type, "is-Active");
       }
 
       roomMapMarker.setZIndex(1000);
@@ -251,7 +275,7 @@ const DetailMap = ({ lat, lng, onRequestClosed }) => {
   }, [roomData]);
 
   useEffect(() => {
-    console.log("searchDataValue: ", searchDataValue);
+    // console.log("searchDataValue: ", searchDataValue);
     initMap();
     addRoomMapMarker();
     setRoomData([]);
