@@ -54,23 +54,20 @@ const RouteGuard = ({ children }) => {
             nickName: checkLogin.nickName,
             userExtraInfo: checkLogin.userExtraInfo
           }));
-          setAuthorized(true);
         } else {
         // 로컬스토리지 값 authPublisher가 있지만 로그인 유저가 아니므로 로그인 관련 상태값 초기화
           CleanLoginInfoInLocalStorage();
           dispatch(userInfoActions.setUserInfo({ pub: null, id: null, auth: false, nickName: null, userExtraInfo: {} }));
-          setAuthorized(false);
           if (path != '/login') goLoginPage();
           
         }
       } else {
-        setAuthorized(false);
         if (path != '/login') goLoginPage();
 
       }
-    } else if (authPublisher) {
+    } else if (authPublisher && path != '/signup') {
       let checkLogin = await CheckLogin(authPublisher);
-      console.log(checkLogin);
+      // console.log(checkLogin);
 
       if (checkLogin.auth) {
       // 로컬스토리지 값 authPublisher가 있고 로그인 유저이므로 로그인 관련 상태값 재정의 (새로고침시 발동)
@@ -82,19 +79,17 @@ const RouteGuard = ({ children }) => {
           userExtraInfo: checkLogin.userExtraInfo
         }));
 
-        setAuthorized(true);
 
       } else {
       // 로컬스토리지 값 authPublisher가 있지만 로그인 유저가 아니므로 로그인 관련 상태값 초기화
         CleanLoginInfoInLocalStorage();
         dispatch(userInfoActions.setUserInfo({ pub: null, id: null, auth: false, nickName: null, userExtraInfo: {} }));
-        setAuthorized(true);
         
       }
     } else {
-        setAuthorized(true);
 
     }
+    setAuthorized(true);
 
   };
 
