@@ -50,7 +50,7 @@ const Kakao = () => {
 
   return (
     <div id={"kakao-link-btn"}>
-      <button onClick={onClickKakao}>카카오</button>
+      <button onClick={onClickKakao}>카카오톡 공유</button>
     </div>
   );
 };

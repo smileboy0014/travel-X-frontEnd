@@ -131,9 +131,10 @@ const MyReservationDetailView = () => {
 									{/*<div className="ReservSingleHeaderBtn-btn is-disable">후기 작성하기 (30일 이내)</div> 후기작성 종료 */}
 									{/*<div className="ReservSingleHeaderBtn-btn is-disable">후기 작성 완료</div> 후기작성 완료 */}
 									{/*<div className="ReservSingleHeaderBtn-btn is-disable">후기 작성 기간 만료</div> 후기작성 기간 만료 */}
-									<button type="button" className={!orderRoom.reviewWritable ? cx("ReservSingleHeaderBtn-btn") : cx("ReservSingleHeaderBtn-btn", "is-disable")}
-										onClick={() => !orderRoom.reviewWritable ? moveToPage() : ''}>
-										{(orderRoom.reviewWritable) ? reviewBtnContents[0] : reviewBtnContents[1]}</button>
+									<button type="button" className={orderRoom.reviewWritable ? cx("ReservSingleHeaderBtn-btn") : cx("ReservSingleHeaderBtn-btn", "is-disable")}
+										disabled={orderRoom.hasReview}
+										onClick={() => orderRoom.reviewWritable ? moveToPage() : ''}>
+										{(orderRoom.reviewWritable) ? reviewBtnContents[1] : reviewBtnContents[0]}</button>
 								{/* </div>} */}
 							</div>
 						</div>

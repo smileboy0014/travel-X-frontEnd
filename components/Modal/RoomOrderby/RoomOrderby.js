@@ -61,7 +61,7 @@ const RoomOrderby = ({ onRequestClose, callback }) => {
               <span className={Style.FilterRadio_text}>최신순</span>
             </label>
           </li> */}
-          <li className={Style["FilterPopList-item"]}>
+          {/* <li className={Style["FilterPopList-item"]}>
             <label className={Style["FilterRadio"]}>
               <input
                 className={Style["FilterRadio-input"]}
@@ -73,7 +73,7 @@ const RoomOrderby = ({ onRequestClose, callback }) => {
               />
               <span className={Style["FilterRadio-text"]}>거리순</span>
             </label>
-          </li>
+          </li> */}
           {/* 평점순 추가 예정 */}
           <li className={Style["FilterPopList-item"]}>
             <label className={Style["FilterRadio"]}>
